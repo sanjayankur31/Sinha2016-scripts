@@ -21,6 +21,7 @@
 # Queue's up a new nest job for me.
 
 SOURCE_PATH="/home/asinha/Documents/02_Code/00_repos/00_mine/Sinha2016/"
+SCRIPT_PATH="/home/asinha/Documents/02_Code/00_repos/00_mine/sinha2016-sciprts/"
 GIT_COMMIT=""
 SIM_PATH="/stri-data/asinha/simulations-nest/"
 SIM_TIME=$(date +%Y%m%d%H%M)
@@ -64,7 +65,7 @@ function setup_env
 
         RUN_NEW="nest_""$GIT_COMMIT"".sh"
         echo "Setting up $RUN_NEW..."
-        cp "$SOURCE_PATH""$RUN_SCRIPT" "$RUN_NEW" -v
+        cp "$SCRIPT_PATH""$RUN_SCRIPT" "$RUN_NEW" -v
         sed -i "s|nest_v_s|nest_$GIT_COMMIT|" "$RUN_NEW"
         sed -i "s|nodes=.*|nodes=$NUM_NODES|" "$RUN_NEW"
         sed -i "s|NUM_NODES=.*|NUM_NODES=$NUM_NODES|" "$RUN_NEW"
