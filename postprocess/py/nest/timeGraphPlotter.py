@@ -300,8 +300,8 @@ class timeGraphPlotter:
 
     def __plot_using_gnuplot_binary(self):
         """Use the binary because it doesnt support py3."""
-        args = ('/home/asinha/Documents/02_Code/00_repos/00_mine/Sinha2016/' +
-                'scripts/postprocess/py/nest/plot-firing-rates.plt')
+        args = ('/home/asinha/Documents/02_Code/00_repos/00_mine/' +
+                'Sinha2016-scripts/postprocess/py/nest/plot-firing-rates.plt')
         subprocess.call(['gnuplot',
                          args])
 
