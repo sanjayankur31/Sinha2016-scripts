@@ -21,7 +21,7 @@
 # Queue's up a new nest job for me.
 
 SOURCE_PATH="/home/asinha/Documents/02_Code/00_repos/00_mine/Sinha2016/"
-SCRIPT_PATH="/home/asinha/Documents/02_Code/00_repos/00_mine/sinha2016-sciprts/"
+SCRIPT_PATH="/home/asinha/Documents/02_Code/00_repos/00_mine/Sinha2016-scripts/"
 GIT_COMMIT=""
 SIM_PATH="/stri-data/asinha/simulations-nest/"
 SIM_TIME=$(date +%Y%m%d%H%M)
