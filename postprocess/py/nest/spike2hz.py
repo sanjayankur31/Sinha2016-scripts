@@ -157,6 +157,7 @@ class spike2hz:
 
                 # ISI cv
                 neurons = set(thiswindow_spikes)
+                print("{} neurons being analysed.".format(len(neurons)))
                 for neuron in list(neurons):
                     indices = [i for i, x in enumerate(thiswindow_spikes) if x == neuron]
                     neuron_times = [thiswindow_times[i] for i in indices]
