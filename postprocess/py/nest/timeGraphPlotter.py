@@ -206,6 +206,8 @@ class timeGraphPlotter:
             spikeconverter = spike2hz()
             if spikeconverter.setup(self.config.filenameE,
                                     self.config.filenameRatesE,
+                                    self.config.filenameCVE,
+                                    self.config.filenameFanoE,
                                     self.config.neuronsE,
                                     self.config.rows_per_read):
                 spikeconverter.run()
@@ -218,6 +220,8 @@ class timeGraphPlotter:
             spikeconverter = spike2hz()
             if spikeconverter.setup(self.config.filenameI,
                                     self.config.filenameRatesI,
+                                    self.config.filenameCVI,
+                                    self.config.filenameFanoI,
                                     self.config.neuronsI,
                                     self.config.rows_per_read):
                 spikeconverter.run()
@@ -230,6 +234,8 @@ class timeGraphPlotter:
             spikeconverter = spike2hz()
             if spikeconverter.setup(self.config.filenameR,
                                     self.config.filenameRatesR,
+                                    self.config.filenameCVR,
+                                    self.config.filenameFanoR,
                                     self.config.neuronsR,
                                     self.config.rows_per_read):
                 spikeconverter.run()
@@ -242,6 +248,8 @@ class timeGraphPlotter:
             spikeconverter = spike2hz()
             if spikeconverter.setup(self.config.filenameB,
                                     self.config.filenameRatesB,
+                                    self.config.filenameCVB,
+                                    self.config.filenameFanoB,
                                     self.config.neuronsB,
                                     self.config.rows_per_read):
                 spikeconverter.run()
@@ -254,6 +262,8 @@ class timeGraphPlotter:
             spikeconverter = spike2hz()
             if spikeconverter.setup(self.config.filenameS,
                                     self.config.filenameRatesS,
+                                    self.config.filenameCVS,
+                                    self.config.filenameFanoS,
                                     self.config.neuronsS,
                                     self.config.rows_per_read):
                 spikeconverter.run()
@@ -266,6 +276,8 @@ class timeGraphPlotter:
             spikeconverter = spike2hz()
             if spikeconverter.setup(self.config.filenameL,
                                     self.config.filenameRatesL,
+                                    self.config.filenameCVL,
+                                    self.config.filenameFanoL,
                                     self.config.neuronsL,
                                     self.config.rows_per_read):
                 spikeconverter.run()
@@ -278,6 +290,8 @@ class timeGraphPlotter:
             spikeconverter = spike2hz()
             if spikeconverter.setup(self.config.filenameP,
                                     self.config.filenameRatesP,
+                                    self.config.filenameCVP,
+                                    self.config.filenameFanoP,
                                     self.config.neuronsP,
                                     self.config.rows_per_read):
                 spikeconverter.run()

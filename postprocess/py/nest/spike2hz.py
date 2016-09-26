@@ -62,7 +62,7 @@ class spike2hz:
         self.rows = 0.
 
     def setup(self, input_filename, meanrate_filename,
-              meancv_file, meanfano_file, num_neurons=8000.,
+              meancv_filename, meanfano_filename, num_neurons=8000.,
               rows=0.):
         """Setup various things."""
         self.input_filename = input_filename
