@@ -143,7 +143,7 @@ class spike2hz:
                     side='right')
 
                 thiswindow_spikes = spikes[self.left:self.right]
-                thiswindows_times = times[self.left:self.right]
+                thiswindow_times = times[self.left:self.right]
 
                 # mean firing rate
                 # total spikes by number of neurons
@@ -162,6 +162,7 @@ class spike2hz:
                     neuron_times = [thiswindow_times[i] for i in indices]
 
                     prev = neuron_times[0]
+                    isis = []
                     for neuron_time in neuron_times:
                         isis.append(neuron_time - prev)
                         prev = neuron_time
