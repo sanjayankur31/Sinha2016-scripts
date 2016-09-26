@@ -44,11 +44,14 @@ class spike2hz:
     def __init__(self):
         """Main init method."""
         self.input_filename = ""
-        self.output_filename = ""
+        self.meanrate_filename = ""
+        self.meancv_filename = ""
+        self.meanfano_filename = ""
         self.usage = ("nest-spike2hz.py: generate mean firing rate file " +
                       "from spike file\n\n" +
                       "Usage: \npython3 nest-spike2hz.py " +
-                      "input_filename output_filename number_neurons" +
+                      "input_filename meanrate_filename meancv_filename " +
+                      "meanfano_filename number_neurons" +
                       " rows")
 
         # Initial indices
@@ -58,13 +61,18 @@ class spike2hz:
         self.num_neurons = 8000.
         self.rows = 0.
 
-    def setup(self, input_filename, output_filename, num_neurons=8000.,
+    def setup(self, input_filename, meanrate_filename,
+              meancv_file, meanfano_file, num_neurons=8000.,
               rows=0.):
         """Setup various things."""
         self.input_filename = input_filename
-        self.output_filename = output_filename
+        self.meanrate_filename = meanrate_filename
+        self.meancv_filename = meancv_filename
+        self.meanfano_filename = meanfano_filename
         self.rows = rows
-        self.output_file = open(self.output_filename, 'w')
+        self.meanrate_file = open(self.meanrate_filename, 'w')
+        self.meancv_file = open(self.meancv_filename, 'w')
+        self.meanfano_file = open(self.meanfano_filename, 'w')
         self.num_neurons = int(num_neurons)
 
         if not (
@@ -134,15 +142,46 @@ class spike2hz:
                     times[self.left:], current_time,
                     side='right')
 
+                thiswindow_spikes = spikes[self.left:self.right]
+                thiswindows_times = times[self.left:self.right]
+
+                # mean firing rate
+                # total spikes by number of neurons
                 statement = ("{}\t{}\n".format(
                     current_time/1000.,
                     (
-                        len(
-                            spikes[self.left:self.right]
-                        )/self.num_neurons)))
+                        len(thiswindow_spikes)/self.num_neurons)))
 
-                self.output_file.write(statement)
-                self.output_file.flush()
+                self.meanrate_file.write(statement)
+                self.meanrate_file.flush()
+
+                # ISI cv
+                neurons = set(thiswindow_spikes)
+                for neuron in list(neurons):
+                    indices = [i for i, x in enumerate(thiswindow_spikes) if x == neuron]
+                    neuron_times = [thiswindow_times[i] for i in indices]
+
+                    prev = neuron_times[0]
+                    for neuron_time in neuron_times:
+                        isis.append(neuron_time - prev)
+                        prev = neuron_time
+
+                    isis_mean = numpy.mean(isis)
+                    isis_std = numpy.std(isis)
+                    isis_cv = isis_std/isis_mean
+                    isis_fano = isis_std**2/isis_mean
+
+                statement = ("{}\t{}\n".format(
+                    current_time/1000.,
+                    numpy.mean(isis_cv)))
+                self.meancv_file.write(statement)
+                self.meancv_file.flush()
+
+                statement = ("{}\t{}\n".format(
+                    current_time/1000.,
+                    numpy.mean(isis_fano)))
+                self.meanfano_file.write(statement)
+                self.meanfano_file.flush()
 
                 current_time += self.dt
 
@@ -154,7 +193,9 @@ class spike2hz:
             del times
             gc.collect()
 
-        self.output_file.close()
+        self.meanrate_file.close()
+        self.meancv_file.close()
+        self.meanfano_file.close()
 
     def print_usage(self):
         """Print usage."""
@@ -162,18 +203,9 @@ class spike2hz:
 
 if __name__ == "__main__":
     converter = spike2hz()
-    if len(sys.argv) == 3:
-        converter.setup(str(sys.argv[1]), str(sys.argv[2]))
-        print("Processing ...")
-        converter.run()
-        print("Finished ...")
-    elif len(sys.argv) == 4:
+    if len(sys.argv) == 5:
         converter.setup(str(sys.argv[1]), str(sys.argv[2]),
-                        int(sys.argv[3]))
-        converter.run()
-        print("Finished ...")
-    elif len(sys.argv) == 5:
-        converter.setup(str(sys.argv[1]), str(sys.argv[2]),
+                        str(sys.argv[3]), str(sys.argv[4]),
                         int(sys.argv[3]), int(sys.argv[4]))
         print("Processing ...")
         converter.run()

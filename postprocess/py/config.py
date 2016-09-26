@@ -50,6 +50,20 @@ class Config:
         self.filenameRatesS = ""
         self.filenameRatesL = ""
         self.filenameRatesP = ""
+        self.filenameCVE = ""
+        self.filenameCVI = ""
+        self.filenameCVR = ""
+        self.filenameCVB = ""
+        self.filenameCVS = ""
+        self.filenameCVL = ""
+        self.filenameCVP = ""
+        self.filenameFanoE = ""
+        self.filenameFanoI = ""
+        self.filenameFanoR = ""
+        self.filenameFanoB = ""
+        self.filenameFanoS = ""
+        self.filenameFanoL = ""
+        self.filenameFanoP = ""
 
         parser = configparser.ConfigParser()
         parser.read(self.taskfile)
@@ -76,6 +90,20 @@ class Config:
         self.filenameRatesS = parser['default']['filenameRatesS']
         self.filenameRatesL = parser['default']['filenameRatesL']
         self.filenameRatesP = parser['default']['filenameRatesP']
+        self.filenameCVE = parser['default']['filenameCVE']
+        self.filenameCVI = parser['default']['filenameCVI']
+        self.filenameCVR = parser['default']['filenameCVR']
+        self.filenameCVB = parser['default']['filenameCVB']
+        self.filenameCVS = parser['default']['filenameCVS']
+        self.filenameCVL = parser['default']['filenameCVL']
+        self.filenameCVP = parser['default']['filenameCVP']
+        self.filenameFanoE = parser['default']['filenameFanoE']
+        self.filenameFanoI = parser['default']['filenameFanoI']
+        self.filenameFanoR = parser['default']['filenameFanoR']
+        self.filenameFanoB = parser['default']['filenameFanoB']
+        self.filenameFanoS = parser['default']['filenameFanoS']
+        self.filenameFanoL = parser['default']['filenameFanoL']
+        self.filenameFanoP = parser['default']['filenameFanoP']
 
         self.timegraphs = parser['default'].getboolean('timegraphs')
         self.rows_per_read = int(parser['default']['rows_per_read'])

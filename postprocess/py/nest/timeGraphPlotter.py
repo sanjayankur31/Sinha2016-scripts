@@ -92,10 +92,10 @@ class timeGraphPlotter:
                 self.lineR = [0, 0]
 
             if (
-                os.path.isfile(self.config.filenameBatesB) and
-                os.stat(self.config.filenameBatesB).st_size != 0
+                os.path.isfile(self.config.filenameRatesB) and
+                os.stat(self.config.filenameRatesB).st_size != 0
             ):
-                ratesB = pandas.load_csv(self.config.filenameBatesB, sep='\s+',
+                ratesB = pandas.load_csv(self.config.filenameRatesB, sep='\s+',
                                          names=["neuronID", "spike_time"],
                                          dtype={'neuronID': numpy.uint16,
                                                 'spike_time': numpy.float32},
@@ -108,10 +108,10 @@ class timeGraphPlotter:
                 self.lineB = [0, 0]
 
             if (
-                os.path.isfile(self.config.filenameSatesS) and
-                os.stat(self.config.filenameSatesS).st_size != 0
+                os.path.isfile(self.config.filenameRatesS) and
+                os.stat(self.config.filenameRatesS).st_size != 0
             ):
-                ratesS = pandas.load_csv(self.config.filenameSatesS, sep='\s+',
+                ratesS = pandas.load_csv(self.config.filenameRatesS, sep='\s+',
                                          names=["neuronID", "spike_time"],
                                          dtype={'neuronID': numpy.uint16,
                                                 'spike_time': numpy.float32},
@@ -140,10 +140,10 @@ class timeGraphPlotter:
                 self.lineL = [0, 0]
 
             if (
-                os.path.isfile(self.config.filenamePatesP) and
-                os.stat(self.config.filenamePatesP).st_size != 0
+                os.path.isfile(self.config.filenameRatesP) and
+                os.stat(self.config.filenameRatesP).st_size != 0
             ):
-                ratesP = pandas.load_csv(self.config.filenamePatesP, sep='\s+',
+                ratesP = pandas.load_csv(self.config.filenameRatesP, sep='\s+',
                                          names=["neuronID", "spike_time"],
                                          dtype={'neuronID': numpy.uint16,
                                                 'spike_time': numpy.float32},
