@@ -166,7 +166,7 @@ class spike2hz:
                 # finish.
                 if (current_time % 200000 == 0):
                     # STD of firing rates
-                    firing_rates = collections.Counter(thiswindow_neuronIDs).values()
+                    firing_rates = list(collections.Counter(thiswindow_neuronIDs).values())
                     missing_neurons = self.num_neurons - len(firing_rates)
                     for entries in range(0, missing_neurons):
                         firing_rates.append(0)
