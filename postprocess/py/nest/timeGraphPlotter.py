@@ -44,10 +44,10 @@ class timeGraphPlotter:
             self.plotter.reset()
 
             if (
-                os.path.isfile(self.config.filenameRatesE) and
-                os.stat(self.config.filenameRatesE).st_size != 0
+                os.path.isfile(self.config.filenameMeanRatesE) and
+                os.stat(self.config.filenameMeanRatesE).st_size != 0
             ):
-                ratesE = pandas.load_csv(self.config.filenameRatesE, sep='\s+',
+                ratesE = pandas.load_csv(self.config.filenameMeanRatesE, sep='\s+',
                                          names=["neuronID", "spike_time"],
                                          dtype={'neuronID': numpy.uint16,
                                                 'spike_time': numpy.float32},
@@ -60,10 +60,10 @@ class timeGraphPlotter:
                 self.lineE = [0, 0]
 
             if (
-                os.path.isfile(self.config.filenameRatesI) and
-                os.stat(self.config.filenameRatesI).st_size != 0
+                os.path.isfile(self.config.filenameMeanRatesI) and
+                os.stat(self.config.filenameMeanRatesI).st_size != 0
             ):
-                ratesI = pandas.load_csv(self.config.filenameRatesI, sep='\s+',
+                ratesI = pandas.load_csv(self.config.filenameMeanRatesI, sep='\s+',
                                          names=["neuronID", "spike_time"],
                                          dtype={'neuronID': numpy.uint16,
                                                 'spike_time': numpy.float32},
@@ -76,10 +76,10 @@ class timeGraphPlotter:
                 self.lineI = [0, 0]
 
             if (
-                os.path.isfile(self.config.filenameRatesR) and
-                os.stat(self.config.filenameRatesR).st_size != 0
+                os.path.isfile(self.config.filenameMeanRatesR) and
+                os.stat(self.config.filenameMeanRatesR).st_size != 0
             ):
-                ratesR = pandas.load_csv(self.config.filenameRatesR, sep='\s+',
+                ratesR = pandas.load_csv(self.config.filenameMeanRatesR, sep='\s+',
                                          names=["neuronID", "spike_time"],
                                          dtype={'neuronID': numpy.uint16,
                                                 'spike_time': numpy.float32},
@@ -92,10 +92,10 @@ class timeGraphPlotter:
                 self.lineR = [0, 0]
 
             if (
-                os.path.isfile(self.config.filenameRatesB) and
-                os.stat(self.config.filenameRatesB).st_size != 0
+                os.path.isfile(self.config.filenameMeanRatesB) and
+                os.stat(self.config.filenameMeanRatesB).st_size != 0
             ):
-                ratesB = pandas.load_csv(self.config.filenameRatesB, sep='\s+',
+                ratesB = pandas.load_csv(self.config.filenameMeanRatesB, sep='\s+',
                                          names=["neuronID", "spike_time"],
                                          dtype={'neuronID': numpy.uint16,
                                                 'spike_time': numpy.float32},
@@ -108,10 +108,10 @@ class timeGraphPlotter:
                 self.lineB = [0, 0]
 
             if (
-                os.path.isfile(self.config.filenameRatesS) and
-                os.stat(self.config.filenameRatesS).st_size != 0
+                os.path.isfile(self.config.filenameMeanRatesS) and
+                os.stat(self.config.filenameMeanRatesS).st_size != 0
             ):
-                ratesS = pandas.load_csv(self.config.filenameRatesS, sep='\s+',
+                ratesS = pandas.load_csv(self.config.filenameMeanRatesS, sep='\s+',
                                          names=["neuronID", "spike_time"],
                                          dtype={'neuronID': numpy.uint16,
                                                 'spike_time': numpy.float32},
@@ -124,10 +124,10 @@ class timeGraphPlotter:
                 self.lineS = [0, 0]
 
             if (
-                os.path.isfile(self.config.filenameRatesL) and
-                os.stat(self.config.filenameRatesL).st_size != 0
+                os.path.isfile(self.config.filenameMeanRatesL) and
+                os.stat(self.config.filenameMeanRatesL).st_size != 0
             ):
-                ratesL = pandas.load_csv(self.config.filenameRatesL, sep='\s+',
+                ratesL = pandas.load_csv(self.config.filenameMeanRatesL, sep='\s+',
                                          names=["neuronID", "spike_time"],
                                          dtype={'neuronID': numpy.uint16,
                                                 'spike_time': numpy.float32},
@@ -140,10 +140,10 @@ class timeGraphPlotter:
                 self.lineL = [0, 0]
 
             if (
-                os.path.isfile(self.config.filenameRatesP) and
-                os.stat(self.config.filenameRatesP).st_size != 0
+                os.path.isfile(self.config.filenameMeanRatesP) and
+                os.stat(self.config.filenameMeanRatesP).st_size != 0
             ):
-                ratesP = pandas.load_csv(self.config.filenameRatesP, sep='\s+',
+                ratesP = pandas.load_csv(self.config.filenameMeanRatesP, sep='\s+',
                                          names=["neuronID", "spike_time"],
                                          dtype={'neuronID': numpy.uint16,
                                                 'spike_time': numpy.float32},
@@ -205,9 +205,10 @@ class timeGraphPlotter:
         ):
             spikeconverter = spike2hz()
             if spikeconverter.setup(self.config.filenameE,
-                                    self.config.filenameRatesE,
-                                    self.config.filenameCVE,
-                                    self.config.filenameFanoE,
+                                    self.config.filenameMeanRatesE,
+                                    self.config.filenameSTDRatesE,
+                                    self.config.filenameMeanCVE,
+                                    self.config.filenameMeanFanoE,
                                     self.config.neuronsE,
                                     self.config.rows_per_read):
                 spikeconverter.run()
@@ -219,9 +220,10 @@ class timeGraphPlotter:
         ):
             spikeconverter = spike2hz()
             if spikeconverter.setup(self.config.filenameI,
-                                    self.config.filenameRatesI,
-                                    self.config.filenameCVI,
-                                    self.config.filenameFanoI,
+                                    self.config.filenameMeanRatesI,
+                                    self.config.filenameSTDRatesI,
+                                    self.config.filenameMeanCVI,
+                                    self.config.filenameMeanFanoI,
                                     self.config.neuronsI,
                                     self.config.rows_per_read):
                 spikeconverter.run()
@@ -233,9 +235,10 @@ class timeGraphPlotter:
         ):
             spikeconverter = spike2hz()
             if spikeconverter.setup(self.config.filenameR,
-                                    self.config.filenameRatesR,
-                                    self.config.filenameCVR,
-                                    self.config.filenameFanoR,
+                                    self.config.filenameMeanRatesR,
+                                    self.config.filenameSTDRatesR,
+                                    self.config.filenameMeanCVR,
+                                    self.config.filenameMeanFanoR,
                                     self.config.neuronsR,
                                     self.config.rows_per_read):
                 spikeconverter.run()
@@ -247,9 +250,10 @@ class timeGraphPlotter:
         ):
             spikeconverter = spike2hz()
             if spikeconverter.setup(self.config.filenameB,
-                                    self.config.filenameRatesB,
-                                    self.config.filenameCVB,
-                                    self.config.filenameFanoB,
+                                    self.config.filenameMeanRatesB,
+                                    self.config.filenameSTDRatesB,
+                                    self.config.filenameMeanCVB,
+                                    self.config.filenameMeanFanoB,
                                     self.config.neuronsB,
                                     self.config.rows_per_read):
                 spikeconverter.run()
@@ -261,9 +265,10 @@ class timeGraphPlotter:
         ):
             spikeconverter = spike2hz()
             if spikeconverter.setup(self.config.filenameS,
-                                    self.config.filenameRatesS,
-                                    self.config.filenameCVS,
-                                    self.config.filenameFanoS,
+                                    self.config.filenameMeanRatesS,
+                                    self.config.filenameSTDRatesS,
+                                    self.config.filenameMeanCVS,
+                                    self.config.filenameMeanFanoS,
                                     self.config.neuronsS,
                                     self.config.rows_per_read):
                 spikeconverter.run()
@@ -275,9 +280,10 @@ class timeGraphPlotter:
         ):
             spikeconverter = spike2hz()
             if spikeconverter.setup(self.config.filenameL,
-                                    self.config.filenameRatesL,
-                                    self.config.filenameCVL,
-                                    self.config.filenameFanoL,
+                                    self.config.filenameMeanRatesL,
+                                    self.config.filenameSTDRatesL,
+                                    self.config.filenameMeanCVL,
+                                    self.config.filenameMeanFanoL,
                                     self.config.neuronsL,
                                     self.config.rows_per_read):
                 spikeconverter.run()
@@ -289,9 +295,10 @@ class timeGraphPlotter:
         ):
             spikeconverter = spike2hz()
             if spikeconverter.setup(self.config.filenameP,
-                                    self.config.filenameRatesP,
-                                    self.config.filenameCVP,
-                                    self.config.filenameFanoP,
+                                    self.config.filenameMeanRatesP,
+                                    self.config.filenameSTDRatesP,
+                                    self.config.filenameMeanCVP,
+                                    self.config.filenameMeanFanoP,
                                     self.config.neuronsP,
                                     self.config.rows_per_read):
                 spikeconverter.run()

@@ -27,6 +27,7 @@ import math
 import pandas
 import os.path
 import gc
+import collections
 
 
 class spike2hz:
@@ -44,14 +45,16 @@ class spike2hz:
     def __init__(self):
         """Main init method."""
         self.input_filename = ""
-        self.meanrate_filename = ""
-        self.meancv_filename = ""
-        self.meanfano_filename = ""
+        self.mean_rates_filename = ""
+        self.std_rates_filename = ""
+        self.mean_isicvs_filename = ""
+        self.mean_isifanos_filename = ""
         self.usage = ("nest-spike2hz.py: generate mean firing rate file " +
                       "from spike file\n\n" +
                       "Usage: \npython3 nest-spike2hz.py " +
-                      "input_filename meanrate_filename meancv_filename " +
-                      "meanfano_filename number_neurons" +
+                      "input_filename mean_rates_filename std_rates_filename " +
+                      "mean_isicvs_filename " +
+                      "mean_isifanos_filename number_neurons" +
                       " rows")
 
         # Initial indices
@@ -61,18 +64,20 @@ class spike2hz:
         self.num_neurons = 8000.
         self.rows = 0.
 
-    def setup(self, input_filename, meanrate_filename,
-              meancv_filename, meanfano_filename, num_neurons=8000.,
+    def setup(self, input_filename, mean_rates_filename, std_rates_filename,
+              mean_isicvs_filename, mean_isifanos_filename, num_neurons=8000.,
               rows=0.):
         """Setup various things."""
         self.input_filename = input_filename
-        self.meanrate_filename = meanrate_filename
-        self.meancv_filename = meancv_filename
-        self.meanfano_filename = meanfano_filename
+        self.std_rates_filename = std_rates_filename
+        self.mean_rates_filename = mean_rates_filename
+        self.mean_isicvs_filename = mean_isicvs_filename
+        self.mean_isifanos_filename = mean_isifanos_filename
         self.rows = rows
-        self.meanrate_file = open(self.meanrate_filename, 'w')
-        self.meancv_file = open(self.meancv_filename, 'w')
-        self.meanfano_file = open(self.meanfano_filename, 'w')
+        self.mean_rates_file = open(self.mean_rates_filename, 'w')
+        self.std_rates_file = open(self.std_rates_filename, 'w')
+        self.mean_isicvs_file = open(self.mean_isicvs_filename, 'w')
+        self.mean_isifanos_file = open(self.mean_isifanos_filename, 'w')
         self.num_neurons = int(num_neurons)
 
         if not (
@@ -153,12 +158,27 @@ class spike2hz:
                     (
                         len(thiswindow_neuronIDs)/self.num_neurons)))
 
-                self.meanrate_file.write(statement)
-                self.meanrate_file.flush()
+                self.mean_rates_file.write(statement)
+                self.mean_rates_file.flush()
 
-                # ISI cv once every 500 seconds - it just takes way too much
-                # time - my post processing wont finish.
-                if (current_time % 100000 == 0):
+                # STD of firing rates and ISI cv once every 200 seconds - it
+                # just takes way too much time - my post processing wont
+                # finish.
+                if (current_time % 200000 == 0):
+                    # STD of firing rates
+                    firing_rates = collections.Counter(thiswindow_neuronIDs).values()
+                    missing_neurons = self.num_neurons - len(firing_rates)
+                    for entries in range(0, missing_neurons):
+                        firing_rates.append(0)
+
+                    statement = ("{}\t{}\n".format(
+                        current_time/1000.,
+                        numpy.std(firing_rates)))
+
+                    self.std_rates_file.write(statement)
+                    self.std_rates_file.flush()
+
+                    # ISI stats
                     neurons = set(thiswindow_neuronIDs)
                     print("{} neurons being analysed.".format(len(neurons)))
                     # for all neurons in this window
@@ -170,7 +190,8 @@ class spike2hz:
 
                         isis = []
                         if len(neuron_times) > 1:
-                            # otherwise ISI is undefined in this window
+                            # otherwise ISI is undefined in this window for
+                            # this neuron
                             prev = neuron_times[0]
                             # get a list of ISIs
                             for neuron_time in neuron_times:
@@ -189,14 +210,14 @@ class spike2hz:
                     statement = ("{}\t{}\n".format(
                         current_time/1000.,
                         numpy.mean(isi_cvs)))
-                    self.meancv_file.write(statement)
-                    self.meancv_file.flush()
+                    self.mean_isicvs_file.write(statement)
+                    self.mean_isicvs_file.flush()
 
                     statement = ("{}\t{}\n".format(
                         current_time/1000.,
                         numpy.mean(isi_fanos)))
-                    self.meanfano_file.write(statement)
-                    self.meanfano_file.flush()
+                    self.mean_isifanos_file.write(statement)
+                    self.mean_isifanos_file.flush()
 
                 current_time += self.dt
 
@@ -208,9 +229,10 @@ class spike2hz:
             del times
             gc.collect()
 
-        self.meanrate_file.close()
-        self.meancv_file.close()
-        self.meanfano_file.close()
+        self.mean_rates_file.close()
+        self.std_rates_file.close()
+        self.mean_isicvs_file.close()
+        self.mean_isifanos_file.close()
 
     def print_usage(self):
         """Print usage."""
