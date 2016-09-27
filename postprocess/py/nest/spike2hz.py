@@ -99,7 +99,7 @@ class spike2hz:
         """Do the work."""
         start_row = 0
         current_time = 1000.
-        old_spikes = numpy.array([])
+        old_neuronIDs = numpy.array([])
         old_times = numpy.array([])
         for chunk in pandas.read_csv(self.input_filename, sep='\s+',
                                      names=["neuronID",
@@ -115,14 +115,15 @@ class spike2hz:
                 print("Error in file. Skipping.", file=sys.stderr)
                 return False
 
-            spikes = numpy.array(chunk.values[:, 0])
+            neuronIDs = numpy.array(chunk.values[:, 0])
             times = numpy.array(chunk.values[:, 1])
 
-            # 200 spikes per second = 2 spikes per 0.01 second (dt) per neuron
-            # this implies 2 * 10000 spikes for 10000 neurons need to be kept
-            # to make sure I have a proper sliding window of chunks
-            if len(old_spikes) > 0:
-                spikes = numpy.append(old_spikes, spikes)
+            # 200 neuronIDs per second = 2 neuronIDs per 0.01 second (dt) per
+            # neuron this implies 2 * 10000 neuronIDs for 10000 neurons need
+            # to be kept to make sure I have a proper sliding window of
+            # chunks
+            if len(old_neuronIDs) > 0:
+                neuronIDs = numpy.append(old_neuronIDs, neuronIDs)
                 times = numpy.append(old_times, times)
 
             print(
@@ -142,48 +143,58 @@ class spike2hz:
                     times[self.left:], current_time,
                     side='right')
 
-                thiswindow_spikes = spikes[self.left:self.right]
+                thiswindow_neuronIDs = neuronIDs[self.left:self.right]
                 thiswindow_times = times[self.left:self.right]
 
                 # mean firing rate
-                # total spikes by number of neurons
+                # total neuronIDs by number of neurons
                 statement = ("{}\t{}\n".format(
                     current_time/1000.,
                     (
-                        len(thiswindow_spikes)/self.num_neurons)))
+                        len(thiswindow_neuronIDs)/self.num_neurons)))
 
                 self.meanrate_file.write(statement)
                 self.meanrate_file.flush()
 
                 # ISI cv once every 500 seconds - it just takes way too much
                 # time - my post processing wont finish.
-                if (current_time%500000 == 0):
-                    neurons = set(thiswindow_spikes)
+                if (current_time % 100000 == 0):
+                    neurons = set(thiswindow_neuronIDs)
                     print("{} neurons being analysed.".format(len(neurons)))
+                    # for all neurons in this window
+                    isi_cvs = []
+                    isi_fanos = []
                     for neuron in list(neurons):
-                        indices = [i for i, x in enumerate(thiswindow_spikes) if x == neuron]
+                        indices = [i for i, x in enumerate(thiswindow_neuronIDs) if x == neuron]
                         neuron_times = [thiswindow_times[i] for i in indices]
 
-                        prev = neuron_times[0]
                         isis = []
-                        for neuron_time in neuron_times:
-                            isis.append(neuron_time - prev)
-                            prev = neuron_time
+                        if len(neuron_times) > 1:
+                            # otherwise ISI is undefined in this window
+                            prev = neuron_times[0]
+                            # get a list of ISIs
+                            for neuron_time in neuron_times:
+                                isis.append(neuron_time - prev)
+                                prev = neuron_time
 
-                        isis_mean = numpy.mean(isis)
-                        isis_std = numpy.std(isis)
-                        isis_cv = isis_std/isis_mean
-                        isis_fano = isis_std**2/isis_mean
+                            # for this neuron, get stats
+                            isi_mean = numpy.mean(isis)
+                            isi_std = numpy.std(isis)
+                            isi_cv = isi_std/isi_mean
+                            isi_fano = isi_std**2/isi_mean
+
+                            isi_cvs.append(isi_cv)
+                            isi_fanos.append(isi_fano)
 
                     statement = ("{}\t{}\n".format(
                         current_time/1000.,
-                        numpy.mean(isis_cv)))
+                        numpy.mean(isi_cvs)))
                     self.meancv_file.write(statement)
                     self.meancv_file.flush()
 
                     statement = ("{}\t{}\n".format(
                         current_time/1000.,
-                        numpy.mean(isis_fano)))
+                        numpy.mean(isi_fanos)))
                     self.meanfano_file.write(statement)
                     self.meanfano_file.flush()
 
@@ -191,9 +202,9 @@ class spike2hz:
 
             print("Printed till {}".format(current_time))
             old_times = numpy.array(times[(self.left - len(times)):])
-            old_spikes = numpy.array(spikes[(self.left - len(spikes)):])
+            old_neuronIDs = numpy.array(neuronIDs[(self.left - len(neuronIDs)):])
 
-            del spikes
+            del neuronIDs
             del times
             gc.collect()
 
