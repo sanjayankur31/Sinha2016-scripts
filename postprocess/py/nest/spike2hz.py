@@ -155,35 +155,37 @@ class spike2hz:
                 self.meanrate_file.write(statement)
                 self.meanrate_file.flush()
 
-                # ISI cv
-                neurons = set(thiswindow_spikes)
-                print("{} neurons being analysed.".format(len(neurons)))
-                for neuron in list(neurons):
-                    indices = [i for i, x in enumerate(thiswindow_spikes) if x == neuron]
-                    neuron_times = [thiswindow_times[i] for i in indices]
+                # ISI cv once every 500 seconds - it just takes way too much
+                # time - my post processing wont finish.
+                if (current_time%500000 == 0):
+                    neurons = set(thiswindow_spikes)
+                    print("{} neurons being analysed.".format(len(neurons)))
+                    for neuron in list(neurons):
+                        indices = [i for i, x in enumerate(thiswindow_spikes) if x == neuron]
+                        neuron_times = [thiswindow_times[i] for i in indices]
 
-                    prev = neuron_times[0]
-                    isis = []
-                    for neuron_time in neuron_times:
-                        isis.append(neuron_time - prev)
-                        prev = neuron_time
+                        prev = neuron_times[0]
+                        isis = []
+                        for neuron_time in neuron_times:
+                            isis.append(neuron_time - prev)
+                            prev = neuron_time
 
-                    isis_mean = numpy.mean(isis)
-                    isis_std = numpy.std(isis)
-                    isis_cv = isis_std/isis_mean
-                    isis_fano = isis_std**2/isis_mean
+                        isis_mean = numpy.mean(isis)
+                        isis_std = numpy.std(isis)
+                        isis_cv = isis_std/isis_mean
+                        isis_fano = isis_std**2/isis_mean
 
-                statement = ("{}\t{}\n".format(
-                    current_time/1000.,
-                    numpy.mean(isis_cv)))
-                self.meancv_file.write(statement)
-                self.meancv_file.flush()
+                    statement = ("{}\t{}\n".format(
+                        current_time/1000.,
+                        numpy.mean(isis_cv)))
+                    self.meancv_file.write(statement)
+                    self.meancv_file.flush()
 
-                statement = ("{}\t{}\n".format(
-                    current_time/1000.,
-                    numpy.mean(isis_fano)))
-                self.meanfano_file.write(statement)
-                self.meanfano_file.flush()
+                    statement = ("{}\t{}\n".format(
+                        current_time/1000.,
+                        numpy.mean(isis_fano)))
+                    self.meanfano_file.write(statement)
+                    self.meanfano_file.flush()
 
                 current_time += self.dt
 
