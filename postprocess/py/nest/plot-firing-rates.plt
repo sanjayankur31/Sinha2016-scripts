@@ -69,22 +69,37 @@ set output "firing-rate-deaffed.png"
 set title "Firing rate for deaffed neurons"
 plot "firing-rate-deaffed.gdf" with lines lw 4 title "D", 3 with lines lw 2 title "T";
 
+set xlabel "Time (seconds)"
+set ylabel "CV(ISIs)"
+set ytics border nomirror
+set xtics border nomirror
 set yrange [0:5]
 set output "cv-E.png"
-set title "CV for E neurons"
+set title "CV of ISIs for E neurons"
 plot "cv-E.gdf" with lines lw 4 title "E", 1 with lines lw 2 title "1";
 
-set yrange [0:5]
 set output "cv-I.png"
-set title "CV for I neurons"
+set title "CV of ISIs for I neurons"
 plot "cv-I.gdf" with lines lw 4 title "I", 1 with lines lw 2 title "1";
 
 unset yrange
+set ylabel "STD(firing rates) (Hz)"
+set output "std-E.png"
+set title "STD of firing rates for E neurons"
+plot "std-rate-E.gdf" with lines lw 4 title "E", 5 with lines lw 2 title "5Hz"
+
+unset yrange
+set output "std-I.png"
+set title "STD of firing rates for I neurons"
+plot "std-rate-I.gdf" with lines lw 4 title "I", 5 with lines lw 2 title "5Hz"
+
+unset yrange
+set ylabel "Fano factor(ISIs)"
 set output "fano-E.png"
-set title "Fano for E neurons"
+set title "Fano factor of ISIs for E neurons"
 plot "fano-E.gdf" with lines lw 4 title "E"
 
 unset yrange
 set output "fano-I.png"
-set title "Fano for I neurons"
+set title "Fano factor of ISIs for I neurons"
 plot "fano-I.gdf" with lines lw 4 title "I"
