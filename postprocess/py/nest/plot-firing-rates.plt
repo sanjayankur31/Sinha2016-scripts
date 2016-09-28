@@ -71,9 +71,9 @@ plot "firing-rate-deaffed.gdf" with lines lw 4 title "D", 3 with lines lw 2 titl
 
 set xlabel "Time (seconds)"
 set ylabel "CV(ISIs)"
-set ytics border nomirror
+set ytics border nomirror 1
 set xtics border nomirror
-set yrange [0:5]
+set yrange[0:5]
 set output "cv-E.png"
 set title "CV of ISIs for E neurons"
 plot "cv-E.gdf" with lines lw 4 title "E", 1 with lines lw 2 title "1";
@@ -82,7 +82,6 @@ set output "cv-I.png"
 set title "CV of ISIs for I neurons"
 plot "cv-I.gdf" with lines lw 4 title "I", 1 with lines lw 2 title "1";
 
-unset yrange
 set ylabel "STD(firing rates) (Hz)"
 set output "std-E.png"
 set title "STD of firing rates for E neurons"
