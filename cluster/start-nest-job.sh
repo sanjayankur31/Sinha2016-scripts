@@ -29,6 +29,7 @@ RUN_SCRIPT="cluster/nest-runsim.sh"
 RUN_NEW=""
 ERROR="no"
 NUM_NODES=50
+WALLTIME="48:00:00"
 CUR_SIM_PATH=""
 
 function queue_task
@@ -69,6 +70,7 @@ function setup_env
         sed -i "s|nest_v_s|nest_$GIT_COMMIT|" "$RUN_NEW"
         sed -i "s|nodes=.*|nodes=$NUM_NODES|" "$RUN_NEW"
         sed -i "s|NUM_NODES=.*|NUM_NODES=$NUM_NODES|" "$RUN_NEW"
+        sed -i "s|walltime=.*|walltime=$WALLTIME|" "$RUN_NEW"
         sed -i "s|SIM_TIME=.*|SIM_TIME=$SIM_TIME|" "$RUN_NEW"
 
         mkdir -v result
@@ -83,19 +85,20 @@ function usage
 {
     echo "Usage: $0"
     echo "Queue up a job to run a particular git commit"
-    echo "$0 <git_commit> <number_nodes>"
+    echo "$0 <git_commit> <number_nodes> <walltime>"
 }
 
-if [ "$#" -ne 2 ];
+if [ "$#" -ne 3 ];
 then
     echo "Error occurred. Exiting..."
-    echo "Received $# arguments. Expected: 3"
+    echo "Received $# arguments. Expected: 4"
     usage
     exit -1
 fi
 
 GIT_COMMIT="$1"
 NUM_NODES="$2"
+WALLTIME="$3"
 setup_env
 queue_task
 
