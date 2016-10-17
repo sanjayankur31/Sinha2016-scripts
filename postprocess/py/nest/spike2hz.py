@@ -181,6 +181,7 @@ class spike2hz:
                     firing_rates = list(collections.Counter(bin5neurons).values())
                     # multiplied by 200 to get firing rate per second as Hertz
                     # since bins are 5ms each
+                    print("{} neurons in bin for std".format(len(firing_rates)))
                     firing_rates = [(x * 200.) for x in firing_rates]
                     missing_neurons = self.num_neurons - len(firing_rates)
                     for entries in range(0, missing_neurons):

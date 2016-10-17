@@ -83,6 +83,7 @@ set title "CV of ISIs for I neurons"
 plot "cv-I.gdf" with linespoints lw 4 title "I", 1 with lines lw 2 title "1";
 
 unset yrange
+set ytics border nomirror 5
 set ylabel "STD(firing rates) (Hz)"
 set output "std-E.png"
 set title "STD of firing rates for E neurons"
@@ -93,8 +94,7 @@ set title "STD of firing rates for I neurons"
 plot "std-rate-I.gdf" with linespoints lw 4 title "I", 5 with lines lw 2 title "5Hz"
 
 unset yrange
-unset ytics
-set ytics border nomirror
+set ytics border nomirror 20
 set ylabel "Fano factor(ISIs)"
 set output "fano-E.png"
 set title "Fano factor of ISIs for E neurons"
