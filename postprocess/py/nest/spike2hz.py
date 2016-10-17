@@ -101,9 +101,15 @@ class spike2hz:
             return True
 
     def run(self):
-        """Do the work."""
+        """Do the work.
+
+        Mean firing rate has 1 second bins.
+        ISI CV and Fano have 1 second bins.
+        STD of firing rate has 5 ms bins.
+        """
         start_row = 0
-        current_time = 1000.
+        # start at 50 ms
+        current_time = 50.
         old_neuronIDs = numpy.array([])
         old_times = numpy.array([])
         for chunk in pandas.read_csv(self.input_filename, sep='\s+',
@@ -152,21 +158,30 @@ class spike2hz:
                 thiswindow_times = times[self.left:self.right]
 
                 # mean firing rate
+                spikesnum = float(len(thiswindow_neuronIDs))
                 # total neuronIDs by number of neurons
                 statement = ("{}\t{}\n".format(
                     current_time/1000.,
                     (
-                        len(thiswindow_neuronIDs)/self.num_neurons)))
+                        spikesnum/self.num_neurons)))
 
                 self.mean_rates_file.write(statement)
                 self.mean_rates_file.flush()
 
-                # STD of firing rates and ISI cv once every 200 seconds - it
+                # STD of firing rates and ISI cv - it
                 # just takes way too much time - my post processing wont
                 # finish.
                 if (current_time % 200000 == 0):
-                    # STD of firing rates
-                    firing_rates = list(collections.Counter(thiswindow_neuronIDs).values())
+                    # STD of firing rates - 5 second bin
+                    bin5right = numpy.searchsorted(thiswindow_times,
+                                                   thiswindow_times[0] + 5.,
+                                                   side="right")
+                    bin5neurons = thiswindow_neuronIDs[0:bin5right]
+
+                    firing_rates = list(collections.Counter(bin5neurons).values())
+                    # multiplied by 200 to get firing rate per second as Hertz
+                    # since bins are 5ms each
+                    firing_rates = [(x * 200.) for x in firing_rates]
                     missing_neurons = self.num_neurons - len(firing_rates)
                     for entries in range(0, missing_neurons):
                         firing_rates.append(0)
@@ -180,44 +195,49 @@ class spike2hz:
 
                     # ISI stats
                     neurons = set(thiswindow_neuronIDs)
-                    print("{} neurons being analysed.".format(len(neurons)))
-                    # for all neurons in this window
-                    isi_cvs = []
-                    isi_fanos = []
-                    for neuron in list(neurons):
-                        indices = [i for i, x in enumerate(thiswindow_neuronIDs) if x == neuron]
-                        neuron_times = [thiswindow_times[i] for i in indices]
+                    if len(neurons) == 0:
+                        print("No neurons found in window. Skipping")
+                    else:
+                        print("{} neurons being analysed.".format(len(neurons)))
+                        # for all neurons in this window
+                        isi_cvs = []
+                        isi_fanos = []
+                        for neuron in list(neurons):
+                            indices = [i for i, x in enumerate(thiswindow_neuronIDs) if x == neuron]
+                            neuron_times = [thiswindow_times[i] for i in indices]
 
-                        isis = []
-                        if len(neuron_times) > 1:
-                            # otherwise ISI is undefined in this window for
-                            # this neuron
-                            prev = neuron_times[0]
-                            # get a list of ISIs
-                            for neuron_time in neuron_times:
-                                isis.append(neuron_time - prev)
-                                prev = neuron_time
+                            isis = []
+                            if len(neuron_times) > 1:
+                                # otherwise ISI is undefined in this window for
+                                # this neuron
+                                prev = neuron_times[0]
+                                # get a list of ISIs
+                                for neuron_time in neuron_times:
+                                    isis.append(neuron_time - prev)
+                                    prev = neuron_time
 
-                            # for this neuron, get stats
-                            isi_mean = numpy.mean(isis)
-                            isi_std = numpy.std(isis)
-                            isi_cv = isi_std/isi_mean
-                            isi_fano = isi_std**2/isi_mean
+                                # for this neuron, get stats
+                                isi_mean = numpy.mean(isis)
+                                isi_std = numpy.std(isis)
+                                isi_cv = isi_std/isi_mean
+                                isi_fano = isi_std**2/isi_mean
 
-                            isi_cvs.append(isi_cv)
-                            isi_fanos.append(isi_fano)
+                                if not numpy.isnan(isi_cv):
+                                    isi_cvs.append(isi_cv)
+                                if not numpy.isnan(isi_fano):
+                                    isi_fanos.append(isi_fano)
 
-                    statement = ("{}\t{}\n".format(
-                        current_time/1000.,
-                        numpy.mean(isi_cvs)))
-                    self.mean_isicvs_file.write(statement)
-                    self.mean_isicvs_file.flush()
+                        statement = ("{}\t{}\n".format(
+                            current_time/1000.,
+                            numpy.mean(isi_cvs)))
+                        self.mean_isicvs_file.write(statement)
+                        self.mean_isicvs_file.flush()
 
-                    statement = ("{}\t{}\n".format(
-                        current_time/1000.,
-                        numpy.mean(isi_fanos)))
-                    self.mean_isifanos_file.write(statement)
-                    self.mean_isifanos_file.flush()
+                        statement = ("{}\t{}\n".format(
+                            current_time/1000.,
+                            numpy.mean(isi_fanos)))
+                        self.mean_isifanos_file.write(statement)
+                        self.mean_isifanos_file.flush()
 
                 current_time += self.dt
 

@@ -93,6 +93,7 @@ set title "STD of firing rates for I neurons"
 plot "std-rate-I.gdf" with linespoints lw 4 title "I", 5 with lines lw 2 title "5Hz"
 
 unset yrange
+unset ytics
 set ytics border nomirror
 set ylabel "Fano factor(ISIs)"
 set output "fano-E.png"
