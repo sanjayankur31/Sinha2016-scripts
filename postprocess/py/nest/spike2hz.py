@@ -154,6 +154,7 @@ class spike2hz:
                     times[self.left:], current_time,
                     side='right')
 
+                # could even just do right - left if all I'm using is len
                 thiswindow_neuronIDs = neuronIDs[self.left:self.right]
                 thiswindow_times = times[self.left:self.right]
 
@@ -172,24 +173,33 @@ class spike2hz:
                 # just takes way too much time - my post processing wont
                 # finish.
                 if (current_time % 200000 == 0):
-                    # STD of firing rates - 5 second bin
-                    bin5right = numpy.searchsorted(thiswindow_times,
-                                                   thiswindow_times[0] + 5.,
-                                                   side="right")
-                    bin5neurons = thiswindow_neuronIDs[0:bin5right]
+                    # STD of firing rates
+                    # take 5 second bins of this 1 second bin
+                    # find firing rates for each bin
+                    # get std of these 200 values
+                    bin5rates = []
+                    bin5left = 0
+                    bin5right = 0
+                    bin5time = thiswindow_times[0]
+                    while bin5time < math.floor(thiswindow_times[-1] - 5.):
+                        bin5left += numpy.searchsorted(thiswindow_times[bin5left:],
+                                                      bin5time,
+                                                      side="left")
+                        bin5right = bin5left + numpy.searchsorted(thiswindow_times[bin5left:],
+                                                       bin5time + 5.,
+                                                       side="right")
+                        bin5neurons = thiswindow_neuronIDs[bin5left:bin5right]
 
-                    firing_rates = list(collections.Counter(bin5neurons).values())
-                    # multiplied by 200 to get firing rate per second as Hertz
-                    # since bins are 5ms each
-                    print("{} neurons in bin for std".format(len(firing_rates)))
-                    firing_rates = [(x * 200.) for x in firing_rates]
-                    missing_neurons = self.num_neurons - len(firing_rates)
-                    for entries in range(0, missing_neurons):
-                        firing_rates.append(0)
+                        # multiplied by 200 to get firing rate per second as Hertz
+                        # since bins are 5ms each
+                        firing_rate = float(len(bin5neurons)) * 200./self.num_neurons
+                        bin5rates.append(firing_rate)
+                        bin5time = bin5time + self.dt
 
+                    print("std being calculated from {} values".format(len(bin5rates)))
                     statement = ("{}\t{}\n".format(
                         current_time/1000.,
-                        numpy.std(firing_rates)))
+                        numpy.std(bin5rates)))
 
                     self.std_rates_file.write(statement)
                     self.std_rates_file.flush()
