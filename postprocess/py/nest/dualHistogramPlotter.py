@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate histograms to compare two sets of firing rates at a time.
+Generate histograms of two sets of firing rates. Called from postprocess.py.
 
 File: dualHistogramPlotter.py
 
@@ -93,28 +93,3 @@ class dualHistogramPlotter:
         plt.legend(loc="upper right")
         plt.savefig(output_filename)
         plt.close()
-
-    def usage(self):
-        """Print usage."""
-        usage = ("Usage: \n" +
-                 "python3 plot-histograms-time.py data1 data2" +
-                 " num_neuron1 num_neurons2 " +
-                 " time_start\n"
-                 "python3 plot-histograms-time.py data1 data2" +
-                 " num_neuron1 num_neurons2 " +
-                 " time_start time_end")
-        print(usage, file=sys.stderr)
-
-if __name__ == "__main__":
-    runner = dualHistogramPlotter()
-    if len(sys.argv) == 6:
-        runner.setup(sys.argv[1], sys.argv[2],
-                     sys.argv[3], sys.argv[4])
-        runner.run(sys.argv[5], sys.argv[5])
-    elif len(sys.argv) == 7:
-        runner.setup(sys.argv[1], sys.argv[2],
-                     sys.argv[3], sys.argv[4])
-        runner.run(sys.argv[5], sys.argv[6])
-    else:
-        print("Wrong arguments. Exiting.")
-        runner.usage()
