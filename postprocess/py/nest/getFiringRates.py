@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Calculate firing rates for individual neurons for a particular time.
+Calculate firing rates for individual neurons at a particular time.
 
 File: getFiringRates.py
 
@@ -174,31 +174,3 @@ class getFiringRates:
             del spikes
             del times
             gc.collect()
-
-    def usage(self):
-        """Print usage."""
-        usage = ("Usage: \npython3 getFiringRates.py " +
-                 "spike_file_name " +
-                 "neuron_set_name " +
-                 "num_neurons time\n" +
-                 "python3 getFiringRates.py " +
-                 "spike_file_name " +
-                 "neuron_set_name num_neurons " +
-                 "time_start time_end "
-                 )
-        print(usage, file=sys.stderr)
-
-if __name__ == "__main__":
-    runner = getFiringRates()
-    if len(sys.argv) < 5:
-        print("Wrong arguments. Exiting.")
-        runner.usage()
-    elif len(sys.argv) == 5:
-        runner.run(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4],
-                   sys.argv[4])
-    elif len(sys.argv) == 6:
-        runner.run(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4],
-                   sys.argv[5])
-    else:
-        print("Wrong arguments. Exiting.")
-        runner.usage()
