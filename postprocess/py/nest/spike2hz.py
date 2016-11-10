@@ -112,6 +112,7 @@ class spike2hz:
         current_time = 50.
         old_neuronIDs = numpy.array([])
         old_times = numpy.array([])
+        print("Processing {}.".format(self.input_filename))
         for chunk in pandas.read_csv(self.input_filename, sep='\s+',
                                      names=["neuronID",
                                             "spike_time"],
@@ -140,6 +141,13 @@ class spike2hz:
             print(
                 "Times from {} to {} being analysed containing {} rows".format(
                     times[0], times[-1], len(times)))
+            # Some log files won't start from 0, keep moving on until I do end
+            # up in the data's time window
+            if current_time < times[0]:
+                print("{} not found in window. Skipping.".format(current_time))
+                current_time += self.dt
+                continue
+
             print("Current time is {}".format(current_time))
 
             # Reset chunks
