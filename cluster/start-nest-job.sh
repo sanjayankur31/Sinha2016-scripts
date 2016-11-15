@@ -74,7 +74,9 @@ function setup_env
         sed -i "s|SIM_TIME=.*|SIM_TIME=$SIM_TIME|" "$RUN_NEW"
 
         mkdir -v result
-        touch result/"00-GIT-COMMIT-""$GIT_COMMIT"
+        pushd "Sinha2016"
+            git show > ../result/"00-GIT-COMMIT-""$GIT_COMMIT"
+        popd
 
         mkdir -v result/consolidated_files/
         cp -v "$SCRIPT_PATH/config-nest.ini" result/consolidated_files/
