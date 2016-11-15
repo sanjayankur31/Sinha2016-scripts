@@ -141,12 +141,13 @@ class spike2hz:
             print(
                 "Times from {} to {} being analysed containing {} rows".format(
                     times[0], times[-1], len(times)))
-            # Some log files won't start from 0, keep moving on until I do end
-            # up in the data's time window
+            # This is needed for log files that do not start from zero, for
+            # example pattern and recall spike data files. This condition
+            # should not be met in any other scenario since the log files once
+            # started, are continuous till the end and current_time increases
+            # in accordance.
             if current_time < times[0]:
-                print("{} not found in window. Skipping.".format(current_time))
-                current_time += self.dt
-                continue
+                current_time = times[0]
 
             print("Current time is {}".format(current_time))
 
