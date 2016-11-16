@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Main post processing method.
+Postprocess the spike raster files to generate plots.
 
 File: postprocess.py
 
@@ -26,7 +26,7 @@ import sys
 import os
 
 
-class Postprocess:
+class PostprocessRasters:
 
     """Main post process worker class."""
 
@@ -97,11 +97,11 @@ class Postprocess:
                                      self.config.rows_per_read):
                 rasterPlotterEI.run(self.config.histogram_timelist)
 
-
     def main(self):
         """Do everything."""
         self.__load_config()
         self.__nest_postprocess()
+
 
 def usage():
     """Print usage."""
@@ -111,7 +111,7 @@ def usage():
 
 if __name__ == "__main__":
     if len(sys.argv) == 2:
-        runner = Postprocess(sys.argv[1])
+        runner = PostprocessRasters(sys.argv[1])
         runner.main()
     else:
         usage()
