@@ -62,6 +62,7 @@ class Postprocess:
             syn_elms_DF_E.to_csv(
                 syn_elms_E_filename, sep='\t',
                 header=None, line_terminator='\n')
+            print("Processed synaptic elements for E neurons..")
 
             syn_elms_DF_I = combiner.combineTSVData(
                 self.config.unconsolidatedFilesDir,
@@ -73,6 +74,7 @@ class Postprocess:
             syn_elms_DF_I.to_csv(
                 syn_elms_I_filename, sep='\t',
                 header=None, line_terminator='\n')
+            print("Processed synaptic elements for I neurons..")
 
             args = (os.path.join(
                 self.config.postprocessHomeDir,
@@ -80,6 +82,7 @@ class Postprocess:
                     'plot-synaptic-elements.plt'))
             subprocess.call(['gnuplot',
                             args])
+            print("Synaptic elements graphs generated..")
 
     def __postprocess_calcium(self):
         """Postprocess calcium files."""
@@ -101,6 +104,7 @@ class Postprocess:
             calMetricsE.to_csv(
                 calMetricsEfile, sep='\t',
                 header=None, line_terminator='\n')
+            print("Processed cal metrics for E neurons..")
 
             calDF_I = combiner.combineCSVLists(
                 self.config.unconsolidatedFilesDir,
@@ -115,6 +119,7 @@ class Postprocess:
             calMetricsI.to_csv(
                 calMetricsIfile, sep='\t',
                 header=None, line_terminator='\n')
+            print("Processed cal metrics for I neurons..")
 
             args = (os.path.join(
                 self.config.postprocessHomeDir,
@@ -122,6 +127,7 @@ class Postprocess:
                     'plot-cal-metrics.plt'))
             subprocess.call(['gnuplot',
                             args])
+            print("Calcium graphs generated..")
 
     def __postprocess_conductances(self):
         """Post process conductances, print means."""
@@ -142,6 +148,7 @@ class Postprocess:
             conductanceMetricsEE.to_csv(
                 conductancesMetricsEEfile, sep='\t',
                 header=None, line_terminator='\n')
+            print("Processed EE conductances..")
 
             conductancesDF_EI = combiner.combineCSVLists(
                 self.config.unconsolidatedFilesDir,
@@ -156,6 +163,7 @@ class Postprocess:
             conductanceMetricsEI.to_csv(
                 conductancesMetricsEIfile, sep='\t',
                 header=None, line_terminator='\n')
+            print("Processed EI conductances..")
 
             conductancesDF_II = combiner.combineCSVLists(
                 self.config.unconsolidatedFilesDir,
@@ -170,6 +178,7 @@ class Postprocess:
             conductanceMetricsII.to_csv(
                 conductancesMetricsIIfile, sep='\t',
                 header=None, line_terminator='\n')
+            print("Processed II conductances..")
 
             conductancesDF_IE = combiner.combineCSVLists(
                 self.config.unconsolidatedFilesDir,
@@ -184,6 +193,7 @@ class Postprocess:
             conductanceMetricsIE.to_csv(
                 conductancesMetricsIEfile, sep='\t',
                 header=None, line_terminator='\n')
+            print("Processed IE conductances..")
 
             args = (os.path.join(
                 self.config.postprocessHomeDir,
@@ -191,6 +201,7 @@ class Postprocess:
                     'plot-conductance-metrics.plt'))
             subprocess.call(['gnuplot',
                             args])
+            print("Conductance graphs plotted..")
 
     def __postprocess_spikes(self):
         """Postprocess combined spike files."""
