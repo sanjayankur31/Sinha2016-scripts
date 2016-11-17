@@ -36,6 +36,9 @@ class Config:
         self.snr_time = 0.
         self.taskfile = taskfile
 
+        self.postprocessHome = ""
+        self.gnuplotFilesDir = ""
+
         self.filenameE = ""
         self.filenameI = ""
         self.filenameR = ""
@@ -77,9 +80,12 @@ class Config:
         self.filenamePrefixConductancesII = ""
         self.filenamePrefixConductancesIE = ""
 
-
         parser = configparser.ConfigParser()
         parser.read(self.taskfile)
+
+        # Some configs
+        self.postprocessHome = parser['default']['postprocessHome']
+        self.gnuplotFilesDir = parser['default']['gnuplotFilesDir']
 
         # all the different neuron sets
         self.neuronsE = parser['default']['neuronsE']
@@ -125,6 +131,8 @@ class Config:
         self.filenameMeanFanoL = parser['default']['filenameMeanFanoL']
         self.filenameMeanFanoP = parser['default']['filenameMeanFanoP']
 
+        # where the unconsolidated files are
+        # because its easier to consolidate raster files using sort
         self.unconsolidatedFilesDir = parser['default']['unconsolidatedFilesDir']
 
         self.calciumMetrics = parser['default'].getboolean('calciumMetrics')
