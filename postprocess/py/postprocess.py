@@ -26,7 +26,7 @@ import sys
 import os
 
 
-class PostprocessRasters:
+class Postprocess:
 
     """Main post process worker class."""
 
@@ -103,5 +103,5 @@ class PostprocessRasters:
 
 
 if __name__ == "__main__":
-    runner = PostprocessRasters()
+    runner = Postprocess()
     runner.main()
