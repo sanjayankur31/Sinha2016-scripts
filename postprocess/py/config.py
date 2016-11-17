@@ -65,6 +65,9 @@ class Config:
         self.filenameMeanFanoL = ""
         self.filenameMeanFanoP = ""
 
+        # where the unconsolidated files are
+        self.unconsolidatedFilesDir = ""
+        # The prefixes for these files
         self.filenamePrefixCalciumE = ""
         self.filenamePrefixCalciumI = ""
         self.filenamePrefixSynapticElementsE = ""
@@ -73,6 +76,7 @@ class Config:
         self.filenamePrefixConductancesEI = ""
         self.filenamePrefixConductancesII = ""
         self.filenamePrefixConductancesIE = ""
+
 
         parser = configparser.ConfigParser()
         parser.read(self.taskfile)
@@ -120,6 +124,8 @@ class Config:
         self.filenameMeanFanoS = parser['default']['filenameMeanFanoS']
         self.filenameMeanFanoL = parser['default']['filenameMeanFanoL']
         self.filenameMeanFanoP = parser['default']['filenameMeanFanoP']
+
+        self.unconsolidatedFilesDir = parser['default']['unconsolidatedFilesDir']
         self.filenamePrefixCalciumE = parser['default']['calciumConcPrefixE']
         self.filenamePrefixCalciumI = parser['default']['calciumConcPrefixI']
         self.filenamePrefixSynapticElementsE = parser['default']['synapticElementPrefixE']
