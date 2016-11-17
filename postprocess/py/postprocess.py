@@ -48,6 +48,7 @@ class Postprocess:
     def __postprocess_synaptic_elements(self):
         """Post synaptic element files."""
         if self.config.synapticElementsMetrics:
+            print("Processing synaptic element information..")
             import nest.combineFiles
             combiner = nest.combineFiles.CombineFiles()
 
@@ -83,6 +84,7 @@ class Postprocess:
     def __postprocess_calcium(self):
         """Postprocess calcium files."""
         if self.config.calciumMetrics:
+            print("Processing calcium concentration information..")
             import nest.combineFiles
             combiner = nest.combineFiles.CombineFiles()
 
@@ -124,6 +126,7 @@ class Postprocess:
     def __postprocess_conductances(self):
         """Post process conductances, print means."""
         if self.config.conductancesMetrics:
+            print("Processing conductances..")
             import nest.combineFiles
             combiner = nest.combineFiles.CombineFiles()
             conductancesDF_EE = combiner.combineCSVLists(
@@ -192,11 +195,13 @@ class Postprocess:
     def __postprocess_spikes(self):
         """Postprocess combined spike files."""
         if self.config.timegraphs:
+            print("Generating timegraph..")
             import nest.timeGraphPlotter as TGP
             tgp = TGP.timeGraphPlotter(self.config)
             tgp.plot_all()
 
         if self.config.histograms:
+            print("Generating histograms..")
             import nest.dualHistogramPlotter as pltH
             import nest.getFiringRates as rg
             rateGetterE = rg.getFiringRates()
@@ -234,6 +239,7 @@ class Postprocess:
                 plotterBS.run()
 
         if self.config.rasters:
+            print("Generating rasters..")
             import nest.dualRasterPlotter as pltR
             rasterPlotterEI = pltR.dualRasterPlotter()
             if rasterPlotterEI.setup('E', 'I', self.config.neuronsE,
