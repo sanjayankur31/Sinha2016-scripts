@@ -30,10 +30,9 @@ class PostprocessRasters:
 
     """Main post process worker class."""
 
-    def __init__(self, simulator):
+    def __init__(self):
         """Initialise."""
-        self.simulator = simulator
-        self.configfile = "config-{}.ini".format(simulator)
+        self.configfile = "config.ini"
 
     def __load_config(self):
         """Load configuration file."""
@@ -45,7 +44,7 @@ class PostprocessRasters:
             sys.exit("Could not find config file: {}. Exiting.".format(
                 self.configfile))
 
-    def __nest_postprocess(self):
+    def __postprocess(self):
         """Nest postprocessing."""
         if self.config.timegraphs:
             import nest.timeGraphPlotter as TGP
@@ -100,18 +99,9 @@ class PostprocessRasters:
     def main(self):
         """Do everything."""
         self.__load_config()
-        self.__nest_postprocess()
+        self.__postprocess()
 
-
-def usage():
-    """Print usage."""
-    print("Wrong arguments.", file=sys.stderr)
-    print("Usage:", file=sys.stderr)
-    sys.exit("\t{} nest".format(sys.argv[0]))
 
 if __name__ == "__main__":
-    if len(sys.argv) == 2:
-        runner = PostprocessRasters(sys.argv[1])
-        runner.main()
-    else:
-        usage()
+    runner = PostprocessRasters()
+    runner.main()
