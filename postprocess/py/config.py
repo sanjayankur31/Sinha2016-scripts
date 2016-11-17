@@ -126,10 +126,16 @@ class Config:
         self.filenameMeanFanoP = parser['default']['filenameMeanFanoP']
 
         self.unconsolidatedFilesDir = parser['default']['unconsolidatedFilesDir']
+
+        self.calciumMetrics = parser['default'].getboolean('calciumMetrics')
         self.filenamePrefixCalciumE = parser['default']['calciumConcPrefixE']
         self.filenamePrefixCalciumI = parser['default']['calciumConcPrefixI']
+
+        self.synapticElementsMetrics = parser['default'].getboolean('synapticElementsMetrics')
         self.filenamePrefixSynapticElementsE = parser['default']['synapticElementPrefixE']
         self.filenamePrefixSynapticElementsI = parser['default']['synapticElementPrefixI']
+
+        self.conductancesMetrics = parser['default'].getboolean('conductancesMetrics')
         self.filenamePrefixConductancesEE = parser['default']['conductancesPrefixEE']
         self.filenamePrefixConductancesEI = parser['default']['conductancesPrefixEI']
         self.filenamePrefixConductancesII = parser['default']['conductancesPrefixII']
