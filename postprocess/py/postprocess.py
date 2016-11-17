@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from config import Config
 import sys
 import os
+import pandas
 
 
 class Postprocess:
@@ -44,8 +45,152 @@ class Postprocess:
             sys.exit("Could not find config file: {}. Exiting.".format(
                 self.configfile))
 
-    def __postprocess(self):
-        """Nest postprocessing."""
+    def __postprocess_synaptic_elements(self):
+        """Post synaptic element files."""
+        if self.config.synapticElementsMetrics:
+            import nest.combineFiles
+            combiner = nest.combineFiles.CombineFiles()
+
+            syn_elms_DF_E = combiner.combineTSVData(
+                self.config.unconsolidatedFilesDir,
+                self.config.filenamePrefixSynapticElementsE)
+
+            syn_elms_E_filename = (
+                self.config.filenamePrefixSynapticElementsE + '-all.txt'
+            )
+            syn_elms_DF_E.to_csv(
+                syn_elms_E_filename, sep='\t',
+                header=None, lineterminator='\n')
+
+            syn_elms_DF_I = combiner.combineTSVData(
+                self.config.unconsolidatedFilesDir,
+                self.config.filenamePrefixSynapticIlementsI)
+
+            syn_elms_I_filename = (
+                self.config.filenamePrefixSynapticIlementsI + '-all.txt'
+            )
+            syn_elms_DF_I.to_csv(
+                syn_elms_I_filename, sep='\t',
+                header=None, lineterminator='\n')
+
+            args = (os.path.join(
+                self.config.postprocessHomeDir,
+                self.config.gnuplotFilesDir,
+                    'plot-synaptic-elements.plt'))
+            subprocess.call(['gnuplot',
+                            args])
+
+    def __postprocess_calcium(self):
+        """Postprocess calcium files."""
+        if self.config.calciumMetrics:
+            import nest.combineFiles
+            combiner = nest.combineFiles.CombineFiles()
+
+            calDF_E = combiner.combineCSVLists(
+                self.config.unconsolidatedFilesDir,
+                self.config.filenamePrefixCalciumE)
+            calMetricsE = pandas.concat(
+                [calDF_E.mean(axis=1),
+                 calDF_E.std(axis=1)],
+                axis=1)
+            calMetricsEfile = (
+                self.config.filenamePrefixCalciumE + 'all.txt'
+            )
+            calMetricsE.to_csv(
+                calMetricsEfile, sep='\t',
+                header=None, lineterminator='\n')
+
+            calDF_I = combiner.combineCSVLists(
+                self.config.unconsolidatedFilesDir,
+                self.config.filenamePrefixCalciumI)
+            calMetricsI = pandas.concat(
+                [calDF_I.mean(axis=1),
+                 calDF_I.std(axis=1)],
+                axis=1)
+            calMetricsIfile = (
+                self.config.filenamePrefixCalciumI + 'all.txt'
+            )
+            calMetricsI.to_csv(
+                calMetricsIfile, sep='\t',
+                header=None, lineterminator='\n')
+
+            args = (os.path.join(
+                self.config.postprocessHomeDir,
+                self.config.gnuplotFilesDir,
+                    'plot-cal-metrics.plt'))
+            subprocess.call(['gnuplot',
+                            args])
+
+    def __postprocess_conductances(self):
+        """Post process conductances, print means."""
+        if self.config.conductancesMetrics:
+            import nest.combineFiles
+            combiner = nest.combineFiles.CombineFiles()
+            conductancesDF_EE = combiner.combineCSVLists(
+                self.config.unconsolidatedFilesDir,
+                self.config.filenamePrefixConductancesEE)
+            conductanceMetricsEE = pandas.concat(
+                [conductancesDF_EE.mean(axis=1),
+                 conductancesDF_EE.std(axis=1)],
+                axis=1)
+            conductanceMetricsEEfile = (
+                self.config.filenamePrefixConductancesEE + 'all.txt'
+            )
+            conductanceMetricsEE.to_csv(
+                conductancesMetricsEEfile, sep='\t',
+                header=None, lineterminator='\n')
+
+            conductancesDF_EI = combiner.combineCSVLists(
+                self.config.unconsolidatedFilesDir,
+                self.config.filenamePrefixConductancesEI)
+            conductanceMetricsEI = pandas.concat(
+                [conductancesDF_EI.mean(axis=1),
+                 conductancesDF_EI.std(axis=1)],
+                axis=1)
+            conductanceMetricsEIfile = (
+                self.config.filenamePrefixConductancesEI + 'all.txt'
+            )
+            conductanceMetricsEI.to_csv(
+                conductancesMetricsEIfile, sep='\t',
+                header=None, lineterminator='\n')
+
+            conductancesDF_II = combiner.combineCSVLists(
+                self.config.unconsolidatedFilesDir,
+                self.config.filenamePrefixConductancesII)
+            conductanceMetricsII = pandas.concat(
+                [conductancesDF_II.mean(axis=1),
+                 conductancesDF_II.std(axis=1)],
+                axis=1)
+            conductanceMetricsIIfile = (
+                self.config.filenamePrefixConductancesII + 'all.txt'
+            )
+            conductanceMetricsII.to_csv(
+                conductancesMetricsIIfile, sep='\t',
+                header=None, lineterminator='\n')
+
+            conductancesDF_IE = combiner.combineCSVLists(
+                self.config.unconsolidatedFilesDir,
+                self.config.filenamePrefixConductancesIE)
+            conductanceMetricsIE = pandas.concat(
+                [conductancesDF_IE.mean(axis=1),
+                 conductancesDF_IE.std(axis=1)],
+                axis=1)
+            conductanceMetricsIEfile = (
+                self.config.filenamePrefixConductancesIE + 'all.txt'
+            )
+            conductanceMetricsIE.to_csv(
+                conductancesMetricsIEfile, sep='\t',
+                header=None, lineterminator='\n')
+
+            args = (os.path.join(
+                self.config.postprocessHomeDir,
+                self.config.gnuplotFilesDir,
+                    'plot-conductance-metrics.plt'))
+            subprocess.call(['gnuplot',
+                            args])
+
+    def __postprocess_spikes(self):
+        """Postprocess combined spike files."""
         if self.config.timegraphs:
             import nest.timeGraphPlotter as TGP
             tgp = TGP.timeGraphPlotter(self.config)
@@ -99,8 +244,10 @@ class Postprocess:
     def main(self):
         """Do everything."""
         self.__load_config()
-        self.__postprocess()
-
+        self.__postprocess_synaptic_elements()
+        self.__postprocess_conductances()
+        self.__postprocess_calcium()
+        self.__postprocess_spikes()
 
 if __name__ == "__main__":
     runner = Postprocess()
