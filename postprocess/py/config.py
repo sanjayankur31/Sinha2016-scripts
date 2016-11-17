@@ -65,6 +65,15 @@ class Config:
         self.filenameMeanFanoL = ""
         self.filenameMeanFanoP = ""
 
+        self.filenamePrefixCalciumE = ""
+        self.filenamePrefixCalciumI = ""
+        self.filenamePrefixSynapticElementsE = ""
+        self.filenamePrefixSynapticElementsI = ""
+        self.filenamePrefixConductancesEE = ""
+        self.filenamePrefixConductancesEI = ""
+        self.filenamePrefixConductancesII = ""
+        self.filenamePrefixConductancesIE = ""
+
         parser = configparser.ConfigParser()
         parser.read(self.taskfile)
 
@@ -111,6 +120,14 @@ class Config:
         self.filenameMeanFanoS = parser['default']['filenameMeanFanoS']
         self.filenameMeanFanoL = parser['default']['filenameMeanFanoL']
         self.filenameMeanFanoP = parser['default']['filenameMeanFanoP']
+        self.filenamePrefixCalciumE = parser['default']['calciumConcPrefixE']
+        self.filenamePrefixCalciumI = parser['default']['calciumConcPrefixI']
+        self.filenamePrefixSynapticElementsE = parser['default']['synapticElementPrefixE']
+        self.filenamePrefixSynapticElementsI = parser['default']['synapticElementPrefixI']
+        self.filenamePrefixConductancesEE = parser['default']['conductancesPrefixEE']
+        self.filenamePrefixConductancesEI = parser['default']['conductancesPrefixEI']
+        self.filenamePrefixConductancesII = parser['default']['conductancesPrefixII']
+        self.filenamePrefixConductancesIE = parser['default']['conductancesPrefixIE']
 
         self.timegraphs = parser['default'].getboolean('timegraphs')
         self.rows_per_read = int(parser['default']['rows_per_read'])
