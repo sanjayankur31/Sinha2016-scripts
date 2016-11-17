@@ -52,8 +52,5 @@ echo "Combining Stim files"
 LC_ALL=C sort -k "2" -n --parallel=16 -T $SORTTMPDIR spikes-*Stim*.gdf > spikes-Stim.gdf
 mv spikes-Stim.gdf consolidated_files
 
-echo "Copying over settings file"
-#TODO copy over tasklist ini file
-
 echo "All files combined."
 exit 0
