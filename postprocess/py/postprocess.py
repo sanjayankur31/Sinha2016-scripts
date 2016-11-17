@@ -60,7 +60,7 @@ class Postprocess:
             )
             syn_elms_DF_E.to_csv(
                 syn_elms_E_filename, sep='\t',
-                header=None, lineterminator='\n')
+                header=None, line_terminator='\n')
 
             syn_elms_DF_I = combiner.combineTSVData(
                 self.config.unconsolidatedFilesDir,
@@ -71,7 +71,7 @@ class Postprocess:
             )
             syn_elms_DF_I.to_csv(
                 syn_elms_I_filename, sep='\t',
-                header=None, lineterminator='\n')
+                header=None, line_terminator='\n')
 
             args = (os.path.join(
                 self.config.postprocessHomeDir,
@@ -98,7 +98,7 @@ class Postprocess:
             )
             calMetricsE.to_csv(
                 calMetricsEfile, sep='\t',
-                header=None, lineterminator='\n')
+                header=None, line_terminator='\n')
 
             calDF_I = combiner.combineCSVLists(
                 self.config.unconsolidatedFilesDir,
@@ -112,7 +112,7 @@ class Postprocess:
             )
             calMetricsI.to_csv(
                 calMetricsIfile, sep='\t',
-                header=None, lineterminator='\n')
+                header=None, line_terminator='\n')
 
             args = (os.path.join(
                 self.config.postprocessHomeDir,
@@ -138,7 +138,7 @@ class Postprocess:
             )
             conductanceMetricsEE.to_csv(
                 conductancesMetricsEEfile, sep='\t',
-                header=None, lineterminator='\n')
+                header=None, line_terminator='\n')
 
             conductancesDF_EI = combiner.combineCSVLists(
                 self.config.unconsolidatedFilesDir,
@@ -152,7 +152,7 @@ class Postprocess:
             )
             conductanceMetricsEI.to_csv(
                 conductancesMetricsEIfile, sep='\t',
-                header=None, lineterminator='\n')
+                header=None, line_terminator='\n')
 
             conductancesDF_II = combiner.combineCSVLists(
                 self.config.unconsolidatedFilesDir,
@@ -166,7 +166,7 @@ class Postprocess:
             )
             conductanceMetricsII.to_csv(
                 conductancesMetricsIIfile, sep='\t',
-                header=None, lineterminator='\n')
+                header=None, line_terminator='\n')
 
             conductancesDF_IE = combiner.combineCSVLists(
                 self.config.unconsolidatedFilesDir,
@@ -180,7 +180,7 @@ class Postprocess:
             )
             conductanceMetricsIE.to_csv(
                 conductancesMetricsIEfile, sep='\t',
-                header=None, lineterminator='\n')
+                header=None, line_terminator='\n')
 
             args = (os.path.join(
                 self.config.postprocessHomeDir,
