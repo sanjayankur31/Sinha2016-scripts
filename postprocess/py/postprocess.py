@@ -142,7 +142,7 @@ class Postprocess:
                 [conductancesDF_EE.mean(axis=1),
                  conductancesDF_EE.std(axis=1)],
                 axis=1)
-            conductanceMetricsEEfile = (
+            conductancesMetricsEEfile = (
                 self.config.filenamePrefixConductancesEE + 'all.txt'
             )
             conductanceMetricsEE.to_csv(
@@ -157,7 +157,7 @@ class Postprocess:
                 [conductancesDF_EI.mean(axis=1),
                  conductancesDF_EI.std(axis=1)],
                 axis=1)
-            conductanceMetricsEIfile = (
+            conductancesMetricsEIfile = (
                 self.config.filenamePrefixConductancesEI + 'all.txt'
             )
             conductanceMetricsEI.to_csv(
@@ -172,7 +172,7 @@ class Postprocess:
                 [conductancesDF_II.mean(axis=1),
                  conductancesDF_II.std(axis=1)],
                 axis=1)
-            conductanceMetricsIIfile = (
+            conductancesMetricsIIfile = (
                 self.config.filenamePrefixConductancesII + 'all.txt'
             )
             conductanceMetricsII.to_csv(
@@ -187,7 +187,7 @@ class Postprocess:
                 [conductancesDF_IE.mean(axis=1),
                  conductancesDF_IE.std(axis=1)],
                 axis=1)
-            conductanceMetricsIEfile = (
+            conductancesMetricsIEfile = (
                 self.config.filenamePrefixConductancesIE + 'all.txt'
             )
             conductanceMetricsIE.to_csv(
