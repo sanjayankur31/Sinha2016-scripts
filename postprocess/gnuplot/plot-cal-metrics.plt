@@ -1,6 +1,3 @@
-# load number of ranks
-load 'settings.plt'
-
 set term pngcairo font "OpenSans, 28" size 1920,1028
 set xlabel "Time (seconds)"
 set ylabel "Calcium concentrations"
