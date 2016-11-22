@@ -58,7 +58,7 @@ class Postprocess:
                 self.config.filenamePrefixSynapticElementsE)
 
             syn_elms_E_filename = (
-                self.config.filenamePrefixSynapticElementsE + '-all.txt'
+                self.config.filenamePrefixSynapticElementsE + 'all.txt'
             )
             syn_elms_DF_E.to_csv(
                 syn_elms_E_filename, sep='\t',
@@ -67,10 +67,10 @@ class Postprocess:
 
             syn_elms_DF_I = combiner.combineTSVData(
                 self.config.unconsolidatedFilesDir,
-                self.config.filenamePrefixSynapticIlementsI)
+                self.config.filenamePrefixSynapticElementsI)
 
             syn_elms_I_filename = (
-                self.config.filenamePrefixSynapticIlementsI + '-all.txt'
+                self.config.filenamePrefixSynapticElementsI + 'all.txt'
             )
             syn_elms_DF_I.to_csv(
                 syn_elms_I_filename, sep='\t',
@@ -80,7 +80,7 @@ class Postprocess:
             args = (os.path.join(
                 self.config.postprocessHome,
                 self.config.gnuplotFilesDir,
-                    'plot-synaptic-elements.plt'))
+                    'plot-synaptic-elements-metrics.plt'))
             subprocess.call(['gnuplot',
                             args])
             print("Synaptic elements graphs generated..")

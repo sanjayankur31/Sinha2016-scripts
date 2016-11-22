@@ -140,8 +140,8 @@ class Config:
         self.filenamePrefixCalciumI = parser['default']['calciumConcPrefixI']
 
         self.synapticElementsMetrics = parser['default'].getboolean('synapticElementsMetrics')
-        self.filenamePrefixSynapticElementsE = parser['default']['synapticElementPrefixE']
-        self.filenamePrefixSynapticElementsI = parser['default']['synapticElementPrefixI']
+        self.filenamePrefixSynapticElementsE = parser['default']['synapticElementsPrefixE']
+        self.filenamePrefixSynapticElementsI = parser['default']['synapticElementsPrefixI']
 
         self.conductancesMetrics = parser['default'].getboolean('conductancesMetrics')
         self.filenamePrefixConductancesEE = parser['default']['conductancesPrefixEE']
