@@ -25,6 +25,7 @@ from config import Config
 import sys
 import os
 import pandas
+import subprocess
 
 
 class Postprocess:
@@ -77,7 +78,7 @@ class Postprocess:
             print("Processed synaptic elements for I neurons..")
 
             args = (os.path.join(
-                self.config.postprocessHomeDir,
+                self.config.postprocessHome,
                 self.config.gnuplotFilesDir,
                     'plot-synaptic-elements.plt'))
             subprocess.call(['gnuplot',
@@ -122,7 +123,7 @@ class Postprocess:
             print("Processed cal metrics for I neurons..")
 
             args = (os.path.join(
-                self.config.postprocessHomeDir,
+                self.config.postprocessHome,
                 self.config.gnuplotFilesDir,
                     'plot-cal-metrics.plt'))
             subprocess.call(['gnuplot',
@@ -196,7 +197,7 @@ class Postprocess:
             print("Processed IE conductances..")
 
             args = (os.path.join(
-                self.config.postprocessHomeDir,
+                self.config.postprocessHome,
                 self.config.gnuplotFilesDir,
                     'plot-conductance-metrics.plt'))
             subprocess.call(['gnuplot',
