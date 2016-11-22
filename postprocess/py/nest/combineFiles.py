@@ -60,6 +60,7 @@ class CombineFiles:
         dataframes = []
 
         for entry in filelist:
+            print("Reading {}".format(entry))
             dataframe = pandas.read_csv(entry, skiprows=1, sep=',',
                                         skipinitialspace=True,
                                         skip_blank_lines=True, dtype=float,
@@ -68,6 +69,7 @@ class CombineFiles:
 
             dataframes.append(dataframe)
 
+        print("Combining dataframes..")
         combineddataframe = pandas.concat(dataframes, axis=1)
         return combineddataframe
 
