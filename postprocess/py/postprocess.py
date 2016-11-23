@@ -48,17 +48,17 @@ class Postprocess:
 
     def __postprocess_synaptic_elements(self):
         """Post synaptic element files."""
-        if self.config.synapticElementsMetrics:
+        if self.config.SETotalsMetrics:
             print("Processing synaptic element information..")
             import nest.combineFiles
             combiner = nest.combineFiles.CombineFiles()
 
             syn_elms_DF_E = combiner.combineTSVData(
                 self.config.unconsolidatedFilesDir,
-                self.config.filenamePrefixSynapticElementsE)
+                self.config.filenamePrefixSETotalsE)
 
             syn_elms_E_filename = (
-                self.config.filenamePrefixSynapticElementsE + 'all.txt'
+                self.config.filenamePrefixSETotalsE + 'all.txt'
             )
             syn_elms_DF_E.to_csv(
                 syn_elms_E_filename, sep='\t',
@@ -67,10 +67,10 @@ class Postprocess:
 
             syn_elms_DF_I = combiner.combineTSVData(
                 self.config.unconsolidatedFilesDir,
-                self.config.filenamePrefixSynapticElementsI)
+                self.config.filenamePrefixSETotalsI)
 
             syn_elms_I_filename = (
-                self.config.filenamePrefixSynapticElementsI + 'all.txt'
+                self.config.filenamePrefixSETotalsI + 'all.txt'
             )
             syn_elms_DF_I.to_csv(
                 syn_elms_I_filename, sep='\t',

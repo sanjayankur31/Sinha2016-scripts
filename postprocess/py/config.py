@@ -73,8 +73,8 @@ class Config:
         # The prefixes for these files
         self.filenamePrefixCalciumE = ""
         self.filenamePrefixCalciumI = ""
-        self.filenamePrefixSynapticElementsE = ""
-        self.filenamePrefixSynapticElementsI = ""
+        self.filenamePrefixSEE = ""
+        self.filenamePrefixSEI = ""
         self.filenamePrefixConductancesEE = ""
         self.filenamePrefixConductancesEI = ""
         self.filenamePrefixConductancesII = ""
@@ -139,9 +139,9 @@ class Config:
         self.filenamePrefixCalciumE = parser['default']['calciumConcPrefixE']
         self.filenamePrefixCalciumI = parser['default']['calciumConcPrefixI']
 
-        self.synapticElementsMetrics = parser['default'].getboolean('synapticElementsMetrics')
-        self.filenamePrefixSynapticElementsE = parser['default']['synapticElementsPrefixE']
-        self.filenamePrefixSynapticElementsI = parser['default']['synapticElementsPrefixI']
+        self.SETotalsMetrics = parser['default'].getboolean('SETotalsMetrics')
+        self.filenamePrefixSETotalsE = parser['default']['SETotalsPrefixE']
+        self.filenamePrefixSETotalsI = parser['default']['SETotalsPrefixI']
 
         self.conductancesMetrics = parser['default'].getboolean('conductancesMetrics')
         self.filenamePrefixConductancesEE = parser['default']['conductancesPrefixEE']
