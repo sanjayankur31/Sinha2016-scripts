@@ -143,6 +143,10 @@ class Config:
         self.filenamePrefixSETotalsE = parser['default']['SETotalsPrefixE']
         self.filenamePrefixSETotalsI = parser['default']['SETotalsPrefixI']
 
+        self.SEIndividualMetrics = parser['default'].getboolean('SEIndividualMetrics')
+        self.filenamePrefixSEIndividualE = parser['default']['SEIndividualPrefixE']
+        self.filenamePrefixSEIndividualI = parser['default']['SEIndividualPrefixI']
+
         self.conductancesMetrics = parser['default'].getboolean('conductancesMetrics')
         self.filenamePrefixConductancesEE = parser['default']['conductancesPrefixEE']
         self.filenamePrefixConductancesEI = parser['default']['conductancesPrefixEI']
