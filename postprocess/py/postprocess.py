@@ -50,6 +50,38 @@ class Postprocess:
         """Post process synaptic elements from individual neuronal files."""
         if self.config.SETotalsMetrics:
             print("Processing synaptic elements for individual neurons..")
+            import nest.combineFiles
+            combiner = nest.combineFiles.CombineFiles()
+
+            # E neurons
+            timeddfDict = combiner.combineTimedTSVColDataFiles(
+                self.config.unconsolidatedFilesDir,
+                self.config.filenamePrefixSEIndividualE)
+
+            for time, df in timeddfDict.items():
+                syn_elms_ind_DF_filename = (
+                    self.config.filenamePrefixSEIndividualE +
+                    str(time) + ".txt")
+                df.to_csv(
+                    syn_elms_ind_DF_filename, sep='\t',
+                    header=None, line_terminator='\n')
+                print("Processed synaptic elements for E neurons" +
+                      " at time {}..".format(time))
+
+            # I neurons
+            timeddfDict = combiner.combineTimedTSVColDataFiles(
+                self.config.unconsolidatedFilesDir,
+                self.config.filenamePrefixSEIndividualI)
+
+            for time, df in timeddfDict.items():
+                syn_elms_ind_DF_filename = (
+                    self.config.filenamePrefixSEIndividualI +
+                    str(time) + ".txt")
+                df.to_csv(
+                    syn_elms_ind_DF_filename, sep='\t',
+                    header=None, line_terminator='\n')
+                print("Processed synaptic elements for I neurons" +
+                      " at time {}..".format(time))
 
     def __postprocess_synaptic_elements_all(self):
         """Post total synaptic element files."""
@@ -268,6 +300,7 @@ class Postprocess:
         """Do everything."""
         self.__load_config()
         self.__postprocess_synaptic_elements_all()
+        self.__postprocess_synaptic_elements_individual()
         self.__postprocess_conductances()
         self.__postprocess_calcium()
         self.__postprocess_spikes()

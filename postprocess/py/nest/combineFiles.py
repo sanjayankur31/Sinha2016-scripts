@@ -69,10 +69,10 @@ class CombineFiles:
 
         return filelist
 
-    def combineTSVColData(self, directory, prefix):
-        """Combine TSV files columnwise."""
+    def combineTimedTSVColDataFiles(self, directory, prefix):
+        """Combine TSV files columnwise for different times."""
         filedict = self.getTimedFileList(directory, prefix)
-        combineddataframelist = []
+        combineddataframelist = {}
 
         for time, filelist in filedict.items():
             dataframes = []
@@ -88,7 +88,7 @@ class CombineFiles:
 
             print("Combined dataframe..")
             combineddataframe = pandas.concat(dataframes, axis=0)
-            combineddataframelist.append(combineddataframe.sort_index())
+            combineddataframelist[time] = combineddataframe.sort_index()
 
         return combineddataframelist
 
