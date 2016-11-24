@@ -46,9 +46,32 @@ class CombineFiles:
 
         return filelist
 
-    def combineCSVLists(self, directory, prefix):
+    def combineTSVColData(self, directory, prefix):
+        """Combine TSV files columnwise."""
+        filedict = self.getTimedFileList(directory, prefix)
+        combineddataframelist = []
+
+        for time, filelist in filedict.items():
+            dataframes = []
+            for entry in filelist:
+                print("Reading {}".format(entry))
+                dataframe = pandas.read_csv(entry, skiprows=1, sep='\t',
+                                            skipinitialspace=True,
+                                            skip_blank_lines=True, dtype=float,
+                                            lineterminator='\n', header=None,
+                                            index_col=0)
+
+                dataframes.append(dataframe)
+
+            print("Combined dataframe..")
+            combineddataframe = pandas.concat(dataframes, axis=0)
+            combineddataframelist.append(combineddataframe.sort_index())
+
+        return combineddataframelist
+
+    def combineCSVRowLists(self, directory, prefix):
         """
-        Combine files.
+        Combine comma separated files row wise.
 
         Format:
         time, comma separated values
@@ -73,9 +96,9 @@ class CombineFiles:
         combineddataframe = pandas.concat(dataframes, axis=1)
         return combineddataframe
 
-    def combineTSVData(self, directory, prefix):
+    def combineTSVRowData(self, directory, prefix):
         """
-        Combine files.
+        Combine tab separated files row wise.
 
         The difference here is that the columns depict different things, unlike
         the csv lists in the other method.
