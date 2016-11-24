@@ -53,7 +53,9 @@ class CombineFiles:
                     else:
                         filedict[time] = [afile]
 
-        return filedict
+        if len(filedict) > 0:
+            return filedict
+        return None
 
     def getFileList(self, directory, prefix):
         """Get list of files with prefix."""
@@ -67,11 +69,16 @@ class CombineFiles:
                 if(prefixregex.match(entry)):
                     filelist.append(fullentry)
 
-        return filelist
+        if len(filelist) > 0:
+            return filelist
+        return None
 
     def combineTimedTSVColDataFiles(self, directory, prefix):
         """Combine TSV files columnwise for different times."""
         filedict = self.getTimedFileList(directory, prefix)
+        if not filedict:
+            return None
+
         combineddataframelist = {}
 
         for time, filelist in filedict.items():
@@ -103,6 +110,9 @@ class CombineFiles:
         time, comma separated values concatenated from all files.
         """
         filelist = self.getFileList(directory, prefix)
+        if not filelist:
+            return None
+
         dataframes = []
 
         for entry in filelist:
@@ -133,6 +143,9 @@ class CombineFiles:
             time    sumoffiles(info1)   sumoffiles(info2)...
         """
         filelist = self.getFileList(directory, prefix)
+        if not filelist:
+            return None
+
         dataframes = []
 
         for entry in filelist:
