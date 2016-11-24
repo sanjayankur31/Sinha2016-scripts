@@ -46,14 +46,19 @@ class Postprocess:
             sys.exit("Could not find config file: {}. Exiting.".format(
                 self.configfile))
 
-    def __postprocess_synaptic_elements(self):
-        """Post synaptic element files."""
+    def __postprocess_synaptic_elements_individual(self):
+        """Post process synaptic elements from individual neuronal files."""
+        if self.config.SETotalsMetrics:
+            print("Processing synaptic elements for individual neurons..")
+
+    def __postprocess_synaptic_elements_all(self):
+        """Post total synaptic element files."""
         if self.config.SETotalsMetrics:
             print("Processing synaptic element information..")
             import nest.combineFiles
             combiner = nest.combineFiles.CombineFiles()
 
-            syn_elms_DF_E = combiner.combineTSVData(
+            syn_elms_DF_E = combiner.combineTSVRowData(
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixSETotalsE)
 
@@ -65,7 +70,7 @@ class Postprocess:
                 header=None, line_terminator='\n')
             print("Processed synaptic elements for E neurons..")
 
-            syn_elms_DF_I = combiner.combineTSVData(
+            syn_elms_DF_I = combiner.combineTSVRowData(
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixSETotalsI)
 
@@ -92,7 +97,7 @@ class Postprocess:
             import nest.combineFiles
             combiner = nest.combineFiles.CombineFiles()
 
-            calDF_E = combiner.combineCSVLists(
+            calDF_E = combiner.combineCSVRowLists(
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixCalciumE)
             calMetricsE = pandas.concat(
@@ -107,7 +112,7 @@ class Postprocess:
                 header=None, line_terminator='\n')
             print("Processed cal metrics for E neurons..")
 
-            calDF_I = combiner.combineCSVLists(
+            calDF_I = combiner.combineCSVRowLists(
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixCalciumI)
             calMetricsI = pandas.concat(
@@ -136,7 +141,7 @@ class Postprocess:
             print("Processing conductances..")
             import nest.combineFiles
             combiner = nest.combineFiles.CombineFiles()
-            conductancesDF_EE = combiner.combineCSVLists(
+            conductancesDF_EE = combiner.combineCSVRowLists(
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixConductancesEE)
             conductanceMetricsEE = pandas.concat(
@@ -151,7 +156,7 @@ class Postprocess:
                 header=None, line_terminator='\n')
             print("Processed EE conductances..")
 
-            conductancesDF_EI = combiner.combineCSVLists(
+            conductancesDF_EI = combiner.combineCSVRowLists(
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixConductancesEI)
             conductanceMetricsEI = pandas.concat(
@@ -166,7 +171,7 @@ class Postprocess:
                 header=None, line_terminator='\n')
             print("Processed EI conductances..")
 
-            conductancesDF_II = combiner.combineCSVLists(
+            conductancesDF_II = combiner.combineCSVRowLists(
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixConductancesII)
             conductanceMetricsII = pandas.concat(
@@ -181,7 +186,7 @@ class Postprocess:
                 header=None, line_terminator='\n')
             print("Processed II conductances..")
 
-            conductancesDF_IE = combiner.combineCSVLists(
+            conductancesDF_IE = combiner.combineCSVRowLists(
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixConductancesIE)
             conductanceMetricsIE = pandas.concat(
@@ -262,7 +267,7 @@ class Postprocess:
     def main(self):
         """Do everything."""
         self.__load_config()
-        self.__postprocess_synaptic_elements()
+        self.__postprocess_synaptic_elements_all()
         self.__postprocess_conductances()
         self.__postprocess_calcium()
         self.__postprocess_spikes()

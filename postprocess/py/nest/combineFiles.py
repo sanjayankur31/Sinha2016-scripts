@@ -32,6 +32,29 @@ class CombineFiles:
 
     """Combine files."""
 
+    def getTimedFileList(self, directory, prefix):
+        """Get list of files for each snapshot time."""
+        completefilelist = self.getFileList(directory, prefix)
+        timelist = []
+
+        for afile in completefilelist:
+            filename = afile[len(directory):]
+            time = (filename.split('-')[5])[0:-4]
+            timelist.append(time)
+
+        timelist = set(timelist)
+        filedict = {}
+
+        for afile in completefilelist:
+            for time in timelist:
+                if ("-" + time + ".txt") in afile:
+                    if time in filedict:
+                        filedict[time].append(afile)
+                    else:
+                        filedict[time] = [afile]
+
+        return filedict
+
     def getFileList(self, directory, prefix):
         """Get list of files with prefix."""
         directorylist = listdir(directory)
