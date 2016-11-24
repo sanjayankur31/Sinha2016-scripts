@@ -57,8 +57,6 @@ class Postprocess:
             timeddfDict = combiner.combineTimedTSVColDataFiles(
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixSEIndividualE)
-            if not timeddfDict:
-                print("No ind synaptic elements df for E neurons. Exiting.")
 
             for time, df in timeddfDict.items():
                 syn_elms_ind_DF_filename = (
@@ -70,12 +68,30 @@ class Postprocess:
                 print("Processed synaptic elements for E neurons" +
                       " at time {}..".format(time))
 
+                args = ['gnuplot',
+                        '-e',
+                        "plotname='{}'".format(
+                            self.config.filenamePrefixSEIndividualE +
+                            str(time) + ".png"),
+                        '-e',
+                        'plottitle={}'.format(
+                            "'Synaptic elements at time {}'".format(
+                                str(time))),
+                        '-e',
+                        "inputfile='{}'".format(
+                            syn_elms_ind_DF_filename),
+                        os.path.join(
+                            self.config.postprocessHome,
+                            self.config.gnuplotFilesDir,
+                            'plot-ind-synaptic-elements-metrics.plt')]
+                subprocess.call(args)
+                print("E neuron synaptic elements graph" +
+                      " at time {} generated.".format(time))
+
             # I neurons
             timeddfDict = combiner.combineTimedTSVColDataFiles(
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixSEIndividualI)
-            if not timeddfDict:
-                print("No ind synaptic elements df for I neurons. Exiting.")
 
             for time, df in timeddfDict.items():
                 syn_elms_ind_DF_filename = (
@@ -87,6 +103,26 @@ class Postprocess:
                 print("Processed synaptic elements for I neurons" +
                       " at time {}..".format(time))
 
+                args = ['gnuplot',
+                        '-e',
+                        "plotname='{}'".format(
+                            self.config.filenamePrefixSEIndividualI +
+                            str(time) + ".png"),
+                        '-e',
+                        'plottitle={}'.format(
+                            "'Synaptic elements at time {}'".format(
+                                str(time))),
+                        '-e',
+                        "inputfile='{}'".format(
+                            syn_elms_ind_DF_filename),
+                        os.path.join(
+                            self.config.postprocessHome,
+                            self.config.gnuplotFilesDir,
+                            'plot-ind-synaptic-elements-metrics.plt')]
+                subprocess.call(args)
+                print("I neuron synaptic elements graph" +
+                      " at time {} generated.".format(time))
+
     def __postprocess_synaptic_elements_all(self):
         """Post total synaptic element files."""
         if self.config.SETotalsMetrics:
@@ -97,8 +133,6 @@ class Postprocess:
             syn_elms_DF_E = combiner.combineTSVRowData(
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixSETotalsE)
-            if not syn_elms_DF_E:
-                print("No DF for all E syn elms. Exiting")
 
             syn_elms_E_filename = (
                 self.config.filenamePrefixSETotalsE + 'all.txt'
@@ -111,8 +145,6 @@ class Postprocess:
             syn_elms_DF_I = combiner.combineTSVRowData(
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixSETotalsI)
-            if not syn_elms_DF_I:
-                print("No DF for all I syn elms. Exiting")
 
             syn_elms_I_filename = (
                 self.config.filenamePrefixSETotalsI + 'all.txt'
@@ -140,8 +172,6 @@ class Postprocess:
             calDF_E = combiner.combineCSVRowLists(
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixCalciumE)
-            if not calDF_E:
-                print("No E cal DF. Exiting")
 
             calMetricsE = pandas.concat(
                 [calDF_E.mean(axis=1),
@@ -158,8 +188,6 @@ class Postprocess:
             calDF_I = combiner.combineCSVRowLists(
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixCalciumI)
-            if not calDF_I:
-                print("No I cal DF. Exiting")
 
             calMetricsI = pandas.concat(
                 [calDF_I.mean(axis=1),
@@ -190,8 +218,6 @@ class Postprocess:
             conductancesDF_EE = combiner.combineCSVRowLists(
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixConductancesEE)
-            if not conductancesDF_EE:
-                print("No EE conductances DF. Exiting")
             conductanceMetricsEE = pandas.concat(
                 [conductancesDF_EE.mean(axis=1),
                  conductancesDF_EE.std(axis=1)],
@@ -207,8 +233,6 @@ class Postprocess:
             conductancesDF_EI = combiner.combineCSVRowLists(
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixConductancesEI)
-            if not conductancesDF_EI:
-                print("No EI conductances DF. Exiting")
             conductanceMetricsEI = pandas.concat(
                 [conductancesDF_EI.mean(axis=1),
                  conductancesDF_EI.std(axis=1)],
@@ -224,8 +248,6 @@ class Postprocess:
             conductancesDF_II = combiner.combineCSVRowLists(
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixConductancesII)
-            if not conductancesDF_II:
-                print("No II conductances DF. Exiting")
             conductanceMetricsII = pandas.concat(
                 [conductancesDF_II.mean(axis=1),
                  conductancesDF_II.std(axis=1)],
@@ -241,8 +263,6 @@ class Postprocess:
             conductancesDF_IE = combiner.combineCSVRowLists(
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixConductancesIE)
-            if not conductancesDF_IE:
-                print("No IE conductances DF. Exiting")
             conductanceMetricsIE = pandas.concat(
                 [conductancesDF_IE.mean(axis=1),
                  conductancesDF_IE.std(axis=1)],
