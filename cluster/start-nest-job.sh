@@ -79,7 +79,7 @@ function setup_env
         popd
 
         mkdir -v result/consolidated_files/
-        cp -v "$SCRIPT_PATH/config-nest.ini" result/consolidated_files/
+        cp -v "$SCRIPT_PATH/config.ini" result/consolidated_files/
     popd
 }
 
