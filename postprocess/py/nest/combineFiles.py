@@ -26,6 +26,7 @@ import pandas
 from os import listdir
 import re
 from os.path import isfile, join
+import subprocess
 
 
 class CombineFiles:
@@ -103,6 +104,8 @@ class CombineFiles:
         """
         Combine comma separated files row wise.
 
+        Each line may have a different number of fields.
+
         Format:
         time, comma separated values
 
@@ -117,16 +120,31 @@ class CombineFiles:
 
         for entry in filelist:
             print("Reading {}".format(entry))
+            # Last line contains the maximum number of fields in any line, so
+            # use this to size our df. Pandas can manage lines shorter than
+            # previous lines by using NA, but it cannot handle lines longer and
+            # crashes
+            # Ignore ',\n'
+            max_columns = int(
+                subprocess.check_output(['tail', '-1', entry])[0:-2]) + 1
+            print("Max cols is: {}".format(max_columns))
+
             dataframe = pandas.read_csv(entry, skiprows=1, sep=',',
                                         skipinitialspace=True,
                                         skip_blank_lines=True, dtype=float,
                                         lineterminator='\n', header=None,
+                                        names=range(0, max_columns),
+                                        mangle_dupe_cols=True,
                                         index_col=0)
+            # Drop last row which isn't data, it's metadata
+            dataframe = dataframe.drop(dataframe.index[len(dataframe) - 1])
+            dataframe = dataframe.dropna(axis=1, how='all')
 
             dataframes.append(dataframe)
 
         print("Combining dataframes..")
         combineddataframe = pandas.concat(dataframes, axis=1)
+
         return combineddataframe
 
     def combineTSVRowData(self, directory, prefix):
