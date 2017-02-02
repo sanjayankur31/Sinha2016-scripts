@@ -125,8 +125,8 @@ class CombineFiles:
             # previous lines by using NA, but it cannot handle lines longer and
             # crashes
             # Ignore ',\n'
-            max_columns = int(
-                subprocess.check_output(['tail', '-1', entry])[0:-2]) + 1
+            max_columns = int(float(
+                subprocess.check_output(['tail', '-1', entry])[0:-2])) + 1
             print("Max cols is: {}".format(max_columns))
 
             dataframe = pandas.read_csv(entry, skiprows=1, sep=',',
