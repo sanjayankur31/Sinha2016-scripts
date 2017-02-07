@@ -89,8 +89,9 @@ class CombineFiles:
                 dataframe = pandas.read_csv(entry, skiprows=1, sep='\t',
                                             skipinitialspace=True,
                                             skip_blank_lines=True, dtype=float,
+                                            warn_bad_lines=True,
                                             lineterminator='\n', header=None,
-                                            index_col=0)
+                                            index_col=0, error_bad_lines=False)
 
                 dataframes.append(dataframe)
 
@@ -132,10 +133,12 @@ class CombineFiles:
             dataframe = pandas.read_csv(entry, skiprows=1, sep=',',
                                         skipinitialspace=True,
                                         skip_blank_lines=True, dtype=float,
+                                        warn_bad_lines=True,
                                         lineterminator='\n', header=None,
                                         names=range(0, max_columns),
                                         mangle_dupe_cols=True,
-                                        index_col=0)
+                                        warn_bad_lines=True,
+                                        index_col=0, error_bad_lines=False)
             # Drop last row which isn't data, it's metadata
             dataframe = dataframe.drop(dataframe.index[len(dataframe) - 1])
             dataframe = dataframe.dropna(axis=1, how='all')
@@ -170,8 +173,9 @@ class CombineFiles:
             dataframe = pandas.read_csv(entry, skiprows=1, sep='\t',
                                         skipinitialspace=True,
                                         skip_blank_lines=True, dtype=float,
+                                        warn_bad_lines=True,
                                         lineterminator='\n', header=None,
-                                        index_col=0)
+                                        index_col=0, error_bad_lines=False)
 
             dataframes.append(dataframe)
 
