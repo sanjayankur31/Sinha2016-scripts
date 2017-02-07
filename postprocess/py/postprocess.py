@@ -58,7 +58,7 @@ class Postprocess:
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixSEIndividualE)
 
-            if timeddfDict:
+            if not timeddfDict.empty:
                 for time, df in timeddfDict.items():
                     syn_elms_ind_DF_filename = (
                         self.config.filenamePrefixSEIndividualE +
@@ -96,7 +96,7 @@ class Postprocess:
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixSEIndividualI)
 
-            if timeddfDict:
+            if not timeddfDict.empty:
                 for time, df in timeddfDict.items():
                     syn_elms_ind_DF_filename = (
                         self.config.filenamePrefixSEIndividualI +
@@ -140,7 +140,7 @@ class Postprocess:
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixSETotalsE)
 
-            if syn_elms_DF_E:
+            if not syn_elms_DF_E.empty:
                 syn_elms_E_filename = (
                     self.config.filenamePrefixSETotalsE + 'all.txt'
                 )
@@ -155,7 +155,7 @@ class Postprocess:
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixSETotalsI)
 
-            if syn_elms_DF_I:
+            if not syn_elms_DF_I.empty:
                 syn_elms_I_filename = (
                     self.config.filenamePrefixSETotalsI + 'all.txt'
                 )
@@ -185,7 +185,7 @@ class Postprocess:
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixCalciumE)
 
-            if calDF_E:
+            if not calDF_E.empty:
                 calMetricsE = pandas.concat(
                     [calDF_E.mean(axis=1),
                      calDF_E.std(axis=1)],
@@ -204,7 +204,7 @@ class Postprocess:
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixCalciumI)
 
-            if calDF_I:
+            if not calDF_I.empty:
                 calMetricsI = pandas.concat(
                     [calDF_I.mean(axis=1),
                      calDF_I.std(axis=1)],
@@ -219,7 +219,7 @@ class Postprocess:
             else:
                 print("No cal metric df for I neurons. Skipping.")
 
-            if calDF_E and calDF_I:
+            if (not calDF_E.empty) and (not calDF_I.empty):
                 args = (os.path.join(
                     self.config.postprocessHome,
                     self.config.gnuplotFilesDir,
@@ -239,7 +239,7 @@ class Postprocess:
             conductancesDF_EE = combiner.combineCSVRowLists(
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixConductancesEE)
-            if conductancesDF_EE:
+            if not conductancesDF_EE.empty:
                 conductanceMetricsEE = pandas.concat(
                     [conductancesDF_EE.mean(axis=1),
                      conductancesDF_EE.std(axis=1)],
@@ -257,7 +257,7 @@ class Postprocess:
             conductancesDF_EI = combiner.combineCSVRowLists(
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixConductancesEI)
-            if conductancesDF_EI:
+            if not conductancesDF_EI.empty:
                 conductanceMetricsEI = pandas.concat(
                     [conductancesDF_EI.mean(axis=1),
                      conductancesDF_EI.std(axis=1)],
@@ -275,7 +275,7 @@ class Postprocess:
             conductancesDF_II = combiner.combineCSVRowLists(
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixConductancesII)
-            if conductancesDF_II:
+            if not conductancesDF_II.empty:
                 conductanceMetricsII = pandas.concat(
                     [conductancesDF_II.mean(axis=1),
                      conductancesDF_II.std(axis=1)],
@@ -293,7 +293,7 @@ class Postprocess:
             conductancesDF_IE = combiner.combineCSVRowLists(
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixConductancesIE)
-            if conductancesDF_IE:
+            if not conductancesDF_IE.empty:
                 conductanceMetricsIE = pandas.concat(
                     [conductancesDF_IE.mean(axis=1),
                      conductancesDF_IE.std(axis=1)],
@@ -308,8 +308,9 @@ class Postprocess:
             else:
                 print("No dataframe for IE conductances. Skipping")
 
-            if (conductancesDF_EE and conductancesDF_EI and conductancesDF_IE
-                    and conductancesDF_II):
+            if ((not conductancesDF_EE.empty) and (not conductancesDF_EI.empty)
+                    and (not conductancesDF_IE.empty)
+                    and (not conductancesDF_II.empty)):
                 args = (os.path.join(
                     self.config.postprocessHome,
                     self.config.gnuplotFilesDir,

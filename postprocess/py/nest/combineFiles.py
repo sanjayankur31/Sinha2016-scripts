@@ -78,7 +78,7 @@ class CombineFiles:
         """Combine TSV files columnwise for different times."""
         filedict = self.getTimedFileList(directory, prefix)
         if not filedict:
-            return None
+            return pandas.DataFrame()
 
         combineddataframelist = {}
 
@@ -115,7 +115,7 @@ class CombineFiles:
         """
         filelist = self.getFileList(directory, prefix)
         if not filelist:
-            return None
+            return pandas.DataFrame()
 
         dataframes = []
 
@@ -164,7 +164,7 @@ class CombineFiles:
         """
         filelist = self.getFileList(directory, prefix)
         if not filelist:
-            return None
+            return pandas.DataFrame()
 
         dataframes = []
 
