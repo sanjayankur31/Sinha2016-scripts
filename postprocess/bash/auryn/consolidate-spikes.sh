@@ -34,8 +34,8 @@ mv spikes-auryn-pattern.gdf consolidated_files
 
 
 echo "Combining deaff files"
-sort -n --parallel=16 -T $SORTTMPDIR spikes-*deaffed*.gdf > spikes-auryn-deaffed.gdf
-mv spikes-auryn-deaffed.gdf consolidated_files
+sort -n --parallel=16 -T $SORTTMPDIR spikes-*deaffed*.gdf > spikes-auryn-deaffed-pattern.gdf
+mv spikes-auryn-deaffed-pattern.gdf consolidated_files
 
 echo "Combining background files"
 sort -n --parallel=16 -T $SORTTMPDIR spikes-*background*.gdf > spikes-auryn-background.gdf
@@ -70,8 +70,8 @@ rm -f spikes-auryn-recall.gdf
 cat spikes-auryn-pattern.gdf | awk '{printf "%s\t%f\n",$2, $1*1000}' > spikes-pattern.gdf
 rm -f spikes-auryn-pattern.gdf 
 
-cat spikes-auryn-deaffed.gdf | awk '{printf "%s\t%f\n",$2, $1*1000}' > spikes-deaffed.gdf
-rm -f spikes-auryn-deaffed.gdf 
+cat spikes-auryn-deaffed-pattern.gdf | awk '{printf "%s\t%f\n",$2, $1*1000}' > spikes-deaffed-pattern.gdf
+rm -f spikes-auryn-deaffed-pattern.gdf 
 
 cat spikes-auryn-Stim.gdf | awk '{printf "%s\t%f\n",$2, $1*1000}' > spikes-Stim.gdf
 rm -f spikes-auryn-Stim.gdf 

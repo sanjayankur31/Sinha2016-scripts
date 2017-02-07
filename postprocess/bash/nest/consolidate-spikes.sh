@@ -33,8 +33,8 @@ LC_ALL=C sort -k "2" -n --parallel=16 -T $SORTTMPDIR spikes-*pattern*.gdf > spik
 mv spikes-pattern.gdf consolidated_files
 
 echo "Combining deaff files"
-LC_ALL=C sort -k "2" -n --parallel=16 -T $SORTTMPDIR spikes-*deaffed*.gdf > spikes-deaffed.gdf
-mv spikes-deaffed.gdf consolidated_files
+LC_ALL=C sort -k "2" -n --parallel=16 -T $SORTTMPDIR spikes-*deaffed*.gdf > spikes-deaffed-pattern.gdf
+mv spikes-deaffed-pattern.gdf consolidated_files
 
 echo "Combining background files"
 LC_ALL=C sort -k "2" -n --parallel=16 -T $SORTTMPDIR spikes-*background*.gdf > spikes-background.gdf
