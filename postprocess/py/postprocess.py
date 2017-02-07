@@ -58,70 +58,76 @@ class Postprocess:
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixSEIndividualE)
 
-            for time, df in timeddfDict.items():
-                syn_elms_ind_DF_filename = (
-                    self.config.filenamePrefixSEIndividualE +
-                    str(time) + ".txt")
-                df.to_csv(
-                    syn_elms_ind_DF_filename, sep='\t',
-                    header=None, line_terminator='\n')
-                print("Processed synaptic elements for E neurons" +
-                      " at time {}..".format(time))
+            if timeddfDict:
+                for time, df in timeddfDict.items():
+                    syn_elms_ind_DF_filename = (
+                        self.config.filenamePrefixSEIndividualE +
+                        str(time) + ".txt")
+                    df.to_csv(
+                        syn_elms_ind_DF_filename, sep='\t',
+                        header=None, line_terminator='\n')
+                    print("Processed synaptic elements for E neurons" +
+                          " at time {}..".format(time))
 
-                args = ['gnuplot',
-                        '-e',
-                        "plotname='{}'".format(
-                            self.config.filenamePrefixSEIndividualE +
-                            str(time) + ".png"),
-                        '-e',
-                        'plottitle={}'.format(
-                            "'Synaptic elements at time {}'".format(
-                                str(time))),
-                        '-e',
-                        "inputfile='{}'".format(
-                            syn_elms_ind_DF_filename),
-                        os.path.join(
-                            self.config.postprocessHome,
-                            self.config.gnuplotFilesDir,
-                            'plot-ind-synaptic-elements-metrics.plt')]
-                subprocess.call(args)
-                print("E neuron synaptic elements graph" +
-                      " at time {} generated.".format(time))
+                    args = ['gnuplot',
+                            '-e',
+                            "plotname='{}'".format(
+                                self.config.filenamePrefixSEIndividualE +
+                                str(time) + ".png"),
+                            '-e',
+                            'plottitle={}'.format(
+                                "'Synaptic elements at time {}'".format(
+                                    str(time))),
+                            '-e',
+                            "inputfile='{}'".format(
+                                syn_elms_ind_DF_filename),
+                            os.path.join(
+                                self.config.postprocessHome,
+                                self.config.gnuplotFilesDir,
+                                'plot-ind-synaptic-elements-metrics.plt')]
+                    subprocess.call(args)
+                    print("E neuron synaptic elements graph" +
+                          " at time {} generated.".format(time))
+            else:
+                print("No dataframes for E synaptic elements. Skipping.")
 
             # I neurons
             timeddfDict = combiner.combineTimedTSVColDataFiles(
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixSEIndividualI)
 
-            for time, df in timeddfDict.items():
-                syn_elms_ind_DF_filename = (
-                    self.config.filenamePrefixSEIndividualI +
-                    str(time) + ".txt")
-                df.to_csv(
-                    syn_elms_ind_DF_filename, sep='\t',
-                    header=None, line_terminator='\n')
-                print("Processed synaptic elements for I neurons" +
-                      " at time {}..".format(time))
+            if timeddfDict:
+                for time, df in timeddfDict.items():
+                    syn_elms_ind_DF_filename = (
+                        self.config.filenamePrefixSEIndividualI +
+                        str(time) + ".txt")
+                    df.to_csv(
+                        syn_elms_ind_DF_filename, sep='\t',
+                        header=None, line_terminator='\n')
+                    print("Processed synaptic elements for I neurons" +
+                          " at time {}..".format(time))
 
-                args = ['gnuplot',
-                        '-e',
-                        "plotname='{}'".format(
-                            self.config.filenamePrefixSEIndividualI +
-                            str(time) + ".png"),
-                        '-e',
-                        'plottitle={}'.format(
-                            "'Synaptic elements at time {}'".format(
-                                str(time))),
-                        '-e',
-                        "inputfile='{}'".format(
-                            syn_elms_ind_DF_filename),
-                        os.path.join(
-                            self.config.postprocessHome,
-                            self.config.gnuplotFilesDir,
-                            'plot-ind-synaptic-elements-metrics.plt')]
-                subprocess.call(args)
-                print("I neuron synaptic elements graph" +
-                      " at time {} generated.".format(time))
+                    args = ['gnuplot',
+                            '-e',
+                            "plotname='{}'".format(
+                                self.config.filenamePrefixSEIndividualI +
+                                str(time) + ".png"),
+                            '-e',
+                            'plottitle={}'.format(
+                                "'Synaptic elements at time {}'".format(
+                                    str(time))),
+                            '-e',
+                            "inputfile='{}'".format(
+                                syn_elms_ind_DF_filename),
+                            os.path.join(
+                                self.config.postprocessHome,
+                                self.config.gnuplotFilesDir,
+                                'plot-ind-synaptic-elements-metrics.plt')]
+                    subprocess.call(args)
+                    print("I neuron synaptic elements graph" +
+                          " at time {} generated.".format(time))
+            else:
+                print("No dataframes for E synaptic elements. Skipping.")
 
     def __postprocess_synaptic_elements_all(self):
         """Post total synaptic element files."""
@@ -134,33 +140,39 @@ class Postprocess:
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixSETotalsE)
 
-            syn_elms_E_filename = (
-                self.config.filenamePrefixSETotalsE + 'all.txt'
-            )
-            syn_elms_DF_E.to_csv(
-                syn_elms_E_filename, sep='\t',
-                header=None, line_terminator='\n')
-            print("Processed synaptic elements for E neurons..")
+            if syn_elms_DF_E:
+                syn_elms_E_filename = (
+                    self.config.filenamePrefixSETotalsE + 'all.txt'
+                )
+                syn_elms_DF_E.to_csv(
+                    syn_elms_E_filename, sep='\t',
+                    header=None, line_terminator='\n')
+                print("Processed synaptic elements for E neurons..")
+            else:
+                print("No dataframe for all E synaptic elements. Skipping.")
 
             syn_elms_DF_I = combiner.combineTSVRowData(
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixSETotalsI)
 
-            syn_elms_I_filename = (
-                self.config.filenamePrefixSETotalsI + 'all.txt'
-            )
-            syn_elms_DF_I.to_csv(
-                syn_elms_I_filename, sep='\t',
-                header=None, line_terminator='\n')
-            print("Processed synaptic elements for I neurons..")
+            if syn_elms_DF_I:
+                syn_elms_I_filename = (
+                    self.config.filenamePrefixSETotalsI + 'all.txt'
+                )
+                syn_elms_DF_I.to_csv(
+                    syn_elms_I_filename, sep='\t',
+                    header=None, line_terminator='\n')
+                print("Processed synaptic elements for I neurons..")
 
-            args = (os.path.join(
-                self.config.postprocessHome,
-                self.config.gnuplotFilesDir,
-                    'plot-synaptic-elements-metrics.plt'))
-            subprocess.call(['gnuplot',
-                            args])
-            print("Synaptic elements graphs generated..")
+                args = (os.path.join(
+                    self.config.postprocessHome,
+                    self.config.gnuplotFilesDir,
+                        'plot-synaptic-elements-metrics.plt'))
+                subprocess.call(['gnuplot',
+                                args])
+                print("Synaptic elements graphs generated..")
+            else:
+                print("No datafame for all I synaptic elements. Skipping.")
 
     def __postprocess_calcium(self):
         """Postprocess calcium files."""
@@ -173,41 +185,50 @@ class Postprocess:
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixCalciumE)
 
-            calMetricsE = pandas.concat(
-                [calDF_E.mean(axis=1),
-                 calDF_E.std(axis=1)],
-                axis=1)
-            calMetricsEfile = (
-                self.config.filenamePrefixCalciumE + 'all.txt'
-            )
-            calMetricsE.to_csv(
-                calMetricsEfile, sep='\t',
-                header=None, line_terminator='\n')
-            print("Processed cal metrics for E neurons..")
+            if calDF_E:
+                calMetricsE = pandas.concat(
+                    [calDF_E.mean(axis=1),
+                     calDF_E.std(axis=1)],
+                    axis=1)
+                calMetricsEfile = (
+                    self.config.filenamePrefixCalciumE + 'all.txt'
+                )
+                calMetricsE.to_csv(
+                    calMetricsEfile, sep='\t',
+                    header=None, line_terminator='\n')
+                print("Processed cal metrics for E neurons..")
+            else:
+                print("No cal metric df for E neurons. Skipping.")
 
             calDF_I = combiner.combineCSVRowLists(
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixCalciumI)
 
-            calMetricsI = pandas.concat(
-                [calDF_I.mean(axis=1),
-                 calDF_I.std(axis=1)],
-                axis=1)
-            calMetricsIfile = (
-                self.config.filenamePrefixCalciumI + 'all.txt'
-            )
-            calMetricsI.to_csv(
-                calMetricsIfile, sep='\t',
-                header=None, line_terminator='\n')
-            print("Processed cal metrics for I neurons..")
+            if calDF_I:
+                calMetricsI = pandas.concat(
+                    [calDF_I.mean(axis=1),
+                     calDF_I.std(axis=1)],
+                    axis=1)
+                calMetricsIfile = (
+                    self.config.filenamePrefixCalciumI + 'all.txt'
+                )
+                calMetricsI.to_csv(
+                    calMetricsIfile, sep='\t',
+                    header=None, line_terminator='\n')
+                print("Processed cal metrics for I neurons..")
+            else:
+                print("No cal metric df for I neurons. Skipping.")
 
-            args = (os.path.join(
-                self.config.postprocessHome,
-                self.config.gnuplotFilesDir,
-                    'plot-cal-metrics.plt'))
-            subprocess.call(['gnuplot',
-                            args])
-            print("Calcium graphs generated..")
+            if calDF_E and calDF_I:
+                args = (os.path.join(
+                    self.config.postprocessHome,
+                    self.config.gnuplotFilesDir,
+                        'plot-cal-metrics.plt'))
+                subprocess.call(['gnuplot',
+                                args])
+                print("Calcium graphs generated..")
+            else:
+                print("No calcium metric graphs generated.")
 
     def __postprocess_conductances(self):
         """Post process conductances, print means."""
@@ -218,70 +239,86 @@ class Postprocess:
             conductancesDF_EE = combiner.combineCSVRowLists(
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixConductancesEE)
-            conductanceMetricsEE = pandas.concat(
-                [conductancesDF_EE.mean(axis=1),
-                 conductancesDF_EE.std(axis=1)],
-                axis=1)
-            conductancesMetricsEEfile = (
-                self.config.filenamePrefixConductancesEE + 'all.txt'
-            )
-            conductanceMetricsEE.to_csv(
-                conductancesMetricsEEfile, sep='\t',
-                header=None, line_terminator='\n')
-            print("Processed EE conductances..")
+            if conductancesDF_EE:
+                conductanceMetricsEE = pandas.concat(
+                    [conductancesDF_EE.mean(axis=1),
+                     conductancesDF_EE.std(axis=1)],
+                    axis=1)
+                conductancesMetricsEEfile = (
+                    self.config.filenamePrefixConductancesEE + 'all.txt'
+                )
+                conductanceMetricsEE.to_csv(
+                    conductancesMetricsEEfile, sep='\t',
+                    header=None, line_terminator='\n')
+                print("Processed EE conductances..")
+            else:
+                print("No dataframe for EE conductances. Skipping.")
 
             conductancesDF_EI = combiner.combineCSVRowLists(
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixConductancesEI)
-            conductanceMetricsEI = pandas.concat(
-                [conductancesDF_EI.mean(axis=1),
-                 conductancesDF_EI.std(axis=1)],
-                axis=1)
-            conductancesMetricsEIfile = (
-                self.config.filenamePrefixConductancesEI + 'all.txt'
-            )
-            conductanceMetricsEI.to_csv(
-                conductancesMetricsEIfile, sep='\t',
-                header=None, line_terminator='\n')
-            print("Processed EI conductances..")
+            if conductancesDF_EI:
+                conductanceMetricsEI = pandas.concat(
+                    [conductancesDF_EI.mean(axis=1),
+                     conductancesDF_EI.std(axis=1)],
+                    axis=1)
+                conductancesMetricsEIfile = (
+                    self.config.filenamePrefixConductancesEI + 'all.txt'
+                )
+                conductanceMetricsEI.to_csv(
+                    conductancesMetricsEIfile, sep='\t',
+                    header=None, line_terminator='\n')
+                print("Processed EI conductances..")
+            else:
+                print("No dataframe for EI conductances. Skipping.")
 
             conductancesDF_II = combiner.combineCSVRowLists(
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixConductancesII)
-            conductanceMetricsII = pandas.concat(
-                [conductancesDF_II.mean(axis=1),
-                 conductancesDF_II.std(axis=1)],
-                axis=1)
-            conductancesMetricsIIfile = (
-                self.config.filenamePrefixConductancesII + 'all.txt'
-            )
-            conductanceMetricsII.to_csv(
-                conductancesMetricsIIfile, sep='\t',
-                header=None, line_terminator='\n')
-            print("Processed II conductances..")
+            if conductancesDF_II:
+                conductanceMetricsII = pandas.concat(
+                    [conductancesDF_II.mean(axis=1),
+                     conductancesDF_II.std(axis=1)],
+                    axis=1)
+                conductancesMetricsIIfile = (
+                    self.config.filenamePrefixConductancesII + 'all.txt'
+                )
+                conductanceMetricsII.to_csv(
+                    conductancesMetricsIIfile, sep='\t',
+                    header=None, line_terminator='\n')
+                print("Processed II conductances..")
+            else:
+                print("No dataframe for II conductances. Skipping.")
 
             conductancesDF_IE = combiner.combineCSVRowLists(
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixConductancesIE)
-            conductanceMetricsIE = pandas.concat(
-                [conductancesDF_IE.mean(axis=1),
-                 conductancesDF_IE.std(axis=1)],
-                axis=1)
-            conductancesMetricsIEfile = (
-                self.config.filenamePrefixConductancesIE + 'all.txt'
-            )
-            conductanceMetricsIE.to_csv(
-                conductancesMetricsIEfile, sep='\t',
-                header=None, line_terminator='\n')
-            print("Processed IE conductances..")
+            if conductancesDF_IE:
+                conductanceMetricsIE = pandas.concat(
+                    [conductancesDF_IE.mean(axis=1),
+                     conductancesDF_IE.std(axis=1)],
+                    axis=1)
+                conductancesMetricsIEfile = (
+                    self.config.filenamePrefixConductancesIE + 'all.txt'
+                )
+                conductanceMetricsIE.to_csv(
+                    conductancesMetricsIEfile, sep='\t',
+                    header=None, line_terminator='\n')
+                print("Processed IE conductances..")
+            else:
+                print("No dataframe for IE conductances. Skipping")
 
-            args = (os.path.join(
-                self.config.postprocessHome,
-                self.config.gnuplotFilesDir,
+            if (conductancesDF_EE and conductancesDF_EI and conductancesDF_IE
+                    and conductancesDF_II):
+                args = (os.path.join(
+                    self.config.postprocessHome,
+                    self.config.gnuplotFilesDir,
                     'plot-conductance-metrics.plt'))
-            subprocess.call(['gnuplot',
-                            args])
-            print("Conductance graphs plotted..")
+                subprocess.call(['gnuplot',
+                                 args])
+                print("Conductance graphs plotted..")
+            else:
+                print("Conductance graphs not generated.")
 
     def __postprocess_spikes(self):
         """Postprocess combined spike files."""
