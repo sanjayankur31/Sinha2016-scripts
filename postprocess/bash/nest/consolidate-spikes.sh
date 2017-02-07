@@ -48,9 +48,9 @@ echo "Combining I files"
 LC_ALL=C sort -k "2" -n --parallel=16 -T $SORTTMPDIR spikes-*I*.gdf > spikes-I.gdf
 mv spikes-I.gdf consolidated_files
 
-echo "Combining Stim files"
-LC_ALL=C sort -k "2" -n --parallel=16 -T $SORTTMPDIR spikes-*Stim*.gdf > spikes-Stim.gdf
-mv spikes-Stim.gdf consolidated_files
+echo "Combining stim files"
+LC_ALL=C sort -k "2" -n --parallel=16 -T $SORTTMPDIR spikes-*stim*.gdf > spikes-stim.gdf
+mv spikes-stim.gdf consolidated_files
 
 echo "All files combined."
 exit 0
