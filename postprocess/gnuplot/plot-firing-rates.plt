@@ -17,9 +17,9 @@ set output "firing-rate-background.png"
 set title "Firing rate for background neurons"
 plot "firing-rate-background.gdf" with lines lw 4 title "N", 3 with lines lw 2 title "T";
 
-set output "firing-rate-Stim.png"
-set title "Firing rate for Stim neurons"
-plot "firing-rate-Stim.gdf" with lines lw 4 title "Stim", 3 with lines lw 2 title "T";
+set output "firing-rate-stim.png"
+set title "Firing rate for stim neurons"
+plot "firing-rate-stim.gdf" with lines lw 4 title "stim", 3 with lines lw 2 title "T";
 
 set output "firing-rate-pattern-background.png"
 set title "Firing rate for pattern and background neurons"
