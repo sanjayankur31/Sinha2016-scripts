@@ -28,33 +28,45 @@ mkdir consolidated_files
 
 # Merge multiple pattern files
 for pat in $(seq 1 $NUMPATS); do
-    echo "Combining background files"
+    echo "Combining background spike files"
     LC_ALL=C sort -k "2" -n --parallel=16 -T $SORTTMPDIR "spikes-background-""$pat"*.gdf  > "spikes-background-""$pat"".gdf"
     mv "spikes-background-""$pat"".gdf" consolidated_files
 
-    echo "Combining deaffed-bg-E files"
+    echo "Combining deaffed-bg-E spike files"
     LC_ALL=C sort -k "2" -n --parallel=16 -T $SORTTMPDIR "spikes-deaffed-bg-E-""$pat"*.gdf  > "spikes-deaffed-bg-E-""$pat"".gdf"
     mv "spikes-deaffed-bg-E-""$pat"".gdf" consolidated_files
 
-    echo "Combining deaffed-bg-I files"
+    echo "Combining deaffed-bg-I spike files"
     LC_ALL=C sort -k "2" -n --parallel=16 -T $SORTTMPDIR "spikes-deaffed-bg-I-""$pat"*.gdf  > "spikes-deaffed-bg-I-""$pat"".gdf"
     mv "spikes-deaffed-bg-I-""$pat"".gdf" consolidated_files
 
-    echo "Combining deaffed-pattern files"
+    echo "Combining deaffed-pattern spike files"
     LC_ALL=C sort -k "2" -n --parallel=16 -T $SORTTMPDIR "spikes-deaffed-pattern-""$pat"*.gdf  > "spikes-deaffed-pattern-""$pat"".gdf"
     mv "spikes-deaffed-pattern-""$pat"".gdf" consolidated_files
 
-    echo "Combining pattern files"
+    echo "Combining pattern spike files"
     LC_ALL=C sort -k "2" -n --parallel=16 -T $SORTTMPDIR "spikes-pattern-""$pat"*.gdf  > "spikes-pattern-""$pat"".gdf"
     mv "spikes-pattern-""$pat"".gdf" consolidated_files
 
-    echo "Combining recall files"
+    echo "Combining recall spike files"
     LC_ALL=C sort -k "2" -n --parallel=16 -T $SORTTMPDIR "spikes-recall-""$pat"*.gdf  > "spikes-recall-""$pat"".gdf"
     mv "spikes-recall-""$pat"".gdf" consolidated_files
 
-    echo "Combining stim files"
+    echo "Combining stim spike files"
     LC_ALL=C sort -k "2" -n --parallel=16 -T $SORTTMPDIR "spikes-stim-""$pat"*.gdf  > "spikes-stim-""$pat"".gdf"
     mv "spikes-stim-""$pat"".gdf" consolidated_files
+
+    echo "Combining pattern neuron files"
+    LC_ALL=C sort -n --parallel=16 -T $SORTTMPDIR "patternneurons-""$pat""-rank-"*.txt > "patternneurons-""$pat"".txt"
+    mv "patternneurons-""$pat"".txt" consolidated_files
+
+    echo "Combining recall neuron files"
+    LC_ALL=C sort -n --parallel=16 -T $SORTTMPDIR "recallneurons-""$pat""-rank-"*.txt > "recallneurons-""$pat"".txt"
+    mv "recallneurons-""$pat"".txt" consolidated_files
+
+    echo "Combining background neuron files"
+    LC_ALL=C sort -n --parallel=16 -T $SORTTMPDIR "backgroundneurons-""$pat""-rank-"*.txt > "backgroundneurons-""$pat"".txt"
+    mv "backgroundneurons-""$pat"".txt" consolidated_files
 done
 
 echo "Combining E files"
