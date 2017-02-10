@@ -38,6 +38,9 @@ class CombineFiles:
         completefilelist = self.getFileList(directory, prefix)
         timelist = []
 
+        if not completefilelist:
+            return None
+
         for afile in completefilelist:
             filename = afile[len(directory):]
             time = (filename.split('-')[5])[0:-4]
