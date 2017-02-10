@@ -127,7 +127,7 @@ class Postprocess:
                     print("I neuron synaptic elements graph" +
                           " at time {} generated.".format(time))
             else:
-                print("No dataframes for E synaptic elements. Skipping.")
+                print("No dataframes for I synaptic elements. Skipping.")
 
     def __postprocess_synaptic_elements_all(self):
         """Post total synaptic element files."""
@@ -172,7 +172,7 @@ class Postprocess:
                                 args])
                 print("Synaptic elements graphs generated..")
             else:
-                print("No datafame for all I synaptic elements. Skipping.")
+                print("No dataframe for all I synaptic elements. Skipping.")
 
     def __postprocess_calcium(self):
         """Postprocess calcium files."""
