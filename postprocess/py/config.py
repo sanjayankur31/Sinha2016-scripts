@@ -17,7 +17,8 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License along with
+this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import configparser
@@ -49,40 +50,40 @@ class Config:
         self.filenameP = ""
         self.filenameMeanRatesE = ""
         self.filenameMeanRatesI = ""
-        self.filenameMeanRatesR = ""
-        self.filenameMeanRatesB = ""
-        self.filenameMeanRatesS = ""
-        self.filenameMeanRatesDP = ""
-        self.filenameMeanRatesDBGE = ""
-        self.filenameMeanRatesDBGI = ""
-        self.filenameMeanRatesP = ""
+        self.filenamePrefixMeanRatesR = ""
+        self.filenamePrefixMeanRatesB = ""
+        self.filenamePrefixMeanRatesS = ""
+        self.filenamePrefixMeanRatesDP = ""
+        self.filenamePrefixMeanRatesDBGE = ""
+        self.filenamePrefixMeanRatesDBGI = ""
+        self.filenamePrefixMeanRatesP = ""
         self.filenameSTDRatesE = ""
         self.filenameSTDRatesI = ""
-        self.filenameSTDRatesR = ""
-        self.filenameSTDRatesB = ""
-        self.filenameSTDRatesS = ""
-        self.filenameSTDRatesDP = ""
-        self.filenameSTDRatesDBGE = ""
-        self.filenameSTDRatesDBGI = ""
-        self.filenameSTDRatesP = ""
+        self.filenamePrefixSTDRatesR = ""
+        self.filenamePrefixSTDRatesB = ""
+        self.filenamePrefixSTDRatesS = ""
+        self.filenamePrefixSTDRatesDP = ""
+        self.filenamePrefixSTDRatesDBGE = ""
+        self.filenamePrefixSTDRatesDBGI = ""
+        self.filenamePrefixSTDRatesP = ""
         self.filenameMeanCVE = ""
         self.filenameMeanCVI = ""
-        self.filenameMeanCVR = ""
-        self.filenameMeanCVB = ""
-        self.filenameMeanCVS = ""
-        self.filenameMeanCVDP = ""
-        self.filenameMeanCVDBGE = ""
-        self.filenameMeanCVDBGI = ""
-        self.filenameMeanCVP = ""
+        self.filenamePrefixMeanCVR = ""
+        self.filenamePrefixMeanCVB = ""
+        self.filenamePrefixMeanCVS = ""
+        self.filenamePrefixMeanCVDP = ""
+        self.filenamePrefixMeanCVDBGE = ""
+        self.filenamePrefixMeanCVDBGI = ""
+        self.filenamePrefixMeanCVP = ""
         self.filenameMeanFanoE = ""
         self.filenameMeanFanoI = ""
-        self.filenameMeanFanoR = ""
-        self.filenameMeanFanoB = ""
-        self.filenameMeanFanoS = ""
-        self.filenameMeanFanoDP = ""
-        self.filenameMeanFanoDBGE = ""
-        self.filenameMeanFanoDBGI = ""
-        self.filenameMeanFanoP = ""
+        self.filenamePrefixMeanFanoR = ""
+        self.filenamePrefixMeanFanoB = ""
+        self.filenamePrefixMeanFanoS = ""
+        self.filenamePrefixMeanFanoDP = ""
+        self.filenamePrefixMeanFanoDBGE = ""
+        self.filenamePrefixMeanFanoDBGI = ""
+        self.filenamePrefixMeanFanoP = ""
 
         # where the unconsolidated files are
         self.unconsolidatedFilesDir = ""
@@ -115,13 +116,14 @@ class Config:
         self.neuronsP = parser['default']['neuronsP']
         self.filenameE = parser['default']['filenameE']
         self.filenameI = parser['default']['filenameI']
-        self.filenameR = parser['default']['filenameR']
-        self.filenameB = parser['default']['filenameB']
-        self.filenameS = parser['default']['filenameS']
-        self.filenameDP = parser['default']['filenameDP']
-        self.filenameDBGE = parser['default']['filenameDBGE']
-        self.filenameDBGI = parser['default']['filenameDBGI']
-        self.filenameP = parser['default']['filenameP']
+        # multiple patterns and so related files
+        self.filenamePrefixR = parser['default']['filenamePrefixR']
+        self.filenamePrefixB = parser['default']['filenamePrefixB']
+        self.filenamePrefixS = parser['default']['filenamePrefixS']
+        self.filenamePrefixDP = parser['default']['filenamePrefixDP']
+        self.filenamePrefixDBGE = parser['default']['filenamePrefixDBGE']
+        self.filenamePrefixDBGI = parser['default']['filenamePrefixDBGI']
+        self.filenamePrefixP = parser['default']['filenamePrefixP']
 
         # where the unconsolidated files are
         # because its easier to consolidate raster files using sort
@@ -188,61 +190,61 @@ class Config:
             self.filenameE)
         self.filenameMeanRatesI = self.__getMeanFiringRateFilename(
             self.filenameI)
-        self.filenameMeanRatesR = self.__getMeanFiringRateFilename(
-            self.filenameR)
-        self.filenameMeanRatesB = self.__getMeanFiringRateFilename(
-            self.filenameB)
-        self.filenameMeanRatesS = self.__getMeanFiringRateFilename(
-            self.filenameS)
-        self.filenameMeanRatesDP = self.__getMeanFiringRateFilename(
-            self.filenameDP)
-        self.filenameMeanRatesP = self.__getMeanFiringRateFilename(
-            self.filenameP)
+        self.filenamePrefixMeanRatesR = self.__getMeanFiringRateFilename(
+            self.filenamePrefixR)
+        self.filenamePrefixMeanRatesB = self.__getMeanFiringRateFilename(
+            self.filenamePrefixB)
+        self.filenamePrefixMeanRatesS = self.__getMeanFiringRateFilename(
+            self.filenamePrefixS)
+        self.filenamePrefixMeanRatesDP = self.__getMeanFiringRateFilename(
+            self.filenamePrefixDP)
+        self.filenamePrefixMeanRatesP = self.__getMeanFiringRateFilename(
+            self.filenamePrefixP)
 
         self.filenameSTDRatesE = self.__getSTDFiringRateFilename(
             self.filenameE)
         self.filenameSTDRatesI = self.__getSTDFiringRateFilename(
             self.filenameI)
-        self.filenameSTDRatesR = self.__getSTDFiringRateFilename(
-            self.filenameR)
-        self.filenameSTDRatesB = self.__getSTDFiringRateFilename(
-            self.filenameB)
-        self.filenameSTDRatesS = self.__getSTDFiringRateFilename(
-            self.filenameS)
-        self.filenameSTDRatesDP = self.__getSTDFiringRateFilename(
-            self.filenameDP)
-        self.filenameSTDRatesP = self.__getSTDFiringRateFilename(
-            self.filenameP)
+        self.filenamePrefixSTDRatesR = self.__getSTDFiringRateFilename(
+            self.filenamePrefixR)
+        self.filenamePrefixSTDRatesB = self.__getSTDFiringRateFilename(
+            self.filenamePrefixB)
+        self.filenamePrefixSTDRatesS = self.__getSTDFiringRateFilename(
+            self.filenamePrefixS)
+        self.filenamePrefixSTDRatesDP = self.__getSTDFiringRateFilename(
+            self.filenamePrefixDP)
+        self.filenamePrefixSTDRatesP = self.__getSTDFiringRateFilename(
+            self.filenamePrefixP)
 
         self.filenameMeanCVE = self.__getMeanCVFilename(
             self.filenameE)
         self.filenameMeanCVI = self.__getMeanCVFilename(
             self.filenameI)
-        self.filenameMeanCVR = self.__getMeanCVFilename(
-            self.filenameR)
-        self.filenameMeanCVB = self.__getMeanCVFilename(
-            self.filenameB)
-        self.filenameMeanCVS = self.__getMeanCVFilename(
-            self.filenameS)
-        self.filenameMeanCVDP = self.__getMeanCVFilename(
-            self.filenameDP)
-        self.filenameMeanCVP = self.__getMeanCVFilename(
-            self.filenameP)
+        self.filenamePrefixMeanCVR = self.__getMeanCVFilename(
+            self.filenamePrefixR)
+        self.filenamePrefixMeanCVB = self.__getMeanCVFilename(
+            self.filenamePrefixB)
+        self.filenamePrefixMeanCVS = self.__getMeanCVFilename(
+            self.filenamePrefixS)
+        self.filenamePrefixMeanCVDP = self.__getMeanCVFilename(
+            self.filenamePrefixDP)
+        self.filenamePrefixMeanCVP = self.__getMeanCVFilename(
+            self.filenamePrefixP)
 
         self.filenameMeanFanoE = self.__getMeanFanoFilename(
             self.filenameE)
         self.filenameMeanFanoI = self.__getMeanFanoFilename(
             self.filenameI)
-        self.filenameMeanFanoR = self.__getMeanFanoFilename(
-            self.filenameR)
-        self.filenameMeanFanoB = self.__getMeanFanoFilename(
-            self.filenameB)
-        self.filenameMeanFanoS = self.__getMeanFanoFilename(
-            self.filenameS)
-        self.filenameMeanFanoDP = self.__getMeanFanoFilename(
-            self.filenameDP)
-        self.filenameMeanFanoP = self.__getMeanFanoFilename(
-            self.filenameP)
+        self.filenamePrefixMeanFanoR = self.__getMeanFanoFilename(
+            self.filenamePrefixR)
+        self.filenamePrefixMeanFanoB = self.__getMeanFanoFilename(
+            self.filenamePrefixB)
+        self.filenamePrefixMeanFanoS = self.__getMeanFanoFilename(
+            self.filenamePrefixS)
+        self.filenamePrefixMeanFanoDP = self.__getMeanFanoFilename(
+            self.filenamePrefixDP)
+        self.filenamePrefixMeanFanoP = self.__getMeanFanoFilename(
+            self.filenamePrefixP)
 
 if __name__ == "__main__":
     config = Config()
