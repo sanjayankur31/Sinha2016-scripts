@@ -40,6 +40,7 @@ class Postprocess:
         """Load configuration file."""
         if os.path.isfile(self.configfile):
             self.config = Config(self.configfile)
+            self.config.generateOutputFileNames()
             print("Config file {} loaded successfully.".format(
                 self.configfile))
         else:
@@ -58,7 +59,7 @@ class Postprocess:
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixSEIndividualE)
 
-            if not timeddfDict.empty:
+            if not timeddfDict:
                 for time, df in timeddfDict.items():
                     syn_elms_ind_DF_filename = (
                         self.config.filenamePrefixSEIndividualE +
@@ -96,7 +97,7 @@ class Postprocess:
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixSEIndividualI)
 
-            if not timeddfDict.empty:
+            if not timeddfDict:
                 for time, df in timeddfDict.items():
                     syn_elms_ind_DF_filename = (
                         self.config.filenamePrefixSEIndividualI +

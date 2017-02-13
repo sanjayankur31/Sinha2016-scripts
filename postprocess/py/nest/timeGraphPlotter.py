@@ -275,16 +275,16 @@ class timeGraphPlotter:
             del spikeconverter
 
         if (
-            os.path.isfile(self.config.filenameL) and
-            os.stat(self.config.filenameL).st_size != 0
+            os.path.isfile(self.config.filenameDP) and
+            os.stat(self.config.filenameDP).st_size != 0
         ):
             spikeconverter = spike2hz()
-            if spikeconverter.setup(self.config.filenameL,
-                                    self.config.filenameMeanRatesL,
-                                    self.config.filenameSTDRatesL,
-                                    self.config.filenameMeanCVL,
-                                    self.config.filenameMeanFanoL,
-                                    self.config.neuronsL,
+            if spikeconverter.setup(self.config.filenameDP,
+                                    self.config.filenameMeanRatesDP,
+                                    self.config.filenameSTDRatesDP,
+                                    self.config.filenameMeanCVDP,
+                                    self.config.filenameMeanFanoDP,
+                                    self.config.neuronsDP,
                                     self.config.rows_per_read):
                 spikeconverter.run()
             del spikeconverter
@@ -300,6 +300,36 @@ class timeGraphPlotter:
                                     self.config.filenameMeanCVP,
                                     self.config.filenameMeanFanoP,
                                     self.config.neuronsP,
+                                    self.config.rows_per_read):
+                spikeconverter.run()
+            del spikeconverter
+
+        if (
+            os.path.isfile(self.config.filenameDBGE) and
+            os.stat(self.config.filenameDBGE).st_size != 0
+        ):
+            spikeconverter = spike2hz()
+            if spikeconverter.setup(self.config.filenameDBGE,
+                                    self.config.filenameMeanRatesDBGE,
+                                    self.config.filenameSTDRatesDBGE,
+                                    self.config.filenameMeanCVDBGE,
+                                    self.config.filenameMeanFanoDBGE,
+                                    self.config.neuronsDBGE,
+                                    self.config.rows_per_read):
+                spikeconverter.run()
+            del spikeconverter
+
+        if (
+            os.path.isfile(self.config.filenameDBGI) and
+            os.stat(self.config.filenameDBGI).st_size != 0
+        ):
+            spikeconverter = spike2hz()
+            if spikeconverter.setup(self.config.filenameDBGI,
+                                    self.config.filenameMeanRatesDBGI,
+                                    self.config.filenameSTDRatesDBGI,
+                                    self.config.filenameMeanCVDBGI,
+                                    self.config.filenameMeanFanoDBGI,
+                                    self.config.neuronsDBGI,
                                     self.config.rows_per_read):
                 spikeconverter.run()
             del spikeconverter
