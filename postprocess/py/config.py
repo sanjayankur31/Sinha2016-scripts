@@ -167,29 +167,29 @@ class Config:
     def __getMeanFiringRateFilename(self, inputname):
         """Generate mean firing rate filename."""
         neuronSet = (inputname.split(sep='-', maxsplit=1)[1]).split(sep='.')[0]
-        return ('firing-rate-{}.gdf'.format(neuronSet))
+        return ('firing-rate-{}'.format(neuronSet))
 
     def __getSTDFiringRateFilename(self, inputname):
         """Generate STD firing rate filename."""
         neuronSet = (inputname.split(sep='-', maxsplit=1)[1]).split(sep='.')[0]
-        return ('std-rate-{}.gdf'.format(neuronSet))
+        return ('std-rate-{}'.format(neuronSet))
 
     def __getMeanCVFilename(self, inputname):
         """Generate CV rate filename."""
         neuronSet = (inputname.split(sep='-', maxsplit=1)[1]).split(sep='.')[0]
-        return ('cv-rate-{}.gdf'.format(neuronSet))
+        return ('cv-rate-{}'.format(neuronSet))
 
     def __getMeanFanoFilename(self, inputname):
         """Generate Fano rate filename."""
         neuronSet = (inputname.split(sep='-', maxsplit=1)[1]).split(sep='.')[0]
-        return ('fano-rate-{}.gdf'.format(neuronSet))
+        return ('fano-rate-{}'.format(neuronSet))
 
     def generateOutputFileNames(self):
         """Generate output file names from inputs file patterns."""
         self.filenameMeanRatesE = self.__getMeanFiringRateFilename(
-            self.filenameE)
+            self.filenameE) + ".gdf"
         self.filenameMeanRatesI = self.__getMeanFiringRateFilename(
-            self.filenameI)
+            self.filenameI) + ".gdf"
         self.filenamePrefixMeanRatesR = self.__getMeanFiringRateFilename(
             self.filenamePrefixR)
         self.filenamePrefixMeanRatesB = self.__getMeanFiringRateFilename(
@@ -200,11 +200,15 @@ class Config:
             self.filenamePrefixDP)
         self.filenamePrefixMeanRatesP = self.__getMeanFiringRateFilename(
             self.filenamePrefixP)
+        self.filenamePrefixMeanRatesDBGE = self.__getMeanFiringRateFilename(
+            self.filenamePrefixDBGE)
+        self.filenamePrefixMeanRatesDBGI = self.__getMeanFiringRateFilename(
+            self.filenamePrefixDBGI)
 
         self.filenameSTDRatesE = self.__getSTDFiringRateFilename(
-            self.filenameE)
+            self.filenameE) + ".gdf"
         self.filenameSTDRatesI = self.__getSTDFiringRateFilename(
-            self.filenameI)
+            self.filenameI) + ".gdf"
         self.filenamePrefixSTDRatesR = self.__getSTDFiringRateFilename(
             self.filenamePrefixR)
         self.filenamePrefixSTDRatesB = self.__getSTDFiringRateFilename(
@@ -215,11 +219,15 @@ class Config:
             self.filenamePrefixDP)
         self.filenamePrefixSTDRatesP = self.__getSTDFiringRateFilename(
             self.filenamePrefixP)
+        self.filenamePrefixSTDRatesDBGE = self.__getSTDFiringRateFilename(
+            self.filenamePrefixDBGE)
+        self.filenamePrefixSTDRatesDBGI = self.__getSTDFiringRateFilename(
+            self.filenamePrefixDBGI)
 
         self.filenameMeanCVE = self.__getMeanCVFilename(
-            self.filenameE)
+            self.filenameE) + ".gdf"
         self.filenameMeanCVI = self.__getMeanCVFilename(
-            self.filenameI)
+            self.filenameI) + ".gdf"
         self.filenamePrefixMeanCVR = self.__getMeanCVFilename(
             self.filenamePrefixR)
         self.filenamePrefixMeanCVB = self.__getMeanCVFilename(
@@ -230,11 +238,15 @@ class Config:
             self.filenamePrefixDP)
         self.filenamePrefixMeanCVP = self.__getMeanCVFilename(
             self.filenamePrefixP)
+        self.filenamePrefixMeanCVDBGE = self.__getMeanCVFilename(
+            self.filenamePrefixDBGE)
+        self.filenamePrefixMeanCVDBGI = self.__getMeanCVFilename(
+            self.filenamePrefixDBGI)
 
         self.filenameMeanFanoE = self.__getMeanFanoFilename(
-            self.filenameE)
+            self.filenameE) + ".gdf"
         self.filenameMeanFanoI = self.__getMeanFanoFilename(
-            self.filenameI)
+            self.filenameI) + ".gdf"
         self.filenamePrefixMeanFanoR = self.__getMeanFanoFilename(
             self.filenamePrefixR)
         self.filenamePrefixMeanFanoB = self.__getMeanFanoFilename(
@@ -245,6 +257,10 @@ class Config:
             self.filenamePrefixDP)
         self.filenamePrefixMeanFanoP = self.__getMeanFanoFilename(
             self.filenamePrefixP)
+        self.filenamePrefixMeanFanoDBGE = self.__getMeanFanoFilename(
+            self.filenamePrefixDBGE)
+        self.filenamePrefixMeanFanoDBGI = self.__getMeanFanoFilename(
+            self.filenamePrefixDBGI)
 
 if __name__ == "__main__":
     config = Config()
