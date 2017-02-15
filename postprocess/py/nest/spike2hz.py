@@ -163,6 +163,11 @@ class spike2hz:
                     times[self.left:], current_time,
                     side='right')
 
+                # neither start, nor finish found, we need the next chunk
+                if self.right == self.left:
+                    print("This window is empty! Need more data")
+                    break
+
                 # could even just do right - left if all I'm using is len
                 thiswindow_neuronIDs = neuronIDs[self.left:self.right]
                 thiswindow_times = times[self.left:self.right]
@@ -183,7 +188,7 @@ class spike2hz:
                 # finish.
                 if (current_time % 200000 == 0):
                     # STD of firing rates
-                    # take 5 second bins of this 1 second bin
+                    # take 5 milli second bins of this 1 second bin
                     # find firing rates for each bin
                     # get std of these 200 values
                     bin5rates = []
