@@ -377,7 +377,25 @@ class timeGraphPlotter:
 
     def plot_all(self):
         """Plot them all."""
-        self.__get_firing_rates_from_spikes()
+        # Ask if regenerate firing rate files
+        filelist = os.listdir()
+        filesfound = []
+        for entry in filelist:
+            if 'firing-' in entry or 'std-' in entry or 'cv-' in entry:
+                if ".png" not in entry:
+                    filesfound.append(entry)
+
+        filesfound.sort()
+        if len(filesfound) > 0:
+            print("Generated files found: {}".format(len(filesfound)))
+            for entry in filesfound:
+                print("- {}".format(entry))
+
+            regen = input("Regenerate firing rate files (Y for yes)? ")
+            if regen == "Y":
+                self.__get_firing_rates_from_spikes()
+
+        print("Generating graphs.")
         try:
             __import__('Gnuplot')
         except ImportError:
@@ -401,10 +419,37 @@ class timeGraphPlotter:
 
     def __plot_using_gnuplot_binary(self):
         """Use the binary because it doesnt support py3."""
+        numpats = self.__get_numpats()
+        print("Plotting E I firing rate graphs.")
         args = (os.path.join(
             self.config.postprocessHome,
             self.config.gnuplotFilesDir,
-            'plot-firing-rates.plt'))
+            'plot-firing-rates-IE.plt'))
+        subprocess.call(['gnuplot',
+                         args])
+
+        print("Plotting pattern related firing rate graphs.")
+        args = (os.path.join(
+            self.config.postprocessHome,
+            self.config.gnuplotFilesDir,
+            'plot-firing-rates-patterns.plt'))
+        command = ['gnuplot', '-e', 'numpats={}'.format(numpats),
+                   args]
+        subprocess.call(command)
+
+        print("Plotting CV graphs.")
+        args = (os.path.join(
+            self.config.postprocessHome,
+            self.config.gnuplotFilesDir,
+            'plot-cvs.plt'))
+        subprocess.call(['gnuplot',
+                         args])
+
+        print("Plotting STD graphs.")
+        args = (os.path.join(
+            self.config.postprocessHome,
+            self.config.gnuplotFilesDir,
+            'plot-std.plt'))
         subprocess.call(['gnuplot',
                          args])
 
