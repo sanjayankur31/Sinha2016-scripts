@@ -394,6 +394,8 @@ class timeGraphPlotter:
             regen = input("Regenerate firing rate files (Y for yes)? ")
             if regen == "Y":
                 self.__get_firing_rates_from_spikes()
+        else:
+            self.__get_firing_rates_from_spikes()
 
         print("Generating graphs.")
         try:
