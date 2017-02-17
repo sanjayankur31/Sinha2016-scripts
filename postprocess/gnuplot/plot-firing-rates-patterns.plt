@@ -32,6 +32,17 @@ do for [pat=1:numpats+0] {
         plot infile with lines lw 4 title "P", infile1 with lines lw 4 title "BGE"
     }
 
+    outfile = sprintf('firing-rate-pattern-background-zoomed-%d.png', pat)
+    infile = sprintf('firing-rate-pattern-%d.gdf', pat)
+    infile1 = sprintf('firing-rate-background-%d.gdf', pat)
+    set yrange [0:40]
+    if (file_exists(infile)) && (file_exists(infile1)) {
+        set output outfile
+        set title "Firing rate for pattern ".pat." and its background E neurons"; 
+        plot infile with lines lw 4 title "P", infile1 with lines lw 4 title "BGE"
+    }
+    set yrange [0:200]
+
     outfile = sprintf('firing-rate-deaffed-pattern-%d.png', pat)
     infile = sprintf('firing-rate-deaffed-pattern-%d.gdf', pat)
     if (file_exists(infile)) {
