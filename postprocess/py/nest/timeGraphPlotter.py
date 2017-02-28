@@ -203,7 +203,7 @@ class timeGraphPlotter:
         self.plotter.plot(self.lineP, self.lineB)
         self.hardcopy(filename="firing-rate-P-B.png")
 
-    def __get_firing_rates_from_spikes(self):
+    def get_firing_rates_from_spikes(self):
         """Get firing rate files from spikes."""
         from nest.spike2hz import spike2hz
         if (
@@ -377,26 +377,6 @@ class timeGraphPlotter:
 
     def plot_all(self):
         """Plot them all."""
-        # Ask if regenerate firing rate files
-        filelist = os.listdir()
-        filesfound = []
-        for entry in filelist:
-            if 'firing-' in entry or 'std-' in entry or 'cv-' in entry:
-                if ".png" not in entry:
-                    filesfound.append(entry)
-
-        filesfound.sort()
-        if len(filesfound) > 0:
-            print("Generated files found: {}".format(len(filesfound)))
-            for entry in filesfound:
-                print("- {}".format(entry))
-
-            regen = input("Regenerate firing rate files (Y for yes)? ")
-            if regen == "Y":
-                self.__get_firing_rates_from_spikes()
-        else:
-            self.__get_firing_rates_from_spikes()
-
         print("Generating graphs.")
         try:
             __import__('Gnuplot')
@@ -457,3 +437,5 @@ class timeGraphPlotter:
 
 if __name__ == "__main__":
     runner = timeGraphPlotter()
+    runner.get_firing_rates_from_spikes()
+    runner.plot_all()

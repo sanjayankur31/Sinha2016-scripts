@@ -26,7 +26,7 @@ import sys
 import os
 import pandas
 import subprocess
-
+from select import select
 
 class Postprocess:
 
@@ -137,34 +137,43 @@ class Postprocess:
             import nest.combineFiles
             combiner = nest.combineFiles.CombineFiles()
 
-            syn_elms_DF_E = combiner.combineTSVRowData(
-                self.config.unconsolidatedFilesDir,
-                self.config.filenamePrefixSETotalsE)
+            syn_elms_DF_E = pandas.DataFrame()
+            syn_elms_DF_I = pandas.DataFrame()
+            if self.__reprocess_raw_files([self.config.filenamePrefixSETotalsE]):
+                syn_elms_DF_E = combiner.combineTSVRowData(
+                    self.config.unconsolidatedFilesDir,
+                    self.config.filenamePrefixSETotalsE)
 
-            if not syn_elms_DF_E.empty:
-                syn_elms_E_filename = (
-                    self.config.filenamePrefixSETotalsE + 'all.txt'
-                )
-                syn_elms_DF_E.to_csv(
-                    syn_elms_E_filename, sep='\t',
-                    header=None, line_terminator='\n')
-                print("Processed synaptic elements for E neurons..")
+                if not syn_elms_DF_E.empty:
+                    syn_elms_E_filename = (
+                        self.config.filenamePrefixSETotalsE + 'all.txt'
+                    )
+                    syn_elms_DF_E.to_csv(
+                        syn_elms_E_filename, sep='\t',
+                        header=None, line_terminator='\n')
+                    print("Processed synaptic elements for E neurons..")
+                else:
+                    print("No dataframe for all E synaptic elements. Skipping.")
             else:
-                print("No dataframe for all E synaptic elements. Skipping.")
+                syn_elms_DF_E = syn_elms_DF_E.append([0])
 
-            syn_elms_DF_I = combiner.combineTSVRowData(
-                self.config.unconsolidatedFilesDir,
-                self.config.filenamePrefixSETotalsI)
+            if self.__reprocess_raw_files([self.config.filenamePrefixSETotalsI]):
+                syn_elms_DF_I = combiner.combineTSVRowData(
+                    self.config.unconsolidatedFilesDir,
+                    self.config.filenamePrefixSETotalsI)
 
-            if not syn_elms_DF_I.empty:
-                syn_elms_I_filename = (
-                    self.config.filenamePrefixSETotalsI + 'all.txt'
-                )
-                syn_elms_DF_I.to_csv(
-                    syn_elms_I_filename, sep='\t',
-                    header=None, line_terminator='\n')
-                print("Processed synaptic elements for I neurons..")
+                if not syn_elms_DF_I.empty:
+                    syn_elms_I_filename = (
+                        self.config.filenamePrefixSETotalsI + 'all.txt'
+                    )
+                    syn_elms_DF_I.to_csv(
+                        syn_elms_I_filename, sep='\t',
+                        header=None, line_terminator='\n')
+                    print("Processed synaptic elements for I neurons..")
+            else:
+                syn_elms_DF_I = syn_elms_DF_I.append([0])
 
+            if (not syn_elms_DF_E.empty) and (not syn_elms_DF_I.empty):
                 args = (os.path.join(
                     self.config.postprocessHome,
                     self.config.gnuplotFilesDir,
@@ -178,47 +187,55 @@ class Postprocess:
     def __postprocess_calcium(self):
         """Postprocess calcium files."""
         if self.config.calciumMetrics:
-            print("Processing calcium concentration information..")
             import nest.combineFiles
-            combiner = nest.combineFiles.CombineFiles()
+            calDF_E = pandas.DataFrame()
+            calDF_I = pandas.DataFrame()
+            print("Processing calcium concentration information..")
+            if self.__reprocess_raw_files([self.config.filenamePrefixCalciumE]):
+                combiner = nest.combineFiles.CombineFiles()
 
-            calDF_E = combiner.combineCSVRowLists(
-                self.config.unconsolidatedFilesDir,
-                self.config.filenamePrefixCalciumE)
+                calDF_E = combiner.combineCSVRowLists(
+                    self.config.unconsolidatedFilesDir,
+                    self.config.filenamePrefixCalciumE)
 
-            if not calDF_E.empty:
-                calMetricsE = pandas.concat(
-                    [calDF_E.mean(axis=1),
-                     calDF_E.std(axis=1)],
-                    axis=1)
-                calMetricsEfile = (
-                    self.config.filenamePrefixCalciumE + 'all.txt'
-                )
-                calMetricsE.to_csv(
-                    calMetricsEfile, sep='\t',
-                    header=None, line_terminator='\n')
-                print("Processed cal metrics for E neurons..")
+                if not calDF_E.empty:
+                    calMetricsE = pandas.concat(
+                        [calDF_E.mean(axis=1),
+                         calDF_E.std(axis=1)],
+                        axis=1)
+                    calMetricsEfile = (
+                        self.config.filenamePrefixCalciumE + 'all.txt'
+                    )
+                    calMetricsE.to_csv(
+                        calMetricsEfile, sep='\t',
+                        header=None, line_terminator='\n')
+                    print("Processed cal metrics for E neurons..")
+                else:
+                    print("No cal metric df for E neurons. Skipping.")
             else:
-                print("No cal metric df for E neurons. Skipping.")
+                calDF_E = calDF_E.append([0])
 
-            calDF_I = combiner.combineCSVRowLists(
-                self.config.unconsolidatedFilesDir,
-                self.config.filenamePrefixCalciumI)
+            if self.__reprocess_raw_files([self.config.filenamePrefixCalciumI]):
+                calDF_I = combiner.combineCSVRowLists(
+                    self.config.unconsolidatedFilesDir,
+                    self.config.filenamePrefixCalciumI)
 
-            if not calDF_I.empty:
-                calMetricsI = pandas.concat(
-                    [calDF_I.mean(axis=1),
-                     calDF_I.std(axis=1)],
-                    axis=1)
-                calMetricsIfile = (
-                    self.config.filenamePrefixCalciumI + 'all.txt'
-                )
-                calMetricsI.to_csv(
-                    calMetricsIfile, sep='\t',
-                    header=None, line_terminator='\n')
-                print("Processed cal metrics for I neurons..")
+                if not calDF_I.empty:
+                    calMetricsI = pandas.concat(
+                        [calDF_I.mean(axis=1),
+                         calDF_I.std(axis=1)],
+                        axis=1)
+                    calMetricsIfile = (
+                        self.config.filenamePrefixCalciumI + 'all.txt'
+                    )
+                    calMetricsI.to_csv(
+                        calMetricsIfile, sep='\t',
+                        header=None, line_terminator='\n')
+                    print("Processed cal metrics for I neurons..")
+                else:
+                    print("No cal metric df for I neurons. Skipping.")
             else:
-                print("No cal metric df for I neurons. Skipping.")
+                calDF_I = calDF_I.append([0])
 
             if (not calDF_E.empty) and (not calDF_I.empty):
                 args = (os.path.join(
@@ -235,79 +252,95 @@ class Postprocess:
         """Post process conductances, print means."""
         if self.config.conductancesMetrics:
             print("Processing conductances..")
+            conductancesDF_EE = pandas.DataFrame()
+            conductancesDF_EI = pandas.DataFrame()
+            conductancesDF_IE = pandas.DataFrame()
+            conductancesDF_II = pandas.DataFrame()
             import nest.combineFiles
-            combiner = nest.combineFiles.CombineFiles()
-            conductancesDF_EE = combiner.combineCSVRowLists(
-                self.config.unconsolidatedFilesDir,
-                self.config.filenamePrefixConductancesEE)
-            if not conductancesDF_EE.empty:
-                conductanceMetricsEE = pandas.concat(
-                    [conductancesDF_EE.mean(axis=1),
-                     conductancesDF_EE.std(axis=1)],
-                    axis=1)
-                conductancesMetricsEEfile = (
-                    self.config.filenamePrefixConductancesEE + 'all.txt'
-                )
-                conductanceMetricsEE.to_csv(
-                    conductancesMetricsEEfile, sep='\t',
-                    header=None, line_terminator='\n')
-                print("Processed EE conductances..")
+            if self.__reprocess_raw_files([self.config.filenamePrefixConductancesEE]):
+                combiner = nest.combineFiles.CombineFiles()
+                conductancesDF_EE = combiner.combineCSVRowLists(
+                    self.config.unconsolidatedFilesDir,
+                    self.config.filenamePrefixConductancesEE)
+                if not conductancesDF_EE.empty:
+                    conductanceMetricsEE = pandas.concat(
+                        [conductancesDF_EE.mean(axis=1),
+                         conductancesDF_EE.std(axis=1)],
+                        axis=1)
+                    conductancesMetricsEEfile = (
+                        self.config.filenamePrefixConductancesEE + 'all.txt'
+                    )
+                    conductanceMetricsEE.to_csv(
+                        conductancesMetricsEEfile, sep='\t',
+                        header=None, line_terminator='\n')
+                    print("Processed EE conductances..")
+                else:
+                    print("No dataframe for EE conductances. Skipping.")
             else:
-                print("No dataframe for EE conductances. Skipping.")
+                conductancesDF_EE = conductancesDF_EE.append([0])
 
-            conductancesDF_EI = combiner.combineCSVRowLists(
-                self.config.unconsolidatedFilesDir,
-                self.config.filenamePrefixConductancesEI)
-            if not conductancesDF_EI.empty:
-                conductanceMetricsEI = pandas.concat(
-                    [conductancesDF_EI.mean(axis=1),
-                     conductancesDF_EI.std(axis=1)],
-                    axis=1)
-                conductancesMetricsEIfile = (
-                    self.config.filenamePrefixConductancesEI + 'all.txt'
-                )
-                conductanceMetricsEI.to_csv(
-                    conductancesMetricsEIfile, sep='\t',
-                    header=None, line_terminator='\n')
-                print("Processed EI conductances..")
+            if self.__reprocess_raw_files([self.config.filenamePrefixConductancesEI]):
+                conductancesDF_EI = combiner.combineCSVRowLists(
+                    self.config.unconsolidatedFilesDir,
+                    self.config.filenamePrefixConductancesEI)
+                if not conductancesDF_EI.empty:
+                    conductanceMetricsEI = pandas.concat(
+                        [conductancesDF_EI.mean(axis=1),
+                         conductancesDF_EI.std(axis=1)],
+                        axis=1)
+                    conductancesMetricsEIfile = (
+                        self.config.filenamePrefixConductancesEI + 'all.txt'
+                    )
+                    conductanceMetricsEI.to_csv(
+                        conductancesMetricsEIfile, sep='\t',
+                        header=None, line_terminator='\n')
+                    print("Processed EI conductances..")
+                else:
+                    print("No dataframe for EI conductances. Skipping.")
             else:
-                print("No dataframe for EI conductances. Skipping.")
+                conductancesDF_EI = conductancesDF_EI.append([0])
 
-            conductancesDF_II = combiner.combineCSVRowLists(
-                self.config.unconsolidatedFilesDir,
-                self.config.filenamePrefixConductancesII)
-            if not conductancesDF_II.empty:
-                conductanceMetricsII = pandas.concat(
-                    [conductancesDF_II.mean(axis=1),
-                     conductancesDF_II.std(axis=1)],
-                    axis=1)
-                conductancesMetricsIIfile = (
-                    self.config.filenamePrefixConductancesII + 'all.txt'
-                )
-                conductanceMetricsII.to_csv(
-                    conductancesMetricsIIfile, sep='\t',
-                    header=None, line_terminator='\n')
-                print("Processed II conductances..")
+            if self.__reprocess_raw_files([self.config.filenamePrefixConductancesII]):
+                conductancesDF_II = combiner.combineCSVRowLists(
+                    self.config.unconsolidatedFilesDir,
+                    self.config.filenamePrefixConductancesII)
+                if not conductancesDF_II.empty:
+                    conductanceMetricsII = pandas.concat(
+                        [conductancesDF_II.mean(axis=1),
+                         conductancesDF_II.std(axis=1)],
+                        axis=1)
+                    conductancesMetricsIIfile = (
+                        self.config.filenamePrefixConductancesII + 'all.txt'
+                    )
+                    conductanceMetricsII.to_csv(
+                        conductancesMetricsIIfile, sep='\t',
+                        header=None, line_terminator='\n')
+                    print("Processed II conductances..")
+                else:
+                    print("No dataframe for II conductances. Skipping.")
             else:
-                print("No dataframe for II conductances. Skipping.")
+                conductancesDF_II = conductancesDF_II.append([0])
 
-            conductancesDF_IE = combiner.combineCSVRowLists(
-                self.config.unconsolidatedFilesDir,
-                self.config.filenamePrefixConductancesIE)
-            if not conductancesDF_IE.empty:
-                conductanceMetricsIE = pandas.concat(
-                    [conductancesDF_IE.mean(axis=1),
-                     conductancesDF_IE.std(axis=1)],
-                    axis=1)
-                conductancesMetricsIEfile = (
-                    self.config.filenamePrefixConductancesIE + 'all.txt'
-                )
-                conductanceMetricsIE.to_csv(
-                    conductancesMetricsIEfile, sep='\t',
-                    header=None, line_terminator='\n')
-                print("Processed IE conductances..")
+            if self.__reprocess_raw_files([self.config.filenamePrefixConductancesIE]):
+                conductancesDF_IE = combiner.combineCSVRowLists(
+                    self.config.unconsolidatedFilesDir,
+                    self.config.filenamePrefixConductancesIE)
+                if not conductancesDF_IE.empty:
+                    conductanceMetricsIE = pandas.concat(
+                        [conductancesDF_IE.mean(axis=1),
+                         conductancesDF_IE.std(axis=1)],
+                        axis=1)
+                    conductancesMetricsIEfile = (
+                        self.config.filenamePrefixConductancesIE + 'all.txt'
+                    )
+                    conductanceMetricsIE.to_csv(
+                        conductancesMetricsIEfile, sep='\t',
+                        header=None, line_terminator='\n')
+                    print("Processed IE conductances..")
+                else:
+                    print("No dataframe for IE conductances. Skipping")
             else:
-                print("No dataframe for IE conductances. Skipping")
+                conductancesDF_IE = conductancesDF_IE.append([0])
 
             if ((not conductancesDF_EE.empty) and (not conductancesDF_EI.empty)
                     and (not conductancesDF_IE.empty)
@@ -328,6 +361,8 @@ class Postprocess:
             print("Generating timegraph..")
             import nest.timeGraphPlotter as TGP
             tgp = TGP.timeGraphPlotter(self.config)
+            if self.__reprocess_raw_files(["firing-", "std-", "cv-"]):
+                tgp.get_firing_rates_from_spikes()
             tgp.plot_all()
 
         if self.config.histograms:
@@ -376,6 +411,40 @@ class Postprocess:
                                      self.config.neuronsI,
                                      self.config.rows_per_read):
                 rasterPlotterEI.run(self.config.histogram_timelist)
+
+    def __reprocess_raw_files(self, prefixlist):
+        """Ask if files should be reprocessed if found."""
+        filelist = os.listdir()
+        filesfound = []
+        for entry in filelist:
+            for prefix in prefixlist:
+                if prefix in entry:
+                    if ".png" not in entry:
+                        filesfound.append(entry)
+
+        filesfound.sort()
+        if len(filesfound) > 0:
+            print("Generated files found: {}".format(len(filesfound)))
+            for entry in filesfound:
+                print("- {}".format(entry))
+
+            regen = self.__input_with_timeout(
+                "Regenerate(Y/N defaults to N in 15 seconds)? ", 15.0)
+            if regen == "Y":
+                return True
+        else:
+            return False
+
+    def __input_with_timeout(self, prompt, timeout=30.0):
+        """Input but with timeout."""
+        astring = 'N'
+        print(prompt, end='', flush=True)
+        rlist, _, _ = select([sys.stdin], [], [], timeout)
+        if rlist:
+            astring = sys.stdin.readline()
+        else:
+            print("Timed out proceeding.")
+        return astring
 
     def main(self):
         """Do everything."""
