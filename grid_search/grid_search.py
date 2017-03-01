@@ -83,23 +83,18 @@ class GridSearch:
         print("{} permutations of parameters generated.".format(
             len(permlists)))
 
+        git_args = ["checkout", "-b", branch_prefix, self.branch]
+        subprocess.call(['git'] + git_args)
+
         for aset in permlists:
-            branchname = "" + branch_prefix
             commit_msg = "" + commit_prefix
             sedcmds = []
             for i in range(0, len(aset)):
-                branchname = branchname + ("-{}-{}".format(
-                    self.paramlist[i]['name'], aset[i]))
                 commit_msg = commit_msg + ("({} = {})".format(
                     self.paramlist[i]['name'], aset[i]))
-                print(branchname)
 
                 sedcmds.append(['sed', '-i', "s/{0} = .*$/{0} = {1}/".format(
                     self.paramlist[i]['variable'], aset[i]), self.source])
-
-            # Do the modifications
-            git_args = ["checkout", "-b", branchname, self.branch]
-            subprocess.call(['git'] + git_args)
 
             for cmd in sedcmds:
                 subprocess.call(cmd)
@@ -107,11 +102,8 @@ class GridSearch:
             git_args = ["add", self.source]
             subprocess.call(['git'] + git_args)
 
-            git_args = ["commit", "-m", branchname]
+            git_args = ["commit", "-m", commit_msg]
             subprocess.call(['git'] + git_args)
-
-        git_args = ["checkout", "-b", branch_prefix, self.branch]
-        subprocess.call(['git'] + git_args)
 
         git_args = ["checkout", self.branch]
         subprocess.call(['git'] + git_args)
