@@ -1,0 +1,9 @@
+[
+{
+    'name': 'deaff_pattern_percent',
+    'variable': 'deaff_pattern_percent',
+    'start': 0.1,
+    'stop': 0.5,
+    'numpts': 5
+},
+]
