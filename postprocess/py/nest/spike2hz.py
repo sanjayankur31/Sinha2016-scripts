@@ -87,6 +87,11 @@ class spike2hz:
             print("File not found. Skipping.", file=sys.stderr)
             return False
 
+        if self.num_neurons == 0:
+            print("No neurons of this category available. Skipping.",
+                  file=sys.stderr)
+            return False
+
         return True
 
     def __validate_input(self, dataframe):
