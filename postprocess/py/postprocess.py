@@ -59,7 +59,7 @@ class Postprocess:
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixSEIndividualE)
 
-            if not timeddfDict:
+            if timeddfDict:
                 for time, df in timeddfDict.items():
                     syn_elms_ind_DF_filename = (
                         self.config.filenamePrefixSEIndividualE +
@@ -97,7 +97,7 @@ class Postprocess:
                 self.config.unconsolidatedFilesDir,
                 self.config.filenamePrefixSEIndividualI)
 
-            if not timeddfDict:
+            if timeddfDict:
                 for time, df in timeddfDict.items():
                     syn_elms_ind_DF_filename = (
                         self.config.filenamePrefixSEIndividualI +
