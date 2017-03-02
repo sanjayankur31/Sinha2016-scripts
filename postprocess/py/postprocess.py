@@ -422,6 +422,9 @@ class Postprocess:
                     if ".png" not in entry:
                         filesfound.append(entry)
 
+        if len(filesfound) == 0:
+            return True
+
         filesfound.sort()
         if len(filesfound) > 0:
             print("Generated files found: {}".format(len(filesfound)))
@@ -432,8 +435,8 @@ class Postprocess:
                 "Regenerate(Y/N defaults to N in 15 seconds)? ", 15.0)
             if regen == "Y":
                 return True
-        else:
-            return False
+            else:
+                return False
 
     def __input_with_timeout(self, prompt, timeout=30.0):
         """Input but with timeout."""
