@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 import pandas
+import os
 from os import listdir
 import re
 from os.path import isfile, join
@@ -124,28 +125,31 @@ class CombineFiles:
 
         for entry in filelist:
             print("Reading {}".format(entry))
-            # Last line contains the maximum number of fields in any line, so
-            # use this to size our df. Pandas can manage lines shorter than
-            # previous lines by using NA, but it cannot handle lines longer and
-            # crashes
-            # Ignore ',\n'
-            max_columns = int(float(
-                subprocess.check_output(['tail', '-1', entry])[0:-2])) + 1
-            print("Max cols is: {}".format(max_columns))
+            if os.stat(entry).st_size != 0:
+                # Last line contains the maximum number of fields in any line,
+                # so use this to size our df. Pandas can manage lines shorter
+                # than previous lines by using NA, but it cannot handle lines
+                # longer and crashes
+                # Ignore ',\n'
+                max_columns = int(float(
+                    subprocess.check_output(['tail', '-1', entry])[0:-2])) + 1
+                print("Max cols is: {}".format(max_columns))
 
-            dataframe = pandas.read_csv(entry, skiprows=1, sep=',',
-                                        skipinitialspace=True,
-                                        skip_blank_lines=True, dtype=float,
-                                        warn_bad_lines=True,
-                                        lineterminator='\n', header=None,
-                                        names=range(0, max_columns),
-                                        mangle_dupe_cols=True,
-                                        index_col=0, error_bad_lines=False)
-            # Drop last row which isn't data, it's metadata
-            dataframe = dataframe.drop(dataframe.index[len(dataframe) - 1])
-            dataframe = dataframe.dropna(axis=1, how='all')
+                dataframe = pandas.read_csv(entry, skiprows=1, sep=',',
+                                            skipinitialspace=True,
+                                            skip_blank_lines=True, dtype=float,
+                                            warn_bad_lines=True,
+                                            lineterminator='\n', header=None,
+                                            names=range(0, max_columns),
+                                            mangle_dupe_cols=True,
+                                            index_col=0, error_bad_lines=False)
+                # Drop last row which isn't data, it's metadata
+                dataframe = dataframe.drop(dataframe.index[len(dataframe) - 1])
+                dataframe = dataframe.dropna(axis=1, how='all')
 
-            dataframes.append(dataframe)
+                dataframes.append(dataframe)
+            else:
+                print("Skipping empty file, {}".format(entry))
 
         print("Combining dataframes..")
         combineddataframe = pandas.concat(dataframes, axis=1)
@@ -172,14 +176,17 @@ class CombineFiles:
         dataframes = []
 
         for entry in filelist:
-            dataframe = pandas.read_csv(entry, skiprows=1, sep='\t',
-                                        skipinitialspace=True,
-                                        skip_blank_lines=True, dtype=float,
-                                        warn_bad_lines=True,
-                                        lineterminator='\n', header=None,
-                                        index_col=0, error_bad_lines=False)
+            if os.stat(entry).st_size != 0:
+                dataframe = pandas.read_csv(entry, skiprows=1, sep='\t',
+                                            skipinitialspace=True,
+                                            skip_blank_lines=True, dtype=float,
+                                            warn_bad_lines=True,
+                                            lineterminator='\n', header=None,
+                                            index_col=0, error_bad_lines=False)
 
-            dataframes.append(dataframe)
+                dataframes.append(dataframe)
+            else:
+                print("Skipping empty file, {}".format(entry))
 
         summeddf = dataframes.pop(0)
         for dataframe in dataframes:
