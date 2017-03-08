@@ -444,7 +444,7 @@ class Postprocess:
         print(prompt, end='', flush=True)
         rlist, _, _ = select([sys.stdin], [], [], timeout)
         if rlist:
-            astring = sys.stdin.readline()
+            astring = sys.stdin.readline()[0]
         else:
             print("Timed out proceeding.")
         return astring
