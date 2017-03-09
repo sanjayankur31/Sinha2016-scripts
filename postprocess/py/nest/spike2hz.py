@@ -126,8 +126,11 @@ class spike2hz:
                                      lineterminator="\n",
                                      skipinitialspace=True,
                                      header=None, index_col=None,
+                                     skip_blank_lines=True,
                                      chunksize=self.rows):
 
+            # Drop rows with nan
+            chunk = chunk.dropna(how='any')
             if not self.__validate_input(chunk):
                 print("Error in file. Skipping.", file=sys.stderr)
                 return False
