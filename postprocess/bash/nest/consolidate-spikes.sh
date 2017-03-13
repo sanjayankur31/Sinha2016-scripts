@@ -57,15 +57,15 @@ for pat in $(seq 1 $NUMPATS); do
     mv "spikes-stim-""$pat"".gdf" consolidated_files
 
     echo "Combining pattern neuron files"
-    LC_ALL=C sort -n --parallel=16 -T $SORTTMPDIR "patternneurons-""$pat""-rank-"*.txt > "patternneurons-""$pat"".txt"
+    LC_ALL=C sort -n --parallel=16 -T $SORTTMPDIR "patternneurons-""$pat""-rank-"*.txt | uniq > "patternneurons-""$pat"".txt"
     mv "patternneurons-""$pat"".txt" consolidated_files
 
     echo "Combining recall neuron files"
-    LC_ALL=C sort -n --parallel=16 -T $SORTTMPDIR "recallneurons-""$pat""-rank-"*.txt > "recallneurons-""$pat"".txt"
+    LC_ALL=C sort -n --parallel=16 -T $SORTTMPDIR "recallneurons-""$pat""-rank-"*.txt | uniq > "recallneurons-""$pat"".txt"
     mv "recallneurons-""$pat"".txt" consolidated_files
 
     echo "Combining background neuron files"
-    LC_ALL=C sort -n --parallel=16 -T $SORTTMPDIR "backgroundneurons-""$pat""-rank-"*.txt > "backgroundneurons-""$pat"".txt"
+    LC_ALL=C sort -n --parallel=16 -T $SORTTMPDIR "backgroundneurons-""$pat""-rank-"*.txt | uniq > "backgroundneurons-""$pat"".txt"
     mv "backgroundneurons-""$pat"".txt" consolidated_files
 done
 
