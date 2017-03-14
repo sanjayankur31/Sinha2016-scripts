@@ -51,7 +51,7 @@ class Postprocess:
         """Post process synaptic elements from individual neuronal files."""
         if self.config.SETotalsMetrics:
             print("Processing synaptic elements for individual neurons..")
-            import nest.combineFiles
+            import nestpp.combineFiles
             combiner = nest.combineFiles.CombineFiles()
 
             # E neurons
@@ -134,7 +134,7 @@ class Postprocess:
         """Post total synaptic element files."""
         if self.config.SETotalsMetrics:
             print("Processing synaptic element information..")
-            import nest.combineFiles
+            import nestpp.combineFiles
             combiner = nest.combineFiles.CombineFiles()
 
             syn_elms_DF_E = pandas.DataFrame()
@@ -187,7 +187,7 @@ class Postprocess:
     def __postprocess_calcium(self):
         """Postprocess calcium files."""
         if self.config.calciumMetrics:
-            import nest.combineFiles
+            import nestpp.combineFiles
             calDF_E = pandas.DataFrame()
             calDF_I = pandas.DataFrame()
             print("Processing calcium concentration information..")
@@ -256,7 +256,7 @@ class Postprocess:
             conductancesDF_EI = pandas.DataFrame()
             conductancesDF_IE = pandas.DataFrame()
             conductancesDF_II = pandas.DataFrame()
-            import nest.combineFiles
+            import nestpp.combineFiles
             if self.__reprocess_raw_files([self.config.filenamePrefixConductancesEE]):
                 combiner = nest.combineFiles.CombineFiles()
                 conductancesDF_EE = combiner.combineCSVRowLists(
@@ -359,7 +359,7 @@ class Postprocess:
         """Postprocess combined spike files."""
         if self.config.timegraphs:
             print("Generating timegraph..")
-            import nest.timeGraphPlotter as TGP
+            import nestpp.timeGraphPlotter as TGP
             tgp = TGP.timeGraphPlotter(self.config)
             if self.__reprocess_raw_files(["firing-", "std-", "cv-"]):
                 tgp.get_firing_rates_from_spikes()
@@ -367,8 +367,8 @@ class Postprocess:
 
         if self.config.histograms:
             print("Generating histograms..")
-            import nest.dualHistogramPlotter as pltH
-            import nest.getFiringRates as rg
+            import nestpp.dualHistogramPlotter as pltH
+            import nestpp.getFiringRates as rg
             rateGetterE = rg.getFiringRates()
             if rateGetterE.setup(self.config.filenameE, 'E',
                                  self.config.neuronsE,
@@ -405,7 +405,7 @@ class Postprocess:
 
         if self.config.rasters:
             print("Generating rasters..")
-            import nest.dualRasterPlotter as pltR
+            import nestpp.dualRasterPlotter as pltR
             rasterPlotterEI = pltR.dualRasterPlotter()
             if rasterPlotterEI.setup('E', 'I', self.config.neuronsE,
                                      self.config.neuronsI,
