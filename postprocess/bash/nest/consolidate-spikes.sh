@@ -60,6 +60,14 @@ for pat in $(seq 1 $NUMPATS); do
     LC_ALL=C sort -n --parallel=16 -T $SORTTMPDIR "patternneurons-""$pat""-rank-"*.txt | uniq > "patternneurons-""$pat"".txt"
     mv "patternneurons-""$pat"".txt" consolidated_files
 
+    echo "Combining deaffed pattern neuron files"
+    LC_ALL=C sort -n --parallel=16 -T $SORTTMPDIR "deaffed-patternneurons-""$pat""-rank-"*.txt | uniq > "deaffed-patternneurons-""$pat"".txt"
+    mv "deaffed-patternneurons-""$pat"".txt" consolidated_files
+
+    echo "Combining non deaffed pattern neuron files"
+    LC_ALL=C sort -n --parallel=16 -T $SORTTMPDIR "non-deaffed-patternneurons-""$pat""-rank-"*.txt | uniq > "non-deaffed-patternneurons-""$pat"".txt"
+    mv "non-deaffed-patternneurons-""$pat"".txt" consolidated_files
+
     echo "Combining recall neuron files"
     LC_ALL=C sort -n --parallel=16 -T $SORTTMPDIR "recallneurons-""$pat""-rank-"*.txt | uniq > "recallneurons-""$pat"".txt"
     mv "recallneurons-""$pat"".txt" consolidated_files
@@ -67,6 +75,22 @@ for pat in $(seq 1 $NUMPATS); do
     echo "Combining background neuron files"
     LC_ALL=C sort -n --parallel=16 -T $SORTTMPDIR "backgroundneurons-""$pat""-rank-"*.txt | uniq > "backgroundneurons-""$pat"".txt"
     mv "backgroundneurons-""$pat"".txt" consolidated_files
+
+    echo "Combining deaffed background neuron files"
+    LC_ALL=C sort -n --parallel=16 -T $SORTTMPDIR "deaffed-backgroundneurons-""$pat""-rank-"*.txt | uniq > "deaffed-backgroundneurons-""$pat"".txt"
+    mv "deaffed-backgroundneurons-""$pat"".txt" consolidated_files
+
+    echo "Combining non deaffed background neuron files"
+    LC_ALL=C sort -n --parallel=16 -T $SORTTMPDIR "non-deaffed-backgroundneurons-""$pat""-rank-"*.txt | uniq > "non-deaffed-backgroundneurons-""$pat"".txt"
+    mv "non-deaffed-backgroundneurons-""$pat"".txt" consolidated_files
+
+    echo "Combining deaffed I neuron files"
+    LC_ALL=C sort -n --parallel=16 -T $SORTTMPDIR "deaffed-Ineurons-""$pat""-rank-"*.txt | uniq > "deaffed-Ineurons-""$pat"".txt"
+    mv "deaffed-Ineurons-""$pat"".txt" consolidated_files
+
+    echo "Combining non deaffed I neuron files"
+    LC_ALL=C sort -n --parallel=16 -T $SORTTMPDIR "non-deaffed-Ineurons-""$pat""-rank-"*.txt | uniq > "non-deaffed-Ineurons-""$pat"".txt"
+    mv "non-deaffed-Ineurons-""$pat"".txt" consolidated_files
 done
 
 echo "Combining E files"
