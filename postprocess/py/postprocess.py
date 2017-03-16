@@ -52,7 +52,7 @@ class Postprocess:
         if self.config.SETotalsMetrics:
             print("Processing synaptic elements for individual neurons..")
             import nestpp.combineFiles
-            combiner = nest.combineFiles.CombineFiles()
+            combiner = nestpp.combineFiles.CombineFiles()
 
             # E neurons
             timeddfDict = combiner.combineTimedTSVColDataFiles(
@@ -135,7 +135,7 @@ class Postprocess:
         if self.config.SETotalsMetrics:
             print("Processing synaptic element information..")
             import nestpp.combineFiles
-            combiner = nest.combineFiles.CombineFiles()
+            combiner = nestpp.combineFiles.CombineFiles()
 
             syn_elms_DF_E = pandas.DataFrame()
             syn_elms_DF_I = pandas.DataFrame()
@@ -192,7 +192,7 @@ class Postprocess:
             calDF_I = pandas.DataFrame()
             print("Processing calcium concentration information..")
             if self.__reprocess_raw_files([self.config.filenamePrefixCalciumE]):
-                combiner = nest.combineFiles.CombineFiles()
+                combiner = nestpp.combineFiles.CombineFiles()
 
                 calDF_E = combiner.combineCSVRowLists(
                     self.config.unconsolidatedFilesDir,
@@ -258,7 +258,7 @@ class Postprocess:
             conductancesDF_II = pandas.DataFrame()
             import nestpp.combineFiles
             if self.__reprocess_raw_files([self.config.filenamePrefixConductancesEE]):
-                combiner = nest.combineFiles.CombineFiles()
+                combiner = nestpp.combineFiles.CombineFiles()
                 conductancesDF_EE = combiner.combineCSVRowLists(
                     self.config.unconsolidatedFilesDir,
                     self.config.filenamePrefixConductancesEE)

@@ -205,7 +205,7 @@ class timeGraphPlotter:
 
     def get_firing_rates_from_spikes(self):
         """Get firing rate files from spikes."""
-        from nest.spike2hz import spike2hz
+        from nestpp.spike2hz import spike2hz
         if (
             os.path.isfile(self.config.filenameE) and
             os.stat(self.config.filenameE).st_size != 0
