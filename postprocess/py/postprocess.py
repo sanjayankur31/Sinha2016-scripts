@@ -405,11 +405,29 @@ class Postprocess:
 
         if self.config.rasters:
             print("Generating rasters..")
-            import nestpp.dualRasterPlotter as pltR
-            rasterPlotterEI = pltR.dualRasterPlotter()
-            if rasterPlotterEI.setup('E', 'I', self.config.neuronsE,
-                                     self.config.neuronsI,
-                                     self.config.rows_per_read):
+            import nestpp.rasterPlotter as pltR
+            rasterPlotter = pltR.rasterPlotter()
+            optiontdict = [
+                {
+                    'neuronSet': 'P',
+                    'neuronsFileName': self.config.neuronListPrefixP + str(i) + ".txt",
+                    'spikesFileName': self.config.filenamePrefixP + str(i) + ".gdf",
+                    'neuronNum': self.config.neuronsP
+                },
+                {
+                    'neuronSet': 'E',
+                    'neuronsFileName': self.config.neuronListPrefixB,
+                    'spikesFileName': self.config.filenamePrefixB + str(i) + ".gdf",
+                    'neuronNum': self.config.neuronsB
+                },
+                {
+                    'neuronSet': 'I',
+                    'neuronsFileName': self.config.neuronListI,
+                    'spikesFileName': self.config.filenameI,
+                    'neuronNum': self.config.neuronsI
+                },
+            ]
+            if rasterPlotterEI.setup(optiondict):
                 rasterPlotterEI.run(self.config.histogram_timelist)
 
     def __reprocess_raw_files(self, prefixlist):
