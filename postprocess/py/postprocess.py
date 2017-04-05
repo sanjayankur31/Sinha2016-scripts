@@ -430,6 +430,58 @@ class Postprocess:
             if rasterPlotterEI.setup(optiondict):
                 rasterPlotterEI.run(self.config.histogram_timelist)
 
+        if self.config.grid:
+            print("Generating grids..")
+            import nestpp.gridPlotter as gp
+            import nestpp.getFiringRates as rg
+            numpats = self.__get_numpats()
+            rateGetter = rg.getFiringRates()
+
+            for i in numpats:
+                if rateGetter.setup(
+                    self.config.filenamePrefixP + str(i) + ".gdf", 'P',
+                    self.config.neuronsP,
+                    self.config.rows_per_read
+                ):
+                    rateGetter.run(self.config.gridplots_timelist)
+                if rateGetter.setup(
+                    self.config.filenamePrefixB + str(i) + ".gdf", 'B',
+                    self.config.neuronsB,
+                    self.config.rows_per_read
+                ):
+                    rateGetter.run(self.config.gridplots_timelist)
+                if rateGetter.setup(
+                    self.config.filenameI + ".gdf", 'I',
+                    self.config.neuronsI,
+                    self.config.rows_per_read
+                ):
+                    rateGetter.run(self.config.gridplots_timelist)
+
+                gridplotter = gp.gridPlotter()
+                optiontdict = [
+                    {
+                        'neuronSet': 'P',
+                        'neuronsFile': "patternneurons-{}.txt".format(i),
+                        'firingRateFile': "firing-rate-pattern-{}.gdf".format(i),
+                        'neuronNum': self.config.neuronsP
+                    },
+                    {
+                        'neuronSet': 'B',
+                        'neuronsFile': "backgroundneurons-{}.txt".format(i),
+                        'firingRateFile': "firing-rate-background-{}.gdf".format(i),
+                        'neuronNum': self.config.neuronsB
+                    },
+                    {
+                        'neuronSet': 'I',
+                        'neuronsFile': "inhibitory-{}.txt".format(i),
+                        'firingRateFile': "firing-rate-I.gdf".format(i),
+                        'neuronNum': self.config.neuronsI
+                    },
+                ]
+
+                if gridplotter.setup(optiondict):
+                    gridplotter.run(self.config.gridplots_timelist)
+
     def __reprocess_raw_files(self, prefixlist):
         """Ask if files should be reprocessed if found."""
         filelist = os.listdir()

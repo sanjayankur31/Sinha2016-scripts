@@ -224,7 +224,7 @@ class rasterPlotter:
 if __name__ == "__main__":
     dictlist = [
         {
-            'neuronSet': 'E',
+            'neuronSet': 'BG',
             'spikesFileName': 'spikes-background-1.gdf',
             'neuronsFileName': 'backgroundneurons-1.txt',
             'neuronNum': 7200

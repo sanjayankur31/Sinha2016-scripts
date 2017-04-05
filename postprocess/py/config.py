@@ -33,6 +33,7 @@ class Config:
         self.timegraphs = True
         self.snr = False
         self.histogram_timelist = [0.]
+        self.gridplots_timelist = [0.]
         self.snr_time = 0.
         self.taskfile = taskfile
 
@@ -115,15 +116,24 @@ class Config:
         self.neuronsDBGI = parser['default']['neuronsDBGI']
         self.neuronsP = parser['default']['neuronsP']
         self.filenameE = parser['default']['filenameE']
+        self.neuronListE = parser['default']['neuronListE']
         self.filenameI = parser['default']['filenameI']
+        self.neuronListI = parser['default']['neuronListI']
         # multiple patterns and so related files
         self.filenamePrefixR = parser['default']['filenamePrefixR']
+        self.neuronListPrefixR = parser['default']['neuronListPrefixR']
         self.filenamePrefixB = parser['default']['filenamePrefixB']
+        self.neuronListPrefixB = parser['default']['neuronListPrefixB']
         self.filenamePrefixS = parser['default']['filenamePrefixS']
+        self.neuronListPrefixS = parser['default']['neuronListPrefixS']
         self.filenamePrefixDP = parser['default']['filenamePrefixDP']
+        self.neuronListPrefixDP = parser['default']['neuronListPrefixDP']
         self.filenamePrefixDBGE = parser['default']['filenamePrefixDBGE']
+        self.neuronListPrefixDBGE = parser['default']['neuronListPrefixDBGE']
         self.filenamePrefixDBGI = parser['default']['filenamePrefixDBGI']
+        self.neuronListPrefixDBGI = parser['default']['neuronListPrefixDBGI']
         self.filenamePrefixP = parser['default']['filenamePrefixP']
+        self.neuronListPrefixP = parser['default']['neuronListPrefixP']
 
         # where the unconsolidated files are
         # because its easier to consolidate raster files using sort
@@ -155,6 +165,8 @@ class Config:
         self.rasters = parser['default'].getboolean('rasters')
         self.histogram_timelist = [float(s) for s in
                                    parser['histograms']['times'].split()]
+        self.gridplots_timelist = [float(s) for s in
+                                   parser['gridplots']['times'].split()]
         self.store_rate_files = parser['histograms'].getboolean(
             'store_rate_files')
         self.store_raster_files = parser['histograms'].getboolean(
