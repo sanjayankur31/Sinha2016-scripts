@@ -479,7 +479,7 @@ class Postprocess:
                     },
                 ]
 
-                if gridplotter.setup(optiondict):
+                if gridplotter.setup(optiondict, rows, columns):
                     gridplotter.run(self.config.gridplots_timelist)
 
     def __reprocess_raw_files(self, prefixlist):
