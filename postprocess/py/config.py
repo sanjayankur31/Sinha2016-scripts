@@ -163,6 +163,7 @@ class Config:
         # histograms and rasters
         self.histograms = parser['default'].getboolean('histograms')
         self.rasters = parser['default'].getboolean('rasters')
+        self.grid = parser['default'].getboolean('grids')
         self.histogram_timelist = [float(s) for s in
                                    parser['histograms']['times'].split()]
         self.gridplots_timelist = [float(s) for s in
@@ -175,6 +176,7 @@ class Config:
         # snr
         self.snr = parser['default'].getboolean('snr')
         self.snr_time = float(parser['snr']['times'])
+
 
     def __getMeanFiringRateFilename(self, inputname):
         """Generate mean firing rate filename."""

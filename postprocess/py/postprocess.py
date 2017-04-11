@@ -28,6 +28,7 @@ import pandas
 import subprocess
 from select import select
 
+
 class Postprocess:
 
     """Main post process worker class."""
@@ -153,7 +154,7 @@ class Postprocess:
                         header=None, line_terminator='\n')
                     print("Processed synaptic elements for E neurons..")
                 else:
-                    print("No dataframe for all E synaptic elements. Skipping.")
+                    print("No dataframe for all E syn elements. Skipping.")
             else:
                 syn_elms_DF_E = syn_elms_DF_E.append([0])
 
@@ -404,31 +405,37 @@ class Postprocess:
                 plotterBS.run()
 
         if self.config.rasters:
-            print("Generating rasters..")
             import nestpp.rasterPlotter as pltR
+            numpats = self.__get_numpats()
             rasterPlotter = pltR.rasterPlotter()
-            optiontdict = [
-                {
-                    'neuronSet': 'P',
-                    'neuronsFileName': self.config.neuronListPrefixP + str(i) + ".txt",
-                    'spikesFileName': self.config.filenamePrefixP + str(i) + ".gdf",
-                    'neuronNum': self.config.neuronsP
-                },
-                {
-                    'neuronSet': 'E',
-                    'neuronsFileName': self.config.neuronListPrefixB,
-                    'spikesFileName': self.config.filenamePrefixB + str(i) + ".gdf",
-                    'neuronNum': self.config.neuronsB
-                },
-                {
-                    'neuronSet': 'I',
-                    'neuronsFileName': self.config.neuronListI,
-                    'spikesFileName': self.config.filenameI,
-                    'neuronNum': self.config.neuronsI
-                },
-            ]
-            if rasterPlotterEI.setup(optiondict):
-                rasterPlotterEI.run(self.config.histogram_timelist)
+            print("numpats are: {}".format(numpats))
+            for i in range(1, numpats + 1):
+                print("Generating rasters for pattern {}..".format(i))
+                optiondict = [
+                    {
+                        'neuronSet': 'P',
+                        'neuronsFileName': (self.config.neuronListPrefixP +
+                                            str(i) + ".txt"),
+                        'spikesFileName': (self.config.filenamePrefixP + str(i)
+                                           + ".gdf"),
+                        'neuronNum': int(self.config.neuronsP)
+                    },
+                    {
+                        'neuronSet': 'E',
+                        'neuronsFileName': self.config.neuronListE,
+                        'spikesFileName': (self.config.filenamePrefixB + str(i)
+                                           + ".gdf"),
+                        'neuronNum': int(self.config.neuronsE)
+                    },
+                    {
+                        'neuronSet': 'I',
+                        'neuronsFileName': self.config.neuronListI,
+                        'spikesFileName': self.config.filenameI,
+                        'neuronNum': int(self.config.neuronsI)
+                    },
+                ]
+                if rasterPlotter.setup(optiondict):
+                    rasterPlotter.run(self.config.histogram_timelist)
 
         if self.config.grid:
             print("Generating grids..")
@@ -437,7 +444,7 @@ class Postprocess:
             numpats = self.__get_numpats()
             rateGetter = rg.getFiringRates()
 
-            for i in numpats:
+            for i in range(1, numpats + 1):
                 if rateGetter.setup(
                     self.config.filenamePrefixP + str(i) + ".gdf", 'P',
                     self.config.neuronsP,
@@ -518,6 +525,15 @@ class Postprocess:
         else:
             print("Timed out proceeding.")
         return astring
+
+    def __get_numpats(self):
+        """Get number of patterns from list of files in directory."""
+        filelist = os.listdir()
+        i = 0
+        for entry in filelist:
+            if 'patternneurons-' in entry:
+                i = i+1
+        return i
 
     def main(self):
         """Do everything."""

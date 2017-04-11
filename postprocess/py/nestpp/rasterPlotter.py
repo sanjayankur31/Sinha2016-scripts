@@ -213,8 +213,6 @@ class rasterPlotter:
 
         for adict in self.neuronOptions:
             adict['neurons'] = self.__get_neurons(adict)
-
-        for adict in self.neuronOptions:
             adict['spikes'] = self.__get_spikes(adict, timelist)
 
         for atime in timelist:
@@ -238,7 +236,7 @@ if __name__ == "__main__":
         {
             'neuronSet': 'I',
             'spikesFileName': 'spikes-I.gdf',
-            'neuronsFileName': 'neurons-I.txt',
+            'neuronsFileName': 'inhibitoryneurons.txt',
             'neuronNum': 2000
         },
     ]
