@@ -58,5 +58,6 @@ for run in range(0, 25):
     plt.plot(numpats, coverage, ".", markersize=5)
 
 plt.legend(loc="upper right")
+plt.grid()
 plt.savefig(output_filename)
 plt.close()
