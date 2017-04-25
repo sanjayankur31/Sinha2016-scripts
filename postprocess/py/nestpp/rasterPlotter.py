@@ -29,6 +29,7 @@ import numpy
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+import sys
 
 
 class rasterPlotter:
@@ -48,6 +49,7 @@ class rasterPlotter:
         self.scale = scale
         self.window = window
         if len(optionDicts) <= 0:
+            print("No option dictionaries received..", file=sys.stderr)
             return False
         self.neuronOptions = optionDicts
         return self.__validate_dicts()
@@ -222,16 +224,10 @@ class rasterPlotter:
 if __name__ == "__main__":
     dictlist = [
         {
-            'neuronSet': 'BG',
-            'spikesFileName': 'spikes-background-1.gdf',
-            'neuronsFileName': 'backgroundneurons-1.txt',
-            'neuronNum': 7200
-        },
-        {
-            'neuronSet': 'P',
-            'spikesFileName': 'spikes-pattern-1.gdf',
-            'neuronsFileName': 'patternneurons-1.txt',
-            'neuronNum': 800
+            'neuronSet': 'E',
+            'spikesFileName': 'spikes-E.gdf',
+            'neuronsFileName': 'excitatoryneurons.txt',
+            'neuronNum': 8000
         },
         {
             'neuronSet': 'I',
@@ -243,5 +239,5 @@ if __name__ == "__main__":
 
     plotter = rasterPlotter()
     plotter.setup(dictlist)
-    timelist = [4000, 4010]
+    timelist = [1990, 2005, 3990, 4005, 5990]
     plotter.run(timelist)

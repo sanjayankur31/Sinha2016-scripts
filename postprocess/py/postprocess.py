@@ -421,20 +421,24 @@ class Postprocess:
                         'neuronNum': int(self.config.neuronsP)
                     },
                     {
-                        'neuronSet': 'E',
-                        'neuronsFileName': self.config.neuronListE,
+                        'neuronSet': 'B',
+                        'neuronsFileName': (self.config.neuronListPrefixB +
+                                            str(i) + ".txt"),
                         'spikesFileName': (self.config.filenamePrefixB + str(i)
                                            + ".gdf"),
-                        'neuronNum': int(self.config.neuronsE)
+                        'neuronNum': int(self.config.neuronsB)
                     },
                     {
-                        'neuronSet': 'I',
-                        'neuronsFileName': self.config.neuronListI,
-                        'spikesFileName': self.config.filenameI,
-                        'neuronNum': int(self.config.neuronsI)
+                        'neuronSet': 'E',
+                        'neuronsFileName': (self.config.neuronListPrefixB +
+                                            str(i) + ".txt"),
+                        'spikesFileName': (self.config.filenamePrefixB + str(i)
+                                           + ".gdf"),
+                        'neuronNum': int(self.config.neuronsB)
                     },
                 ]
                 if rasterPlotter.setup(optiondict):
+                    print("Doing the work.")
                     rasterPlotter.run(self.config.histogram_timelist)
 
         if self.config.grid:
@@ -531,7 +535,7 @@ class Postprocess:
         filelist = os.listdir()
         i = 0
         for entry in filelist:
-            if 'patternneurons-' in entry:
+            if entry.startswith('patternneurons-'):
                 i = i+1
         return i
 

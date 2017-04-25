@@ -395,7 +395,7 @@ class timeGraphPlotter:
         filelist = os.listdir()
         i = 0
         for entry in filelist:
-            if 'patternneurons-' in entry:
+            if entry.startswith('patternneurons-'):
                 i = i+1
         return i
 
