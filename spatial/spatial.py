@@ -46,19 +46,22 @@ def butz():
 
     locs = []
 
+    start = timer()
     for neuron in neuronsE:
-        yE = numpy.random.normal(
-            int((neuron - neuronsE[0])/colsE) * neuronal_distE, sd, 1)[0]
-        xE = numpy.random.normal(
-            ((neuron - neuronsE[0]) % colsE) * neuronal_distE, sd, 1)[0]
+        yE = random.gauss(
+            int((neuron - neuronsE[0])/colsE) * neuronal_distE, sd)
+        xE = random.gauss(
+            ((neuron - neuronsE[0]) % colsE) * neuronal_distE, sd)
         locs.append([xE, yE])
 
     for neuron in neuronsI:
-        yI = neuronal_distI/4 + numpy.random.normal(
-            int((neuron - neuronsI[0])/colsI) * neuronal_distI, sd, 1)[0]
-        xI = neuronal_distI/4 + numpy.random.normal(
-            ((neuron - neuronsI[0]) % colsI) * neuronal_distI, sd, 1)[0]
+        yI = neuronal_distI/4 + random.gauss(
+            int((neuron - neuronsI[0])/colsI) * neuronal_distI, sd)
+        xI = neuronal_distI/4 + random.gauss(
+            ((neuron - neuronsI[0]) % colsI) * neuronal_distI, sd)
         locs.append([xI, yI])
+    end = timer()
+    print("Locations with native random generator: {}".format(end - start))
 
     plotit(locs, "spatial-grid-butz.png")
     timetree(locs, "BUTZ")
