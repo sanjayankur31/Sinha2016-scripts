@@ -53,8 +53,6 @@ echo "ANKUR>> Script: ${0}"
 
 cd $RESULT_PATH
 
-source ~/installed-software/nest/bin/nest_vars.sh
-source activate python3
 /usr/local/bin/mpiexec -n $NUM_NODES python3 $PROGRAM_PATH
 
 END_TIME=$(date +%Y%m%d%H%M)
