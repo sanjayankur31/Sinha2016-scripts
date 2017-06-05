@@ -19,7 +19,7 @@
 # File : consolidate-spikes.sh
 #
 
-SORTTMPDIR="/home/asinha/dump/sort-tmpdir"
+SORTTMPDIR="/simulation-drive/sort-tmpdir"
 
 echo "Combining files for Auryn simulation"
 mkdir consolidated_files

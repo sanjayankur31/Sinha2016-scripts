@@ -19,7 +19,7 @@
 # File : consolidate-spikes.sh
 #
 
-SORTTMPDIR="/home/asinha/dump/sort-tmpdir"
+SORTTMPDIR="/simulation-drive/sort-tmpdir"
 # Get number of patterns in this simulation
 NUMPATS="$(ls spikes-pattern* | grep -Eo 'pattern-[0-9]+' | sort  | uniq | sed 's/pattern-//' | wc -l)"
 
