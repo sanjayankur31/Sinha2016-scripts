@@ -16,18 +16,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# File : scripts/cluster/start-job.sh
+# File : start-nest-job.sh
 #
-# Queue's up a new job for me.
+# Queue's up a new nest job for me.
 
 SOURCE_PATH="/home/asinha/Documents/02_Code/00_repos/00_mine/Sinha2016/"
+SCRIPT_PATH="/home/asinha/Documents/02_Code/00_repos/00_mine/Sinha2016-scripts/"
 GIT_COMMIT=""
-SIM_PATH="/home/asinha/cluster-data/"
+SIM_PATH="/simulation-drive/"
 SIM_TIME=$(date +%Y%m%d%H%M)
-RUN_SCRIPT="scripts/mac/nest-runsim.sh"
+RUN_SCRIPT="mac/nest-runsim.sh"
 RUN_NEW=""
 ERROR="no"
-NUM_NODES=20
+NUM_NODES=50
 CUR_SIM_PATH=""
 
 function run_task
@@ -64,28 +65,33 @@ function setup_env
 
         RUN_NEW="nest_""$GIT_COMMIT"".sh"
         echo "Setting up $RUN_NEW..."
-        cp "$SOURCE_PATH""$RUN_SCRIPT" "$RUN_NEW" -v
+        cp "$SCRIPT_PATH""$RUN_SCRIPT" "$RUN_NEW" -v
         sed -i "s|nest_v_s|nest_$GIT_COMMIT|" "$RUN_NEW"
         sed -i "s|nodes=.*|nodes=$NUM_NODES|" "$RUN_NEW"
         sed -i "s|NUM_NODES=.*|NUM_NODES=$NUM_NODES|" "$RUN_NEW"
         sed -i "s|SIM_TIME=.*|SIM_TIME=$SIM_TIME|" "$RUN_NEW"
 
         mkdir -v result
-        touch result/"00-GIT-COMMIT-""$GIT_COMMIT"
+        pushd "Sinha2016"
+            git show > ../result/"00-GIT-COMMIT-""$GIT_COMMIT"
+        popd
+
+        mkdir -v result/consolidated_files/
+        cp -v "$SCRIPT_PATH/config.ini" result/consolidated_files/
     popd
 }
 
 function usage
 {
     echo "Usage: $0"
-    echo "Run up a task for a particular git commit"
+    echo "Queue up a job to run a particular git commit"
     echo "$0 <git_commit> <number_nodes>"
 }
 
 if [ "$#" -ne 2 ];
 then
     echo "Error occurred. Exiting..."
-    echo "Received $# arguments. Expected: 3"
+    echo "Received $# arguments. Expected: 2"
     usage
     exit -1
 fi
