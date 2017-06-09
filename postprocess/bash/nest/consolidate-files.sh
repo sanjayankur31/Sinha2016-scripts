@@ -20,6 +20,8 @@
 #
 
 SORTTMPDIR="/simulation-drive/sort-tmpdir"
+echo "Created $SORTTMPDIR"
+mkdir -p $SORTTMPDIR
 # Get number of patterns in this simulation
 NUMPATS="$(ls spikes-pattern* | grep -Eo 'pattern-[0-9]+' | sort  | uniq | sed 's/pattern-//' | wc -l)"
 
@@ -101,5 +103,7 @@ echo "Combining I files"
 LC_ALL=C sort -k "2" -n --parallel=16 -T $SORTTMPDIR spikes-*I*.gdf > spikes-I.gdf
 mv spikes-I.gdf consolidated_files
 
+echo "Removed $SORTTMPDIR"
+rm -rf $SORTTMPDIR
 echo "All files combined."
 exit 0
