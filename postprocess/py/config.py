@@ -83,6 +83,12 @@ class Config:
         self.filenamePrefixConductancesII = ""
         self.filenamePrefixConductancesIE = ""
 
+        self.numpats = 0
+        self.neuronsE = 0
+        self.neuronsI = 0
+        self.neuronsLPZE = 0
+        self.neuronsLPZI = 0
+
         parser = configparser.ConfigParser()
         parser.read(self.taskfile)
 

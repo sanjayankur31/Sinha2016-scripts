@@ -78,23 +78,6 @@ class timeGraphPlotter:
                 self.lineI = [0, 0]
 
             if (
-                os.path.isfile(self.config.filenameMeanRatesR) and
-                os.stat(self.config.filenameMeanRatesR).st_size != 0
-            ):
-                ratesR = pandas.load_csv(self.config.filenameMeanRatesR,
-                                         sep='\s+',
-                                         names=["neuronID", "spike_time"],
-                                         dtype={'neuronID': numpy.uint16,
-                                                'spike_time': numpy.float32},
-                                         lineterminator="\n",
-                                         skipinitialspace=True, header=None,
-                                         index_col=None)
-                self.lineR = Gnuplot.data(ratesR.values[:0], ratesR.values[:1],
-                                          title="R", with_="lines lw 4")
-            else:
-                self.lineR = [0, 0]
-
-            if (
                 os.path.isfile(self.config.filenameMeanRatesB) and
                 os.stat(self.config.filenameMeanRatesB).st_size != 0
             ):
@@ -110,40 +93,6 @@ class timeGraphPlotter:
                                           title="B", with_="lines lw 4")
             else:
                 self.lineB = [0, 0]
-
-            if (
-                os.path.isfile(self.config.filenameMeanRatesS) and
-                os.stat(self.config.filenameMeanRatesS).st_size != 0
-            ):
-                ratesS = pandas.load_csv(self.config.filenameMeanRatesS,
-                                         sep='\s+',
-                                         names=["neuronID", "spike_time"],
-                                         dtype={'neuronID': numpy.uint16,
-                                                'spike_time': numpy.float32},
-                                         lineterminator="\n",
-                                         skipinitialspace=True, header=None,
-                                         index_col=None)
-                self.lineS = Gnuplot.data(ratesS.values[:0], ratesS.values[:1],
-                                          title="S", with_="lines lw 4")
-            else:
-                self.lineS = [0, 0]
-
-            if (
-                os.path.isfile(self.config.filenameMeanRatesL) and
-                os.stat(self.config.filenameMeanRatesL).st_size != 0
-            ):
-                ratesL = pandas.load_csv(self.config.filenameMeanRatesL,
-                                         sep='\s+',
-                                         names=["neuronID", "spike_time"],
-                                         dtype={'neuronID': numpy.uint16,
-                                                'spike_time': numpy.float32},
-                                         lineterminator="\n",
-                                         skipinitialspace=True, header=None,
-                                         index_col=None)
-                self.lineL = Gnuplot.data(ratesL.values[:0], ratesL.values[:1],
-                                          title="L", with_="lines lw 4")
-            else:
-                self.lineL = [0, 0]
 
             if (
                 os.path.isfile(self.config.filenameMeanRatesP) and
@@ -222,6 +171,21 @@ class timeGraphPlotter:
             del spikeconverter
 
         if (
+            os.path.isfile(self.config.filenameLPZE) and
+            os.stat(self.config.filenameLPZE).st_size != 0
+        ):
+            spikeconverter = spike2hz()
+            if spikeconverter.setup(self.config.filenameLPZE,
+                                    self.config.filenameMeanRatesLPZE,
+                                    self.config.filenameSTDRatesLPZE,
+                                    self.config.filenameMeanCVLPZE,
+                                    self.config.filenameMeanFanoLPZE,
+                                    self.config.neuronsLPZE,
+                                    self.config.rows_per_read):
+                spikeconverter.run()
+            del spikeconverter
+
+        if (
             os.path.isfile(self.config.filenameI) and
             os.stat(self.config.filenameI).st_size != 0
         ):
@@ -235,29 +199,30 @@ class timeGraphPlotter:
                                     self.config.rows_per_read):
                 spikeconverter.run()
             del spikeconverter
+        if (
+            os.path.isfile(self.config.filenameLPZI) and
+            os.stat(self.config.filenameLPZI).st_size != 0
+        ):
+            spikeconverter = spike2hz()
+            if spikeconverter.setup(self.config.filenameLPZI,
+                                    self.config.filenameMeanRatesLPZI,
+                                    self.config.filenameSTDRatesLPZI,
+                                    self.config.filenameMeanCVLPZI,
+                                    self.config.filenameMeanFanoLPZI,
+                                    self.config.neuronsLPZI,
+                                    self.config.rows_per_read):
+                spikeconverter.run()
+            del spikeconverter
 
         # various pattern related spike files
-        numpats = self.__get_numpats()
+        numpats = self.config.numpats
         for i in range(1, numpats + 1):
-            if (
-                os.path.isfile(
-                    self.config.filenamePrefixR + str(i) + ".gdf") and
-                os.stat(
-                    self.config.filenamePrefixR + str(i) + ".gdf").st_size != 0
-            ):
-                spikeconverter = spike2hz()
-                if spikeconverter.setup(
-                    self.config.filenamePrefixR + str(i) + ".gdf",
-                    self.config.filenamePrefixMeanRatesR + str(i) + ".gdf",
-                    self.config.filenamePrefixSTDRatesR + str(i) + ".gdf",
-                    self.config.filenamePrefixMeanCVR + str(i) + ".gdf",
-                    self.config.filenamePrefixMeanFanoR + str(i) + ".gdf",
-                    self.config.neuronsR,
-                    self.config.rows_per_read
-                ):
-                    spikeconverter.run()
-                del spikeconverter
-
+            neuronsP = len(numpy.loadtxt(
+                self.config.neuronListPrefixP + str(i) + ".txt",
+                delimiter='\t'))
+            neuronsB = len(numpy.loadtxt(
+                self.config.neuronListPrefixB + str(i) + ".txt",
+                delimiter='\t'))
             if (
                 os.path.isfile(
                     self.config.filenamePrefixB + str(i) + ".gdf") and
@@ -271,51 +236,11 @@ class timeGraphPlotter:
                     self.config.filenamePrefixSTDRatesB + str(i) + ".gdf",
                     self.config.filenamePrefixMeanCVB + str(i) + ".gdf",
                     self.config.filenamePrefixMeanFanoB + str(i) + ".gdf",
-                    self.config.neuronsB,
+                    neuronsB,
                     self.config.rows_per_read
                 ):
                     spikeconverter.run()
                 del spikeconverter
-
-            if (
-                os.path.isfile(
-                    self.config.filenamePrefixS + str(i) + ".gdf") and
-                os.stat(
-                    self.config.filenamePrefixS + str(i) + ".gdf").st_size != 0
-            ):
-                spikeconverter = spike2hz()
-                if spikeconverter.setup(
-                    self.config.filenamePrefixS + str(i) + ".gdf",
-                    self.config.filenamePrefixMeanRatesS + str(i) + ".gdf",
-                    self.config.filenamePrefixSTDRatesS + str(i) + ".gdf",
-                    self.config.filenamePrefixMeanCVS + str(i) + ".gdf",
-                    self.config.filenamePrefixMeanFanoS + str(i) + ".gdf",
-                    self.config.neuronsS,
-                    self.config.rows_per_read
-                ):
-                    spikeconverter.run()
-                del spikeconverter
-
-            if (
-                os.path.isfile(
-                    self.config.filenamePrefixDP + str(i) + ".gdf") and
-                os.stat(
-                    self.config.filenamePrefixDP + str(i) + ".gdf"
-                ).st_size != 0
-            ):
-                spikeconverter = spike2hz()
-                if spikeconverter.setup(
-                    self.config.filenamePrefixDP + str(i) + ".gdf",
-                    self.config.filenamePrefixMeanRatesDP + str(i) + ".gdf",
-                    self.config.filenamePrefixSTDRatesDP + str(i) + ".gdf",
-                    self.config.filenamePrefixMeanCVDP + str(i) + ".gdf",
-                    self.config.filenamePrefixMeanFanoDP + str(i) + ".gdf",
-                    self.config.neuronsDP,
-                    self.config.rows_per_read
-                ):
-                    spikeconverter.run()
-                del spikeconverter
-
             if (
                 os.path.isfile(
                     self.config.filenamePrefixP + str(i) + ".gdf") and
@@ -329,47 +254,7 @@ class timeGraphPlotter:
                     self.config.filenamePrefixSTDRatesP + str(i) + ".gdf",
                     self.config.filenamePrefixMeanCVP + str(i) + ".gdf",
                     self.config.filenamePrefixMeanFanoP + str(i) + ".gdf",
-                    self.config.neuronsP,
-                    self.config.rows_per_read
-                ):
-                    spikeconverter.run()
-                del spikeconverter
-
-            if (
-                os.path.isfile(
-                    self.config.filenamePrefixDBGE + str(i) + ".gdf") and
-                os.stat(
-                    self.config.filenamePrefixDBGE + str(i) + ".gdf"
-                ).st_size != 0
-            ):
-                spikeconverter = spike2hz()
-                if spikeconverter.setup(
-                    self.config.filenamePrefixDBGE + str(i) + ".gdf",
-                    self.config.filenamePrefixMeanRatesDBGE + str(i) + ".gdf",
-                    self.config.filenamePrefixSTDRatesDBGE + str(i) + ".gdf",
-                    self.config.filenamePrefixMeanCVDBGE + str(i) + ".gdf",
-                    self.config.filenamePrefixMeanFanoDBGE + str(i) + ".gdf",
-                    self.config.neuronsDBGE,
-                    self.config.rows_per_read
-                ):
-                    spikeconverter.run()
-                del spikeconverter
-
-            if (
-                os.path.isfile(
-                    self.config.filenamePrefixDBGI + str(i) + ".gdf") and
-                os.stat(
-                    self.config.filenamePrefixDBGI + str(i) + ".gdf"
-                ).st_size != 0
-            ):
-                spikeconverter = spike2hz()
-                if spikeconverter.setup(
-                    self.config.filenamePrefixDBGI + str(i) + ".gdf",
-                    self.config.filenamePrefixMeanRatesDBGI + str(i) + ".gdf",
-                    self.config.filenamePrefixSTDRatesDBGI + str(i) + ".gdf",
-                    self.config.filenamePrefixMeanCVDBGI + str(i) + ".gdf",
-                    self.config.filenamePrefixMeanFanoDBGI + str(i) + ".gdf",
-                    self.config.neuronsDBGI,
+                    neuronsP,
                     self.config.rows_per_read
                 ):
                     spikeconverter.run()
@@ -390,18 +275,10 @@ class timeGraphPlotter:
             self.__plot_I_E()
             self.__plot_P_B()
 
-    def __get_numpats(self):
-        """Get number of patterns from list of files in directory."""
-        filelist = os.listdir()
-        i = 0
-        for entry in filelist:
-            if entry.startswith('patternneurons-'):
-                i = i+1
-        return i
 
     def __plot_using_gnuplot_binary(self):
         """Use the binary because it doesnt support py3."""
-        numpats = self.__get_numpats()
+        numpats = self.config.numpats
         print("Plotting E I firing rate graphs.")
         args = (os.path.join(
             self.config.postprocessHome,

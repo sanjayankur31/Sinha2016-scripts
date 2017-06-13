@@ -359,11 +359,15 @@ class Postprocess:
 
     def __postprocess_spikes(self):
         """Postprocess combined spike files."""
-        neuronsE = len(numpy.loadtxt(self.config.neuronListE,
+        self.config.neuronsE = len(numpy.loadtxt(self.config.neuronListE,
                                      delimiter='\t'))
-        neuronsI = len(numpy.loadtxt(self.config.neuronListI,
+        self.config.neuronsLPZE = len(numpy.loadtxt(self.config.neuronListLPZE,
                                      delimiter='\t'))
-        numpats = self.__get_numpats()
+        self.config.neuronsI = len(numpy.loadtxt(self.config.neuronListI,
+                                     delimiter='\t'))
+        self.config.neuronsLPZI = len(numpy.loadtxt(self.config.neuronListLPZI,
+                                     delimiter='\t'))
+        self.config.numpats = self.__get_numpats()
         if self.config.timegraphs:
             print("Generating timegraph..")
             import nestpp.timeGraphPlotter as TGP
@@ -378,18 +382,19 @@ class Postprocess:
             import nestpp.getFiringRates as rg
             rateGetterE = rg.getFiringRates()
             if rateGetterE.setup(self.config.filenameE, 'E',
-                                 neuronsE,
+                                 self.config.neuronsE,
                                  self.config.rows_per_read):
                 rateGetterE.run(self.config.histogram_timelist)
 
             rateGetterI = rg.getFiringRates()
             if rateGetterI.setup(self.config.filenameI, 'I',
-                                 neuronsI,
+                                 self.config.neuronsI,
                                  self.config.rows_per_read):
                 rateGetterI.run(self.config.histogram_timelist)
 
             plotterEI = pltH.dualHistogramPlotter()
-            if plotterEI.setup('E', 'I', neuronsE, neuronsI):
+            if plotterEI.setup('E', 'I', self.config.neuronsE,
+                               self.config.neuronsI):
                 plotterEI.run()
 
         if self.config.rasters:
