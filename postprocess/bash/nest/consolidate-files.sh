@@ -62,14 +62,6 @@ for pat in $(seq 1 $NUMPATS); do
     LC_ALL=C sort -n --parallel=16 -T $SORTTMPDIR "patternneurons-""$pat""-rank-"*.txt | uniq > "patternneurons-""$pat"".txt"
     mv "patternneurons-""$pat"".txt" consolidated_files
 
-    echo "Combining lpz pattern neuron files"
-    LC_ALL=C sort -n --parallel=16 -T $SORTTMPDIR "lpz-patternneurons-""$pat""-rank-"*.txt | uniq > "lpz-patternneurons-""$pat"".txt"
-    mv "lpz-patternneurons-""$pat"".txt" consolidated_files
-
-    echo "Combining non lpz pattern neuron files"
-    LC_ALL=C sort -n --parallel=16 -T $SORTTMPDIR "non-lpz-patternneurons-""$pat""-rank-"*.txt | uniq > "non-lpz-patternneurons-""$pat"".txt"
-    mv "non-lpz-patternneurons-""$pat"".txt" consolidated_files
-
     echo "Combining recall neuron files"
     LC_ALL=C sort -n --parallel=16 -T $SORTTMPDIR "recallneurons-""$pat""-rank-"*.txt | uniq > "recallneurons-""$pat"".txt"
     mv "recallneurons-""$pat"".txt" consolidated_files
