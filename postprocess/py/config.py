@@ -41,50 +41,35 @@ class Config:
         self.gnuplotFilesDir = ""
 
         self.filenameE = ""
+        self.filenameLPZE = ""
         self.filenameI = ""
-        self.filenameR = ""
-        self.filenameB = ""
-        self.filenameS = ""
-        self.filenameDP = ""
-        self.filenameDBGE = ""
-        self.filenameDBGI = ""
+        self.filenameLPZI = ""
         self.filenameP = ""
+        self.filenameB = ""
         self.filenameMeanRatesE = ""
+        self.filenameMeanRatesLPZE = ""
         self.filenameMeanRatesI = ""
-        self.filenamePrefixMeanRatesR = ""
-        self.filenamePrefixMeanRatesB = ""
-        self.filenamePrefixMeanRatesS = ""
-        self.filenamePrefixMeanRatesDP = ""
-        self.filenamePrefixMeanRatesDBGE = ""
-        self.filenamePrefixMeanRatesDBGI = ""
+        self.filenameMeanRatesLPZI = ""
         self.filenamePrefixMeanRatesP = ""
+        self.filenamePrefixMeanRatesB = ""
         self.filenameSTDRatesE = ""
+        self.filenameSTDRatesLPZE = ""
         self.filenameSTDRatesI = ""
-        self.filenamePrefixSTDRatesR = ""
-        self.filenamePrefixSTDRatesB = ""
-        self.filenamePrefixSTDRatesS = ""
-        self.filenamePrefixSTDRatesDP = ""
-        self.filenamePrefixSTDRatesDBGE = ""
-        self.filenamePrefixSTDRatesDBGI = ""
+        self.filenameSTDRatesLPZI = ""
         self.filenamePrefixSTDRatesP = ""
+        self.filenamePrefixSTDRatesB = ""
         self.filenameMeanCVE = ""
+        self.filenameMeanCVLPZE = ""
         self.filenameMeanCVI = ""
-        self.filenamePrefixMeanCVR = ""
-        self.filenamePrefixMeanCVB = ""
-        self.filenamePrefixMeanCVS = ""
-        self.filenamePrefixMeanCVDP = ""
-        self.filenamePrefixMeanCVDBGE = ""
-        self.filenamePrefixMeanCVDBGI = ""
+        self.filenameMeanCVLPZI = ""
         self.filenamePrefixMeanCVP = ""
+        self.filenamePrefixMeanCVB = ""
         self.filenameMeanFanoE = ""
+        self.filenameMeanFanoLPZE = ""
         self.filenameMeanFanoI = ""
-        self.filenamePrefixMeanFanoR = ""
-        self.filenamePrefixMeanFanoB = ""
-        self.filenamePrefixMeanFanoS = ""
-        self.filenamePrefixMeanFanoDP = ""
-        self.filenamePrefixMeanFanoDBGE = ""
-        self.filenamePrefixMeanFanoDBGI = ""
+        self.filenameMeanFanoLPZI = ""
         self.filenamePrefixMeanFanoP = ""
+        self.filenamePrefixMeanFanoB = ""
 
         # where the unconsolidated files are
         self.unconsolidatedFilesDir = ""
@@ -106,32 +91,17 @@ class Config:
         self.gnuplotFilesDir = parser['default']['gnuplotFilesDir']
 
         # all the different neuron sets
-        self.neuronsE = parser['default']['neuronsE']
-        self.neuronsI = parser['default']['neuronsI']
-        self.neuronsR = parser['default']['neuronsR']
-        self.neuronsB = parser['default']['neuronsB']
-        self.neuronsS = parser['default']['neuronsS']
-        self.neuronsDP = parser['default']['neuronsDP']
-        self.neuronsDBGE = parser['default']['neuronsDBGE']
-        self.neuronsDBGI = parser['default']['neuronsDBGI']
-        self.neuronsP = parser['default']['neuronsP']
         self.filenameE = parser['default']['filenameE']
         self.neuronListE = parser['default']['neuronListE']
+        self.filenameLPZE = parser['default']['filenameLPZE']
+        self.neuronListLPZE = parser['default']['neuronListLPZE']
         self.filenameI = parser['default']['filenameI']
         self.neuronListI = parser['default']['neuronListI']
+        self.filenameLPZI = parser['default']['filenameLPZI']
+        self.neuronListLPZI = parser['default']['neuronListLPZI']
         # multiple patterns and so related files
-        self.filenamePrefixR = parser['default']['filenamePrefixR']
-        self.neuronListPrefixR = parser['default']['neuronListPrefixR']
         self.filenamePrefixB = parser['default']['filenamePrefixB']
         self.neuronListPrefixB = parser['default']['neuronListPrefixB']
-        self.filenamePrefixS = parser['default']['filenamePrefixS']
-        self.neuronListPrefixS = parser['default']['neuronListPrefixS']
-        self.filenamePrefixDP = parser['default']['filenamePrefixDP']
-        self.neuronListPrefixDP = parser['default']['neuronListPrefixDP']
-        self.filenamePrefixDBGE = parser['default']['filenamePrefixDBGE']
-        self.neuronListPrefixDBGE = parser['default']['neuronListPrefixDBGE']
-        self.filenamePrefixDBGI = parser['default']['filenamePrefixDBGI']
-        self.neuronListPrefixDBGI = parser['default']['neuronListPrefixDBGI']
         self.filenamePrefixP = parser['default']['filenamePrefixP']
         self.neuronListPrefixP = parser['default']['neuronListPrefixP']
 
@@ -202,79 +172,57 @@ class Config:
         """Generate output file names from inputs file patterns."""
         self.filenameMeanRatesE = self.__getMeanFiringRateFilename(
             self.filenameE) + ".gdf"
+        self.filenameMeanRatesLPZE = self.__getMeanFiringRateFilename(
+            self.filenameLPZE) + ".gdf"
         self.filenameMeanRatesI = self.__getMeanFiringRateFilename(
             self.filenameI) + ".gdf"
-        self.filenamePrefixMeanRatesR = self.__getMeanFiringRateFilename(
-            self.filenamePrefixR)
+        self.filenameMeanRatesLPZI = self.__getMeanFiringRateFilename(
+            self.filenameLPZI) + ".gdf"
         self.filenamePrefixMeanRatesB = self.__getMeanFiringRateFilename(
             self.filenamePrefixB)
-        self.filenamePrefixMeanRatesS = self.__getMeanFiringRateFilename(
-            self.filenamePrefixS)
-        self.filenamePrefixMeanRatesDP = self.__getMeanFiringRateFilename(
-            self.filenamePrefixDP)
         self.filenamePrefixMeanRatesP = self.__getMeanFiringRateFilename(
             self.filenamePrefixP)
-        self.filenamePrefixMeanRatesDBGE = self.__getMeanFiringRateFilename(
-            self.filenamePrefixDBGE)
-        self.filenamePrefixMeanRatesDBGI = self.__getMeanFiringRateFilename(
-            self.filenamePrefixDBGI)
 
         self.filenameSTDRatesE = self.__getSTDFiringRateFilename(
             self.filenameE) + ".gdf"
+        self.filenameSTDRatesLPZE = self.__getSTDFiringRateFilename(
+            self.filenameLPZE) + ".gdf"
         self.filenameSTDRatesI = self.__getSTDFiringRateFilename(
             self.filenameI) + ".gdf"
-        self.filenamePrefixSTDRatesR = self.__getSTDFiringRateFilename(
-            self.filenamePrefixR)
+        self.filenameSTDRatesLPZI = self.__getSTDFiringRateFilename(
+            self.filenameLPZI) + ".gdf"
         self.filenamePrefixSTDRatesB = self.__getSTDFiringRateFilename(
             self.filenamePrefixB)
-        self.filenamePrefixSTDRatesS = self.__getSTDFiringRateFilename(
-            self.filenamePrefixS)
-        self.filenamePrefixSTDRatesDP = self.__getSTDFiringRateFilename(
-            self.filenamePrefixDP)
         self.filenamePrefixSTDRatesP = self.__getSTDFiringRateFilename(
             self.filenamePrefixP)
-        self.filenamePrefixSTDRatesDBGE = self.__getSTDFiringRateFilename(
-            self.filenamePrefixDBGE)
-        self.filenamePrefixSTDRatesDBGI = self.__getSTDFiringRateFilename(
-            self.filenamePrefixDBGI)
 
         self.filenameMeanCVE = self.__getMeanCVFilename(
             self.filenameE) + ".gdf"
+        self.filenameMeanCVLPZE = self.__getMeanCVFilename(
+            self.filenameLPZE) + ".gdf"
         self.filenameMeanCVI = self.__getMeanCVFilename(
             self.filenameI) + ".gdf"
-        self.filenamePrefixMeanCVR = self.__getMeanCVFilename(
-            self.filenamePrefixR)
+        self.filenameMeanCVLPZI = self.__getMeanCVFilename(
+            self.filenameLPZI) + ".gdf"
         self.filenamePrefixMeanCVB = self.__getMeanCVFilename(
             self.filenamePrefixB)
-        self.filenamePrefixMeanCVS = self.__getMeanCVFilename(
-            self.filenamePrefixS)
-        self.filenamePrefixMeanCVDP = self.__getMeanCVFilename(
-            self.filenamePrefixDP)
         self.filenamePrefixMeanCVP = self.__getMeanCVFilename(
             self.filenamePrefixP)
-        self.filenamePrefixMeanCVDBGE = self.__getMeanCVFilename(
-            self.filenamePrefixDBGE)
-        self.filenamePrefixMeanCVDBGI = self.__getMeanCVFilename(
-            self.filenamePrefixDBGI)
 
+        self.filenameMeanFanoE = self.__getMeanFanoFilename(
+            self.filenameE) + ".gdf"
         self.filenameMeanFanoE = self.__getMeanFanoFilename(
             self.filenameE) + ".gdf"
         self.filenameMeanFanoI = self.__getMeanFanoFilename(
             self.filenameI) + ".gdf"
-        self.filenamePrefixMeanFanoR = self.__getMeanFanoFilename(
-            self.filenamePrefixR)
+        self.filenameMeanFanoLPZI = self.__getMeanFanoFilename(
+            self.filenameLPZI) + ".gdf"
         self.filenamePrefixMeanFanoB = self.__getMeanFanoFilename(
             self.filenamePrefixB)
-        self.filenamePrefixMeanFanoS = self.__getMeanFanoFilename(
-            self.filenamePrefixS)
         self.filenamePrefixMeanFanoDP = self.__getMeanFanoFilename(
             self.filenamePrefixDP)
         self.filenamePrefixMeanFanoP = self.__getMeanFanoFilename(
             self.filenamePrefixP)
-        self.filenamePrefixMeanFanoDBGE = self.__getMeanFanoFilename(
-            self.filenamePrefixDBGE)
-        self.filenamePrefixMeanFanoDBGI = self.__getMeanFanoFilename(
-            self.filenamePrefixDBGI)
 
 if __name__ == "__main__":
     config = Config()
