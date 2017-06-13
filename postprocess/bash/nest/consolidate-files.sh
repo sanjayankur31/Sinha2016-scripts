@@ -54,37 +54,14 @@ for pat in $(seq 1 $NUMPATS); do
     LC_ALL=C sort -k "2" -n --parallel=16 -T $SORTTMPDIR "spikes-lpz-bg-I-""$pat"*.gdf  > "spikes-lpz-bg-I-""$pat"".gdf"
     mv "spikes-lpz-bg-I-""$pat"".gdf" consolidated_files
 
-    echo "Combining stim spike files"
-    LC_ALL=C sort -k "2" -n --parallel=16 -T $SORTTMPDIR "spikes-stim-""$pat"*.gdf  > "spikes-stim-""$pat"".gdf"
-    mv "spikes-stim-""$pat"".gdf" consolidated_files
+    echo "Moving pattern neuron files"
+    mv "00-pattern-neurons-""$pat"".txt" consolidated_files
 
-    echo "Combining pattern neuron files"
-    LC_ALL=C sort -n --parallel=16 -T $SORTTMPDIR "patternneurons-""$pat""-rank-"*.txt | uniq > "patternneurons-""$pat"".txt"
-    mv "patternneurons-""$pat"".txt" consolidated_files
+    echo "Moving background neuron files"
+    mv "00-background-neurons-""$pat"".txt" consolidated_files
 
-    echo "Combining recall neuron files"
-    LC_ALL=C sort -n --parallel=16 -T $SORTTMPDIR "recallneurons-""$pat""-rank-"*.txt | uniq > "recallneurons-""$pat"".txt"
-    mv "recallneurons-""$pat"".txt" consolidated_files
-
-    echo "Combining background neuron files"
-    LC_ALL=C sort -n --parallel=16 -T $SORTTMPDIR "backgroundneurons-""$pat""-rank-"*.txt | uniq > "backgroundneurons-""$pat"".txt"
-    mv "backgroundneurons-""$pat"".txt" consolidated_files
-
-    echo "Combining lpz background neuron files"
-    LC_ALL=C sort -n --parallel=16 -T $SORTTMPDIR "lpz-backgroundneurons-""$pat""-rank-"*.txt | uniq > "lpz-backgroundneurons-""$pat"".txt"
-    mv "lpz-backgroundneurons-""$pat"".txt" consolidated_files
-
-    echo "Combining non lpz background neuron files"
-    LC_ALL=C sort -n --parallel=16 -T $SORTTMPDIR "non-lpz-backgroundneurons-""$pat""-rank-"*.txt | uniq > "non-lpz-backgroundneurons-""$pat"".txt"
-    mv "non-lpz-backgroundneurons-""$pat"".txt" consolidated_files
-
-    echo "Combining lpz I neuron files"
-    LC_ALL=C sort -n --parallel=16 -T $SORTTMPDIR "lpz-Ineurons-""$pat""-rank-"*.txt | uniq > "lpz-Ineurons-""$pat"".txt"
-    mv "lpz-Ineurons-""$pat"".txt" consolidated_files
-
-    echo "Combining non lpz I neuron files"
-    LC_ALL=C sort -n --parallel=16 -T $SORTTMPDIR "non-lpz-Ineurons-""$pat""-rank-"*.txt | uniq > "non-lpz-Ineurons-""$pat"".txt"
-    mv "non-lpz-Ineurons-""$pat"".txt" consolidated_files
+    echo "Moving recall neuron files"
+    mv "00-recall-neurons-""$pat"".txt" consolidated_files
 done
 
 echo "Combining E files"
