@@ -448,6 +448,14 @@ class Postprocess:
             numpats = self.__get_numpats()
             rateGetter = rg.getFiringRates()
 
+            gridplotter = gp.gridPlotter()
+            gridplotter.read_files(numpats=self.numpats)
+            gridplotter.plot_E_graph()
+            gridplotter.plot_I_graph()
+            gridplotter.plot_EI_graph()
+            gridplotter.plot_single_pattern_graphs()
+            gridplotter.plot_all_pattern_graph()
+
             for i in range(1, numpats + 1):
                 if rateGetter.setup(
                     self.config.filenamePrefixP + str(i) + ".gdf", 'P',
@@ -468,30 +476,7 @@ class Postprocess:
                 ):
                     rateGetter.run(self.config.gridplots_timelist)
 
-                gridplotter = gp.gridPlotter()
-                optiontdict = [
-                    {
-                        'neuronSet': 'P',
-                        'neuronsFile': "patternneurons-{}.txt".format(i),
-                        'firingRateFile': "firing-rate-pattern-{}.gdf".format(i),
-                        'neuronNum': self.config.neuronsP
-                    },
-                    {
-                        'neuronSet': 'B',
-                        'neuronsFile': "backgroundneurons-{}.txt".format(i),
-                        'firingRateFile': "firing-rate-background-{}.gdf".format(i),
-                        'neuronNum': self.config.neuronsB
-                    },
-                    {
-                        'neuronSet': 'I',
-                        'neuronsFile': "inhibitory-{}.txt".format(i),
-                        'firingRateFile': "firing-rate-I.gdf".format(i),
-                        'neuronNum': self.config.neuronsI
-                    },
-                ]
-
-                if gridplotter.setup(optiondict, rows, columns):
-                    gridplotter.run(self.config.gridplots_timelist)
+                gridplotter.plot_rate_plots(self.config.gridplots_timelist)
 
     def __reprocess_raw_files(self, prefixlist):
         """Ask if files should be reprocessed if found."""
@@ -535,7 +520,7 @@ class Postprocess:
         filelist = os.listdir()
         i = 0
         for entry in filelist:
-            if entry.startswith('patternneurons-'):
+            if entry.startswith('00-pattern-neurons-'):
                 i = i+1
         return i
 
