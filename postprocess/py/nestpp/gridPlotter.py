@@ -279,7 +279,7 @@ class gridPlotter():
 
 if __name__ == "__main__":
     plotter = gridPlotter()
-    plotter.read_files(numpats=2)
+    plotter.read_files(numpats=3)
     plotter.plot_E_graph()
     plotter.plot_I_graph()
     plotter.plot_EI_graph()
