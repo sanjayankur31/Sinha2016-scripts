@@ -35,25 +35,27 @@ class gridPlotter():
 
     def __init__(self):
         """Initialise."""
-        self.filenameE = "00-neuron-locations-E.txt"
-        self.filenameI = "00-neuron-locations-I.txt"
-        self.filename_lpz_E = "00-lpz-neuron-locations-E.txt"
-        self.filename_lpz_I = "00-lpz-neuron-locations-I.txt"
-        self.pattern_files_prefix = "00-pattern-neurons-"
+        self.neuronListE = "00-neuron-locations-E.txt"
+        self.neuronListI = "00-neuron-locations-I.txt"
+        self.neuronListLPZE = "00-lpz-neuron-locations-E.txt"
+        self.neuronListLPZI = "00-lpz-neuron-locations-I.txt"
+        self.neuronListPrefixP = "00-pattern-neurons-"
         self.neuronsE = []
         self.neuronsI = []
         self.neurons_lpz_E = []
         self.neurons_lpz_I = []
         self.patterns = []
-        self.number_patterns = 0
+        self.numpats = 0
         matplotlib.rcParams.update({'font.size': 30})
 
-    def setup(self, filenameE, filenameI, filename_lpz_E, filename_lpz_I):
+    def setup(self, config):
         """Set up plotter."""
-        self.filenameE = filenameE
-        self.filenameI = filenameI
-        self.filename_lpz_E = filename_lpz_E
-        self.filename_lpz_I = filename_lpz_I
+        self.neuronListE = config.neuronListE
+        self.neuronListI = config.neuronListI
+        self.neuronListLPZE = config.neuronListLPZE
+        self.neuronListLPZI = config.neuronListLPZI
+        self.neuronListPrefixP = config.neuronListPrefixP
+        self.numpats = config.numpats
 
     def plot_EI_graph(self):
         """Plot I E neurons."""
@@ -128,14 +130,14 @@ class gridPlotter():
 
     def plot_single_pattern_graphs(self):
         """Plot E , lpz E and pattern neurons."""
-        for i in range(0, self.number_patterns):
+        for i in range(1, self.numpats + 1):
             patX = []
             patY = []
             xE_this = []
             yE_this = []
             x_lpzE_this = []
             y_lpzE_this = []
-            thispattern = self.patterns[i]
+            thispattern = self.patterns[i - 1]
 
             neuronsE_this = self.neuronsE - thispattern - self.neurons_lpz_E
             neurons_lpz_E_this = self.neurons_lpz_E - thispattern
@@ -154,10 +156,10 @@ class gridPlotter():
             plt.xlabel("extent (micro metres)")
             plt.ylabel("extent (micro metres)")
             plt.plot(xE_this, yE_this, ".", markersize=6, label="E")
-            plt.plot(patX, patY, "x", markersize=6, label="PAT" + str(i+1))
+            plt.plot(patX, patY, "x", markersize=6, label="PAT" + str(i))
             plt.plot(x_lpzE_this, y_lpzE_this, "o", markersize=6, label="LPZ E")
             plt.legend(loc="upper right")
-            plt.savefig("Pattern-{}-gridplot.png".format((i+1)))
+            plt.savefig("Pattern-{}-gridplot.png".format((i)))
 
     def plot_all_pattern_graph(self):
         """Plot E, lpz E, all patterns."""
@@ -170,10 +172,10 @@ class gridPlotter():
         yE = []
         x_lpzE = []
         y_lpzE = []
-        for i in range(0, self.number_patterns):
+        for i in range(1, self.numpats + 1):
             patX = []
             patY = []
-            thispattern = self.patterns[i]
+            thispattern = self.patterns[i - 1]
 
             non_patE = non_patE - thispattern - self.neurons_lpz_E
             non_pat_lpzE = non_pat_lpzE - thispattern
@@ -181,7 +183,7 @@ class gridPlotter():
             for nrn in thispattern:
                 patX.append(nrn[1])
                 patY.append(nrn[2])
-            plt.plot(patX, patY, "x", markersize=6, label="PAT" + str(i+1))
+            plt.plot(patX, patY, "x", markersize=6, label="PAT" + str(i))
 
         for nrn in non_patE:
             xE.append(nrn[1])
@@ -229,41 +231,39 @@ class gridPlotter():
         plt.legend(loc="upper right")
         plt.savefig("I-E-gridplot.png")
 
-    def read_files(self, numpats):
+    def read_files(self):
         """Read all files.
 
         Convert all the data into sets: lets one use set arithmetic on them.
         """
         if not (
-            os.path.exists(self.filenameE) and
-            os.path.exists(self.filenameI) and
-            os.stat(self.filenameE).st_size > 0 and
-            os.stat(self.filenameI).st_size > 0
+            os.path.exists(self.neuronListE) and
+            os.path.exists(self.neuronListI) and
+            os.stat(self.neuronListE).st_size > 0 and
+            os.stat(self.neuronListI).st_size > 0
         ):
             return False
 
-        self.neuronsE = set(map(tuple,
-                                numpy.loadtxt(self.filenameE, delimiter='\t')))
-        self.neuronsI = set(map(tuple,
-                                numpy.loadtxt(self.filenameI, delimiter='\t')))
+        self.neuronsE = set(map(tuple, numpy.loadtxt(self.neuronListE,
+                                                     delimiter='\t')))
+        self.neuronsI = set(map(tuple, numpy.loadtxt(self.neuronListI,
+                                                     delimiter='\t')))
         # Now the LPZ bits
         if not (
-            os.path.exists(self.filename_lpz_E) and
-            os.path.exists(self.filename_lpz_I) and
-            os.stat(self.filename_lpz_E).st_size > 0 and
-            os.stat(self.filename_lpz_I).st_size > 0
+            os.path.exists(self.neuronListLPZE) and
+            os.path.exists(self.neuronListLPZI) and
+            os.stat(self.neuronListLPZE).st_size > 0 and
+            os.stat(self.neuronListLPZI).st_size > 0
         ):
             return False
 
         self.neurons_lpz_I = set(
-            map(tuple, numpy.loadtxt(self.filename_lpz_I, delimiter='\t')))
+            map(tuple, numpy.loadtxt(self.neuronListLPZI, delimiter='\t')))
         self.neurons_lpz_E = set(
-            map(tuple, numpy.loadtxt(self.filename_lpz_E, delimiter='\t')))
+            map(tuple, numpy.loadtxt(self.neuronListLPZE, delimiter='\t')))
 
-        self.number_patterns = numpats
-
-        for i in range(0, self.number_patterns):
-            this_pat_filename = self.pattern_files_prefix + str(i+1) + ".txt"
+        for i in range(1, self.numpats + 1):
+            this_pat_filename = self.neuronListPrefixP + str(i) + ".txt"
             if (
                 os.path.exists(this_pat_filename) and
                 os.stat(this_pat_filename).st_size > 0
@@ -273,13 +273,22 @@ class gridPlotter():
                         numpy.loadtxt(this_pat_filename, delimiter='\t')))
                 self.patterns.append(this_pat)
 
-    def plot_rate_plots(timelist):
-        """Plot grid but with firing rates too."""
-        print("TODO: Unimplemented")
-
 if __name__ == "__main__":
+
+    class config:
+
+        """Dummy config class."""
+
+        neuronListE = "00-neuron-locations-E.txt"
+        neuronListI = "00-neuron-locations-I.txt"
+        neuronListLPZE = "00-lpz-neuron-locations-E.txt"
+        neuronListLPZI = "00-lpz-neuron-locations-I.txt"
+        neuronListPrefixP = "00-pattern-neurons-"
+        numpats = 3
+
     plotter = gridPlotter()
-    plotter.read_files(numpats=3)
+    plotter.setup(config)
+    plotter.read_files()
     plotter.plot_E_graph()
     plotter.plot_I_graph()
     plotter.plot_EI_graph()
