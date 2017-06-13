@@ -25,6 +25,7 @@ from config import Config
 import sys
 import os
 import pandas
+import numpy
 import subprocess
 from select import select
 
@@ -358,6 +359,11 @@ class Postprocess:
 
     def __postprocess_spikes(self):
         """Postprocess combined spike files."""
+        neuronsE = len(numpy.loadtxt(self.config.neuronListE,
+                                     delimiter='\t'))
+        neuronsI = len(numpy.loadtxt(self.config.neuronListI,
+                                     delimiter='\t'))
+        numpats = self.__get_numpats()
         if self.config.timegraphs:
             print("Generating timegraph..")
             import nestpp.timeGraphPlotter as TGP
@@ -372,80 +378,43 @@ class Postprocess:
             import nestpp.getFiringRates as rg
             rateGetterE = rg.getFiringRates()
             if rateGetterE.setup(self.config.filenameE, 'E',
-                                 self.config.neuronsE,
+                                 neuronsE,
                                  self.config.rows_per_read):
                 rateGetterE.run(self.config.histogram_timelist)
 
             rateGetterI = rg.getFiringRates()
             if rateGetterI.setup(self.config.filenameI, 'I',
-                                 self.config.neuronsI,
+                                 neuronsI,
                                  self.config.rows_per_read):
                 rateGetterI.run(self.config.histogram_timelist)
 
             plotterEI = pltH.dualHistogramPlotter()
-            if plotterEI.setup('E', 'I', self.config.neuronsE,
-                               self.config.neuronsI):
+            if plotterEI.setup('E', 'I', neuronsE, neuronsI):
                 plotterEI.run()
-
-            rateGetterB = rg.getFiringRates()
-            if rateGetterB.setup(self.config.filenameB, 'B',
-                                 self.config.neuronsB,
-                                 self.config.rows_per_read):
-                rateGetterB.run(self.config.histogram_timelist)
-
-            rateGetterS = rg.getFiringRates()
-            if rateGetterS.setup(self.config.filenameS, 'S',
-                                 self.config.neuronsS,
-                                 self.config.rows_per_read):
-                rateGetterS.run(self.config.histogram_timelist)
-
-            plotterBS = pltH.dualHistogramPlotter()
-            if plotterBS.setup('B', 'S', self.config.neuronsB,
-                               self.config.neuronsS):
-                plotterBS.run()
 
         if self.config.rasters:
             import nestpp.rasterPlotter as pltR
-            numpats = self.__get_numpats()
             rasterPlotter = pltR.rasterPlotter()
-            print("numpats are: {}".format(numpats))
-            for i in range(1, numpats + 1):
-                print("Generating rasters for pattern {}..".format(i))
-                optiondict = [
-                    {
-                        'neuronSet': 'P',
-                        'neuronsFileName': (self.config.neuronListPrefixP +
-                                            str(i) + ".txt"),
-                        'spikesFileName': (self.config.filenamePrefixP + str(i)
-                                           + ".gdf"),
-                        'neuronNum': int(self.config.neuronsP)
-                    },
-                    {
-                        'neuronSet': 'B',
-                        'neuronsFileName': (self.config.neuronListPrefixB +
-                                            str(i) + ".txt"),
-                        'spikesFileName': (self.config.filenamePrefixB + str(i)
-                                           + ".gdf"),
-                        'neuronNum': int(self.config.neuronsB)
-                    },
-                    {
-                        'neuronSet': 'E',
-                        'neuronsFileName': (self.config.neuronListPrefixB +
-                                            str(i) + ".txt"),
-                        'spikesFileName': (self.config.filenamePrefixB + str(i)
-                                           + ".gdf"),
-                        'neuronNum': int(self.config.neuronsB)
-                    },
-                ]
-                if rasterPlotter.setup(optiondict):
-                    print("Doing the work.")
-                    rasterPlotter.run(self.config.histogram_timelist)
+            optiondict = [
+                {
+                    'neuronSet': 'E',
+                    'neuronsFileName': self.config.neuronListE,
+                    'spikesFileName': self.config.filenameE
+                },
+                {
+                    'neuronSet': 'I',
+                    'neuronsFileName': self.config.neuronListI,
+                    'spikesFileName': self.config.filenameI
+                },
+            ]
+            if rasterPlotter.setup(optiondict):
+                print("Doing the work.")
+                rasterPlotter.run(self.config.histogram_timelist)
 
         if self.config.grid:
             print("Generating grids..")
             import nestpp.gridPlotter as gp
             import nestpp.getFiringRates as rg
-            numpats = self.__get_numpats()
             rateGetter = rg.getFiringRates()
 
             gridplotter = gp.gridPlotter()
@@ -457,6 +426,13 @@ class Postprocess:
             gridplotter.plot_all_pattern_graph()
 
             for i in range(1, numpats + 1):
+                neuronsP = len(numpy.loadtxt(
+                    self.config.neuronListPrefixP + str(i) + ".txt",
+                    delimiter='\t'))
+                neuronsB = len(numpy.loadtxt(
+                    self.config.neuronListBrefixB + str(i) + ".txt",
+                    delimiter='\t'))
+
                 if rateGetter.setup(
                     self.config.filenamePrefixP + str(i) + ".gdf", 'P',
                     self.config.neuronsP,
@@ -465,13 +441,7 @@ class Postprocess:
                     rateGetter.run(self.config.gridplots_timelist)
                 if rateGetter.setup(
                     self.config.filenamePrefixB + str(i) + ".gdf", 'B',
-                    self.config.neuronsB,
-                    self.config.rows_per_read
-                ):
-                    rateGetter.run(self.config.gridplots_timelist)
-                if rateGetter.setup(
-                    self.config.filenameI + ".gdf", 'I',
-                    self.config.neuronsI,
+                    neuronsB,
                     self.config.rows_per_read
                 ):
                     rateGetter.run(self.config.gridplots_timelist)
