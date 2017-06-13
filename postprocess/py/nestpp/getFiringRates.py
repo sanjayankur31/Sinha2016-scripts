@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import pandas
 import numpy
 import sys
-import math
 import collections
 import os
 import gc
@@ -78,10 +77,9 @@ class getFiringRates:
         print("Printing firing rate values to {}".format(
             output_filename))
 
-        output_file = open(output_filename, 'w')
-        for rate in self.rates:
-            print(rate, file=output_file)
-        output_file.close()
+        with open(output_filename, 'w') as output_file:
+            for nrn in self.rates:
+                print("{}\t{}".format(nrn, self.rates[nrn]), file=output_file)
 
     def run(self, timelist):
         """Main runner method."""
@@ -146,18 +144,13 @@ class getFiringRates:
                     break
                 else:
                     self.neurons = spikes[self.start:self.end]
-                    counts = dict(collections.Counter(self.neurons))
-                    self.rates = list(counts.values())
-
-                    missing_neurons = self.num_neurons - len(self.rates)
-
+                    self.rates = collections.Counter(self.neurons)
                     print("Neurons found: {}".format(len(self.rates)))
 
-                    # Add missing entries - affects the mean and std
-                    # calculations. They have to be the right number
-                    for entries in range(0, missing_neurons):
-                        self.rates.append(0)
-
+                    # Fill up missing neurons
+                    for i in range(1, self.num_neurons):
+                        if i not in self.rates:
+                            self.rates[i] = 0
                     print("Neurons after appending zeros: {}".format(
                         len(self.rates)))
 
