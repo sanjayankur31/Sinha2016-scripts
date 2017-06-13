@@ -360,13 +360,13 @@ class Postprocess:
     def __postprocess_spikes(self):
         """Postprocess combined spike files."""
         self.config.neuronsE = len(numpy.loadtxt(self.config.neuronListE,
-                                     delimiter='\t'))
+                                                 delimiter='\t'))
         self.config.neuronsLPZE = len(numpy.loadtxt(self.config.neuronListLPZE,
-                                     delimiter='\t'))
+                                                    delimiter='\t'))
         self.config.neuronsI = len(numpy.loadtxt(self.config.neuronListI,
-                                     delimiter='\t'))
+                                                 delimiter='\t'))
         self.config.neuronsLPZI = len(numpy.loadtxt(self.config.neuronListLPZI,
-                                     delimiter='\t'))
+                                                    delimiter='\t'))
         self.config.numpats = self.__get_numpats()
         if self.config.timegraphs:
             print("Generating timegraph..")
@@ -423,14 +423,15 @@ class Postprocess:
             rateGetter = rg.getFiringRates()
 
             gridplotter = gp.gridPlotter()
-            gridplotter.read_files(numpats=self.numpats)
+            gridplotter.setup(self.config)
+            gridplotter.read_files(numpats=self.config.numpats)
             gridplotter.plot_E_graph()
             gridplotter.plot_I_graph()
             gridplotter.plot_EI_graph()
             gridplotter.plot_single_pattern_graphs()
             gridplotter.plot_all_pattern_graph()
 
-            for i in range(1, numpats + 1):
+            for i in range(1, self.config.numpats + 1):
                 neuronsP = len(numpy.loadtxt(
                     self.config.neuronListPrefixP + str(i) + ".txt",
                     delimiter='\t'))
@@ -440,7 +441,7 @@ class Postprocess:
 
                 if rateGetter.setup(
                     self.config.filenamePrefixP + str(i) + ".gdf", 'P',
-                    self.config.neuronsP,
+                    neuronsP,
                     self.config.rows_per_read
                 ):
                     rateGetter.run(self.config.gridplots_timelist)
