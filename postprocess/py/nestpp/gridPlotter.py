@@ -69,7 +69,7 @@ class gridPlotter():
             xI.append(nrn[1])
             yI.append(nrn[2])
 
-        plt.figure(num=None, figsize=(32, 18), dpi=80)
+        plt.figure(num=None, figsize=(16, 20), dpi=80)
         plt.xlabel("extent (micro metres)")
         plt.ylabel("extent (micro metres)")
         plt.plot(xE, yE, ".", markersize=6, label="E")
@@ -93,7 +93,7 @@ class gridPlotter():
             y_lpzE.append(nrn[2])
 
         # E and LPZ E
-        plt.figure(num=None, figsize=(32, 18), dpi=80)
+        plt.figure(num=None, figsize=(16, 20), dpi=80)
         plt.xlabel("extent (micro metres)")
         plt.ylabel("extent (micro metres)")
         plt.plot(xE, yE, ".", markersize=6, label="E")
@@ -117,7 +117,7 @@ class gridPlotter():
             y_lpzI.append(nrn[2])
 
         # I and LPZ I
-        plt.figure(num=None, figsize=(32, 18), dpi=80)
+        plt.figure(num=None, figsize=(16, 20), dpi=80)
         plt.xlabel("extent (micro metres)")
         plt.ylabel("extent (micro metres)")
         plt.plot(xI, yI, ".", markersize=6, label="I")
@@ -150,7 +150,7 @@ class gridPlotter():
                 x_lpzE_this.append(nrn[1])
                 y_lpzE_this.append(nrn[2])
 
-            plt.figure(num=None, figsize=(32, 18), dpi=80)
+            plt.figure(num=None, figsize=(16, 20), dpi=80)
             plt.xlabel("extent (micro metres)")
             plt.ylabel("extent (micro metres)")
             plt.plot(xE_this, yE_this, ".", markersize=6, label="E")
@@ -161,7 +161,7 @@ class gridPlotter():
 
     def plot_all_pattern_graph(self):
         """Plot E, lpz E, all patterns."""
-        plt.figure(num=None, figsize=(32, 18), dpi=80)
+        plt.figure(num=None, figsize=(16, 20), dpi=80)
         plt.xlabel("extent (micro metres)")
         plt.ylabel("extent (micro metres)")
         non_patE = self.neuronsE
@@ -219,7 +219,7 @@ class gridPlotter():
             x_lpzE.append(nrn[1])
             y_lpzE.append(nrn[2])
 
-        plt.figure(num=None, figsize=(32, 18), dpi=80)
+        plt.figure(num=None, figsize=(16, 20), dpi=80)
         plt.xlabel("extent (micro metres)")
         plt.ylabel("extent (micro metres)")
         plt.plot(xE, yE, ".", markersize=6, label="E")
