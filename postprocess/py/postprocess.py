@@ -419,8 +419,6 @@ class Postprocess:
         if self.config.grid:
             print("Generating grids..")
             import nestpp.gridPlotter as gp
-            import nestpp.getFiringRates as rg
-            rateGetter = rg.getFiringRates()
 
             gridplotter = gp.gridPlotter()
             gridplotter.setup(self.config)
@@ -431,6 +429,31 @@ class Postprocess:
             gridplotter.plot_single_pattern_graphs()
             gridplotter.plot_all_pattern_graph()
 
+        if len(self.config.gridplots_timelist > 0):
+            print("Generating grid rate snapshots")
+            import nestpp.gridRatePlotter as grp
+            import nestpp.getFiringRates as rg
+            rateGetter = rg.getFiringRates()
+
+            # sufficient - covers all neurons
+            # no need to also do it for various other sets
+            if rateGetter.setup(
+                self.config.filenameE, 'E',
+                self.config.neuronsE,
+                self.config.rows_per_read
+            ):
+                rateGetter.run(self.config.gridplots_timelist)
+
+            # Note, if rate files were also generated for histograms,
+            # gridrateplotter will currently also plot them - the output file
+            # pattern is the same
+            gridrateplotterE = grp.gridRatePlotter()
+            gridrateplotterE.setup('E')
+            gridrateplotterE.plot()
+
+        if self.config.snr:
+            import nestpp.getFiringRates as rg
+            rateGetter = rg.getFiringRates()
             for i in range(1, self.config.numpats + 1):
                 neuronsP = len(numpy.loadtxt(
                     self.config.neuronListPrefixP + str(i) + ".txt",
@@ -444,15 +467,14 @@ class Postprocess:
                     neuronsP,
                     self.config.rows_per_read
                 ):
-                    rateGetter.run(self.config.gridplots_timelist)
+                    rateGetter.run(self.config.snr_timelist)
                 if rateGetter.setup(
                     self.config.filenamePrefixB + str(i) + ".gdf", 'B',
                     neuronsB,
                     self.config.rows_per_read
                 ):
-                    rateGetter.run(self.config.gridplots_timelist)
+                    rateGetter.run(self.config.snr_timelist)
 
-                gridplotter.plot_rate_plots(self.config.gridplots_timelist)
 
     def __reprocess_raw_files(self, prefixlist):
         """Ask if files should be reprocessed if found."""
