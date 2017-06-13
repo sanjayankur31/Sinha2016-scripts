@@ -229,7 +229,7 @@ class gridPlotter():
         plt.legend(loc="upper right")
         plt.savefig("I-E-gridplot.png")
 
-    def read_files(self):
+    def read_files(self, numpats):
         """Read all files.
 
         Convert all the data into sets: lets one use set arithmetic on them.
@@ -260,7 +260,7 @@ class gridPlotter():
         self.neurons_lpz_E = set(
             map(tuple, numpy.loadtxt(self.filename_lpz_E, delimiter='\t')))
 
-        self.number_patterns = self.__get_numpats()
+        self.number_patterns = numpats
 
         for i in range(0, self.number_patterns):
             this_pat_filename = self.pattern_files_prefix + str(i+1) + ".txt"
@@ -273,19 +273,13 @@ class gridPlotter():
                         numpy.loadtxt(this_pat_filename, delimiter='\t')))
                 self.patterns.append(this_pat)
 
-    def __get_numpats(self):
-        """Get number of patterns from list of files in directory."""
-        filelist = os.listdir()
-        i = 0
-        for entry in filelist:
-            if entry.startswith('00-pattern-neurons-'):
-                i = i+1
-        return i
-
+    def plot_rate_plots(timelist):
+        """Plot grid but with firing rates too."""
+        print("TODO: Unimplemented")
 
 if __name__ == "__main__":
     plotter = gridPlotter()
-    plotter.read_files()
+    plotter.read_files(numpats=2)
     plotter.plot_E_graph()
     plotter.plot_I_graph()
     plotter.plot_EI_graph()
