@@ -34,7 +34,7 @@ class Config:
         self.snr = False
         self.histogram_timelist = [0.]
         self.gridplots_timelist = [0.]
-        self.snr_time = 0.
+        self.snr_timelist = [0.]
         self.taskfile = taskfile
 
         self.postprocessHome = ""
@@ -155,8 +155,7 @@ class Config:
 
         # snr
         self.snr = parser['default'].getboolean('snr')
-        self.snr_time = float(parser['snr']['times'])
-
+        self.snr_timelist = [float(s) for s in parser['snr']['times'].split()]
 
     def __getMeanFiringRateFilename(self, inputname):
         """Generate mean firing rate filename."""
