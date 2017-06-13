@@ -112,6 +112,8 @@ class Config:
         self.calciumMetrics = parser['default'].getboolean('calciumMetrics')
         self.filenamePrefixCalciumE = parser['default']['calciumConcPrefixE']
         self.filenamePrefixCalciumI = parser['default']['calciumConcPrefixI']
+        self.filenamePrefixCalciumLPZE = parser['default']['calciumConcPrefixLPZE']
+        self.filenamePrefixCalciumLPZI = parser['default']['calciumConcPrefixLPZI']
 
         self.SETotalsMetrics = parser['default'].getboolean('SETotalsMetrics')
         self.filenamePrefixSETotalsE = parser['default']['SETotalsPrefixE']
@@ -120,6 +122,8 @@ class Config:
         self.SEIndividualMetrics = parser['default'].getboolean('SEIndividualMetrics')
         self.filenamePrefixSEIndividualE = parser['default']['SEIndividualPrefixE']
         self.filenamePrefixSEIndividualI = parser['default']['SEIndividualPrefixI']
+        self.filenamePrefixSEIndividualLPZE = parser['default']['SEIndividualPrefixLPZE']
+        self.filenamePrefixSEIndividualLPZI = parser['default']['SEIndividualPrefixLPZI']
 
         self.conductancesMetrics = parser['default'].getboolean('conductancesMetrics')
         self.filenamePrefixConductancesEE = parser['default']['conductancesPrefixEE']
