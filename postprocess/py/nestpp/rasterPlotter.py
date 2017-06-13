@@ -56,8 +56,7 @@ class rasterPlotter:
 
     def __validate_dicts(self):
         """Validate the option dicts."""
-        expected_keys = ({'neuronSet', 'spikesFileName', 'neuronsFileName',
-                         'neuronNum'})
+        expected_keys = ({'neuronSet', 'spikesFileName', 'neuronsFileName'})
         for adict in self.neuronOptions:
             if expected_keys != set(adict):
                 return False
@@ -65,19 +64,19 @@ class rasterPlotter:
 
     def __get_neurons(self, adict):
         """Get a subset of neurons for each neuron set."""
-        with open(adict['neuronsFileName']) as f:
-            neurons = f.readlines()
-            neurons = [neuron.strip() for neuron in neurons]
-            neurons = random.sample(neurons,
-                                    int(math.ceil(adict['neuronNum'] *
+        neurons = numpy.loadtxt(adict['neuronsFileName'], delimiter='\t')
+        ids = []
+        for nrn in neurons:
+            ids.append(nrn[0])
+        subset = random.sample(ids, int(math.ceil(len(ids) *
                                                   self.scale)))
-            # add it to the main dict list, adict is a ref, this will work
-            neurons = pandas.DataFrame(neurons, dtype=numpy.uint16,
-                                       columns=['neuronID'])
+        # add it to the main dict list, adict is a ref, this will work
+        subset = pandas.DataFrame(subset, dtype=numpy.uint16,
+                                  columns=['neuronID'])
 
         print('Got {} neurons from {}'.format(
-            neurons.shape[0], adict['neuronsFileName']))
-        return neurons
+            subset.shape[0], adict['neuronsFileName']))
+        return subset
 
     def __get_spikes(self, adict, timelist):
         """Get spikes at required times for a neuron set."""
@@ -226,14 +225,12 @@ if __name__ == "__main__":
         {
             'neuronSet': 'E',
             'spikesFileName': 'spikes-E.gdf',
-            'neuronsFileName': 'excitatoryneurons.txt',
-            'neuronNum': 8000
+            'neuronsFileName': '00-neuron-locations-E.txt',
         },
         {
             'neuronSet': 'I',
             'spikesFileName': 'spikes-I.gdf',
-            'neuronsFileName': 'inhibitoryneurons.txt',
-            'neuronNum': 2000
+            'neuronsFileName': '00-neuron-locations-I.txt',
         },
     ]
 
