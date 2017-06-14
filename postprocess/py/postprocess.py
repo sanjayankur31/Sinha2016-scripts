@@ -141,6 +141,8 @@ class Postprocess:
 
             syn_elms_DF_E = pandas.DataFrame()
             syn_elms_DF_I = pandas.DataFrame()
+            syn_elms_DF_LPZ_E = pandas.DataFrame()
+            syn_elms_DF_LPZ_I = pandas.DataFrame()
             if self.__reprocess_raw_files([self.config.filenamePrefixSETotalsE]):
                 syn_elms_DF_E = combiner.combineTSVRowData(
                     self.config.unconsolidatedFilesDir,
@@ -159,6 +161,24 @@ class Postprocess:
             else:
                 syn_elms_DF_E = syn_elms_DF_E.append([0])
 
+            if self.__reprocess_raw_files([self.config.filenamePrefixSETotalsLPZE]):
+                syn_elms_DF_LPZ_E = combiner.combineTSVRowData(
+                    self.config.unconsolidatedFilesDir,
+                    self.config.filenamePrefixSETotalsLPZE)
+
+                if not syn_elms_DF_LPZ_E.empty:
+                    syn_elms_E_filename = (
+                        self.config.filenamePrefixSETotalsLPZE + 'all.txt'
+                    )
+                    syn_elms_DF_LPZ_E.to_csv(
+                        syn_elms_E_filename, sep='\t',
+                        header=None, line_terminator='\n')
+                    print("Processed synaptic elements for LPZ E neurons..")
+                else:
+                    print("No dataframe for all E syn elements. Skipping.")
+            else:
+                syn_elms_DF_LPZ_E = syn_elms_DF_LPZ_E.append([0])
+
             if self.__reprocess_raw_files([self.config.filenamePrefixSETotalsI]):
                 syn_elms_DF_I = combiner.combineTSVRowData(
                     self.config.unconsolidatedFilesDir,
@@ -175,16 +195,36 @@ class Postprocess:
             else:
                 syn_elms_DF_I = syn_elms_DF_I.append([0])
 
-            if (not syn_elms_DF_E.empty) and (not syn_elms_DF_I.empty):
-                args = (os.path.join(
-                    self.config.postprocessHome,
-                    self.config.gnuplotFilesDir,
-                        'plot-synaptic-elements-metrics.plt'))
-                subprocess.call(['gnuplot',
-                                args])
-                print("Synaptic elements graphs generated..")
+            if self.__reprocess_raw_files([self.config.filenamePrefixSETotalsLPZI]):
+                syn_elms_DF_LPZ_I = combiner.combineTSVRowData(
+                    self.config.unconsolidatedFilesDir,
+                    self.config.filenamePrefixSETotalsLPZI)
+
+                if not syn_elms_DF_LPZ_I.empty:
+                    syn_elms_I_filename = (
+                        self.config.filenamePrefixSETotalsLPZI + 'all.txt'
+                    )
+                    syn_elms_DF_LPZ_I.to_csv(
+                        syn_elms_I_filename, sep='\t',
+                        header=None, line_terminator='\n')
+                    print("Processed synaptic elements for LPZ I neurons..")
             else:
-                print("No dataframe for all I synaptic elements. Skipping.")
+                syn_elms_DF_LPZ_I = syn_elms_DF_LPZ_I.append([0])
+
+            args = (os.path.join(
+                self.config.postprocessHome,
+                self.config.gnuplotFilesDir,
+                    'plot-synaptic-elements-metrics.plt'))
+            subprocess.call(['gnuplot',
+                            args])
+
+            args = (os.path.join(
+                self.config.postprocessHome,
+                self.config.gnuplotFilesDir,
+                    'plot-lpz-synaptic-elements-metrics.plt'))
+            subprocess.call(['gnuplot',
+                            args])
+            print("Synaptic elements graphs generated..")
 
     def __postprocess_calcium(self):
         """Postprocess calcium files."""
