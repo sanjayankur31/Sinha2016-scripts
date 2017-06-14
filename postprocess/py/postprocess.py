@@ -488,7 +488,10 @@ class Postprocess:
             # gridrateplotter will currently also plot them - the output file
             # pattern is the same
             gridrateplotterE = grp.gridRatePlotter()
-            gridrateplotterE.setup('E')
+            # could even pass in the neuron list directly, but it isn't worth
+            # the trouble. A single file read wont hurt anyone. It makes the
+            # script also usable in isolation.
+            gridrateplotterE.setup('E', self.neuronListE)
             gridrateplotterE.plot()
 
         if self.config.snr:
