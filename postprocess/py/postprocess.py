@@ -469,7 +469,7 @@ class Postprocess:
             gridplotter.plot_single_pattern_graphs()
             gridplotter.plot_all_pattern_graph()
 
-        if len(self.config.gridplots_timelist > 0):
+        if len(self.config.gridplots_timelist) > 0:
             print("Generating grid rate snapshots")
             import nestpp.gridRatePlotter as grp
             import nestpp.getFiringRates as rg
