@@ -228,8 +228,6 @@ class Config:
             self.filenameLPZI) + ".gdf"
         self.filenamePrefixMeanFanoB = self.__getMeanFanoFilename(
             self.filenamePrefixB)
-        self.filenamePrefixMeanFanoDP = self.__getMeanFanoFilename(
-            self.filenamePrefixDP)
         self.filenamePrefixMeanFanoP = self.__getMeanFanoFilename(
             self.filenamePrefixP)
 
