@@ -538,22 +538,23 @@ class Postprocess:
             for entry in filesfound:
                 print("- {}".format(entry))
 
-            regen = self.__input_with_timeout(
-                "Regenerate(Y/N defaults to N in 15 seconds)? ", 15.0)
-            if regen == "Y":
-                return True
-            else:
-                return False
+            while True:
+                regen = self.__input_with_timeout(
+                    "Regenerate(Y/N/y/n defaults to Y in 15 seconds)? ", 15.0)
+                if regen == "N" or regen == "n":
+                    return False
+                elif regen == "Y" or regen == "y":
+                    return True
 
     def __input_with_timeout(self, prompt, timeout=30.0):
         """Input but with timeout."""
-        astring = 'N'
+        astring = 'Y'
         print(prompt, end='', flush=True)
         rlist, _, _ = select([sys.stdin], [], [], timeout)
         if rlist:
             astring = sys.stdin.readline()[0]
         else:
-            print("Timed out proceeding.")
+            print("Timed out.. Proceeding..")
         return astring
 
     def __get_numpats(self):
