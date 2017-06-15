@@ -57,7 +57,6 @@ class gridRatePlotter:
         # locations use gids of neurons, and so do the firing rate files
         neuronLocations = numpy.loadtxt(self.locationFile, delimiter='\t')
         for i in range(0, len(self.filelist)):
-            output = []
             data1 = numpy.loadtxt(self.filelist[i],
                                   delimiter='\t', dtype='float')
             datatime = (self.filelist[i]).replace(
@@ -67,15 +66,12 @@ class gridRatePlotter:
             for nrn in data1:
                 ratelist[nrn[0]] = nrn[1]
 
-            for nrn in neuronLocations:
-                rate = ratelist[nrn[0]]
-                output.append([int(nrn[1]), int(nrn[2]), rate])
-
             outputfilename = ("snapshot-firing-rate-" + self.neuronLabel + "-" +
                               datatime + ".gdf")
             with open(outputfilename, 'w') as f:
-                for n in output:
-                    print("{}\t{}\t{}".format(n[0], n[1], n[2]), file=f)
+                for nrn in neuronLocations:
+                    rate = ratelist[nrn[0]]
+                    print("{}\t{}\t{}".format(nrn[1], nrn[2], rate), file=f)
 
             args = ['gnuplot', '-e', "plotname='{}'".format(
                         "snapshot-firing-rate-" + self.neuronLabel + "-" +
