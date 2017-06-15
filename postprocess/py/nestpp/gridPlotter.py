@@ -203,23 +203,23 @@ class gridPlotter():
         xI = []
         yI = []
         for nrn in self.neuronsI:
-            xI.append(nrn[1])
-            yI.append(nrn[2])
+            xI.append(nrn[3])
+            yI.append(nrn[4])
         x_lpzI = []
         y_lpzI = []
         for nrn in self.neurons_lpz_I:
-            x_lpzI.append(nrn[1])
-            y_lpzI.append(nrn[2])
+            x_lpzI.append(nrn[3])
+            y_lpzI.append(nrn[4])
         xE = []
         yE = []
         for nrn in self.neuronsE:
-            xE.append(nrn[1])
-            yE.append(nrn[2])
+            xE.append(nrn[3])
+            yE.append(nrn[4])
         x_lpzE = []
         y_lpzE = []
         for nrn in self.neurons_lpz_E:
-            x_lpzE.append(nrn[1])
-            y_lpzE.append(nrn[2])
+            x_lpzE.append(nrn[3])
+            y_lpzE.append(nrn[4])
 
         plt.figure(num=None, figsize=(16, 20), dpi=80)
         plt.xlabel("extent (micro metres)")
