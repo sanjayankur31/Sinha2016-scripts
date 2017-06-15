@@ -25,6 +25,7 @@ import os
 import pandas
 import subprocess
 import sys
+import numpy
 
 
 class timeGraphPlotter:
