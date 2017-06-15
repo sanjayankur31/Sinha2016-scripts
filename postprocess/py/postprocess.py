@@ -408,6 +408,7 @@ class Postprocess:
         self.config.neuronsLPZI = len(numpy.loadtxt(self.config.neuronListLPZI,
                                                     delimiter='\t'))
         self.config.numpats = self.__get_numpats()
+        print("Got {} numpats".format(self.config.numpats))
         if self.config.timegraphs:
             print("Generating timegraph..")
             import nestpp.timeGraphPlotter as TGP

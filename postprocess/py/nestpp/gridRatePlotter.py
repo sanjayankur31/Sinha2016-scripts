@@ -42,7 +42,7 @@ class gridRatePlotter:
         """Initialise."""
         self.filelist = []
         self.locationFile = ""
-        self.neuronLabel
+        self.neuronLabel = ""
 
     def setup(self, neuronLabel, locationFile):
         """Set up for plotting."""
