@@ -157,9 +157,11 @@ class getFiringRates:
                     self.print_firing_rates(sorted_timelist[current])
 
                     current += 1
-                    if current == len(sorted_timelist):
+                    if current >= len(sorted_timelist):
                         break
 
+            if current >= len(sorted_timelist):
+                break
             if self.start < len(times):
                 old_times = numpy.array(times[(self.start - len(times)):])
                 old_spikes = numpy.array(spikes[(self.start - len(spikes)):])

@@ -463,7 +463,7 @@ class Postprocess:
 
             gridplotter = gp.gridPlotter()
             gridplotter.setup(self.config)
-            gridplotter.read_files(numpats=self.config.numpats)
+            gridplotter.read_files()
             gridplotter.plot_E_graph()
             gridplotter.plot_I_graph()
             gridplotter.plot_EI_graph()
@@ -488,12 +488,12 @@ class Postprocess:
             # Note, if rate files were also generated for histograms,
             # gridrateplotter will currently also plot them - the output file
             # pattern is the same
-            gridrateplotterE = grp.gridRatePlotter()
+            gridrateplotterE = grp.gridRatePlotter(self.config)
             # could even pass in the neuron list directly, but it isn't worth
             # the trouble. A single file read wont hurt anyone. It makes the
             # script also usable in isolation.
-            gridrateplotterE.setup('E', self.neuronListE)
-            gridrateplotterE.plot()
+            gridrateplotterE.setup('E', self.config.neuronListE)
+            gridrateplotterE.run()
 
         if self.config.snr:
             import nestpp.getFiringRates as rg

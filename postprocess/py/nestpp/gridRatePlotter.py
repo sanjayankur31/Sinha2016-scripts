@@ -38,11 +38,12 @@ class gridRatePlotter:
     gnuplot can then splot.
     """
 
-    def __init__(self):
+    def __init__(self, config):
         """Initialise."""
         self.filelist = []
         self.locationFile = ""
         self.neuronLabel = ""
+        self.config = config
 
     def setup(self, neuronLabel, locationFile):
         """Set up for plotting."""
@@ -60,28 +61,28 @@ class gridRatePlotter:
             data1 = numpy.loadtxt(self.filelist[i],
                                   delimiter='\t', dtype='float')
             datatime = (self.filelist[i]).replace(
-                "firing-rate-" + self.neuronLabel, '')
-            datatime = int(datatime.replace(".gdf", ''))
+                "firing-rate-" + self.neuronLabel + '-', '')
+            datatime = datatime.replace(".gdf", '')
             ratelist = {}
             for nrn in data1:
-                ratelist[data1[0]] = data1[1]
+                ratelist[nrn[0]] = nrn[1]
 
             for nrn in neuronLocations:
                 rate = ratelist[nrn[0]]
-                output.append([rate, int(nrn[1]), int(nrn[2])])
+                output.append([int(nrn[1]), int(nrn[2]), rate])
 
             outputfilename = ("snapshot-firing-rate-" + self.neuronLabel + "-" +
                               datatime + ".gdf")
-            with open(outputfilename) as f:
+            with open(outputfilename, 'w') as f:
                 for n in output:
                     print("{}\t{}\t{}".format(n[0], n[1], n[2]), file=f)
 
             args = ['gnuplot', '-e', "plotname='{}'".format(
                         "snapshot-firing-rate-" + self.neuronLabel + "-" +
-                        str(datatime) + ".png"),
+                        datatime + ".png"),
                     '-e', 'plottitle={}'.format(
                         "'Firing rate snapshot of {} neurons at {}'".format(
-                            self.neuronLabel, str(datatime))),
+                            self.neuronLabel, datatime)),
                     '-e', "inputfile='{}'".format(outputfilename),
                     os.path.join(
                         self.config.postprocessHome,
