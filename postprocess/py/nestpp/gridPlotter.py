@@ -245,9 +245,11 @@ class gridPlotter():
             return False
 
         self.neuronsE = set(map(tuple, numpy.loadtxt(self.neuronListE,
-                                                     delimiter='\t')))
+                                                     delimiter='\t',
+                                                     usecols=[0, 3, 4])))
         self.neuronsI = set(map(tuple, numpy.loadtxt(self.neuronListI,
-                                                     delimiter='\t')))
+                                                     delimiter='\t',
+                                                     usecols=[0, 3, 4])))
         # Now the LPZ bits
         if not (
             os.path.exists(self.neuronListLPZE) and
