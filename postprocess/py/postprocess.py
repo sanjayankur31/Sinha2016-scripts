@@ -497,28 +497,13 @@ class Postprocess:
 
         if self.config.snr:
             import nestpp.getFiringRates as rg
+            import nestpp.calculateSNR as snr
             rateGetter = rg.getFiringRates()
+            snrCalculator = snr.calculateSNR()
+
             for i in range(1, self.config.numpats + 1):
-                neuronsP = len(numpy.loadtxt(
-                    self.config.neuronListPrefixP + str(i) + ".txt",
-                    delimiter='\t'))
-                neuronsB = len(numpy.loadtxt(
-                    self.config.neuronListBrefixB + str(i) + ".txt",
-                    delimiter='\t'))
-
-                if rateGetter.setup(
-                    self.config.filenamePrefixP + str(i) + ".gdf", 'P',
-                    neuronsP,
-                    self.config.rows_per_read
-                ):
-                    rateGetter.run(self.config.snr_timelist)
-                if rateGetter.setup(
-                    self.config.filenamePrefixB + str(i) + ".gdf", 'B',
-                    neuronsB,
-                    self.config.rows_per_read
-                ):
-                    rateGetter.run(self.config.snr_timelist)
-
+                # use firing rate getter and do stuff
+                snrCalculator()
 
     def __reprocess_raw_files(self, prefixlist):
         """Ask if files should be reprocessed if found."""
