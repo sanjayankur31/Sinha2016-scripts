@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import pandas
 import sys
 import numpy
+import math
 
 
 class calculateSNR:
@@ -51,7 +52,7 @@ class calculateSNR:
         print("Mean2 is: {}".format(mean2))
 
         std1 = numpy.std(rates1, dtype=float)
-        print("STD1is: {}".format(std2))
+        print("STD1is: {}".format(std1))
         std2 = numpy.std(rates2, dtype=float)
         print("STD2 is: {}".format(std2))
 
@@ -60,12 +61,11 @@ class calculateSNR:
                                   math.pow(std2, 2.)))
 
         print("SNR is: {}".format(snr))
+        return snr
 
     def usage(self):
         """Print usage."""
-        usage = ("Usage: \npython3 calculateSNR.py " +
-                 "file1 file2" +
-                 )
+        usage = ("Usage: \npython3 calculateSNR.py " + "file1 file2")
         print(usage, file=sys.stderr)
 
 if __name__ == "__main__":
