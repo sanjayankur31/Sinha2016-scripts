@@ -12,17 +12,23 @@ plot "firing-rate-E.gdf" with lines ls 1 title "E", 3 with lines ls 9 title "T";
 
 set output "firing-rate-I.png"
 set title "Firing rate for I neurons"
-plot "firing-rate-I.gdf" with lines ls 6 title "I", 3 with lines ls 9 title "T";
+plot "firing-rate-I.gdf" with lines ls 1 title "I", 3 with lines ls 9 title "T";
 
 set output "firing-rate-I-E.png"
 set title "Firing rate for neurons"
-plot "firing-rate-I.gdf" with lines ls 6 title "I", "firing-rate-E.gdf" with lines  ls 1 title "E", 3 with lines ls 9 title "T";
+plot "firing-rate-I.gdf" with lines ls 1 title "I", "firing-rate-E.gdf" with lines  ls 1 title "E", 3 with lines ls 9 title "T";
 
 set ytics 5
 set yrange [0:40]
 set output "firing-rate-I-E-zoomed.png"
 set title "Firing rate for neurons"
-plot "firing-rate-I.gdf" with lines ls 6 title "I", "firing-rate-E.gdf" with lines ls 1  title "E", 3 with lines ls 9 title "T";
+plot "firing-rate-I.gdf" with lines ls 1 title "I", "firing-rate-E.gdf" with lines ls 1  title "E", 3 with lines ls 9 title "T";
+
+set ytics 5
+set yrange [0:40]
+set output "firing-rate-lpz-I-E-zoomed.png"
+set title "Firing rate for lpz neurons"
+plot "firing-rate-lpz-E.gdf" with lines ls 1 title "LPZ I", "firing-rate-lpz-I.gdf" with lines ls 1  title "LPZ I", 3 with lines ls 9 title "T";
 
 set yrange [0:40]
 set xrange [3990:4010]
