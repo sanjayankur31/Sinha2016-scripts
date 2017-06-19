@@ -24,6 +24,12 @@ set output "firing-rate-I-E-zoomed.png"
 set title "Firing rate for neurons"
 plot "firing-rate-I.gdf" with lines ls 6 title "I", "firing-rate-E.gdf" with lines ls 1  title "E", 3 with lines ls 9 title "T";
 
+set ytics 5
+set yrange [0:40]
+set output "firing-rate-I-E-zoomed.png"
+set title "Firing rate for lpz neurons"
+plot "firing-rate-lpz-I.gdf" with lines ls 6 title "lpz I", "firing-rate-lpz-E.gdf" with lines ls 1  title "lpz E", 3 with lines ls 9 title "T";
+
 set yrange [0:40]
 set xrange [3990:4010]
 set output "firing-rate-I-E-deaff-zoomed.png"
