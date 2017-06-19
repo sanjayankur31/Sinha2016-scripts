@@ -31,15 +31,15 @@ class calculateSNR:
 
     """Calculate SNR from two sets of unlabelled firing rate files."""
 
-    def run(self, file1, file2):
+    def run(self, signal_file, noise_file):
         """Main runner method."""
-        firing_rates1 = pandas.read_csv(file1,
+        firing_rates1 = pandas.read_csv(signal_file,
                                         sep='\s+', dtype=float,
                                         lineterminator="\n",
                                         skipinitialspace=True, header=None,
                                         index_col=None, names=None)
         rates1 = firing_rates1.values
-        firing_rates2 = pandas.read_csv(file2,
+        firing_rates2 = pandas.read_csv(noise_file,
                                         sep='\s+', dtype=float,
                                         lineterminator="\n",
                                         skipinitialspace=True, header=None,
@@ -65,7 +65,7 @@ class calculateSNR:
 
     def usage(self):
         """Print usage."""
-        usage = ("Usage: \npython3 calculateSNR.py " + "file1 file2")
+        usage = ("Usage: \npython3 calculateSNR.py " + "signal_file noise_file")
         print(usage, file=sys.stderr)
 
 if __name__ == "__main__":
