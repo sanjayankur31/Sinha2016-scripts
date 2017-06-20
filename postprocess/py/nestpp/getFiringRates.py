@@ -148,7 +148,7 @@ class getFiringRates:
                     print("Neurons found: {}".format(len(self.rates)))
 
                     # Fill up missing neurons
-                    for i in range(1, self.num_neurons):
+                    for i in range(1, self.num_neurons + 1):
                         if i not in self.rates:
                             self.rates[i] = 0
                     print("Neurons after appending zeros: {}".format(
