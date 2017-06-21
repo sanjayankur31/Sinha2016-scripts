@@ -11,3 +11,11 @@ plot "01-calcium-E-all.txt" using ($1/1000):2:($2-$3/2):($2+$3/2) with errorbars
 set output "01-calcium-concentration-I.png"
 set title "Mean and STD calcium concentration for I neuron sets"
 plot "01-calcium-I-all.txt" using ($1/1000):2:($2-$3/2):($2+$3/2) with errorbars lw 6 title "SD", "01-calcium-I-all.txt" using ($1/1000):2 with linespoints lw 6 title "Mean"
+
+set output "01-calcium-concentration-lpz-E.png"
+set title "Mean and STD calcium concentration for LPZ E neuron sets"
+plot "01-calcium-lpz-E-all.txt" using ($1/1000):2:($2-$3/2):($2+$3/2) with errorbars lw 6 title "SD", "01-calcium-lpz-E-all.txt" using ($1/1000):2 with linespoints lw 6 title "Mean"
+
+set output "01-calcium-concentration-lpz-I.png"
+set title "Mean and STD calcium concentration for LPZ I neuron sets"
+plot "01-calcium-lpz-I-all.txt" using ($1/1000):2:($2-$3/2):($2+$3/2) with errorbars lw 6 title "SD", "01-calcium-lpz-I-all.txt" using ($1/1000):2 with linespoints lw 6 title "Mean"

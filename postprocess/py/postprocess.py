@@ -290,6 +290,64 @@ class Postprocess:
             else:
                 print("No calcium metric graphs generated.")
 
+            if self.__reprocess_raw_files([self.config.filenamePrefixCalciumLPZE]):
+                combiner = nestpp.combineFiles.CombineFiles()
+
+                calDF_LPZE = combiner.combineCSVRowLists(
+                    self.config.unconsolidatedFilesDir,
+                    self.config.filenamePrefixCalciumLPZE)
+
+                if not calDF_LPZE.empty:
+                    calMetricsLPZE = pandas.concat(
+                        [calDF_LPZE.mean(axis=1),
+                         calDF_LPZE.std(axis=1)],
+                        axis=1)
+                    calMetricsLPZEfile = (
+                        self.config.filenamePrefixCalciumLPZE + 'all.txt'
+                    )
+                    calMetricsLPZE.to_csv(
+                        calMetricsLPZEfile, sep='\t',
+                        header=None, line_terminator='\n')
+                    print("Processed cal metrics for LPZE neurons..")
+                else:
+                    print("No cal metric df for LPZE neurons. Skipping.")
+            else:
+                calDF_LPZE = calDF_LPZE.append([0])
+
+            if self.__reprocess_raw_files([self.config.filenamePrefixCalciumLPZI]):
+                calDF_LPZI = combiner.combineCSVRowLists(
+                    self.config.unconsolidatedFilesDir,
+                    self.config.filenamePrefixCalciumLPZI)
+
+                if not calDF_LPZI.empty:
+                    calMetricsLPZI = pandas.concat(
+                        [calDF_LPZI.mean(axis=1),
+                         calDF_LPZI.std(axis=1)],
+                        axis=1)
+                    calMetricsLPZIfile = (
+                        self.config.filenamePrefixCalciumLPZI + 'all.txt'
+                    )
+                    calMetricsLPZI.to_csv(
+                        calMetricsLPZIfile, sep='\t',
+                        header=None, line_terminator='\n')
+                    print("Processed cal metrics for LPZI neurons..")
+                else:
+                    print("No cal metric df for LPZI neurons. Skipping.")
+            else:
+                calDF_LPZI = calDF_LPZI.append([0])
+
+            if (not calDF_LPZE.empty) and (not calDF_LPZI.empty) and \
+                    (not calDF_E.empty) and (not calDF_I.empty):
+                args = (os.path.join(
+                    self.config.postprocessHome,
+                    self.config.gnuplotFilesDir,
+                        'plot-cal-metrics.plt'))
+                subprocess.call(['gnuplot',
+                                args])
+                print("Calcium graphs generated..")
+            else:
+                print("No calcium metric graphs generated.")
+
     def __postprocess_conductances(self):
         """Post process conductances, print means."""
         if self.config.conductancesMetrics:
