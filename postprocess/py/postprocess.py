@@ -442,9 +442,10 @@ class Postprocess:
             else:
                 conductancesDF_IE = conductancesDF_IE.append([0])
 
-            if ((not conductancesDF_EE.empty) and (not conductancesDF_EI.empty)
-                    and (not conductancesDF_IE.empty)
-                    and (not conductancesDF_II.empty)):
+            if ((not conductancesDF_EE.empty) and
+                (not conductancesDF_EI.empty) and
+                (not conductancesDF_IE.empty) and
+                (not conductancesDF_II.empty)):
                 args = (os.path.join(
                     self.config.postprocessHome,
                     self.config.gnuplotFilesDir,
