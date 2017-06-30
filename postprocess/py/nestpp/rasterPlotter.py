@@ -145,7 +145,7 @@ class rasterPlotter:
                     spiketimesdf = pandas.DataFrame(
                         spiketimes, columns=['spiketimes'], dtype=float)
                     resultdf = pandas.concat([neuronIDdf, spiketimesdf],
-                                             axis='1', join='inner')
+                                             axis=1, join='inner')
                     resultdf = resultdf.merge(
                         adict['neurons'], left_on='neuronID',
                         right_on='neuronID', how='inner')
@@ -190,6 +190,8 @@ class rasterPlotter:
             newvals = list(range(numneurons,
                                  numneurons + (adict['neurons']).shape[0],
                                  1))
+            # update numneurons for next plotter bit
+            numneurons = numneurons + adict['neurons'].shape[0]
             to_replace = list(((adict['neurons'])['neuronID']).values)
             dftoplot.replace(inplace=True,
                              to_replace=to_replace, value=newvals)
@@ -197,8 +199,8 @@ class rasterPlotter:
                      dftoplot['neuronID'].values, ".", markersize=5,
                      label=adict['neuronSet'])
             plt.xticks(numpy.arange(atime - 1., atime + 0.001, 0.2))
-            numneurons = numneurons + adict['neurons'].shape[0]
 
+        plt.ylim(ymax=numneurons)
         plt.legend(loc="upper right")
         plt.savefig(output_filename)
         plt.close()
