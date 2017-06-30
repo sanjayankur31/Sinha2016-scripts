@@ -516,6 +516,22 @@ class Postprocess:
                 print("Doing the work.")
                 rasterPlotter.run(self.config.histogram_timelist)
 
+            optiondict = [
+                {
+                    'neuronSet': 'E',
+                    'neuronsFileName': self.config.neuronListE,
+                    'spikesFileName': self.config.filenameE
+                },
+                {
+                    'neuronSet': 'LPZ E',
+                    'neuronsFileName': self.config.neuronListLPZE,
+                    'spikesFileName': self.config.filenameLPZE
+                },
+            ]
+            if rasterPlotter.setup(optiondict):
+                print("Doing the work.")
+                rasterPlotter.run(self.config.histogram_timelist)
+
         if self.config.grid:
             print("Generating grids..")
             import nestpp.gridPlotter as gp
