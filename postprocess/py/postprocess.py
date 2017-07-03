@@ -518,12 +518,7 @@ class Postprocess:
 
             optiondict = [
                 {
-                    'neuronSet': 'E',
-                    'neuronsFileName': self.config.neuronListE,
-                    'spikesFileName': self.config.filenameE
-                },
-                {
-                    'neuronSet': 'LPZ E',
+                    'neuronSet': 'LPZE',
                     'neuronsFileName': self.config.neuronListLPZE,
                     'spikesFileName': self.config.filenameLPZE
                 },

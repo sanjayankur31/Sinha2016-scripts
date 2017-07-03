@@ -180,9 +180,9 @@ class rasterPlotter:
         plt.ylabel("Neurons")
         plt.xlabel("Time (s)")
         plt.title("Snapshot of spikes at " + str(atime) + " seconds")
-        output_filename = ("raster-" + str(atime) + ".png")
         ax = plt.gca()
         ax.ticklabel_format(useOffset=False)
+        output_filename = ("raster-" + str(atime))
 
         numneurons = 1
         for adict in self.neuronOptions:
@@ -199,7 +199,9 @@ class rasterPlotter:
                      dftoplot['neuronID'].values, ".", markersize=5,
                      label=adict['neuronSet'])
             plt.xticks(numpy.arange(atime - 1., atime + 0.001, 0.2))
+            output_filename = output_filename + "-" + adict['neuronSet']
 
+        output_filename = output_filename + ".png"
         plt.ylim(ymax=numneurons)
         plt.legend(loc="upper right")
         plt.savefig(output_filename)
