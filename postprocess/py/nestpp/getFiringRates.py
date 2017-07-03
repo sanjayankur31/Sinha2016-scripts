@@ -41,6 +41,7 @@ class getFiringRates:
         self.rows = 0.
         self.start = 0
         self.end = 0
+        self.rates = []
 
     def setup(self, filename, neuron_set_name, num_neurons, rows=0.):
         """Setup."""
@@ -81,6 +82,9 @@ class getFiringRates:
             for nrn in self.rates:
                 print("{}\t{}".format(nrn, self.rates[nrn]), file=output_file)
 
+        print("Returning outputfilename: {}".format(output_filename))
+        return output_filename
+
     def run(self, timelist):
         """Main runner method."""
         # remember to convert to ms!
@@ -89,6 +93,7 @@ class getFiringRates:
         current = 0
         old_spikes = numpy.array([])
         old_times = numpy.array([])
+        output_files = []
 
         print("Reading spikes file {}".format(self.spikes_filename))
         for chunk in pandas.read_csv(self.spikes_filename, sep='\s+',
@@ -154,7 +159,9 @@ class getFiringRates:
                     print("Neurons after appending zeros: {}".format(
                         len(self.rates)))
 
-                    self.print_firing_rates(sorted_timelist[current])
+                    output_file = self.print_firing_rates(
+                        sorted_timelist[current])
+                    output_files.append(output_file)
 
                     current += 1
                     if current >= len(sorted_timelist):
@@ -169,3 +176,6 @@ class getFiringRates:
             del spikes
             del times
             gc.collect()
+
+        print("List of outputfiles is: {}".format(output_files))
+        return output_files

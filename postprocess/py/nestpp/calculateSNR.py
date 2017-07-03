@@ -21,7 +21,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import pandas
 import sys
 import numpy
 import math
@@ -33,18 +32,10 @@ class calculateSNR:
 
     def run(self, signal_file, noise_file):
         """Main runner method."""
-        firing_rates1 = pandas.read_csv(signal_file,
-                                        sep='\s+', dtype=float,
-                                        lineterminator="\n",
-                                        skipinitialspace=True, header=None,
-                                        index_col=None, names=None)
-        rates1 = firing_rates1.values
-        firing_rates2 = pandas.read_csv(noise_file,
-                                        sep='\s+', dtype=float,
-                                        lineterminator="\n",
-                                        skipinitialspace=True, header=None,
-                                        index_col=None, names=None)
-        rates2 = firing_rates2.values
+        rates1 = numpy.loadtxt(signal_file, usecols=1,
+                               delimiter='\t')
+        rates2 = numpy.loadtxt(noise_file, usecols=1,
+                               delimiter='\t')
 
         mean1 = numpy.mean(rates1, dtype=float)
         print("Mean1 is: {}".format(mean1))

@@ -459,14 +459,36 @@ class Postprocess:
     def __postprocess_spikes(self):
         """Postprocess combined spike files."""
         self.config.neuronsE = len(numpy.loadtxt(self.config.neuronListE,
-                                                 delimiter='\t'))
-        self.config.neuronsLPZE = len(numpy.loadtxt(self.config.neuronListLPZE,
-                                                    delimiter='\t'))
+                                                 delimiter='\t', usecols=0))
+
+        neuronsLPZE = (numpy.loadtxt(self.config.neuronListLPZE,
+                                     delimiter='\t', usecols=0))
+        self.config.neuronsLPZE = len(neuronsLPZE)
+
         self.config.neuronsI = len(numpy.loadtxt(self.config.neuronListI,
-                                                 delimiter='\t'))
+                                                 delimiter='\t', usecols=0))
         self.config.neuronsLPZI = len(numpy.loadtxt(self.config.neuronListLPZI,
-                                                    delimiter='\t'))
+                                                    delimiter='\t', usecols=0))
         self.config.numpats = self.__get_numpats()
+
+        with open("00-pattern-overlap.txt", 'w') as f:
+            for i in range(1, self.config.numpats + 1):
+                neuronsP = (numpy.loadtxt(
+                    self.config.neuronListPrefixP + str(i) + ".txt",
+                    delimiter='\t', usecols=0))
+                numP = len(neuronsP)
+                neuronsB = (numpy.loadtxt(
+                    self.config.neuronListPrefixB + str(i) + ".txt",
+                    delimiter='\t', usecols=0))
+                numB = len(neuronsB)
+
+                self.config.neuronsP.append(numP)
+                self.config.neuronsB.append(numB)
+
+                neuronsOverlap = set(neuronsLPZE).intersection(set(neuronsP))
+                overlapp_percent = len(neuronsOverlap)/len(neuronsP)
+                print("{}\t{}".format(i, overlapp_percent), file=f)
+
         print("Got {} numpats".format(self.config.numpats))
         if self.config.timegraphs:
             print("Generating timegraph..")
@@ -568,12 +590,37 @@ class Postprocess:
         if self.config.snr:
             import nestpp.getFiringRates as rg
             import nestpp.calculateSNR as snr
-            rateGetter = rg.getFiringRates()
             snrCalculator = snr.calculateSNR()
+            patFilesB = []
+            patFilesP = []
 
             for i in range(1, self.config.numpats + 1):
                 # use firing rate getter and do stuff
-                snrCalculator()
+                rateGetterB = rg.getFiringRates()
+                if rateGetterB.setup(
+                    self.config.filenamePrefixB + str(i) + ".gdf",
+                    'B-{}'.format(i),
+                    self.config.neuronsB[i-1],
+                    self.config.rows_per_read
+                ):
+                    patFilesB = rateGetterB.run(self.config.snr_timelist)
+
+                rateGetterP = rg.getFiringRates()
+                if rateGetterP.setup(
+                    self.config.filenamePrefixP + str(i) + ".gdf",
+                    'P-{}'.format(i),
+                    self.config.neuronsP[i-1],
+                    self.config.rows_per_read
+                ):
+                    patFilesP = rateGetterP.run(self.config.snr_timelist)
+                    print("patfilesP is: {} ".format(patFilesP))
+
+                with open("00-SNR-pattern-{}.txt".format(str(i)), 'w') as f:
+                    for j in range(0, len(self.config.snr_timelist)):
+                        snr = snrCalculator.run(patFilesP[j], patFilesB[j])
+                        print("{}\t{}".format(self.config.snr_timelist[j], snr),
+                              file=f)
+
 
     def __reprocess_raw_files(self, prefixlist):
         """Ask if files should be reprocessed if found."""

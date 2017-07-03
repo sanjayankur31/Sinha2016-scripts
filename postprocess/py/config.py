@@ -86,6 +86,8 @@ class Config:
         self.numpats = 0
         self.neuronsE = 0
         self.neuronsI = 0
+        self.neuronsP = []
+        self.neuronsB = []
         self.neuronsLPZE = 0
         self.neuronsLPZI = 0
 
