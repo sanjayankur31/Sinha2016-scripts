@@ -81,9 +81,9 @@ LC_ALL=C sort -k "2" -n --parallel=16 -T $SORTTMPDIR spikes-lpz-I*.gdf > spikes-
 mv spikes-lpz-I.gdf consolidated_files
 
 echo "Moving neuron location files"
-mv *neuron* consolidated_files/ -v
+cp *neuron* consolidated_files/ -v
 
-echo "Removed $SORTTMPDIR"
-rm -rf $SORTTMPDIR
+# echo "Removed $SORTTMPDIR"
+# rm -rf $SORTTMPDIR
 echo "All files combined."
 exit 0
