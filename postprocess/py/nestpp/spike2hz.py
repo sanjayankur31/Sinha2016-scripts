@@ -149,13 +149,6 @@ class spike2hz:
             print(
                 "Times from {} to {} being analysed containing {} rows".format(
                     times[0], times[-1], len(times)))
-            # This is needed for log files that do not start from zero, for
-            # example pattern and recall spike data files. This condition
-            # should not be met in any other scenario since the log files once
-            # started, are continuous till the end and current_time increases
-            # in accordance.
-            if current_time < times[0]:
-                current_time = times[0]
 
             print("Current time is {}".format(current_time))
 
@@ -171,10 +164,18 @@ class spike2hz:
                     times[self.left:], current_time,
                     side='right')
 
-                # neither start, nor finish found, we need the next chunk
+                # point is lesser than the first value in the chunk
+                if self.right == 0 and self.left == 0:
+                    print("Point too small for chunk. Resetting current time.")
+                    current_time = times[0]
+                    continue
+
+                # interval not found, no spikes - not necessarily at max
+                # the max check is in the while condition, and that
+                # ascertains if a new chunk should be read
                 if self.right == self.left:
-                    print("This window is empty! Need more data")
-                    break
+                    current_time = times[self.left]
+                    continue
 
                 # could even just do right - left if all I'm using is len
                 thiswindow_neuronIDs = neuronIDs[self.left:self.right]
