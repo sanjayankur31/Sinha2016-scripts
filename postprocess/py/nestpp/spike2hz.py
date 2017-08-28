@@ -27,7 +27,6 @@ import math
 import pandas
 import os.path
 import gc
-import collections
 
 
 class spike2hz:
@@ -112,7 +111,6 @@ class spike2hz:
         ISI CV and Fano have 1 second bins.
         STD of firing rate has 5 ms bins.
         """
-        start_row = 0
         # start at 50 ms
         current_time = 50.
         old_neuronIDs = numpy.array([])
@@ -166,8 +164,9 @@ class spike2hz:
 
                 # point is lesser than the first value in the chunk
                 if self.right == 0 and self.left == 0:
-                    print("Point too small for chunk. Resetting current time.")
+                    print("Point too small for chunk")
                     current_time = times[0]
+                    print("Time to reset to: " + times[0])
                     continue
 
                 # interval not found, no spikes - not necessarily at max
@@ -205,12 +204,11 @@ class spike2hz:
                     bin5right = 0
                     bin5time = thiswindow_times[0]
                     while bin5time < math.floor(thiswindow_times[-1] - 5.):
-                        bin5left += numpy.searchsorted(thiswindow_times[bin5left:],
-                                                      bin5time,
-                                                      side="left")
-                        bin5right = bin5left + numpy.searchsorted(thiswindow_times[bin5left:],
-                                                       bin5time + 5.,
-                                                       side="right")
+                        bin5left += numpy.searchsorted(
+                            thiswindow_times[bin5left:], bin5time, side="left")
+                        bin5right = bin5left + numpy.searchsorted(
+                            thiswindow_times[bin5left:], bin5time + 5.,
+                            side="right")
                         bin5neurons = thiswindow_neuronIDs[bin5left:bin5right]
 
                         # multiplied by 200 to get firing rate per second as Hertz
@@ -291,6 +289,7 @@ class spike2hz:
     def print_usage(self):
         """Print usage."""
         print(self.usage, file=sys.stderr)
+
 
 if __name__ == "__main__":
     converter = spike2hz()
