@@ -1,6 +1,8 @@
 set term pngcairo font "OpenSans, 28" size 1920,1028
 set xlabel "Time in seconds"
 set ylabel "Synaptic weight (nS)"
+set yrange[-10.:]
+set key outside
 
 set output "EE-conductances.png"
 set title "Synaptic weights EE"
