@@ -51,7 +51,7 @@ class Postprocess:
 
     def __postprocess_synaptic_elements_individual(self):
         """Post process synaptic elements from individual neuronal files."""
-        if self.config.SETotalsMetrics:
+        if self.config.SEIndividualMetrics:
             print("Processing synaptic elements for individual neurons..")
             import nestpp.combineFiles
             combiner = nestpp.combineFiles.CombineFiles()
@@ -621,6 +621,8 @@ class Postprocess:
                         print("{}\t{}".format(self.config.snr_timelist[j], snr),
                               file=f)
 
+    def __postprocess_growthcurves(self):
+        """Process and plot growth curves."""
 
     def __reprocess_raw_files(self, prefixlist):
         """Ask if files should be reprocessed if found."""
