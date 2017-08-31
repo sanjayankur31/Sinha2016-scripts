@@ -14,6 +14,7 @@ zetaa=(etaa-epsilon)/1.6651092223153954
 dzdt(x, zeta, xi)= (v * ((2.0 * exp(-(((x - xi)/zeta)**2.0))) - 1.0))
 
 set output outputfilename
+set title plottitle
 set xlabel "Calcium concentration"
 set ylabel "dz/dt"
 plot [x=0:1] dzdt(x, zetad, xid) w lines lw 2 title 'Dendritic', [x=0:1] dzdt(x, zetaa, xia) w lines lw 2 title 'Axonal', 0 title "";

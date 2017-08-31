@@ -141,12 +141,9 @@ class Config:
         self.filenamePrefixConductancesII = parser['default']['conductancesPrefixII']
         self.filenamePrefixConductancesIE = parser['default']['conductancesPrefixIE']
 
-        self.growthcurveMetrics = parser['default'].getboolean('growthcurveMetrics')
-        self.filenamePrefixGCE = parser['default']['filenamePrefixGCE']
-        self.filenamePrefixGCI = parser['default']['filenamePrefixGCI']
-
         self.timegraphs = parser['default'].getboolean('timegraphs')
         self.rows_per_read = int(parser['default']['rows_per_read'])
+        self.rewiringEnabledAt = float(parser['default']['rewiringEnabledAt'])
 
         # histograms and rasters
         self.histograms = parser['default'].getboolean('histograms')

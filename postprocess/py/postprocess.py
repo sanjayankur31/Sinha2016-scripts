@@ -287,6 +287,37 @@ class Postprocess:
                 subprocess.call(['gnuplot',
                                 args])
                 print("Calcium graphs generated..")
+
+                eps_e = calDF_E.loc[self.config.rewiringEnabledAt * 1000.][0]
+                eta_a_e = 0.56 * eps_e
+                eta_d_e = 0.14 * eps_e
+                args = ("-e", "etad={}".format(eta_d_e),
+                        "-e", "etaa={}".format(eta_a_e),
+                        "-e", "epsilon={}".format(eps_e),
+                        "-e", "outputfilename=growth-curves-E.png",
+                        "-e", "plottitle=Growth curves for E neurons",
+                        os.path.join(
+                            self.config.postprocessHome,
+                            self.config.gnuplotFilesDir,
+                            'plot-growthcurves.plt'))
+                subprocess.call(['gnuplot',
+                                args])
+
+                eps_i = calDF_I.loc[self.config.rewiringInabledAt * 1000.][0]
+                eta_a_i = 0.56 * eps_i
+                eta_d_i = 0.14 * eps_i
+                args = ("-e", "etad={}".format(eta_d_i),
+                        "-e", "etaa={}".format(eta_a_i),
+                        "-e", "epsilon={}".format(eps_i),
+                        "-e", "outputfilename=growth-curves-I.png",
+                        "-e", "plottitle=Growth curves for I neurons",
+                        os.path.join(
+                            self.config.postprocessHome,
+                            self.config.gnuplotFilesDir,
+                            'plot-growthcurves.plt'))
+                subprocess.call(['gnuplot',
+                                args])
+                print("Growth curves plotted..")
             else:
                 print("No calcium metric graphs generated.")
 
@@ -620,9 +651,6 @@ class Postprocess:
                         snr = snrCalculator.run(patFilesP[j], patFilesB[j])
                         print("{}\t{}".format(self.config.snr_timelist[j], snr),
                               file=f)
-
-    def __postprocess_growthcurves(self):
-        """Process and plot growth curves."""
 
     def __reprocess_raw_files(self, prefixlist):
         """Ask if files should be reprocessed if found."""
