@@ -141,6 +141,7 @@ class Config:
         self.filenamePrefixConductancesII = parser['default']['conductancesPrefixII']
         self.filenamePrefixConductancesIE = parser['default']['conductancesPrefixIE']
 
+        self.growthcurveMetrics = parser['default'].getboolean('growthcurveMetrics')
         self.filenamePrefixGCE = parser['default']['filenamePrefixGCE']
         self.filenamePrefixGCI = parser['default']['filenamePrefixGCI']
 
