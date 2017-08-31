@@ -79,7 +79,7 @@ class CombineFiles:
         return None
 
     def combineTimedTSVColDataFiles(self, directory, prefix):
-        """Combine TSV files columnwise for different times."""
+        """Combine TSV files columnwise."""
         filedict = self.getTimedFileList(directory, prefix)
         if not filedict:
             return {}
