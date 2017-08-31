@@ -82,6 +82,8 @@ class Config:
         self.filenamePrefixConductancesEI = ""
         self.filenamePrefixConductancesII = ""
         self.filenamePrefixConductancesIE = ""
+        self.filenamePrefixGCE = ""
+        self.filenamePrefixGCI = ""
 
         self.numpats = 0
         self.neuronsE = 0
@@ -138,6 +140,9 @@ class Config:
         self.filenamePrefixConductancesEI = parser['default']['conductancesPrefixEI']
         self.filenamePrefixConductancesII = parser['default']['conductancesPrefixII']
         self.filenamePrefixConductancesIE = parser['default']['conductancesPrefixIE']
+
+        self.filenamePrefixGCE = parser['default']['filenamePrefixGCE']
+        self.filenamePrefixGCI = parser['default']['filenamePrefixGCI']
 
         self.timegraphs = parser['default'].getboolean('timegraphs')
         self.rows_per_read = int(parser['default']['rows_per_read'])
