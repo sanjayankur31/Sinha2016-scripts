@@ -166,7 +166,7 @@ class spike2hz:
                 if self.right == 0 and self.left == 0:
                     print("Point too small for chunk")
                     current_time = times[0]
-                    print("Time to reset to: " + times[0])
+                    print("Time to reset to: {}".format(times[0]))
                     continue
 
                 # interval not found, no spikes - not necessarily at max
