@@ -80,6 +80,14 @@ echo "Combining LPZ I files"
 LC_ALL=C sort -k "2" -n --parallel=16 -T $SORTTMPDIR spikes-lpz-I*.gdf > spikes-lpz-I.gdf
 mv spikes-lpz-I.gdf consolidated_files
 
+echo "Combining growth curve parameter files for E neurons"
+LC_ALL=C cat 21-gaussian-params-E-*txt > 21-gaussian-params-E-all.txt
+mv 21-gaussian-params-E-all.txt consolidated_files
+
+echo "Combining growth curve parameter files for I neurons"
+LC_ALL=C cat 21-gaussian-params-I-*txt > 21-gaussian-params-I-all.txt
+mv 21-gaussian-params-I-all.txt consolidated_files
+
 echo "Moving neuron location files"
 cp *neuron* consolidated_files/ -v
 
