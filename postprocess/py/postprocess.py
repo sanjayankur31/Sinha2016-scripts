@@ -232,6 +232,8 @@ class Postprocess:
             import nestpp.combineFiles
             calDF_E = pandas.DataFrame()
             calDF_I = pandas.DataFrame()
+            calDF_LPZE = pandas.DataFrame()
+            calDF_LPZI = pandas.DataFrame()
             print("Processing calcium concentration information..")
             if self.__reprocess_raw_files([self.config.filenamePrefixCalciumE]):
                 combiner = nestpp.combineFiles.CombineFiles()
@@ -245,6 +247,7 @@ class Postprocess:
                         [calDF_E.mean(axis=1),
                          calDF_E.std(axis=1)],
                         axis=1)
+                    xmax = calDF_E.values.max()
                     calMetricsEfile = (
                         self.config.filenamePrefixCalciumE + 'all.txt'
                     )
@@ -252,6 +255,22 @@ class Postprocess:
                         calMetricsEfile, sep='\t',
                         header=None, line_terminator='\n')
                     print("Processed cal metrics for E neurons..")
+
+                    eps_e = calMetricsE.loc[self.config.rewiringEnabledAt * 1000.][0]
+                    eta_a_e = 0.56 * eps_e
+                    eta_d_e = 0.14 * eps_e
+                    args = ("-e", "etad={}".format(eta_d_e),
+                            "-e", "etaa={}".format(eta_a_e),
+                            "-e", "epsilon={}".format(eps_e),
+                            "-e", "outputfilename='growth-curves-E.png'",
+                            "-e", "plottitle='Growth curves for E neurons'",
+                            "-e", "xmax={}".format(xmax),
+                            os.path.join(
+                                self.config.postprocessHome,
+                                self.config.gnuplotFilesDir,
+                                'plot-growthcurves.plt'))
+                    subprocess.call(['gnuplot'] + list(args))
+                    print("Growth curves plotted..")
                 else:
                     print("No cal metric df for E neurons. Skipping.")
             else:
@@ -267,6 +286,7 @@ class Postprocess:
                         [calDF_I.mean(axis=1),
                          calDF_I.std(axis=1)],
                         axis=1)
+                    xmax = calDF_I.values.max()
                     calMetricsIfile = (
                         self.config.filenamePrefixCalciumI + 'all.txt'
                     )
@@ -274,52 +294,26 @@ class Postprocess:
                         calMetricsIfile, sep='\t',
                         header=None, line_terminator='\n')
                     print("Processed cal metrics for I neurons..")
+
+                    eps_i = calMetricsI.loc[self.config.rewiringEnabledAt * 1000.][0]
+                    eta_a_i = 0.56 * eps_i
+                    eta_d_i = 0.14 * eps_i
+                    args = ("-e", "etad={}".format(eta_d_i),
+                            "-e", "etaa={}".format(eta_a_i),
+                            "-e", "epsilon={}".format(eps_i),
+                            "-e", "outputfilename='growth-curves-I.png'",
+                            "-e", "plottitle='Growth curves for I neurons'",
+                            "-e", "xmax={}".format(xmax),
+                            os.path.join(
+                                self.config.postprocessHome,
+                                self.config.gnuplotFilesDir,
+                                'plot-growthcurves.plt'))
+                    subprocess.call(['gnuplot'] + list(args))
+                    print("Growth curves plotted..")
                 else:
                     print("No cal metric df for I neurons. Skipping.")
             else:
                 calDF_I = calDF_I.append([0])
-
-            if (not calDF_E.empty) and (not calDF_I.empty):
-                args = (os.path.join(
-                    self.config.postprocessHome,
-                    self.config.gnuplotFilesDir,
-                        'plot-cal-metrics.plt'))
-                subprocess.call(['gnuplot',
-                                args])
-                print("Calcium graphs generated..")
-
-                eps_e = calDF_E.loc[self.config.rewiringEnabledAt * 1000.][0]
-                eta_a_e = 0.56 * eps_e
-                eta_d_e = 0.14 * eps_e
-                args = ("-e", "etad={}".format(eta_d_e),
-                        "-e", "etaa={}".format(eta_a_e),
-                        "-e", "epsilon={}".format(eps_e),
-                        "-e", "outputfilename=growth-curves-E.png",
-                        "-e", "plottitle=Growth curves for E neurons",
-                        os.path.join(
-                            self.config.postprocessHome,
-                            self.config.gnuplotFilesDir,
-                            'plot-growthcurves.plt'))
-                subprocess.call(['gnuplot',
-                                args])
-
-                eps_i = calDF_I.loc[self.config.rewiringInabledAt * 1000.][0]
-                eta_a_i = 0.56 * eps_i
-                eta_d_i = 0.14 * eps_i
-                args = ("-e", "etad={}".format(eta_d_i),
-                        "-e", "etaa={}".format(eta_a_i),
-                        "-e", "epsilon={}".format(eps_i),
-                        "-e", "outputfilename=growth-curves-I.png",
-                        "-e", "plottitle=Growth curves for I neurons",
-                        os.path.join(
-                            self.config.postprocessHome,
-                            self.config.gnuplotFilesDir,
-                            'plot-growthcurves.plt'))
-                subprocess.call(['gnuplot',
-                                args])
-                print("Growth curves plotted..")
-            else:
-                print("No calcium metric graphs generated.")
 
             if self.__reprocess_raw_files([self.config.filenamePrefixCalciumLPZE]):
                 combiner = nestpp.combineFiles.CombineFiles()
@@ -375,7 +369,7 @@ class Postprocess:
                         'plot-cal-metrics.plt'))
                 subprocess.call(['gnuplot',
                                 args])
-                print("Calcium graphs generated..")
+
             else:
                 print("No calcium metric graphs generated.")
 

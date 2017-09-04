@@ -17,4 +17,4 @@ set output outputfilename
 set title plottitle
 set xlabel "Calcium concentration"
 set ylabel "dz/dt"
-plot [x=0:1] dzdt(x, zetad, xid) w lines lw 2 title 'Dendritic', [x=0:1] dzdt(x, zetaa, xia) w lines lw 2 title 'Axonal', 0 title "";
+plot [x=0:xmax] dzdt(x, zetad, xid) w lines lw 2 title 'Dendritic', [x=0:xmax] dzdt(x, zetaa, xia) w lines lw 2 title 'Axonal', 0 title "";
