@@ -92,6 +92,7 @@ class Config:
         self.neuronsB = []
         self.neuronsLPZE = 0
         self.neuronsLPZI = 0
+        self.rewiringEnabledAt = 0.
 
         parser = configparser.ConfigParser()
         parser.read(self.taskfile)
