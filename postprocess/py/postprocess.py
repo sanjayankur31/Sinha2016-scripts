@@ -646,6 +646,11 @@ class Postprocess:
                         print("{}\t{}".format(self.config.snr_timelist[j], snr),
                               file=f)
 
+    def __postprocess_turnovers(self):
+        """Process synaptic turnover graphs."""
+        if self.config.SETurnoverMetrics:
+            pass
+
     def __reprocess_raw_files(self, prefixlist):
         """Ask if files should be reprocessed if found."""
         filelist = os.listdir()
