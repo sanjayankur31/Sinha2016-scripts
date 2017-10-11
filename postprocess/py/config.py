@@ -30,8 +30,19 @@ class Config:
 
     def __init__(self, taskfile='config.ini'):
         """Initialise."""
+        # booleans
         self.timegraphs = True
+        self.histograms = False
+        self.rasters = False
         self.snr = False
+        self.grids = False
+        self.SETotalsMetrics = False
+        self.SETurnoverMetrics = False
+        self.SEIndividualMetrics = False
+        self.calciumMetrics = False
+        self.conductancesMetrics = False
+
+        # timelists
         self.histogram_timelist = [0.]
         self.gridplots_timelist = [0.]
         self.snr_timelist = [0.]
@@ -40,6 +51,7 @@ class Config:
         self.postprocessHome = ""
         self.gnuplotFilesDir = ""
 
+        # file names and prefixes
         self.filenameE = ""
         self.filenameLPZE = ""
         self.filenameI = ""
@@ -135,6 +147,10 @@ class Config:
         self.SEIndividualMetrics = parser['default'].getboolean('SEIndividualMetrics')
         self.filenamePrefixSEIndividualE = parser['default']['SEIndividualPrefixE']
         self.filenamePrefixSEIndividualI = parser['default']['SEIndividualPrefixI']
+
+        self.SETurnoverMetrics = parser['default'].getboolean('SETurnoverMetrics')
+        self.filenamePrefixSETurnoverE = parser['default']['SETurnoverFormed']
+        self.filenamePrefixSETurnoverI = parser['default']['SETurnoverDeleted']
 
         self.conductancesMetrics = parser['default'].getboolean('conductancesMetrics')
         self.filenamePrefixConductancesEE = parser['default']['conductancesPrefixEE']
