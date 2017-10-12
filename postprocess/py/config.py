@@ -149,8 +149,8 @@ class Config:
         self.filenamePrefixSEIndividualI = parser['default']['SEIndividualPrefixI']
 
         self.SETurnoverMetrics = parser['default'].getboolean('SETurnoverMetrics')
-        self.filenamePrefixSETurnoverE = parser['default']['SETurnoverFormed']
-        self.filenamePrefixSETurnoverI = parser['default']['SETurnoverDeleted']
+        self.filenameSETurnoverFormed = parser['default']['SETurnoverFormed']
+        self.filenameSETurnoverDeleted = parser['default']['SETurnoverDeleted']
 
         self.conductancesMetrics = parser['default'].getboolean('conductancesMetrics')
         self.filenamePrefixConductancesEE = parser['default']['conductancesPrefixEE']

@@ -648,8 +648,52 @@ class Postprocess:
 
     def __postprocess_turnovers(self):
         """Process synaptic turnover graphs."""
+        plotting_interval = 10000.
         if self.config.SETurnoverMetrics:
-            pass
+            formed_filename = os.path.join(
+                self.config.unconsolidatedFilesDir +
+                (self.config.filenameSETurnoverFormed + "0.txt"))
+            deleted_filename = os.path.join(
+                self.config.unconsolidatedFilesDir +
+                (self.config.filenameSETurnoverDeleted + "0.txt"))
+            formed_DF = pandas.read_csv(formed_filename, delimiter='\t',
+                                        engine='c', skipinitialspace=True,
+                                        lineterminator='\n', dtype=float)
+            deleted_DF = pandas.read_csv(deleted_filename, delimiter='\t',
+                                         engine='c', skipinitialspace=True,
+                                         lineterminator='\n', dtype=float)
+            with open(self.config.filenameSETurnoverFormed + "totals.txt",
+                      'w') as fout:
+                current_time = formed_DF.iloc[0][0]
+                current_count = formed_DF.iloc[0][2]
+                for row in formed_DF.itertuples():
+                    if int(row[1]/plotting_interval.) == int(current_time/plotting_interval.):
+                        current_count += row[3]
+
+                    if int(row[1]/plotting_interval.) > int(current_time/plotting_interval.):
+                        print("{}\t{}".format(int(current_time/plotting_interval.), current_count),
+                              file=fout)
+                        current_count = row[3]
+                        current_time = row[1]
+
+            with open(self.config.filenameSETurnoverDeleted + "totals.txt",
+                      'w') as fout:
+                current_time = deleted_DF.iloc[0][0]
+                current_count = deleted_DF.iloc[0][2]
+                for row in deleted_DF.itertuples():
+                    if int(row[1]/plotting_interval.) == int(current_time/plotting_interval.):
+                        current_count += row[4]
+
+                    if int(row[1]/plotting_interval.) > int(current_time/plotting_interval.):
+                        print("{}\t{}".format(int(current_time/plotting_interval.), current_count),
+                              file=fout)
+                        current_count = int(row[4]/1000.)
+                        current_time = row[1]
+            args = ['gnuplot',
+                    self.config.postprocessHome,
+                    self.config.gnuplotFilesDir,
+                    'plot-turnover.plt']
+            subprocess.call(args)
 
     def __reprocess_raw_files(self, prefixlist):
         """Ask if files should be reprocessed if found."""
@@ -706,6 +750,7 @@ class Postprocess:
         self.__postprocess_conductances()
         self.__postprocess_calcium()
         self.__postprocess_spikes()
+        self.__postprocess_turnovers()
 
 if __name__ == "__main__":
     runner = Postprocess()
