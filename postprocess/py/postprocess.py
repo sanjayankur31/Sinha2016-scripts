@@ -37,6 +37,8 @@ class Postprocess:
     def __init__(self):
         """Initialise."""
         self.configfile = "config.ini"
+        self.neuronsE = []
+        self.neuronsI = []
         self.neuronsLPZE = []
         self.neuronsLPZI = []
 
@@ -501,15 +503,18 @@ class Postprocess:
 
     def __populate_neuron_lists(self):
         """Populate neuron lists."""
+        # config holds only the number, object variables only hold gids
         if os.path.exists(self.config.neuronListE):
-            self.config.neuronsE = len(numpy.loadtxt(
-                self.config.neuronListE, delimiter='\t', usecols=0))
+            self.neuronsE = (numpy.loadtxt(self.config.neuronListE,
+                                           delimiter='\t', usecols=0))
+            self.config.neuronsE = len(self.neuronsE)
         else:
             print("Neuron list file {} not found".format(
                 self.config.neuronListE))
-        if os.path.exists(self.config.neuronListE):
-            self.config.neuronsI = len(numpy.loadtxt(
-                self.config.neuronListI, delimiter='\t', usecols=0))
+        if os.path.exists(self.config.neuronListI):
+            self.neuronsI = (numpy.loadtxt(self.config.neuronListI,
+                                           delimiter='\t', usecols=0))
+            self.config.neuronsI = len(self.neuronsI)
         else:
             print("Neuron list file {} not found".format(
                 self.config.neuronListI))
