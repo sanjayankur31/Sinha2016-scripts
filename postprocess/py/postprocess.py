@@ -701,15 +701,19 @@ class Postprocess:
                                          engine='c', skipinitialspace=True,
                                          lineterminator='\n', dtype=float)
             with open(self.config.filenameSETurnoverFormed + "totals.txt",
-                      'w') as fout:
+                      'w') as fout, open(self.config.filenameSETurnoverFormed +
+                                         "LPZ-totals.txt", 'w') as lpzfout:
                 current_time = formed_DF.iloc[0][0]
-                current_count = formed_DF.iloc[0][2]
+                current_count = 0
+                current_lpz_count = 0
                 for row in formed_DF.itertuples():
                     if (
                             int(row[1]/plotting_interval) ==
                             int(current_time/plotting_interval)
                     ):
                         current_count += row[3]
+                        if row[2] in self.neuronsLPZE:
+                            current_lpz_count += row[3]
 
                     if (
                             int(row[1]/plotting_interval) >
@@ -718,19 +722,31 @@ class Postprocess:
                         print("{}\t{}".format(
                             int(current_time/plotting_interval),
                             current_count), file=fout)
+                        print("{}\t{}".format(
+                            int(current_time/plotting_interval),
+                            current_lpz_count), file=lpzfout)
+                        # Ready for the next iteration
                         current_count = row[3]
+                        if row[2] in self.neuronsLPZE:
+                            current_lpz_count = row[3]
+                        else:
+                            current_lpz_count = 0
                         current_time = row[1]
 
             with open(self.config.filenameSETurnoverDeleted + "totals.txt",
-                      'w') as fout:
+                      'w') as fout, open(self.config.filenameSETurnoverDeleted
+                                         + "LPZ-totals.txt", 'w') as lpzfout:
                 current_time = deleted_DF.iloc[0][0]
-                current_count = deleted_DF.iloc[0][2]
+                current_count = 0
+                current_lpz_count = 0
                 for row in deleted_DF.itertuples():
                     if (
                             int(row[1]/plotting_interval) ==
                             int(current_time/plotting_interval)
                     ):
                         current_count += row[4]
+                        if row[2] in self.neuronsLPZE:
+                            current_lpz_count += row[4]
 
                     if (
                             int(row[1]/plotting_interval) >
@@ -739,8 +755,17 @@ class Postprocess:
                         print("{}\t{}".format(
                             int(current_time/plotting_interval),
                             current_count), file=fout)
-                        current_count = int(row[4]/1000.)
+                        print("{}\t{}".format(
+                            int(current_time/plotting_interval),
+                            current_lpz_count), file=lpzfout)
+                        # Ready for the next iteration
+                        current_count = row[4]
+                        if row[2] in self.neuronsLPZE:
+                            current_lpz_count = row[4]
+                        else:
+                            current_lpz_count = 0
                         current_time = row[1]
+
             args = ['gnuplot', os.path.join(
                     self.config.postprocessHome,
                     self.config.gnuplotFilesDir,
