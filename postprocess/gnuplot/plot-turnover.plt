@@ -1,7 +1,6 @@
-set term pngcairo font "OpenSans, 28" size 4096,1920
+set term pngcairo font "OpenSans, 28" size 1920, 1028
 set xlabel "Time (seconds)"
 set ylabel "Synaptic turnover"
-set key outside
 set xzeroaxis ls -1 lw 2
 
 set output "04-synaptic-turnover.png"
