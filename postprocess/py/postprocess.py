@@ -143,7 +143,8 @@ class Postprocess:
             syn_elms_DF_I = pandas.DataFrame()
             syn_elms_DF_LPZ_E = pandas.DataFrame()
             syn_elms_DF_LPZ_I = pandas.DataFrame()
-            if self.__reprocess_raw_files([self.config.filenamePrefixSETotalsE]):
+            if self.__reprocess_raw_files(
+                    [self.config.filenamePrefixSETotalsE]):
                 syn_elms_DF_E = combiner.combineTSVRowData(
                     self.config.unconsolidatedFilesDir,
                     self.config.filenamePrefixSETotalsE)
@@ -161,7 +162,8 @@ class Postprocess:
             else:
                 syn_elms_DF_E = syn_elms_DF_E.append([0])
 
-            if self.__reprocess_raw_files([self.config.filenamePrefixSETotalsLPZE]):
+            if self.__reprocess_raw_files(
+                    [self.config.filenamePrefixSETotalsLPZE]):
                 syn_elms_DF_LPZ_E = combiner.combineTSVRowData(
                     self.config.unconsolidatedFilesDir,
                     self.config.filenamePrefixSETotalsLPZE)
@@ -179,7 +181,8 @@ class Postprocess:
             else:
                 syn_elms_DF_LPZ_E = syn_elms_DF_LPZ_E.append([0])
 
-            if self.__reprocess_raw_files([self.config.filenamePrefixSETotalsI]):
+            if self.__reprocess_raw_files(
+                    [self.config.filenamePrefixSETotalsI]):
                 syn_elms_DF_I = combiner.combineTSVRowData(
                     self.config.unconsolidatedFilesDir,
                     self.config.filenamePrefixSETotalsI)
@@ -195,7 +198,8 @@ class Postprocess:
             else:
                 syn_elms_DF_I = syn_elms_DF_I.append([0])
 
-            if self.__reprocess_raw_files([self.config.filenamePrefixSETotalsLPZI]):
+            if self.__reprocess_raw_files(
+                    [self.config.filenamePrefixSETotalsLPZI]):
                 syn_elms_DF_LPZ_I = combiner.combineTSVRowData(
                     self.config.unconsolidatedFilesDir,
                     self.config.filenamePrefixSETotalsLPZI)
@@ -235,7 +239,8 @@ class Postprocess:
             calDF_LPZE = pandas.DataFrame()
             calDF_LPZI = pandas.DataFrame()
             print("Processing calcium concentration information..")
-            if self.__reprocess_raw_files([self.config.filenamePrefixCalciumE]):
+            if self.__reprocess_raw_files(
+                    [self.config.filenamePrefixCalciumE]):
                 combiner = nestpp.combineFiles.CombineFiles()
 
                 calDF_E = combiner.combineCSVRowLists(
@@ -256,7 +261,8 @@ class Postprocess:
                         header=None, line_terminator='\n')
                     print("Processed cal metrics for E neurons..")
 
-                    eps_e = calMetricsE.loc[self.config.rewiringEnabledAt * 1000.][0]
+                    eps_e = calMetricsE.loc[
+                        self.config.rewiringEnabledAt * 1000.][0]
                     eta_a_e = 0.56 * eps_e
                     eta_d_e = 0.14 * eps_e
                     args = ("-e", "etad={}".format(eta_d_e),
@@ -276,7 +282,8 @@ class Postprocess:
             else:
                 calDF_E = calDF_E.append([0])
 
-            if self.__reprocess_raw_files([self.config.filenamePrefixCalciumI]):
+            if self.__reprocess_raw_files(
+                    [self.config.filenamePrefixCalciumI]):
                 calDF_I = combiner.combineCSVRowLists(
                     self.config.unconsolidatedFilesDir,
                     self.config.filenamePrefixCalciumI)
@@ -295,7 +302,8 @@ class Postprocess:
                         header=None, line_terminator='\n')
                     print("Processed cal metrics for I neurons..")
 
-                    eps_i = calMetricsI.loc[self.config.rewiringEnabledAt * 1000.][0]
+                    eps_i = calMetricsI.loc[
+                        self.config.rewiringEnabledAt * 1000.][0]
                     eta_a_i = 0.56 * eps_i
                     eta_d_i = 0.14 * eps_i
                     args = ("-e", "etad={}".format(eta_d_i),
@@ -315,7 +323,8 @@ class Postprocess:
             else:
                 calDF_I = calDF_I.append([0])
 
-            if self.__reprocess_raw_files([self.config.filenamePrefixCalciumLPZE]):
+            if self.__reprocess_raw_files(
+                    [self.config.filenamePrefixCalciumLPZE]):
                 combiner = nestpp.combineFiles.CombineFiles()
 
                 calDF_LPZE = combiner.combineCSVRowLists(
@@ -339,7 +348,8 @@ class Postprocess:
             else:
                 calDF_LPZE = calDF_LPZE.append([0])
 
-            if self.__reprocess_raw_files([self.config.filenamePrefixCalciumLPZI]):
+            if self.__reprocess_raw_files(
+                    [self.config.filenamePrefixCalciumLPZI]):
                 calDF_LPZI = combiner.combineCSVRowLists(
                     self.config.unconsolidatedFilesDir,
                     self.config.filenamePrefixCalciumLPZI)
@@ -382,7 +392,8 @@ class Postprocess:
             conductancesDF_IE = pandas.DataFrame()
             conductancesDF_II = pandas.DataFrame()
             import nestpp.combineFiles
-            if self.__reprocess_raw_files([self.config.filenamePrefixConductancesEE]):
+            if self.__reprocess_raw_files(
+                    [self.config.filenamePrefixConductancesEE]):
                 combiner = nestpp.combineFiles.CombineFiles()
                 conductancesDF_EE = combiner.combineCSVRowLists(
                     self.config.unconsolidatedFilesDir,
@@ -404,7 +415,8 @@ class Postprocess:
             else:
                 conductancesDF_EE = conductancesDF_EE.append([0])
 
-            if self.__reprocess_raw_files([self.config.filenamePrefixConductancesEI]):
+            if self.__reprocess_raw_files(
+                    [self.config.filenamePrefixConductancesEI]):
                 conductancesDF_EI = combiner.combineCSVRowLists(
                     self.config.unconsolidatedFilesDir,
                     self.config.filenamePrefixConductancesEI)
@@ -425,7 +437,8 @@ class Postprocess:
             else:
                 conductancesDF_EI = conductancesDF_EI.append([0])
 
-            if self.__reprocess_raw_files([self.config.filenamePrefixConductancesII]):
+            if self.__reprocess_raw_files(
+                    [self.config.filenamePrefixConductancesII]):
                 conductancesDF_II = combiner.combineCSVRowLists(
                     self.config.unconsolidatedFilesDir,
                     self.config.filenamePrefixConductancesII)
@@ -446,7 +459,8 @@ class Postprocess:
             else:
                 conductancesDF_II = conductancesDF_II.append([0])
 
-            if self.__reprocess_raw_files([self.config.filenamePrefixConductancesIE]):
+            if self.__reprocess_raw_files(
+                    [self.config.filenamePrefixConductancesIE]):
                 conductancesDF_IE = combiner.combineCSVRowLists(
                     self.config.unconsolidatedFilesDir,
                     self.config.filenamePrefixConductancesIE)
@@ -467,10 +481,12 @@ class Postprocess:
             else:
                 conductancesDF_IE = conductancesDF_IE.append([0])
 
-            if ((not conductancesDF_EE.empty) and
-                (not conductancesDF_EI.empty) and
-                (not conductancesDF_IE.empty) and
-                (not conductancesDF_II.empty)):
+            if (
+                    (not conductancesDF_EE.empty) and
+                    (not conductancesDF_EI.empty) and
+                    (not conductancesDF_IE.empty) and
+                    (not conductancesDF_II.empty)
+            ):
                 args = (os.path.join(
                     self.config.postprocessHome,
                     self.config.gnuplotFilesDir,
@@ -484,17 +500,17 @@ class Postprocess:
     def __postprocess_spikes(self):
         """Postprocess combined spike files."""
         if self.config.timegraphs:
-            self.config.neuronsE = len(numpy.loadtxt(self.config.neuronListE,
-                                                     delimiter='\t', usecols=0))
+            self.config.neuronsE = len(numpy.loadtxt(
+                self.config.neuronListE, delimiter='\t', usecols=0))
 
             neuronsLPZE = (numpy.loadtxt(self.config.neuronListLPZE,
                                          delimiter='\t', usecols=0))
             self.config.neuronsLPZE = len(neuronsLPZE)
 
-            self.config.neuronsI = len(numpy.loadtxt(self.config.neuronListI,
-                                                     delimiter='\t', usecols=0))
-            self.config.neuronsLPZI = len(numpy.loadtxt(self.config.neuronListLPZI,
-                                                        delimiter='\t', usecols=0))
+            self.config.neuronsI = len(numpy.loadtxt(
+                self.config.neuronListI, delimiter='\t', usecols=0))
+            self.config.neuronsLPZI = len(numpy.loadtxt(
+                self.config.neuronListLPZI, delimiter='\t', usecols=0))
             self.config.numpats = self.__get_numpats()
 
             with open("00-pattern-overlap.txt", 'w') as f:
@@ -511,7 +527,8 @@ class Postprocess:
                     self.config.neuronsP.append(numP)
                     self.config.neuronsB.append(numB)
 
-                    neuronsOverlap = set(neuronsLPZE).intersection(set(neuronsP))
+                    neuronsOverlap = set(neuronsLPZE).intersection(
+                        set(neuronsP))
                     overlapp_percent = len(neuronsOverlap)/len(neuronsP)
                     print("{}\t{}".format(i, overlapp_percent), file=f)
 
@@ -644,8 +661,8 @@ class Postprocess:
                 with open("00-SNR-pattern-{}.txt".format(str(i)), 'w') as f:
                     for j in range(0, len(self.config.snr_timelist)):
                         snr = snrCalculator.run(patFilesP[j], patFilesB[j])
-                        print("{}\t{}".format(self.config.snr_timelist[j], snr),
-                              file=f)
+                        print("{}\t{}".format(
+                            self.config.snr_timelist[j], snr), file=f)
 
     def __postprocess_turnovers(self):
         """Process synaptic turnover graphs."""
@@ -668,12 +685,19 @@ class Postprocess:
                 current_time = formed_DF.iloc[0][0]
                 current_count = formed_DF.iloc[0][2]
                 for row in formed_DF.itertuples():
-                    if int(row[1]/plotting_interval) == int(current_time/plotting_interval):
+                    if (
+                            int(row[1]/plotting_interval) ==
+                            int(current_time/plotting_interval)
+                    ):
                         current_count += row[3]
 
-                    if int(row[1]/plotting_interval) > int(current_time/plotting_interval):
-                        print("{}\t{}".format(int(current_time/plotting_interval), current_count),
-                              file=fout)
+                    if (
+                            int(row[1]/plotting_interval) >
+                            int(current_time/plotting_interval)
+                    ):
+                        print("{}\t{}".format(
+                            int(current_time/plotting_interval),
+                            current_count), file=fout)
                         current_count = row[3]
                         current_time = row[1]
 
@@ -682,12 +706,19 @@ class Postprocess:
                 current_time = deleted_DF.iloc[0][0]
                 current_count = deleted_DF.iloc[0][2]
                 for row in deleted_DF.itertuples():
-                    if int(row[1]/plotting_interval) == int(current_time/plotting_interval):
+                    if (
+                            int(row[1]/plotting_interval) ==
+                            int(current_time/plotting_interval)
+                    ):
                         current_count += row[4]
 
-                    if int(row[1]/plotting_interval) > int(current_time/plotting_interval):
-                        print("{}\t{}".format(int(current_time/plotting_interval), current_count),
-                              file=fout)
+                    if (
+                            int(row[1]/plotting_interval) >
+                            int(current_time/plotting_interval)
+                    ):
+                        print("{}\t{}".format(
+                            int(current_time/plotting_interval),
+                            current_count), file=fout)
                         current_count = int(row[4]/1000.)
                         current_time = row[1]
             args = ['gnuplot', os.path.join(
@@ -752,6 +783,7 @@ class Postprocess:
         self.__postprocess_calcium()
         self.__postprocess_spikes()
         self.__postprocess_turnovers()
+
 
 if __name__ == "__main__":
     runner = Postprocess()
