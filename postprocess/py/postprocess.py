@@ -483,39 +483,40 @@ class Postprocess:
 
     def __postprocess_spikes(self):
         """Postprocess combined spike files."""
-        self.config.neuronsE = len(numpy.loadtxt(self.config.neuronListE,
-                                                 delimiter='\t', usecols=0))
-
-        neuronsLPZE = (numpy.loadtxt(self.config.neuronListLPZE,
-                                     delimiter='\t', usecols=0))
-        self.config.neuronsLPZE = len(neuronsLPZE)
-
-        self.config.neuronsI = len(numpy.loadtxt(self.config.neuronListI,
-                                                 delimiter='\t', usecols=0))
-        self.config.neuronsLPZI = len(numpy.loadtxt(self.config.neuronListLPZI,
-                                                    delimiter='\t', usecols=0))
-        self.config.numpats = self.__get_numpats()
-
-        with open("00-pattern-overlap.txt", 'w') as f:
-            for i in range(1, self.config.numpats + 1):
-                neuronsP = (numpy.loadtxt(
-                    self.config.neuronListPrefixP + str(i) + ".txt",
-                    delimiter='\t', usecols=0))
-                numP = len(neuronsP)
-                neuronsB = (numpy.loadtxt(
-                    self.config.neuronListPrefixB + str(i) + ".txt",
-                    delimiter='\t', usecols=0))
-                numB = len(neuronsB)
-
-                self.config.neuronsP.append(numP)
-                self.config.neuronsB.append(numB)
-
-                neuronsOverlap = set(neuronsLPZE).intersection(set(neuronsP))
-                overlapp_percent = len(neuronsOverlap)/len(neuronsP)
-                print("{}\t{}".format(i, overlapp_percent), file=f)
-
-        print("Got {} numpats".format(self.config.numpats))
         if self.config.timegraphs:
+            self.config.neuronsE = len(numpy.loadtxt(self.config.neuronListE,
+                                                     delimiter='\t', usecols=0))
+
+            neuronsLPZE = (numpy.loadtxt(self.config.neuronListLPZE,
+                                         delimiter='\t', usecols=0))
+            self.config.neuronsLPZE = len(neuronsLPZE)
+
+            self.config.neuronsI = len(numpy.loadtxt(self.config.neuronListI,
+                                                     delimiter='\t', usecols=0))
+            self.config.neuronsLPZI = len(numpy.loadtxt(self.config.neuronListLPZI,
+                                                        delimiter='\t', usecols=0))
+            self.config.numpats = self.__get_numpats()
+
+            with open("00-pattern-overlap.txt", 'w') as f:
+                for i in range(1, self.config.numpats + 1):
+                    neuronsP = (numpy.loadtxt(
+                        self.config.neuronListPrefixP + str(i) + ".txt",
+                        delimiter='\t', usecols=0))
+                    numP = len(neuronsP)
+                    neuronsB = (numpy.loadtxt(
+                        self.config.neuronListPrefixB + str(i) + ".txt",
+                        delimiter='\t', usecols=0))
+                    numB = len(neuronsB)
+
+                    self.config.neuronsP.append(numP)
+                    self.config.neuronsB.append(numB)
+
+                    neuronsOverlap = set(neuronsLPZE).intersection(set(neuronsP))
+                    overlapp_percent = len(neuronsOverlap)/len(neuronsP)
+                    print("{}\t{}".format(i, overlapp_percent), file=f)
+
+            print("Got {} numpats".format(self.config.numpats))
+
             print("Generating timegraph..")
             import nestpp.timeGraphPlotter as TGP
             tgp = TGP.timeGraphPlotter(self.config)
