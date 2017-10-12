@@ -37,6 +37,8 @@ class Postprocess:
     def __init__(self):
         """Initialise."""
         self.configfile = "config.ini"
+        self.neuronsLPZE = []
+        self.neuronsLPZI = []
 
     def __load_config(self):
         """Load configuration file."""
@@ -497,43 +499,61 @@ class Postprocess:
             else:
                 print("Conductance graphs not generated.")
 
+    def __populate_neuron_lists(self):
+        """Populate neuron lists."""
+        if os.path.exists(self.config.neuronListE):
+            self.config.neuronsE = len(numpy.loadtxt(
+                self.config.neuronListE, delimiter='\t', usecols=0))
+        else:
+            print("Neuron list file {} not found".format(
+                self.config.neuronListE))
+        if os.path.exists(self.config.neuronListE):
+            self.config.neuronsI = len(numpy.loadtxt(
+                self.config.neuronListI, delimiter='\t', usecols=0))
+        else:
+            print("Neuron list file {} not found".format(
+                self.config.neuronListI))
+
+        if os.path.exists(self.config.neuronListLPZE):
+            self.neuronsLPZE = (numpy.loadtxt(self.config.neuronListLPZE,
+                                              delimiter='\t', usecols=0))
+            self.config.neuronsLPZE = len(self.neuronsLPZE)
+        else:
+            print("Neuron list file {} not found".format(
+                self.config.neuronListLPZE))
+        if os.path.exists(self.config.neuronListLPZI):
+            self.neuronsLPZI = (numpy.loadtxt(self.config.neuronListLPZI,
+                                              delimiter='\t', usecols=0))
+            self.config.neuronsLPZI = len(self.neuronsLPZI)
+        else:
+            print("Neuron list file {} not found".format(
+                self.config.neuronListLPZI))
+
+        # Populate pattern lists and calculate the overlap percentage between
+        # each pattern and the LPZ
+        self.config.numpats = self.__get_numpats()
+        with open("00-pattern-overlap.txt", 'w') as f:
+            for i in range(1, self.config.numpats + 1):
+                neuronsP = (numpy.loadtxt(
+                    self.config.neuronListPrefixP + str(i) + ".txt",
+                    delimiter='\t', usecols=0))
+                numP = len(neuronsP)
+                neuronsB = (numpy.loadtxt(
+                    self.config.neuronListPrefixB + str(i) + ".txt",
+                    delimiter='\t', usecols=0))
+                numB = len(neuronsB)
+
+                self.config.neuronsP.append(numP)
+                self.config.neuronsB.append(numB)
+
+                neuronsOverlap = set(self.neuronsLPZE).intersection(
+                    set(neuronsP))
+                overlapp_percent = len(neuronsOverlap)/len(neuronsP)
+                print("{}\t{}".format(i, overlapp_percent), file=f)
+
     def __postprocess_spikes(self):
         """Postprocess combined spike files."""
         if self.config.timegraphs:
-            self.config.neuronsE = len(numpy.loadtxt(
-                self.config.neuronListE, delimiter='\t', usecols=0))
-
-            neuronsLPZE = (numpy.loadtxt(self.config.neuronListLPZE,
-                                         delimiter='\t', usecols=0))
-            self.config.neuronsLPZE = len(neuronsLPZE)
-
-            self.config.neuronsI = len(numpy.loadtxt(
-                self.config.neuronListI, delimiter='\t', usecols=0))
-            self.config.neuronsLPZI = len(numpy.loadtxt(
-                self.config.neuronListLPZI, delimiter='\t', usecols=0))
-            self.config.numpats = self.__get_numpats()
-
-            with open("00-pattern-overlap.txt", 'w') as f:
-                for i in range(1, self.config.numpats + 1):
-                    neuronsP = (numpy.loadtxt(
-                        self.config.neuronListPrefixP + str(i) + ".txt",
-                        delimiter='\t', usecols=0))
-                    numP = len(neuronsP)
-                    neuronsB = (numpy.loadtxt(
-                        self.config.neuronListPrefixB + str(i) + ".txt",
-                        delimiter='\t', usecols=0))
-                    numB = len(neuronsB)
-
-                    self.config.neuronsP.append(numP)
-                    self.config.neuronsB.append(numB)
-
-                    neuronsOverlap = set(neuronsLPZE).intersection(
-                        set(neuronsP))
-                    overlapp_percent = len(neuronsOverlap)/len(neuronsP)
-                    print("{}\t{}".format(i, overlapp_percent), file=f)
-
-            print("Got {} numpats".format(self.config.numpats))
-
             print("Generating timegraph..")
             import nestpp.timeGraphPlotter as TGP
             tgp = TGP.timeGraphPlotter(self.config)
@@ -772,11 +792,14 @@ class Postprocess:
         for entry in filelist:
             if entry.startswith('00-pattern-neurons-'):
                 i = i+1
+
+        print("Got {} patterns".format(i))
         return i
 
     def main(self):
         """Do everything."""
         self.__load_config()
+        self.__populate_neuron_lists()
         self.__postprocess_synaptic_elements_all()
         self.__postprocess_synaptic_elements_individual()
         self.__postprocess_conductances()
