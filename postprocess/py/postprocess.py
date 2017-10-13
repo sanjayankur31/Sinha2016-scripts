@@ -408,10 +408,20 @@ class Postprocess:
                          conductancesDF_EE.std(axis=1)],
                         axis=1)
                     conductancesMetricsEEfile = (
-                        self.config.filenamePrefixConductancesEE + 'all.txt'
+                        self.config.filenamePrefixConductancesEE +
+                        'mean-all.txt'
                     )
                     conductanceMetricsEE.to_csv(
                         conductancesMetricsEEfile, sep='\t',
+                        header=None, line_terminator='\n')
+
+                    conductanceMetricsTotalsEE = conductancesDF_EE.sum(axis=1)
+                    conductancesMetricsTotalsEEfile = (
+                        self.config.filenamePrefixConductancesEE +
+                        'total-all.txt'
+                    )
+                    conductanceMetricsTotalsEE.to_csv(
+                        conductancesMetricsTotalsEEfile, sep='\t',
                         header=None, line_terminator='\n')
                     print("Processed EE conductances..")
                 else:
@@ -430,10 +440,20 @@ class Postprocess:
                          conductancesDF_EI.std(axis=1)],
                         axis=1)
                     conductancesMetricsEIfile = (
-                        self.config.filenamePrefixConductancesEI + 'all.txt'
+                        self.config.filenamePrefixConductancesEI +
+                        'mean-all.txt'
                     )
                     conductanceMetricsEI.to_csv(
                         conductancesMetricsEIfile, sep='\t',
+                        header=None, line_terminator='\n')
+
+                    conductanceMetricsTotalsEI = conductancesDF_EI.sum(axis=1)
+                    conductancesMetricsTotalsEIfile = (
+                        self.config.filenamePrefixConductancesEI +
+                        'total-all.txt'
+                    )
+                    conductanceMetricsTotalsEI.to_csv(
+                        conductancesMetricsTotalsEIfile, sep='\t',
                         header=None, line_terminator='\n')
                     print("Processed EI conductances..")
                 else:
@@ -452,10 +472,20 @@ class Postprocess:
                          conductancesDF_II.std(axis=1)],
                         axis=1)
                     conductancesMetricsIIfile = (
-                        self.config.filenamePrefixConductancesII + 'all.txt'
+                        self.config.filenamePrefixConductancesII +
+                        'mean-all.txt'
                     )
                     conductanceMetricsII.to_csv(
                         conductancesMetricsIIfile, sep='\t',
+                        header=None, line_terminator='\n')
+
+                    conductanceMetricsTotalsII = conductancesDF_II.sum(axis=1)
+                    conductancesMetricsTotalsIIfile = (
+                        self.config.filenamePrefixConductancesII +
+                        'total-all.txt'
+                    )
+                    conductanceMetricsTotalsII.to_csv(
+                        conductancesMetricsTotalsIIfile, sep='\t',
                         header=None, line_terminator='\n')
                     print("Processed II conductances..")
                 else:
@@ -474,10 +504,20 @@ class Postprocess:
                          conductancesDF_IE.std(axis=1)],
                         axis=1)
                     conductancesMetricsIEfile = (
-                        self.config.filenamePrefixConductancesIE + 'all.txt'
+                        self.config.filenamePrefixConductancesIE +
+                        'mean-all.txt'
                     )
                     conductanceMetricsIE.to_csv(
                         conductancesMetricsIEfile, sep='\t',
+                        header=None, line_terminator='\n')
+
+                    conductanceMetricsTotalsIE = conductancesDF_IE.sum(axis=1)
+                    conductancesMetricsTotalsIEfile = (
+                        self.config.filenamePrefixConductancesIE +
+                        'total-all.txt'
+                    )
+                    conductanceMetricsTotalsIE.to_csv(
+                        conductancesMetricsTotalsIEfile, sep='\t',
                         header=None, line_terminator='\n')
                     print("Processed IE conductances..")
                 else:
