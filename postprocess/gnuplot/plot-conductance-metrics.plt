@@ -1,7 +1,7 @@
 set term pngcairo font "OpenSans, 28" size 4096,1920
 set xlabel "Time in seconds"
 set ylabel "Synaptic weight (nS)"
-set yrange[-10.:]
+set yrange[0.:]
 set key outside
 
 set output "EE-mean-conductances.png"
@@ -14,7 +14,7 @@ plot "01-synaptic-weights-EI-mean-all.txt" using ($1/1000):2:($2-$3/2):($2+$3/2)
 
 set output "II-mean-conductances.png"
 set title "Mean synaptic weights II"
-plot "01-synaptic-weights-II-mean-all.txt" using ($1/1000):2:($2-$3/2):($2+$3/2) with errorbars lw 5 title "SD", "01-synaptic-weights-II-mean-all.txt" using ($1/1000):2 with linespoints lw 5 title "Mean"
+plot "01-synaptic-weights-II-mean-all.txt" using ($1/1000):(-1*$2):(-1*($2-$3/2)):(-1*($2+$3/2)) with errorbars lw 5 title "SD", "01-synaptic-weights-II-mean-all.txt" using ($1/1000):(-1*$2) with linespoints lw 5 title "Mean"
 
 set output "IE-mean-conductances.png"
 set title "Mean synaptic weights IE"
@@ -34,7 +34,7 @@ plot "01-synaptic-weights-EI-total-all.txt" using ($1/1000):2 with linespoints l
 
 set output "II-total-conductances.png"
 set title "Total synaptic weights II"
-plot "01-synaptic-weights-II-total-all.txt" using ($1/1000):2 with linespoints lw 5 title "Total"
+plot "01-synaptic-weights-II-total-all.txt" using ($1/1000):(-1*$2) with linespoints lw 5 title "Total"
 
 set output "IE-total-conductances.png"
 set title "Total synaptic weights IE"
@@ -42,4 +42,4 @@ plot "01-synaptic-weights-IE-total-all.txt" using ($1/1000):(-1*$2) with linespo
 
 set output "all-total-conductances.png"
 set title "All total conductances"
-plot "01-synaptic-weights-EE-total-all.txt" using ($1/1000):2 with linespoints lw 5 title "EE (Total)", "01-synaptic-weights-EI-total-all.txt" using ($1/1000):2 with linespoints lw 5 title "EI (Total)", "01-synaptic-weights-II-total-all.txt" using ($1/1000):2 with linespoints lw 5 title "II (Total)", "01-synaptic-weights-IE-total-all.txt" using ($1/1000):(-1*$2) with linespoints lw 5 title "IE (Total)"
+plot "01-synaptic-weights-EE-total-all.txt" using ($1/1000):2 with linespoints lw 5 title "EE (Total)", "01-synaptic-weights-EI-total-all.txt" using ($1/1000):2 with linespoints lw 5 title "EI (Total)", "01-synaptic-weights-II-total-all.txt" using ($1/1000):(-1*$2) with linespoints lw 5 title "II (Total)", "01-synaptic-weights-IE-total-all.txt" using ($1/1000):(-1*$2) with linespoints lw 5 title "IE (Total)"
