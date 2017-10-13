@@ -422,7 +422,7 @@ class Postprocess:
                     )
                     conductanceMetricsTotalsEE.to_csv(
                         conductancesMetricsTotalsEEfile, sep='\t',
-                        header=None, line_terminator='\n')
+                        header=None)
                     print("Processed EE conductances..")
                 else:
                     print("No dataframe for EE conductances. Skipping.")
@@ -454,7 +454,7 @@ class Postprocess:
                     )
                     conductanceMetricsTotalsEI.to_csv(
                         conductancesMetricsTotalsEIfile, sep='\t',
-                        header=None, line_terminator='\n')
+                        header=None)
                     print("Processed EI conductances..")
                 else:
                     print("No dataframe for EI conductances. Skipping.")
@@ -486,7 +486,7 @@ class Postprocess:
                     )
                     conductanceMetricsTotalsII.to_csv(
                         conductancesMetricsTotalsIIfile, sep='\t',
-                        header=None, line_terminator='\n')
+                        header=None)
                     print("Processed II conductances..")
                 else:
                     print("No dataframe for II conductances. Skipping.")
@@ -518,7 +518,7 @@ class Postprocess:
                     )
                     conductanceMetricsTotalsIE.to_csv(
                         conductancesMetricsTotalsIEfile, sep='\t',
-                        header=None, line_terminator='\n')
+                        header=None)
                     print("Processed IE conductances..")
                 else:
                     print("No dataframe for IE conductances. Skipping")
