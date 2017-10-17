@@ -39,10 +39,6 @@ class Postprocess:
         """Initialise."""
         logging.basicConfig(level=logging.DEBUG)
         self.cfg_file = "config.ini"
-        self.neuronsE = []
-        self.neuronsI = []
-        self.neuronsLPZE = []
-        self.neuronsLPZI = []
 
         # set up logging
         self.lgr = logging.getLogger(__name__)
@@ -553,60 +549,60 @@ class Postprocess:
             else:
                 print("Conductance graphs not generated.")
 
+    def __load_neurons(self, file):
+        """Get a neuron list from a file."""
+        neurons = []
+        if os.path.exists(file):
+            neurons = (numpy.loadtxt(file, delimiter='\t'))
+            self.lgr.info("Read {} neurons from {}".format(
+                len(neurons), file))
+        else:
+            self.lgr.error(
+                "Unable to find {}. Neurons not loaded.".format(file))
+
+        return neurons
+
     def __populate_neuron_lists(self):
         """Populate neuron lists."""
-        # config holds only the number, object variables only hold gids
-        if os.path.exists(self.cfg.neuronListE):
-            self.neuronsE = (numpy.loadtxt(self.cfg.neuronListE,
-                                           delimiter='\t', usecols=0))
-            self.cfg.neuronsE = len(self.neuronsE)
-        else:
-            print("Neuron list file {} not found".format(
-                self.cfg.neuronListE))
-        if os.path.exists(self.cfg.neuronListI):
-            self.neuronsI = (numpy.loadtxt(self.cfg.neuronListI,
-                                           delimiter='\t', usecols=0))
-            self.cfg.neuronsI = len(self.neuronsI)
-        else:
-            print("Neuron list file {} not found".format(
-                self.cfg.neuronListI))
+        # Excitatory neurons
+        self.neurons_E = self.__load_neurons("00-neuron-locations-E.txt")
+        self.neurons_lpz_c_E = self.__load_neurons(
+            "00-lpz-centre-neuron-locations-E.txt")
+        self.neurons_lpz_b_E = self.__load_neurons(
+            "00-lpz-border-neuron-locations-E.txt")
+        self.neurons_lpz_E = (self.neurons_lpz_b_E + self.neurons_lpz_c_E)
+        self.neurons_peri_lpz_E = self.__load_neurons(
+            "00-peri-lpz-neuron-locations-E.txt")
 
-        if os.path.exists(self.cfg.neuronListLPZE):
-            self.neuronsLPZE = (numpy.loadtxt(self.cfg.neuronListLPZE,
-                                              delimiter='\t', usecols=0))
-            self.cfg.neuronsLPZE = len(self.neuronsLPZE)
-        else:
-            print("Neuron list file {} not found".format(
-                self.cfg.neuronListLPZE))
-        if os.path.exists(self.cfg.neuronListLPZI):
-            self.neuronsLPZI = (numpy.loadtxt(self.cfg.neuronListLPZI,
-                                              delimiter='\t', usecols=0))
-            self.cfg.neuronsLPZI = len(self.neuronsLPZI)
-        else:
-            print("Neuron list file {} not found".format(
-                self.cfg.neuronListLPZI))
+        # Inhibitory neurons
+        self.neurons_I = self.__load_neurons("00-neuron-locations-I.txt")
+        self.neurons_lpz_c_I = self.__load_neurons(
+            "00-lpz-centre-neuron-locations-I.txt")
+        self.neurons_lpz_b_I = self.__load_neurons(
+            "00-lpz-border-neuron-locations-I.txt")
+        self.neurons_lpz_I = (self.neurons_lpz_b_I + self.neurons_lpz_c_I)
+        self.neurons_peri_lpz_I = self.__load_neurons(
+            "00-peri-lpz-neuron-locations-I.txt")
 
         # Populate pattern lists and calculate the overlap percentage between
         # each pattern and the LPZ
-        self.cfg.numpats = self.__get_numpats()
+        self.numpats = self.__get_numpats()
+        self.neurons_P = []
+        self.neurons_B = []
         with open("00-pattern-overlap.txt", 'w') as f:
-            for i in range(1, self.cfg.numpats + 1):
-                neuronsP = (numpy.loadtxt(
-                    self.cfg.neuronListPrefixP + str(i) + ".txt",
-                    delimiter='\t', usecols=0))
-                numP = len(neuronsP)
-                neuronsB = (numpy.loadtxt(
-                    self.cfg.neuronListPrefixB + str(i) + ".txt",
-                    delimiter='\t', usecols=0))
-                numB = len(neuronsB)
+            for i in range(1, self.numpats + 1):
+                neurons_P = self.__load_neurons(
+                    "00-pattern-neurons-" + str(i) + ".txt")
+                neurons_B = self.__load_neurons(
+                    "00-background-neurons-" + str(i) + ".txt")
 
-                self.cfg.neuronsP.append(numP)
-                self.cfg.neuronsB.append(numB)
+                self.neurons_P.append(neurons_P)
+                self.neurons_B.append(neurons_B)
 
-                neuronsOverlap = set(self.neuronsLPZE).intersection(
-                    set(neuronsP))
-                overlapp_percent = len(neuronsOverlap)/len(neuronsP)
-                print("{}\t{}".format(i, overlapp_percent), file=f)
+                overlapping_neurons = set(self.neurons_lpz_E).intersection(
+                    set(neurons_P))
+                overlapping_percent = len(overlapping_neurons)/len(neurons_P)
+                print("{}\t{}".format(i, overlapping_percent), file=f)
 
     def __postprocess_spikes(self):
         """Postprocess combined spike files."""
