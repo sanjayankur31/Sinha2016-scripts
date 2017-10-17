@@ -30,229 +30,48 @@ class Config:
 
     def __init__(self, taskfile='config.ini'):
         """Initialise."""
-        # booleans
-        self.timegraphs = True
-        self.histograms = False
-        self.rasters = False
-        self.snr = False
-        self.grids = False
-        self.SETotalsMetrics = False
-        self.SETurnoverMetrics = False
-        self.SEIndividualMetrics = False
-        self.calciumMetrics = False
-        self.conductancesMetrics = False
+        self.graphlist = []
 
         # timelists
         self.histogram_timelist = [0.]
-        self.gridplots_timelist = [0.]
+        self.snapshot_timelist = [0.]
         self.snr_timelist = [0.]
+        self.raster_timelist = [0.]
         self.taskfile = taskfile
 
         self.postprocessHome = ""
         self.gnuplotFilesDir = ""
 
-        # file names and prefixes
-        self.filenameE = ""
-        self.filenameLPZE = ""
-        self.filenameI = ""
-        self.filenameLPZI = ""
-        self.filenameP = ""
-        self.filenameB = ""
-        self.filenameMeanRatesE = ""
-        self.filenameMeanRatesLPZE = ""
-        self.filenameMeanRatesI = ""
-        self.filenameMeanRatesLPZI = ""
-        self.filenamePrefixMeanRatesP = ""
-        self.filenamePrefixMeanRatesB = ""
-        self.filenameSTDRatesE = ""
-        self.filenameSTDRatesLPZE = ""
-        self.filenameSTDRatesI = ""
-        self.filenameSTDRatesLPZI = ""
-        self.filenamePrefixSTDRatesP = ""
-        self.filenamePrefixSTDRatesB = ""
-        self.filenameMeanCVE = ""
-        self.filenameMeanCVLPZE = ""
-        self.filenameMeanCVI = ""
-        self.filenameMeanCVLPZI = ""
-        self.filenamePrefixMeanCVP = ""
-        self.filenamePrefixMeanCVB = ""
-        self.filenameMeanFanoE = ""
-        self.filenameMeanFanoLPZE = ""
-        self.filenameMeanFanoI = ""
-        self.filenameMeanFanoLPZI = ""
-        self.filenamePrefixMeanFanoP = ""
-        self.filenamePrefixMeanFanoB = ""
-
         # where the unconsolidated files are
-        self.unconsolidatedFilesDir = ""
-        # The prefixes for these files
-        self.filenamePrefixCalciumE = ""
-        self.filenamePrefixCalciumI = ""
-        self.filenamePrefixSEE = ""
-        self.filenamePrefixSEI = ""
-        self.filenamePrefixConductancesEE = ""
-        self.filenamePrefixConductancesEI = ""
-        self.filenamePrefixConductancesII = ""
-        self.filenamePrefixConductancesIE = ""
-        self.filenamePrefixGCE = ""
-        self.filenamePrefixGCI = ""
+        self.dataDir = ""
 
-        self.numpats = 0
-        self.neuronsE = 0
-        self.neuronsI = 0
-        self.neuronsP = []
-        self.neuronsB = []
-        self.neuronsLPZE = 0
-        self.neuronsLPZI = 0
-        self.rewiringEnabledAt = 0.
-
+    def get_values(self):
+        """Get values from the config file."""
         parser = configparser.ConfigParser()
         parser.read(self.taskfile)
+        print("Read {}".format(self.taskfile))
 
         # Some configs
-        self.postprocessHome = parser['default']['postprocessHome']
-        self.gnuplotFilesDir = parser['default']['gnuplotFilesDir']
-
-        # all the different neuron sets
-        self.filenameE = parser['default']['filenameE']
-        self.neuronListE = parser['default']['neuronListE']
-        self.filenameLPZE = parser['default']['filenameLPZE']
-        self.neuronListLPZE = parser['default']['neuronListLPZE']
-        self.filenameI = parser['default']['filenameI']
-        self.neuronListI = parser['default']['neuronListI']
-        self.filenameLPZI = parser['default']['filenameLPZI']
-        self.neuronListLPZI = parser['default']['neuronListLPZI']
-        # multiple patterns and so related files
-        self.filenamePrefixB = parser['default']['filenamePrefixB']
-        self.neuronListPrefixB = parser['default']['neuronListPrefixB']
-        self.filenamePrefixP = parser['default']['filenamePrefixP']
-        self.neuronListPrefixP = parser['default']['neuronListPrefixP']
+        self.graph_list = parser['graphs'].split()
+        self.postprocess_home = parser['default']['postprocess_home']
+        self.gnuplot_files_dir = parser['default']['gnuplot_files_dir']
 
         # where the unconsolidated files are
         # because its easier to consolidate raster files using sort
-        self.unconsolidatedFilesDir = parser['default']['unconsolidatedFilesDir']
+        self.data_dir = parser['default']['data_dir']
 
-        self.calciumMetrics = parser['default'].getboolean('calciumMetrics')
-        self.filenamePrefixCalciumE = parser['default']['calciumConcPrefixE']
-        self.filenamePrefixCalciumI = parser['default']['calciumConcPrefixI']
-        self.filenamePrefixCalciumLPZE = parser['default']['calciumConcPrefixLPZE']
-        self.filenamePrefixCalciumLPZI = parser['default']['calciumConcPrefixLPZI']
+        self.sp_enabled_at = float(parser['default']['sp_enabled_at'])
 
-        self.SETotalsMetrics = parser['default'].getboolean('SETotalsMetrics')
-        self.filenamePrefixSETotalsE = parser['default']['SETotalsPrefixE']
-        self.filenamePrefixSETotalsI = parser['default']['SETotalsPrefixI']
-        self.filenamePrefixSETotalsLPZE = parser['default']['SETotalsPrefixLPZE']
-        self.filenamePrefixSETotalsLPZI = parser['default']['SETotalsPrefixLPZI']
-
-        self.SEIndividualMetrics = parser['default'].getboolean('SEIndividualMetrics')
-        self.filenamePrefixSEIndividualE = parser['default']['SEIndividualPrefixE']
-        self.filenamePrefixSEIndividualI = parser['default']['SEIndividualPrefixI']
-
-        self.SETurnoverMetrics = parser['default'].getboolean('SETurnoverMetrics')
-        self.filenameSETurnoverFormed = parser['default']['SETurnoverFormed']
-        self.filenameSETurnoverDeleted = parser['default']['SETurnoverDeleted']
-
-        self.conductancesMetrics = parser['default'].getboolean('conductancesMetrics')
-        self.filenamePrefixConductancesEE = parser['default']['conductancesPrefixEE']
-        self.filenamePrefixConductancesEI = parser['default']['conductancesPrefixEI']
-        self.filenamePrefixConductancesII = parser['default']['conductancesPrefixII']
-        self.filenamePrefixConductancesIE = parser['default']['conductancesPrefixIE']
-
-        self.timegraphs = parser['default'].getboolean('timegraphs')
-        self.rows_per_read = int(parser['default']['rows_per_read'])
-        self.rewiringEnabledAt = float(parser['default']['rewiringEnabledAt'])
-
-        # histograms and rasters
-        self.histograms = parser['default'].getboolean('histograms')
-        self.rasters = parser['default'].getboolean('rasters')
-        self.grid = parser['default'].getboolean('grids')
         self.histogram_timelist = [float(s) for s in
-                                   parser['histograms']['times'].split()]
-        self.gridplots_timelist = [float(s) for s in
-                                   parser['gridplots']['times'].split()]
-        self.store_rate_files = parser['histograms'].getboolean(
-            'store_rate_files')
-        self.store_raster_files = parser['histograms'].getboolean(
-            'store_raster_files')
+                                   parser['histograms'].split()]
+        self.snapshot_timelist = [float(s) for s in
+                                  parser['snapshot_times'].split()]
+        self.raster_timelist = [float(s) for s in
+                                parser['raster_times'].split()]
+        self.snr_timelist = [float(s) for s in
+                             parser['snr_times'].split()]
 
-        # snr
-        self.snr = parser['default'].getboolean('snr')
-        self.snr_timelist = [float(s) for s in parser['snr']['times'].split()]
-
-    def __getMeanFiringRateFilename(self, inputname):
-        """Generate mean firing rate filename."""
-        neuronSet = (inputname.split(sep='-', maxsplit=1)[1]).split(sep='.')[0]
-        return ('firing-rate-{}'.format(neuronSet))
-
-    def __getSTDFiringRateFilename(self, inputname):
-        """Generate STD firing rate filename."""
-        neuronSet = (inputname.split(sep='-', maxsplit=1)[1]).split(sep='.')[0]
-        return ('std-rate-{}'.format(neuronSet))
-
-    def __getMeanCVFilename(self, inputname):
-        """Generate CV rate filename."""
-        neuronSet = (inputname.split(sep='-', maxsplit=1)[1]).split(sep='.')[0]
-        return ('cv-rate-{}'.format(neuronSet))
-
-    def __getMeanFanoFilename(self, inputname):
-        """Generate Fano rate filename."""
-        neuronSet = (inputname.split(sep='-', maxsplit=1)[1]).split(sep='.')[0]
-        return ('fano-rate-{}'.format(neuronSet))
-
-    def generateOutputFileNames(self):
-        """Generate output file names from inputs file patterns."""
-        self.filenameMeanRatesE = self.__getMeanFiringRateFilename(
-            self.filenameE) + ".gdf"
-        self.filenameMeanRatesLPZE = self.__getMeanFiringRateFilename(
-            self.filenameLPZE) + ".gdf"
-        self.filenameMeanRatesI = self.__getMeanFiringRateFilename(
-            self.filenameI) + ".gdf"
-        self.filenameMeanRatesLPZI = self.__getMeanFiringRateFilename(
-            self.filenameLPZI) + ".gdf"
-        self.filenamePrefixMeanRatesB = self.__getMeanFiringRateFilename(
-            self.filenamePrefixB)
-        self.filenamePrefixMeanRatesP = self.__getMeanFiringRateFilename(
-            self.filenamePrefixP)
-
-        self.filenameSTDRatesE = self.__getSTDFiringRateFilename(
-            self.filenameE) + ".gdf"
-        self.filenameSTDRatesLPZE = self.__getSTDFiringRateFilename(
-            self.filenameLPZE) + ".gdf"
-        self.filenameSTDRatesI = self.__getSTDFiringRateFilename(
-            self.filenameI) + ".gdf"
-        self.filenameSTDRatesLPZI = self.__getSTDFiringRateFilename(
-            self.filenameLPZI) + ".gdf"
-        self.filenamePrefixSTDRatesB = self.__getSTDFiringRateFilename(
-            self.filenamePrefixB)
-        self.filenamePrefixSTDRatesP = self.__getSTDFiringRateFilename(
-            self.filenamePrefixP)
-
-        self.filenameMeanCVE = self.__getMeanCVFilename(
-            self.filenameE) + ".gdf"
-        self.filenameMeanCVLPZE = self.__getMeanCVFilename(
-            self.filenameLPZE) + ".gdf"
-        self.filenameMeanCVI = self.__getMeanCVFilename(
-            self.filenameI) + ".gdf"
-        self.filenameMeanCVLPZI = self.__getMeanCVFilename(
-            self.filenameLPZI) + ".gdf"
-        self.filenamePrefixMeanCVB = self.__getMeanCVFilename(
-            self.filenamePrefixB)
-        self.filenamePrefixMeanCVP = self.__getMeanCVFilename(
-            self.filenamePrefixP)
-
-        self.filenameMeanFanoE = self.__getMeanFanoFilename(
-            self.filenameE) + ".gdf"
-        self.filenameMeanFanoLPZE = self.__getMeanFanoFilename(
-            self.filenameLPZE) + ".gdf"
-        self.filenameMeanFanoI = self.__getMeanFanoFilename(
-            self.filenameI) + ".gdf"
-        self.filenameMeanFanoLPZI = self.__getMeanFanoFilename(
-            self.filenameLPZI) + ".gdf"
-        self.filenamePrefixMeanFanoB = self.__getMeanFanoFilename(
-            self.filenamePrefixB)
-        self.filenamePrefixMeanFanoP = self.__getMeanFanoFilename(
-            self.filenamePrefixP)
 
 if __name__ == "__main__":
     config = Config()
-    config.generateOutputFileNames()
+    config.get_values()
