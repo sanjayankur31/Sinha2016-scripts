@@ -36,7 +36,7 @@ class Postprocess:
 
     def __init__(self):
         """Initialise."""
-        self.configfile = "config.ini"
+        self.cfg_file = "config.ini"
         self.neuronsE = []
         self.neuronsI = []
         self.neuronsLPZE = []
@@ -44,31 +44,31 @@ class Postprocess:
 
     def __load_config(self):
         """Load configuration file."""
-        if os.path.isfile(self.configfile):
-            self.config = Config(self.configfile)
-            self.config.generateOutputFileNames()
+        if os.path.isfile(self.cfg_file):
+            self.cfg = Config(self.cfg_file)
+            self.cfg.generateOutputFileNames()
             print("Config file {} loaded successfully.".format(
-                self.configfile))
+                self.cfg_file))
         else:
             sys.exit("Could not find config file: {}. Exiting.".format(
-                self.configfile))
+                self.cfg_file))
 
     def __postprocess_synaptic_elements_individual(self):
         """Post process synaptic elements from individual neuronal files."""
-        if self.config.SEIndividualMetrics:
+        if self.cfg.SEIndividualMetrics:
             print("Processing synaptic elements for individual neurons..")
             import nestpp.combineFiles
             combiner = nestpp.combineFiles.CombineFiles()
 
             # E neurons
             timeddfDict = combiner.combineTimedTSVColDataFiles(
-                self.config.unconsolidatedFilesDir,
-                self.config.filenamePrefixSEIndividualE)
+                self.cfg.unconsolidatedFilesDir,
+                self.cfg.filenamePrefixSEIndividualE)
 
             if timeddfDict:
                 for time, df in timeddfDict.items():
                     syn_elms_ind_DF_filename = (
-                        self.config.filenamePrefixSEIndividualE +
+                        self.cfg.filenamePrefixSEIndividualE +
                         str(time) + ".txt")
                     df.to_csv(
                         syn_elms_ind_DF_filename, sep='\t',
@@ -79,7 +79,7 @@ class Postprocess:
                     args = ['gnuplot',
                             '-e',
                             "plotname='{}'".format(
-                                self.config.filenamePrefixSEIndividualE +
+                                self.cfg.filenamePrefixSEIndividualE +
                                 str(time) + ".png"),
                             '-e',
                             'plottitle={}'.format(
@@ -89,8 +89,8 @@ class Postprocess:
                             "inputfile='{}'".format(
                                 syn_elms_ind_DF_filename),
                             os.path.join(
-                                self.config.postprocessHome,
-                                self.config.gnuplotFilesDir,
+                                self.cfg.postprocessHome,
+                                self.cfg.gnuplotFilesDir,
                                 'plot-ind-synaptic-elements-metrics.plt')]
                     subprocess.call(args)
                     print("E neuron synaptic elements graph" +
@@ -100,13 +100,13 @@ class Postprocess:
 
             # I neurons
             timeddfDict = combiner.combineTimedTSVColDataFiles(
-                self.config.unconsolidatedFilesDir,
-                self.config.filenamePrefixSEIndividualI)
+                self.cfg.unconsolidatedFilesDir,
+                self.cfg.filenamePrefixSEIndividualI)
 
             if timeddfDict:
                 for time, df in timeddfDict.items():
                     syn_elms_ind_DF_filename = (
-                        self.config.filenamePrefixSEIndividualI +
+                        self.cfg.filenamePrefixSEIndividualI +
                         str(time) + ".txt")
                     df.to_csv(
                         syn_elms_ind_DF_filename, sep='\t',
@@ -117,7 +117,7 @@ class Postprocess:
                     args = ['gnuplot',
                             '-e',
                             "plotname='{}'".format(
-                                self.config.filenamePrefixSEIndividualI +
+                                self.cfg.filenamePrefixSEIndividualI +
                                 str(time) + ".png"),
                             '-e',
                             'plottitle={}'.format(
@@ -127,8 +127,8 @@ class Postprocess:
                             "inputfile='{}'".format(
                                 syn_elms_ind_DF_filename),
                             os.path.join(
-                                self.config.postprocessHome,
-                                self.config.gnuplotFilesDir,
+                                self.cfg.postprocessHome,
+                                self.cfg.gnuplotFilesDir,
                                 'plot-ind-synaptic-elements-metrics.plt')]
                     subprocess.call(args)
                     print("I neuron synaptic elements graph" +
@@ -138,7 +138,7 @@ class Postprocess:
 
     def __postprocess_synaptic_elements_all(self):
         """Post total synaptic element files."""
-        if self.config.SETotalsMetrics:
+        if self.cfg.SETotalsMetrics:
             print("Processing synaptic element information..")
             import nestpp.combineFiles
             combiner = nestpp.combineFiles.CombineFiles()
@@ -148,14 +148,14 @@ class Postprocess:
             syn_elms_DF_LPZ_E = pandas.DataFrame()
             syn_elms_DF_LPZ_I = pandas.DataFrame()
             if self.__reprocess_raw_files(
-                    [self.config.filenamePrefixSETotalsE]):
+                    [self.cfg.filenamePrefixSETotalsE]):
                 syn_elms_DF_E = combiner.combineTSVRowData(
-                    self.config.unconsolidatedFilesDir,
-                    self.config.filenamePrefixSETotalsE)
+                    self.cfg.unconsolidatedFilesDir,
+                    self.cfg.filenamePrefixSETotalsE)
 
                 if not syn_elms_DF_E.empty:
                     syn_elms_E_filename = (
-                        self.config.filenamePrefixSETotalsE + 'all.txt'
+                        self.cfg.filenamePrefixSETotalsE + 'all.txt'
                     )
                     syn_elms_DF_E.to_csv(
                         syn_elms_E_filename, sep='\t',
@@ -167,14 +167,14 @@ class Postprocess:
                 syn_elms_DF_E = syn_elms_DF_E.append([0])
 
             if self.__reprocess_raw_files(
-                    [self.config.filenamePrefixSETotalsLPZE]):
+                    [self.cfg.filenamePrefixSETotalsLPZE]):
                 syn_elms_DF_LPZ_E = combiner.combineTSVRowData(
-                    self.config.unconsolidatedFilesDir,
-                    self.config.filenamePrefixSETotalsLPZE)
+                    self.cfg.unconsolidatedFilesDir,
+                    self.cfg.filenamePrefixSETotalsLPZE)
 
                 if not syn_elms_DF_LPZ_E.empty:
                     syn_elms_E_filename = (
-                        self.config.filenamePrefixSETotalsLPZE + 'all.txt'
+                        self.cfg.filenamePrefixSETotalsLPZE + 'all.txt'
                     )
                     syn_elms_DF_LPZ_E.to_csv(
                         syn_elms_E_filename, sep='\t',
@@ -186,14 +186,14 @@ class Postprocess:
                 syn_elms_DF_LPZ_E = syn_elms_DF_LPZ_E.append([0])
 
             if self.__reprocess_raw_files(
-                    [self.config.filenamePrefixSETotalsI]):
+                    [self.cfg.filenamePrefixSETotalsI]):
                 syn_elms_DF_I = combiner.combineTSVRowData(
-                    self.config.unconsolidatedFilesDir,
-                    self.config.filenamePrefixSETotalsI)
+                    self.cfg.unconsolidatedFilesDir,
+                    self.cfg.filenamePrefixSETotalsI)
 
                 if not syn_elms_DF_I.empty:
                     syn_elms_I_filename = (
-                        self.config.filenamePrefixSETotalsI + 'all.txt'
+                        self.cfg.filenamePrefixSETotalsI + 'all.txt'
                     )
                     syn_elms_DF_I.to_csv(
                         syn_elms_I_filename, sep='\t',
@@ -203,14 +203,14 @@ class Postprocess:
                 syn_elms_DF_I = syn_elms_DF_I.append([0])
 
             if self.__reprocess_raw_files(
-                    [self.config.filenamePrefixSETotalsLPZI]):
+                    [self.cfg.filenamePrefixSETotalsLPZI]):
                 syn_elms_DF_LPZ_I = combiner.combineTSVRowData(
-                    self.config.unconsolidatedFilesDir,
-                    self.config.filenamePrefixSETotalsLPZI)
+                    self.cfg.unconsolidatedFilesDir,
+                    self.cfg.filenamePrefixSETotalsLPZI)
 
                 if not syn_elms_DF_LPZ_I.empty:
                     syn_elms_I_filename = (
-                        self.config.filenamePrefixSETotalsLPZI + 'all.txt'
+                        self.cfg.filenamePrefixSETotalsLPZI + 'all.txt'
                     )
                     syn_elms_DF_LPZ_I.to_csv(
                         syn_elms_I_filename, sep='\t',
@@ -220,15 +220,15 @@ class Postprocess:
                 syn_elms_DF_LPZ_I = syn_elms_DF_LPZ_I.append([0])
 
             args = (os.path.join(
-                self.config.postprocessHome,
-                self.config.gnuplotFilesDir,
+                self.cfg.postprocessHome,
+                self.cfg.gnuplotFilesDir,
                     'plot-synaptic-elements-metrics.plt'))
             subprocess.call(['gnuplot',
                             args])
 
             args = (os.path.join(
-                self.config.postprocessHome,
-                self.config.gnuplotFilesDir,
+                self.cfg.postprocessHome,
+                self.cfg.gnuplotFilesDir,
                     'plot-lpz-synaptic-elements-metrics.plt'))
             subprocess.call(['gnuplot',
                             args])
@@ -236,7 +236,7 @@ class Postprocess:
 
     def __postprocess_calcium(self):
         """Postprocess calcium files."""
-        if self.config.calciumMetrics:
+        if self.cfg.calciumMetrics:
             import nestpp.combineFiles
             calDF_E = pandas.DataFrame()
             calDF_I = pandas.DataFrame()
@@ -244,12 +244,12 @@ class Postprocess:
             calDF_LPZI = pandas.DataFrame()
             print("Processing calcium concentration information..")
             if self.__reprocess_raw_files(
-                    [self.config.filenamePrefixCalciumE]):
+                    [self.cfg.filenamePrefixCalciumE]):
                 combiner = nestpp.combineFiles.CombineFiles()
 
                 calDF_E = combiner.combineCSVRowLists(
-                    self.config.unconsolidatedFilesDir,
-                    self.config.filenamePrefixCalciumE)
+                    self.cfg.unconsolidatedFilesDir,
+                    self.cfg.filenamePrefixCalciumE)
 
                 if not calDF_E.empty:
                     calMetricsE = pandas.concat(
@@ -258,7 +258,7 @@ class Postprocess:
                         axis=1)
                     xmax = calDF_E.values.max()
                     calMetricsEfile = (
-                        self.config.filenamePrefixCalciumE + 'all.txt'
+                        self.cfg.filenamePrefixCalciumE + 'all.txt'
                     )
                     calMetricsE.to_csv(
                         calMetricsEfile, sep='\t',
@@ -266,7 +266,7 @@ class Postprocess:
                     print("Processed cal metrics for E neurons..")
 
                     eps_e = calMetricsE.loc[
-                        self.config.rewiringEnabledAt * 1000.][0]
+                        self.cfg.rewiringEnabledAt * 1000.][0]
                     eta_a_e = 0.56 * eps_e
                     eta_d_e = 0.14 * eps_e
                     args = ("-e", "etad={}".format(eta_d_e),
@@ -276,8 +276,8 @@ class Postprocess:
                             "-e", "plottitle='Growth curves for E neurons'",
                             "-e", "xmax={}".format(xmax),
                             os.path.join(
-                                self.config.postprocessHome,
-                                self.config.gnuplotFilesDir,
+                                self.cfg.postprocessHome,
+                                self.cfg.gnuplotFilesDir,
                                 'plot-growthcurves.plt'))
                     subprocess.call(['gnuplot'] + list(args))
                     print("Growth curves plotted..")
@@ -287,10 +287,10 @@ class Postprocess:
                 calDF_E = calDF_E.append([0])
 
             if self.__reprocess_raw_files(
-                    [self.config.filenamePrefixCalciumI]):
+                    [self.cfg.filenamePrefixCalciumI]):
                 calDF_I = combiner.combineCSVRowLists(
-                    self.config.unconsolidatedFilesDir,
-                    self.config.filenamePrefixCalciumI)
+                    self.cfg.unconsolidatedFilesDir,
+                    self.cfg.filenamePrefixCalciumI)
 
                 if not calDF_I.empty:
                     calMetricsI = pandas.concat(
@@ -299,7 +299,7 @@ class Postprocess:
                         axis=1)
                     xmax = calDF_I.values.max()
                     calMetricsIfile = (
-                        self.config.filenamePrefixCalciumI + 'all.txt'
+                        self.cfg.filenamePrefixCalciumI + 'all.txt'
                     )
                     calMetricsI.to_csv(
                         calMetricsIfile, sep='\t',
@@ -307,7 +307,7 @@ class Postprocess:
                     print("Processed cal metrics for I neurons..")
 
                     eps_i = calMetricsI.loc[
-                        self.config.rewiringEnabledAt * 1000.][0]
+                        self.cfg.rewiringEnabledAt * 1000.][0]
                     eta_a_i = 0.56 * eps_i
                     eta_d_i = 0.14 * eps_i
                     args = ("-e", "etad={}".format(eta_d_i),
@@ -317,8 +317,8 @@ class Postprocess:
                             "-e", "plottitle='Growth curves for I neurons'",
                             "-e", "xmax={}".format(xmax),
                             os.path.join(
-                                self.config.postprocessHome,
-                                self.config.gnuplotFilesDir,
+                                self.cfg.postprocessHome,
+                                self.cfg.gnuplotFilesDir,
                                 'plot-growthcurves.plt'))
                     subprocess.call(['gnuplot'] + list(args))
                     print("Growth curves plotted..")
@@ -328,12 +328,12 @@ class Postprocess:
                 calDF_I = calDF_I.append([0])
 
             if self.__reprocess_raw_files(
-                    [self.config.filenamePrefixCalciumLPZE]):
+                    [self.cfg.filenamePrefixCalciumLPZE]):
                 combiner = nestpp.combineFiles.CombineFiles()
 
                 calDF_LPZE = combiner.combineCSVRowLists(
-                    self.config.unconsolidatedFilesDir,
-                    self.config.filenamePrefixCalciumLPZE)
+                    self.cfg.unconsolidatedFilesDir,
+                    self.cfg.filenamePrefixCalciumLPZE)
 
                 if not calDF_LPZE.empty:
                     calMetricsLPZE = pandas.concat(
@@ -341,7 +341,7 @@ class Postprocess:
                          calDF_LPZE.std(axis=1)],
                         axis=1)
                     calMetricsLPZEfile = (
-                        self.config.filenamePrefixCalciumLPZE + 'all.txt'
+                        self.cfg.filenamePrefixCalciumLPZE + 'all.txt'
                     )
                     calMetricsLPZE.to_csv(
                         calMetricsLPZEfile, sep='\t',
@@ -353,10 +353,10 @@ class Postprocess:
                 calDF_LPZE = calDF_LPZE.append([0])
 
             if self.__reprocess_raw_files(
-                    [self.config.filenamePrefixCalciumLPZI]):
+                    [self.cfg.filenamePrefixCalciumLPZI]):
                 calDF_LPZI = combiner.combineCSVRowLists(
-                    self.config.unconsolidatedFilesDir,
-                    self.config.filenamePrefixCalciumLPZI)
+                    self.cfg.unconsolidatedFilesDir,
+                    self.cfg.filenamePrefixCalciumLPZI)
 
                 if not calDF_LPZI.empty:
                     calMetricsLPZI = pandas.concat(
@@ -364,7 +364,7 @@ class Postprocess:
                          calDF_LPZI.std(axis=1)],
                         axis=1)
                     calMetricsLPZIfile = (
-                        self.config.filenamePrefixCalciumLPZI + 'all.txt'
+                        self.cfg.filenamePrefixCalciumLPZI + 'all.txt'
                     )
                     calMetricsLPZI.to_csv(
                         calMetricsLPZIfile, sep='\t',
@@ -378,8 +378,8 @@ class Postprocess:
             if (not calDF_LPZE.empty) and (not calDF_LPZI.empty) and \
                     (not calDF_E.empty) and (not calDF_I.empty):
                 args = (os.path.join(
-                    self.config.postprocessHome,
-                    self.config.gnuplotFilesDir,
+                    self.cfg.postprocessHome,
+                    self.cfg.gnuplotFilesDir,
                         'plot-cal-metrics.plt'))
                 subprocess.call(['gnuplot',
                                 args])
@@ -389,7 +389,7 @@ class Postprocess:
 
     def __postprocess_conductances(self):
         """Post process conductances, print means."""
-        if self.config.conductancesMetrics:
+        if self.cfg.conductancesMetrics:
             print("Processing conductances..")
             conductancesDF_EE = pandas.DataFrame()
             conductancesDF_EI = pandas.DataFrame()
@@ -397,18 +397,18 @@ class Postprocess:
             conductancesDF_II = pandas.DataFrame()
             import nestpp.combineFiles
             if self.__reprocess_raw_files(
-                    [self.config.filenamePrefixConductancesEE]):
+                    [self.cfg.filenamePrefixConductancesEE]):
                 combiner = nestpp.combineFiles.CombineFiles()
                 conductancesDF_EE = combiner.combineCSVRowLists(
-                    self.config.unconsolidatedFilesDir,
-                    self.config.filenamePrefixConductancesEE)
+                    self.cfg.unconsolidatedFilesDir,
+                    self.cfg.filenamePrefixConductancesEE)
                 if not conductancesDF_EE.empty:
                     conductanceMetricsEE = pandas.concat(
                         [conductancesDF_EE.mean(axis=1),
                          conductancesDF_EE.std(axis=1)],
                         axis=1)
                     conductancesMetricsEEfile = (
-                        self.config.filenamePrefixConductancesEE +
+                        self.cfg.filenamePrefixConductancesEE +
                         'mean-all.txt'
                     )
                     conductanceMetricsEE.to_csv(
@@ -417,7 +417,7 @@ class Postprocess:
 
                     conductanceMetricsTotalsEE = conductancesDF_EE.sum(axis=1)
                     conductancesMetricsTotalsEEfile = (
-                        self.config.filenamePrefixConductancesEE +
+                        self.cfg.filenamePrefixConductancesEE +
                         'total-all.txt'
                     )
                     conductanceMetricsTotalsEE.to_csv(
@@ -430,17 +430,17 @@ class Postprocess:
                 conductancesDF_EE = conductancesDF_EE.append([0])
 
             if self.__reprocess_raw_files(
-                    [self.config.filenamePrefixConductancesEI]):
+                    [self.cfg.filenamePrefixConductancesEI]):
                 conductancesDF_EI = combiner.combineCSVRowLists(
-                    self.config.unconsolidatedFilesDir,
-                    self.config.filenamePrefixConductancesEI)
+                    self.cfg.unconsolidatedFilesDir,
+                    self.cfg.filenamePrefixConductancesEI)
                 if not conductancesDF_EI.empty:
                     conductanceMetricsEI = pandas.concat(
                         [conductancesDF_EI.mean(axis=1),
                          conductancesDF_EI.std(axis=1)],
                         axis=1)
                     conductancesMetricsEIfile = (
-                        self.config.filenamePrefixConductancesEI +
+                        self.cfg.filenamePrefixConductancesEI +
                         'mean-all.txt'
                     )
                     conductanceMetricsEI.to_csv(
@@ -449,7 +449,7 @@ class Postprocess:
 
                     conductanceMetricsTotalsEI = conductancesDF_EI.sum(axis=1)
                     conductancesMetricsTotalsEIfile = (
-                        self.config.filenamePrefixConductancesEI +
+                        self.cfg.filenamePrefixConductancesEI +
                         'total-all.txt'
                     )
                     conductanceMetricsTotalsEI.to_csv(
@@ -462,17 +462,17 @@ class Postprocess:
                 conductancesDF_EI = conductancesDF_EI.append([0])
 
             if self.__reprocess_raw_files(
-                    [self.config.filenamePrefixConductancesII]):
+                    [self.cfg.filenamePrefixConductancesII]):
                 conductancesDF_II = combiner.combineCSVRowLists(
-                    self.config.unconsolidatedFilesDir,
-                    self.config.filenamePrefixConductancesII)
+                    self.cfg.unconsolidatedFilesDir,
+                    self.cfg.filenamePrefixConductancesII)
                 if not conductancesDF_II.empty:
                     conductanceMetricsII = pandas.concat(
                         [conductancesDF_II.mean(axis=1),
                          conductancesDF_II.std(axis=1)],
                         axis=1)
                     conductancesMetricsIIfile = (
-                        self.config.filenamePrefixConductancesII +
+                        self.cfg.filenamePrefixConductancesII +
                         'mean-all.txt'
                     )
                     conductanceMetricsII.to_csv(
@@ -481,7 +481,7 @@ class Postprocess:
 
                     conductanceMetricsTotalsII = conductancesDF_II.sum(axis=1)
                     conductancesMetricsTotalsIIfile = (
-                        self.config.filenamePrefixConductancesII +
+                        self.cfg.filenamePrefixConductancesII +
                         'total-all.txt'
                     )
                     conductanceMetricsTotalsII.to_csv(
@@ -494,17 +494,17 @@ class Postprocess:
                 conductancesDF_II = conductancesDF_II.append([0])
 
             if self.__reprocess_raw_files(
-                    [self.config.filenamePrefixConductancesIE]):
+                    [self.cfg.filenamePrefixConductancesIE]):
                 conductancesDF_IE = combiner.combineCSVRowLists(
-                    self.config.unconsolidatedFilesDir,
-                    self.config.filenamePrefixConductancesIE)
+                    self.cfg.unconsolidatedFilesDir,
+                    self.cfg.filenamePrefixConductancesIE)
                 if not conductancesDF_IE.empty:
                     conductanceMetricsIE = pandas.concat(
                         [conductancesDF_IE.mean(axis=1),
                          conductancesDF_IE.std(axis=1)],
                         axis=1)
                     conductancesMetricsIEfile = (
-                        self.config.filenamePrefixConductancesIE +
+                        self.cfg.filenamePrefixConductancesIE +
                         'mean-all.txt'
                     )
                     conductanceMetricsIE.to_csv(
@@ -513,7 +513,7 @@ class Postprocess:
 
                     conductanceMetricsTotalsIE = conductancesDF_IE.sum(axis=1)
                     conductancesMetricsTotalsIEfile = (
-                        self.config.filenamePrefixConductancesIE +
+                        self.cfg.filenamePrefixConductancesIE +
                         'total-all.txt'
                     )
                     conductanceMetricsTotalsIE.to_csv(
@@ -532,8 +532,8 @@ class Postprocess:
                     (not conductancesDF_II.empty)
             ):
                 args = (os.path.join(
-                    self.config.postprocessHome,
-                    self.config.gnuplotFilesDir,
+                    self.cfg.postprocessHome,
+                    self.cfg.gnuplotFilesDir,
                     'plot-conductance-metrics.plt'))
                 subprocess.call(['gnuplot',
                                  args])
@@ -544,52 +544,52 @@ class Postprocess:
     def __populate_neuron_lists(self):
         """Populate neuron lists."""
         # config holds only the number, object variables only hold gids
-        if os.path.exists(self.config.neuronListE):
-            self.neuronsE = (numpy.loadtxt(self.config.neuronListE,
+        if os.path.exists(self.cfg.neuronListE):
+            self.neuronsE = (numpy.loadtxt(self.cfg.neuronListE,
                                            delimiter='\t', usecols=0))
-            self.config.neuronsE = len(self.neuronsE)
+            self.cfg.neuronsE = len(self.neuronsE)
         else:
             print("Neuron list file {} not found".format(
-                self.config.neuronListE))
-        if os.path.exists(self.config.neuronListI):
-            self.neuronsI = (numpy.loadtxt(self.config.neuronListI,
+                self.cfg.neuronListE))
+        if os.path.exists(self.cfg.neuronListI):
+            self.neuronsI = (numpy.loadtxt(self.cfg.neuronListI,
                                            delimiter='\t', usecols=0))
-            self.config.neuronsI = len(self.neuronsI)
+            self.cfg.neuronsI = len(self.neuronsI)
         else:
             print("Neuron list file {} not found".format(
-                self.config.neuronListI))
+                self.cfg.neuronListI))
 
-        if os.path.exists(self.config.neuronListLPZE):
-            self.neuronsLPZE = (numpy.loadtxt(self.config.neuronListLPZE,
+        if os.path.exists(self.cfg.neuronListLPZE):
+            self.neuronsLPZE = (numpy.loadtxt(self.cfg.neuronListLPZE,
                                               delimiter='\t', usecols=0))
-            self.config.neuronsLPZE = len(self.neuronsLPZE)
+            self.cfg.neuronsLPZE = len(self.neuronsLPZE)
         else:
             print("Neuron list file {} not found".format(
-                self.config.neuronListLPZE))
-        if os.path.exists(self.config.neuronListLPZI):
-            self.neuronsLPZI = (numpy.loadtxt(self.config.neuronListLPZI,
+                self.cfg.neuronListLPZE))
+        if os.path.exists(self.cfg.neuronListLPZI):
+            self.neuronsLPZI = (numpy.loadtxt(self.cfg.neuronListLPZI,
                                               delimiter='\t', usecols=0))
-            self.config.neuronsLPZI = len(self.neuronsLPZI)
+            self.cfg.neuronsLPZI = len(self.neuronsLPZI)
         else:
             print("Neuron list file {} not found".format(
-                self.config.neuronListLPZI))
+                self.cfg.neuronListLPZI))
 
         # Populate pattern lists and calculate the overlap percentage between
         # each pattern and the LPZ
-        self.config.numpats = self.__get_numpats()
+        self.cfg.numpats = self.__get_numpats()
         with open("00-pattern-overlap.txt", 'w') as f:
-            for i in range(1, self.config.numpats + 1):
+            for i in range(1, self.cfg.numpats + 1):
                 neuronsP = (numpy.loadtxt(
-                    self.config.neuronListPrefixP + str(i) + ".txt",
+                    self.cfg.neuronListPrefixP + str(i) + ".txt",
                     delimiter='\t', usecols=0))
                 numP = len(neuronsP)
                 neuronsB = (numpy.loadtxt(
-                    self.config.neuronListPrefixB + str(i) + ".txt",
+                    self.cfg.neuronListPrefixB + str(i) + ".txt",
                     delimiter='\t', usecols=0))
                 numB = len(neuronsB)
 
-                self.config.neuronsP.append(numP)
-                self.config.neuronsB.append(numB)
+                self.cfg.neuronsP.append(numP)
+                self.cfg.neuronsB.append(numB)
 
                 neuronsOverlap = set(self.neuronsLPZE).intersection(
                     set(neuronsP))
@@ -598,71 +598,71 @@ class Postprocess:
 
     def __postprocess_spikes(self):
         """Postprocess combined spike files."""
-        if self.config.timegraphs:
+        if self.cfg.timegraphs:
             print("Generating timegraph..")
             import nestpp.timeGraphPlotter as TGP
-            tgp = TGP.timeGraphPlotter(self.config)
+            tgp = TGP.timeGraphPlotter(self.cfg)
             if self.__reprocess_raw_files(["firing-", "std-", "cv-"]):
                 tgp.get_firing_rates_from_spikes()
             tgp.plot_all()
 
-        if self.config.histograms:
+        if self.cfg.histograms:
             print("Generating histograms..")
             import nestpp.dualHistogramPlotter as pltH
             import nestpp.getFiringRates as rg
             rateGetterE = rg.getFiringRates()
-            if rateGetterE.setup(self.config.filenameE, 'E',
-                                 self.config.neuronsE,
-                                 self.config.rows_per_read):
-                rateGetterE.run(self.config.histogram_timelist)
+            if rateGetterE.setup(self.cfg.filenameE, 'E',
+                                 self.cfg.neuronsE,
+                                 self.cfg.rows_per_read):
+                rateGetterE.run(self.cfg.histogram_timelist)
 
             rateGetterI = rg.getFiringRates()
-            if rateGetterI.setup(self.config.filenameI, 'I',
-                                 self.config.neuronsI,
-                                 self.config.rows_per_read):
-                rateGetterI.run(self.config.histogram_timelist)
+            if rateGetterI.setup(self.cfg.filenameI, 'I',
+                                 self.cfg.neuronsI,
+                                 self.cfg.rows_per_read):
+                rateGetterI.run(self.cfg.histogram_timelist)
 
             plotterEI = pltH.dualHistogramPlotter()
-            if plotterEI.setup('E', 'I', self.config.neuronsE,
-                               self.config.neuronsI):
+            if plotterEI.setup('E', 'I', self.cfg.neuronsE,
+                               self.cfg.neuronsI):
                 plotterEI.run()
 
-        if self.config.rasters:
+        if self.cfg.rasters:
             import nestpp.rasterPlotter as pltR
             rasterPlotter = pltR.rasterPlotter()
             optiondict = [
                 {
                     'neuronSet': 'E',
-                    'neuronsFileName': self.config.neuronListE,
-                    'spikesFileName': self.config.filenameE
+                    'neuronsFileName': self.cfg.neuronListE,
+                    'spikesFileName': self.cfg.filenameE
                 },
                 {
                     'neuronSet': 'I',
-                    'neuronsFileName': self.config.neuronListI,
-                    'spikesFileName': self.config.filenameI
+                    'neuronsFileName': self.cfg.neuronListI,
+                    'spikesFileName': self.cfg.filenameI
                 },
             ]
             if rasterPlotter.setup(optiondict):
                 print("Doing the work.")
-                rasterPlotter.run(self.config.histogram_timelist)
+                rasterPlotter.run(self.cfg.histogram_timelist)
 
             optiondict = [
                 {
                     'neuronSet': 'LPZE',
-                    'neuronsFileName': self.config.neuronListLPZE,
-                    'spikesFileName': self.config.filenameLPZE
+                    'neuronsFileName': self.cfg.neuronListLPZE,
+                    'spikesFileName': self.cfg.filenameLPZE
                 },
             ]
             if rasterPlotter.setup(optiondict):
                 print("Doing the work.")
-                rasterPlotter.run(self.config.histogram_timelist)
+                rasterPlotter.run(self.cfg.histogram_timelist)
 
-        if self.config.grid:
+        if self.cfg.grid:
             print("Generating grids..")
             import nestpp.gridPlotter as gp
 
             gridplotter = gp.gridPlotter()
-            gridplotter.setup(self.config)
+            gridplotter.setup(self.cfg)
             gridplotter.read_files()
             gridplotter.plot_E_graph()
             gridplotter.plot_I_graph()
@@ -670,7 +670,7 @@ class Postprocess:
             gridplotter.plot_single_pattern_graphs()
             gridplotter.plot_all_pattern_graph()
 
-        if self.config.grid and len(self.config.gridplots_timelist) > 0:
+        if self.cfg.grid and len(self.cfg.gridplots_timelist) > 0:
             print("Generating grid rate snapshots")
             import nestpp.gridRatePlotter as grp
             import nestpp.getFiringRates as rg
@@ -679,74 +679,74 @@ class Postprocess:
             # sufficient - covers all neurons
             # no need to also do it for various other sets
             if rateGetter.setup(
-                self.config.filenameE, 'E',
-                self.config.neuronsE,
-                self.config.rows_per_read
+                self.cfg.filenameE, 'E',
+                self.cfg.neuronsE,
+                self.cfg.rows_per_read
             ):
-                rateGetter.run(self.config.gridplots_timelist)
+                rateGetter.run(self.cfg.gridplots_timelist)
 
             # Note, if rate files were also generated for histograms,
             # gridrateplotter will currently also plot them - the output file
             # pattern is the same
-            gridrateplotterE = grp.gridRatePlotter(self.config)
+            gridrateplotterE = grp.gridRatePlotter(self.cfg)
             # could even pass in the neuron list directly, but it isn't worth
             # the trouble. A single file read wont hurt anyone. It makes the
             # script also usable in isolation.
-            gridrateplotterE.setup('E', self.config.neuronListE)
+            gridrateplotterE.setup('E', self.cfg.neuronListE)
             gridrateplotterE.run()
 
-        if self.config.snr:
+        if self.cfg.snr:
             import nestpp.getFiringRates as rg
             import nestpp.calculateSNR as snr
             snrCalculator = snr.calculateSNR()
             patFilesB = []
             patFilesP = []
 
-            for i in range(1, self.config.numpats + 1):
+            for i in range(1, self.cfg.numpats + 1):
                 # use firing rate getter and do stuff
                 rateGetterB = rg.getFiringRates()
                 if rateGetterB.setup(
-                    self.config.filenamePrefixB + str(i) + ".gdf",
+                    self.cfg.filenamePrefixB + str(i) + ".gdf",
                     'B-{}'.format(i),
-                    self.config.neuronsB[i-1],
-                    self.config.rows_per_read
+                    self.cfg.neuronsB[i-1],
+                    self.cfg.rows_per_read
                 ):
-                    patFilesB = rateGetterB.run(self.config.snr_timelist)
+                    patFilesB = rateGetterB.run(self.cfg.snr_timelist)
 
                 rateGetterP = rg.getFiringRates()
                 if rateGetterP.setup(
-                    self.config.filenamePrefixP + str(i) + ".gdf",
+                    self.cfg.filenamePrefixP + str(i) + ".gdf",
                     'P-{}'.format(i),
-                    self.config.neuronsP[i-1],
-                    self.config.rows_per_read
+                    self.cfg.neuronsP[i-1],
+                    self.cfg.rows_per_read
                 ):
-                    patFilesP = rateGetterP.run(self.config.snr_timelist)
+                    patFilesP = rateGetterP.run(self.cfg.snr_timelist)
                     print("patfilesP is: {} ".format(patFilesP))
 
                 with open("00-SNR-pattern-{}.txt".format(str(i)), 'w') as f:
-                    for j in range(0, len(self.config.snr_timelist)):
+                    for j in range(0, len(self.cfg.snr_timelist)):
                         snr = snrCalculator.run(patFilesP[j], patFilesB[j])
                         print("{}\t{}".format(
-                            self.config.snr_timelist[j], snr), file=f)
+                            self.cfg.snr_timelist[j], snr), file=f)
 
     def __postprocess_turnovers(self):
         """Process synaptic turnover graphs."""
         plotting_interval = 1000.
-        if self.config.SETurnoverMetrics:
+        if self.cfg.SETurnoverMetrics:
             formed_filename = os.path.join(
-                self.config.unconsolidatedFilesDir +
-                (self.config.filenameSETurnoverFormed + "0.txt"))
+                self.cfg.unconsolidatedFilesDir +
+                (self.cfg.filenameSETurnoverFormed + "0.txt"))
             deleted_filename = os.path.join(
-                self.config.unconsolidatedFilesDir +
-                (self.config.filenameSETurnoverDeleted + "0.txt"))
+                self.cfg.unconsolidatedFilesDir +
+                (self.cfg.filenameSETurnoverDeleted + "0.txt"))
             formed_DF = pandas.read_csv(formed_filename, delimiter='\t',
                                         engine='c', skipinitialspace=True,
                                         lineterminator='\n', dtype=float)
             deleted_DF = pandas.read_csv(deleted_filename, delimiter='\t',
                                          engine='c', skipinitialspace=True,
                                          lineterminator='\n', dtype=float)
-            with open(self.config.filenameSETurnoverFormed + "totals.txt",
-                      'w') as fout, open(self.config.filenameSETurnoverFormed +
+            with open(self.cfg.filenameSETurnoverFormed + "totals.txt",
+                      'w') as fout, open(self.cfg.filenameSETurnoverFormed +
                                          "LPZ-totals.txt", 'w') as lpzfout:
                 current_time = formed_DF.iloc[0][0]
                 current_count = 0
@@ -778,8 +778,8 @@ class Postprocess:
                             current_lpz_count = 0
                         current_time = row[1]
 
-            with open(self.config.filenameSETurnoverDeleted + "totals.txt",
-                      'w') as fout, open(self.config.filenameSETurnoverDeleted
+            with open(self.cfg.filenameSETurnoverDeleted + "totals.txt",
+                      'w') as fout, open(self.cfg.filenameSETurnoverDeleted
                                          + "LPZ-totals.txt", 'w') as lpzfout:
                 current_time = deleted_DF.iloc[0][0]
                 current_count = 0
@@ -812,8 +812,8 @@ class Postprocess:
                         current_time = row[1]
 
             args = ['gnuplot', os.path.join(
-                    self.config.postprocessHome,
-                    self.config.gnuplotFilesDir,
+                    self.cfg.postprocessHome,
+                    self.cfg.gnuplotFilesDir,
                     'plot-turnover.plt')]
             subprocess.call(args)
 
