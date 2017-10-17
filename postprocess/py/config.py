@@ -40,42 +40,59 @@ class Config:
         self.raster_times = [0.]
         self.taskfile = taskfile
 
+        # misc
         self.postprocessHome = ""
         self.gnuplotFilesDir = ""
+
+        # prefixes
+        self.spikes = ""
+        self.conductances = ""
+        self.calcium = ""
+        self.syndel = ""
+        self.synnew = ""
+        self.synelm = ""
 
         # where the unconsolidated files are
         self.dataDir = ""
 
         logging.basicConfig(level=logging.INFO)
 
-    def get_values(self):
+    def populate(self):
         """Get values from the config file."""
-        parser = configparser.ConfigParser()
-        parser.read(self.taskfile)
+        p = configparser.ConfigParser()
+        p.read(self.taskfile)
 
         # Some configs
-        self.graph_list = parser['default']['graphs'].split()
-        self.postprocess_home = parser['default']['postprocess_home']
-        self.gnuplot_files_dir = parser['default']['gnuplot_files_dir']
+        self.graph_list = p['default']['graphs'].split()
+        self.postprocess_home = p['default']['postprocess_home']
+        self.gnuplot_files_dir = p['default']['gnuplot_files_dir']
 
         # where the unconsolidated files are
         # because its easier to consolidate raster files using sort
-        self.data_dir = parser['default']['data_dir']
+        self.data_dir = p['default']['data_dir']
 
-        self.sp_enabled_at = float(parser['default']['sp_enabled_at'])
+        self.sp_enabled_at = float(p['default']['sp_enabled_at'])
 
         self.histogram_times = [float(s) for s in
-                                parser['default']['histogram_times'].split()]
+                                p['default']['histogram_times'].split()]
         self.snapshot_times = [float(s) for s in
-                               parser['default']['snapshot_times'].split()]
+                               p['default']['snapshot_times'].split()]
         self.raster_times = [float(s) for s in
-                             parser['default']['raster_times'].split()]
+                             p['default']['raster_times'].split()]
         self.snr_times = [float(s) for s in
-                          parser['default']['snr_times'].split()]
+                          p['default']['snr_times'].split()]
+
+        # prefixes
+        self.spikes = p['prefixes']['spikes']
+        self.conductances = p['prefixes']['conductances']
+        self.calcium = p['prefixes']['calcium']
+        self.syndel = p['prefixes']['syndel']
+        self.synnew = p['prefixes']['synnew']
+        self.synelm = p['prefixes']['synelm']
 
         logging.info("Loaded config from {}".format(self.taskfile))
 
 
 if __name__ == "__main__":
     config = Config()
-    config.get_values()
+    config.populate()

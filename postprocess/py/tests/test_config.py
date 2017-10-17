@@ -37,7 +37,7 @@ class TestConfig:
     def setup_class(self):
         if os.path.isfile("tests/config_test.ini"):
             aconfig = Config("tests/config_test.ini")
-            aconfig.get_values()
+            aconfig.populate()
             return aconfig
 
     def test_graphlist(self, setup_class):
