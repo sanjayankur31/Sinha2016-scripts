@@ -4,12 +4,10 @@ python:
   - "nightly"
 install:
   - pip install -r requirements.txt
-before_script:
-  - cd postprocess/py
 script:
-  - pytest --cov=./ -v tests/
+  - cd postprocess/py/ && pytest --cov=./ -v tests/
 after_success:
-  - codecov
+  - cd postprocess/py/ && codecov
 notifications:
   email:
     recipients:
