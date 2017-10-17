@@ -153,8 +153,8 @@ class Postprocess:
 
             syn_elms_DF_E = pandas.DataFrame()
             syn_elms_DF_I = pandas.DataFrame()
-            syn_elms_DF_LPZ_E = pandas.DataFrame()
-            syn_elms_DF_LPZ_I = pandas.DataFrame()
+            syn_elms_DF_lpz__E = pandas.DataFrame()
+            syn_elms_DF_lpz__I = pandas.DataFrame()
             if self.__reprocess_raw_files(
                     [self.cfg.filenamePrefixSETotalsE]):
                 syn_elms_DF_E = combiner.combineTSVRowData(
@@ -176,22 +176,22 @@ class Postprocess:
 
             if self.__reprocess_raw_files(
                     [self.cfg.filenamePrefixSETotalsLPZE]):
-                syn_elms_DF_LPZ_E = combiner.combineTSVRowData(
+                syn_elms_DF_lpz__E = combiner.combineTSVRowData(
                     self.cfg.unconsolidatedFilesDir,
                     self.cfg.filenamePrefixSETotalsLPZE)
 
-                if not syn_elms_DF_LPZ_E.empty:
+                if not syn_elms_DF_lpz__E.empty:
                     syn_elms_E_filename = (
                         self.cfg.filenamePrefixSETotalsLPZE + 'all.txt'
                     )
-                    syn_elms_DF_LPZ_E.to_csv(
+                    syn_elms_DF_lpz__E.to_csv(
                         syn_elms_E_filename, sep='\t',
                         header=None, line_terminator='\n')
                     print("Processed synaptic elements for LPZ E neurons..")
                 else:
                     print("No dataframe for all E syn elements. Skipping.")
             else:
-                syn_elms_DF_LPZ_E = syn_elms_DF_LPZ_E.append([0])
+                syn_elms_DF_lpz__E = syn_elms_DF_lpz__E.append([0])
 
             if self.__reprocess_raw_files(
                     [self.cfg.filenamePrefixSETotalsI]):
@@ -212,20 +212,20 @@ class Postprocess:
 
             if self.__reprocess_raw_files(
                     [self.cfg.filenamePrefixSETotalsLPZI]):
-                syn_elms_DF_LPZ_I = combiner.combineTSVRowData(
+                syn_elms_DF_lpz__I = combiner.combineTSVRowData(
                     self.cfg.unconsolidatedFilesDir,
                     self.cfg.filenamePrefixSETotalsLPZI)
 
-                if not syn_elms_DF_LPZ_I.empty:
+                if not syn_elms_DF_lpz__I.empty:
                     syn_elms_I_filename = (
                         self.cfg.filenamePrefixSETotalsLPZI + 'all.txt'
                     )
-                    syn_elms_DF_LPZ_I.to_csv(
+                    syn_elms_DF_lpz__I.to_csv(
                         syn_elms_I_filename, sep='\t',
                         header=None, line_terminator='\n')
                     print("Processed synaptic elements for LPZ I neurons..")
             else:
-                syn_elms_DF_LPZ_I = syn_elms_DF_LPZ_I.append([0])
+                syn_elms_DF_lpz__I = syn_elms_DF_lpz__I.append([0])
 
             args = (os.path.join(
                 self.cfg.postprocessHome,
@@ -248,8 +248,8 @@ class Postprocess:
             import nestpp.combineFiles
             calDF_E = pandas.DataFrame()
             calDF_I = pandas.DataFrame()
-            calDF_LPZE = pandas.DataFrame()
-            calDF_LPZI = pandas.DataFrame()
+            calDF_lpz_E = pandas.DataFrame()
+            calDF_lpz_I = pandas.DataFrame()
             print("Processing calcium concentration information..")
             if self.__reprocess_raw_files(
                     [self.cfg.filenamePrefixCalciumE]):
@@ -339,14 +339,14 @@ class Postprocess:
                     [self.cfg.filenamePrefixCalciumLPZE]):
                 combiner = nestpp.combineFiles.CombineFiles()
 
-                calDF_LPZE = combiner.combineCSVRowLists(
+                calDF_lpz_E = combiner.combineCSVRowLists(
                     self.cfg.unconsolidatedFilesDir,
                     self.cfg.filenamePrefixCalciumLPZE)
 
-                if not calDF_LPZE.empty:
+                if not calDF_lpz_E.empty:
                     calMetricsLPZE = pandas.concat(
-                        [calDF_LPZE.mean(axis=1),
-                         calDF_LPZE.std(axis=1)],
+                        [calDF_lpz_E.mean(axis=1),
+                         calDF_lpz_E.std(axis=1)],
                         axis=1)
                     calMetricsLPZEfile = (
                         self.cfg.filenamePrefixCalciumLPZE + 'all.txt'
@@ -358,18 +358,18 @@ class Postprocess:
                 else:
                     print("No cal metric df for LPZE neurons. Skipping.")
             else:
-                calDF_LPZE = calDF_LPZE.append([0])
+                calDF_lpz_E = calDF_lpz_E.append([0])
 
             if self.__reprocess_raw_files(
                     [self.cfg.filenamePrefixCalciumLPZI]):
-                calDF_LPZI = combiner.combineCSVRowLists(
+                calDF_lpz_I = combiner.combineCSVRowLists(
                     self.cfg.unconsolidatedFilesDir,
                     self.cfg.filenamePrefixCalciumLPZI)
 
-                if not calDF_LPZI.empty:
+                if not calDF_lpz_I.empty:
                     calMetricsLPZI = pandas.concat(
-                        [calDF_LPZI.mean(axis=1),
-                         calDF_LPZI.std(axis=1)],
+                        [calDF_lpz_I.mean(axis=1),
+                         calDF_lpz_I.std(axis=1)],
                         axis=1)
                     calMetricsLPZIfile = (
                         self.cfg.filenamePrefixCalciumLPZI + 'all.txt'
@@ -381,9 +381,9 @@ class Postprocess:
                 else:
                     print("No cal metric df for LPZI neurons. Skipping.")
             else:
-                calDF_LPZI = calDF_LPZI.append([0])
+                calDF_lpz_I = calDF_lpz_I.append([0])
 
-            if (not calDF_LPZE.empty) and (not calDF_LPZI.empty) and \
+            if (not calDF_lpz_E.empty) and (not calDF_lpz_I.empty) and \
                     (not calDF_E.empty) and (not calDF_I.empty):
                 args = (os.path.join(
                     self.cfg.postprocessHome,
@@ -716,7 +716,7 @@ class Postprocess:
                 if rateGetterB.setup(
                     self.cfg.filenamePrefixB + str(i) + ".gdf",
                     'B-{}'.format(i),
-                    self.cfg.neuronsB[i-1],
+                    self.cfg.neurons_B[i-1],
                     self.cfg.rows_per_read
                 ):
                     patFilesB = rateGetterB.run(self.cfg.snr_timelist)
@@ -725,7 +725,7 @@ class Postprocess:
                 if rateGetterP.setup(
                     self.cfg.filenamePrefixP + str(i) + ".gdf",
                     'P-{}'.format(i),
-                    self.cfg.neuronsP[i-1],
+                    self.cfg.neurons_P[i-1],
                     self.cfg.rows_per_read
                 ):
                     patFilesP = rateGetterP.run(self.cfg.snr_timelist)
@@ -765,7 +765,7 @@ class Postprocess:
                             int(current_time/plotting_interval)
                     ):
                         current_count += row[3]
-                        if row[2] in self.neuronsLPZE:
+                        if row[2] in self.neurons_lpz_E:
                             current_lpz_count += row[3]
 
                     if (
@@ -780,7 +780,7 @@ class Postprocess:
                             current_lpz_count), file=lpzfout)
                         # Ready for the next iteration
                         current_count = row[3]
-                        if row[2] in self.neuronsLPZE:
+                        if row[2] in self.neurons_lpz_E:
                             current_lpz_count = row[3]
                         else:
                             current_lpz_count = 0
@@ -798,7 +798,7 @@ class Postprocess:
                             int(current_time/plotting_interval)
                     ):
                         current_count += row[4]
-                        if row[2] in self.neuronsLPZE:
+                        if row[2] in self.neurons_lpz_E:
                             current_lpz_count += row[4]
 
                     if (
@@ -813,7 +813,7 @@ class Postprocess:
                             current_lpz_count), file=lpzfout)
                         # Ready for the next iteration
                         current_count = row[4]
-                        if row[2] in self.neuronsLPZE:
+                        if row[2] in self.neurons_lpz_E:
                             current_lpz_count = row[4]
                         else:
                             current_lpz_count = 0
@@ -871,7 +871,7 @@ class Postprocess:
             if entry.startswith('00-pattern-neurons-'):
                 i = i+1
 
-        print("Got {} patterns".format(i))
+        self.lgr.info("Got {} patterns".format(i))
         return i
 
     def main(self):
