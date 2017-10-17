@@ -43,10 +43,10 @@ class TestConfig:
     def test_graphlist(self, setup_class):
         aconfig = self.setup_class()
         correct_graph_list = ['firing_rates', 'firing_rate_snapshots', 'grids',
-                              'conductances', 'synaptic_elements',
-                              'synaptic_turnover',
-                              'synaptic_element_snapshots',
-                              'synaptic_turnover_snapshots', 'calciums',
+                              'conductances', 'syn_elms',
+                              'syn_turnover',
+                              'syn_elms_snapshots',
+                              'syn_turnover_snapshots', 'calciums',
                               'calcium_snapshots', 'histograms', 'snrs',
                               'rasters']
 
@@ -54,7 +54,7 @@ class TestConfig:
                 sorted(set(correct_graph_list)))
 
         wrong_graph_list = ['something_random', 'hark_more_random',
-                            'synaptic_elements', 'synaptic_turnover',
+                            'syn_elms', 'syn_turnover',
                             'calcium_concentration', 'histograms', 'snr']
 
         assert (sorted(set(aconfig.graphlist)) !=
