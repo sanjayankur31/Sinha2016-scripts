@@ -28,6 +28,7 @@ import pandas
 import numpy
 import subprocess
 from select import select
+import logging
 
 
 class Postprocess:
@@ -36,22 +37,33 @@ class Postprocess:
 
     def __init__(self):
         """Initialise."""
+        logging.basicConfig(level=logging.DEBUG)
         self.cfg_file = "config.ini"
         self.neuronsE = []
         self.neuronsI = []
         self.neuronsLPZE = []
         self.neuronsLPZI = []
 
+        # set up logging
+        self.lgr = logging.getLogger(__name__)
+        self.lgr.setLevel(logging.DEBUG)
+        handler = logging.StreamHandler()
+        handler.setLevel(logging.DEBUG)
+        formatter = logging.Formatter(
+            '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        handler.setFormatter(formatter)
+        self.lgr.addHandler(handler)
+
     def __load_config(self):
         """Load configuration file."""
         if os.path.isfile(self.cfg_file):
             self.cfg = Config(self.cfg_file)
-            self.cfg.generateOutputFileNames()
-            print("Config file {} loaded successfully.".format(
+            self.lgr.info("Config file {} loaded successfully.".format(
                 self.cfg_file))
         else:
-            sys.exit("Could not find config file: {}. Exiting.".format(
+            self.lgr.critical("Could not find config file: {}.".format(
                 self.cfg_file))
+            sys.exit(-1)
 
     def __postprocess_synaptic_elements_individual(self):
         """Post process synaptic elements from individual neuronal files."""
