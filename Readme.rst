@@ -5,3 +5,7 @@ They have not been properly designed or documented. In fact, they're highly cust
 Tread lightly ;)
 
 Everything here is under the GPLv3 license.
+
+.. image::
+https://travis-ci.org/sanjayankur31/Sinha2016-scripts.svg?branch=pp-refactor
+    :target: https://travis-ci.org/sanjayankur31/Sinha2016-scripts
