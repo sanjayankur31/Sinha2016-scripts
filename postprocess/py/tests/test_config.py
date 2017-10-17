@@ -42,9 +42,13 @@ class TestConfig:
 
     def test_graphlist(self, setup_class):
         aconfig = self.setup_class()
-        correct_graph_list = ['firing_rates', 'conductances',
-                              'synaptic_elements', 'synaptic_turnover',
-                              'calcium_concentration', 'histograms', 'snr']
+        correct_graph_list = ['firing_rates', 'firing_rate_snapshots', 'grids',
+                              'conductances', 'synaptic_elements',
+                              'synaptic_turnover',
+                              'synaptic_element_snapshots',
+                              'synaptic_turnover_snapshots', 'calciums',
+                              'calcium_snapshots', 'histograms', 'snrs',
+                              'rasters']
 
         assert (sorted(set(aconfig.graph_list)) ==
                 sorted(set(correct_graph_list)))

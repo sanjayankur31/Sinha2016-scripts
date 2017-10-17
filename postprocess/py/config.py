@@ -39,7 +39,8 @@ class Config:
             'firing_rates': [],
             'snrs': [],
             'rasters': [],
-            'synaptic_elements': []
+            'synaptic_elements': [],
+            'calciums': [],
             }
 
         # misc
@@ -81,6 +82,8 @@ class Config:
             float(s) for s in p['snapshots']['snrs'].split()]
         self.snapshots['synaptic_elements'] = [
             float(s) for s in p['snapshots']['synaptic_elements'].split()]
+        self.snapshots['calciums'] = [
+            float(s) for s in p['snapshots']['calciums'].split()]
 
         # prefixes
         self.prefixes['spikes'] = p['prefixes']['spikes']
