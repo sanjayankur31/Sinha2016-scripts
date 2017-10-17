@@ -22,6 +22,7 @@ this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import configparser
+import logging
 
 
 class Config:
@@ -33,10 +34,10 @@ class Config:
         self.graphlist = []
 
         # timelists
-        self.histogram_timelist = [0.]
-        self.snapshot_timelist = [0.]
-        self.snr_timelist = [0.]
-        self.raster_timelist = [0.]
+        self.histogram_times = [0.]
+        self.snapshot_times = [0.]
+        self.snr_times = [0.]
+        self.raster_times = [0.]
         self.taskfile = taskfile
 
         self.postprocessHome = ""
@@ -45,14 +46,15 @@ class Config:
         # where the unconsolidated files are
         self.dataDir = ""
 
+        logging.basicConfig(level=logging.INFO)
+
     def get_values(self):
         """Get values from the config file."""
         parser = configparser.ConfigParser()
         parser.read(self.taskfile)
-        print("Read {}".format(self.taskfile))
 
         # Some configs
-        self.graph_list = parser['graphs'].split()
+        self.graph_list = parser['default']['graphs'].split()
         self.postprocess_home = parser['default']['postprocess_home']
         self.gnuplot_files_dir = parser['default']['gnuplot_files_dir']
 
@@ -62,14 +64,16 @@ class Config:
 
         self.sp_enabled_at = float(parser['default']['sp_enabled_at'])
 
-        self.histogram_timelist = [float(s) for s in
-                                   parser['histograms'].split()]
-        self.snapshot_timelist = [float(s) for s in
-                                  parser['snapshot_times'].split()]
-        self.raster_timelist = [float(s) for s in
-                                parser['raster_times'].split()]
-        self.snr_timelist = [float(s) for s in
-                             parser['snr_times'].split()]
+        self.histogram_times = [float(s) for s in
+                                parser['default']['histogram_times'].split()]
+        self.snapshot_times = [float(s) for s in
+                               parser['default']['snapshot_times'].split()]
+        self.raster_times = [float(s) for s in
+                             parser['default']['raster_times'].split()]
+        self.snr_times = [float(s) for s in
+                          parser['default']['snr_times'].split()]
+
+        logging.info("Loaded config from {}".format(self.taskfile))
 
 
 if __name__ == "__main__":
