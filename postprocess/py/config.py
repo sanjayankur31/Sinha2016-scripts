@@ -33,24 +33,22 @@ class Config:
         """Initialise."""
         self.graphlist = []
 
-        # timelists
-        self.histogram_times = [0.]
-        self.snapshot_times = [0.]
-        self.snr_times = [0.]
-        self.raster_times = [0.]
-        self.taskfile = taskfile
+        # snapshots at particular times
+        self.snapshots = {
+            'histograms': [],
+            'firing_rates': [],
+            'snrs': [],
+            'rasters': [],
+            'synaptic_elements': []
+            }
 
         # misc
-        self.postprocessHome = ""
-        self.gnuplotFilesDir = ""
+        self.taskfile = taskfile
+        self.postprocess_home = ""
+        self.gnuplot_files_dir = ""
 
         # prefixes
-        self.spikes = ""
-        self.conductances = ""
-        self.calcium = ""
-        self.syndel = ""
-        self.synnew = ""
-        self.synelm = ""
+        self.prefixes = {}
 
         # where the unconsolidated files are
         self.dataDir = ""
@@ -73,22 +71,24 @@ class Config:
 
         self.sp_enabled_at = float(p['default']['sp_enabled_at'])
 
-        self.histogram_times = [float(s) for s in
-                                p['default']['histogram_times'].split()]
-        self.snapshot_times = [float(s) for s in
-                               p['default']['snapshot_times'].split()]
-        self.raster_times = [float(s) for s in
-                             p['default']['raster_times'].split()]
-        self.snr_times = [float(s) for s in
-                          p['default']['snr_times'].split()]
+        self.snapshots['histograms'] = [
+            float(s) for s in p['snapshots']['histograms'].split()]
+        self.snapshots['firing_rates'] = [
+            float(s) for s in p['snapshots']['firing_rates'].split()]
+        self.snapshots['rasters'] = [
+            float(s) for s in p['snapshots']['rasters'].split()]
+        self.snapshots['snrs'] = [
+            float(s) for s in p['snapshots']['snrs'].split()]
+        self.snapshots['synaptic_elements'] = [
+            float(s) for s in p['snapshots']['synaptic_elements'].split()]
 
         # prefixes
-        self.spikes = p['prefixes']['spikes']
-        self.conductances = p['prefixes']['conductances']
-        self.calcium = p['prefixes']['calcium']
-        self.syndel = p['prefixes']['syndel']
-        self.synnew = p['prefixes']['synnew']
-        self.synelm = p['prefixes']['synelm']
+        self.prefixes['spikes'] = p['prefixes']['spikes']
+        self.prefixes['conductances'] = p['prefixes']['conductances']
+        self.prefixes['calcium'] = p['prefixes']['calcium']
+        self.prefixes['syndel'] = p['prefixes']['syndel']
+        self.prefixes['synnew'] = p['prefixes']['synnew']
+        self.prefixes['synelm'] = p['prefixes']['synelm']
 
         logging.info("Loaded config from {}".format(self.taskfile))
 
