@@ -39,8 +39,7 @@ class Postprocess:
     def __init__(self):
         """Initialise."""
         logging.basicConfig(level=logging.DEBUG)
-        self.cfg_file = "config.ini"
-        self.cfg = Config()
+        self.cfg = get_config("config.ini")
 
         # set up logging
         self.lgr = logging.getLogger(__name__)
@@ -51,17 +50,6 @@ class Postprocess:
             '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         handler.setFormatter(formatter)
         self.lgr.addHandler(handler)
-
-    def __load_config(self):
-        """Load configuration file."""
-        if os.path.isfile(self.cfg_file):
-            self.cfg = Config(self.cfg_file)
-            self.lgr.info("Config file {} loaded successfully.".format(
-                self.cfg_file))
-        else:
-            self.lgr.critical("Could not find config file: {}.".format(
-                self.cfg_file))
-            sys.exit(-1)
 
     def __postprocess_synaptic_elements_individual(self):
         """Post process synaptic elements from individual neuronal files."""
@@ -606,16 +594,17 @@ class Postprocess:
                 overlapping_percent = len(overlapping_neurons)/len(neurons_P)
                 print("{}\t{}".format(i, overlapping_percent), file=f)
 
+    def generate_firing_rate_graphs(self):
+        """Generate firing rate graphs."""
+        self.lgr.info("Generating mean firing rate graphs vs time")
+        import nestpp.timeGraphPlotter as TGP
+        tgp = TGP.timeGraphPlotter(self.cfg)
+        if self.__reprocess_raw_files(["firing-", "std-", "cv-"]):
+            tgp.get_firing_rates_from_spikes()
+        tgp.plot_all()
+
     def __postprocess_spikes(self):
         """Postprocess combined spike files."""
-        if "spikes" in self.cfg.graphslist:
-            self.lgr.info("Generating graphs vs time")
-            import nestpp.timeGraphPlotter as TGP
-            tgp = TGP.timeGraphPlotter(self.cfg)
-            if self.__reprocess_raw_files(["firing-", "std-", "cv-"]):
-                tgp.get_firing_rates_from_spikes()
-            tgp.plot_all()
-
         if self.cfg.histograms:
             print("Generating histograms..")
             import nestpp.dualHistogramPlotter as pltH
@@ -926,11 +915,13 @@ class Postprocess:
         """Do everything."""
         self.__load_config()
         self.__populate_neuron_lists()
+        if "firing_rates" in self.cfg.graph_list:
+            self.generate_firing_rate_graphs()
+
         self.__postprocess_synaptic_elements_all()
         self.__postprocess_synaptic_elements_individual()
         self.__postprocess_conductances()
         self.__postprocess_calcium()
-        self.__postprocess_spikes()
         self.__postprocess_turnovers()
 
 

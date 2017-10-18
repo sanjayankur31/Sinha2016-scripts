@@ -35,123 +35,6 @@ class timeGraphPlotter:
     def __init__(self, config):
         """Initialise."""
         self.config = config
-        # Lets check to see if Gnuplot works
-        try:
-            __import__('Gnuplot')
-        except ImportError:
-            print("Could not import Gnuplot module.", file=sys.stderr)
-        else:
-            self.plotter = Gnuplot.Gnuplot()
-            self.plotter.reset()
-
-            if (
-                os.path.isfile(self.config.filenameMeanRatesE) and
-                os.stat(self.config.filenameMeanRatesE).st_size != 0
-            ):
-                ratesE = pandas.load_csv(self.config.filenameMeanRatesE,
-                                         sep='\s+',
-                                         names=["neuronID", "spike_time"],
-                                         dtype={'neuronID': numpy.uint16,
-                                                'spike_time': numpy.float32},
-                                         lineterminator="\n",
-                                         skipinitialspace=True, header=None,
-                                         index_col=None)
-                self.lineE = Gnuplot.data(ratesE.values[:0], ratesE.values[:1],
-                                          title="E", with_="lines lw 4")
-            else:
-                self.lineE = [0, 0]
-
-            if (
-                os.path.isfile(self.config.filenameMeanRatesI) and
-                os.stat(self.config.filenameMeanRatesI).st_size != 0
-            ):
-                ratesI = pandas.load_csv(self.config.filenameMeanRatesI,
-                                         sep='\s+',
-                                         names=["neuronID", "spike_time"],
-                                         dtype={'neuronID': numpy.uint16,
-                                                'spike_time': numpy.float32},
-                                         lineterminator="\n",
-                                         skipinitialspace=True, header=None,
-                                         index_col=None)
-                self.lineI = Gnuplot.data(ratesI.values[:0], ratesI.values[:1],
-                                          title="I", with_="lines lw 4")
-            else:
-                self.lineI = [0, 0]
-
-            if (
-                os.path.isfile(self.config.filenameMeanRatesB) and
-                os.stat(self.config.filenameMeanRatesB).st_size != 0
-            ):
-                ratesB = pandas.load_csv(self.config.filenameMeanRatesB,
-                                         sep='\s+',
-                                         names=["neuronID", "spike_time"],
-                                         dtype={'neuronID': numpy.uint16,
-                                                'spike_time': numpy.float32},
-                                         lineterminator="\n",
-                                         skipinitialspace=True, header=None,
-                                         index_col=None)
-                self.lineB = Gnuplot.data(ratesB.values[:0], ratesB.values[:1],
-                                          title="B", with_="lines lw 4")
-            else:
-                self.lineB = [0, 0]
-
-            if (
-                os.path.isfile(self.config.filenameMeanRatesP) and
-                os.stat(self.config.filenameMeanRatesP).st_size != 0
-            ):
-                ratesP = pandas.load_csv(self.config.filenameMeanRatesP,
-                                         sep='\s+',
-                                         names=["neuronID", "spike_time"],
-                                         dtype={'neuronID': numpy.uint16,
-                                                'spike_time': numpy.float32},
-                                         lineterminator="\n",
-                                         skipinitialspace=True, header=None,
-                                         index_col=None)
-                self.lineP = Gnuplot.data(ratesP.values[:0], ratesP.values[:1],
-                                          title="P", with_="lines lw 4")
-            else:
-                self.lineP = [0, 0]
-
-    def __plot_main(self):
-        """Main plot with everything in it."""
-        self.plotter('set term pngcairo font "OpenSans, 28" size 1920,1028')
-        self.plotter.title("Mean firing rate for all available neuron sets")
-        self.plotter.xlabel("Time (ms)")
-        self.plotter.ylabel("Firing rate (Hz)")
-        self.plotter("set yrange [0:200]")
-        self.plotter("set ytics border nomirror 20")
-        self.plotter("set xtics border nomirror")
-        self.plotter.plot(self.lineE, self.lineI, self.lineB, self.lineL,
-                          self.lineP, self.lineR, self.lineS)
-        self.hardcopy(filename="firing-rate-all.png")
-
-    def __plot_individuals(self):
-        """Main plot with everything in it."""
-        # TODO after Gnuplot is py3 compatible
-
-    def __plot_I_E(self):
-        """Plot one for I and E."""
-        self.plotter('set term pngcairo font "OpenSans, 28" size 1920,1028')
-        self.plotter.title("Mean firing rate for all I E neuron sets")
-        self.plotter.xlabel("Time (ms)")
-        self.plotter.ylabel("Firing rate (Hz)")
-        self.plotter("set yrange [0:200]")
-        self.plotter("set ytics border nomirror 20")
-        self.plotter("set xtics border nomirror")
-        self.plotter.plot(self.lineE, self.lineI)
-        self.hardcopy(filename="firing-rate-I-E.png")
-
-    def __plot_P_B(self):
-        """Plot one for I and E."""
-        self.plotter('set term pngcairo font "OpenSans, 28" size 1920,1028')
-        self.plotter.title("Mean firing rate for all P B neuron sets")
-        self.plotter.xlabel("Time (ms)")
-        self.plotter.ylabel("Firing rate (Hz)")
-        self.plotter("set yrange [0:200]")
-        self.plotter("set ytics border nomirror 20")
-        self.plotter("set xtics border nomirror")
-        self.plotter.plot(self.lineP, self.lineB)
-        self.hardcopy(filename="firing-rate-P-B.png")
 
     def get_firing_rates_from_spikes(self):
         """Get firing rate files from spikes."""
@@ -264,18 +147,7 @@ class timeGraphPlotter:
     def plot_all(self):
         """Plot them all."""
         print("Generating graphs.")
-        try:
-            __import__('Gnuplot')
-        except ImportError:
-            print("Could not import Gnuplot. Using binary and plotting file.",
-                  file=sys.stderr)
             self.__plot_using_gnuplot_binary()
-        else:
-            self.__plot_main()
-            self.__plot_individuals()
-            self.__plot_I_E()
-            self.__plot_P_B()
-
 
     def __plot_using_gnuplot_binary(self):
         """Use the binary because it doesnt support py3."""
