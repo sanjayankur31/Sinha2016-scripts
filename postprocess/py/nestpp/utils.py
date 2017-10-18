@@ -94,3 +94,18 @@ def check_csv_file(path):
                 linenumber, str(type(e)), e.message))
             return False
     return True
+
+
+def get_max_csv_cols(path):
+    """Get maximum number of columns."""
+    maxcols = 0
+    content = ""
+    with open(path, 'r') as f:
+        content = csv.reader(f)
+        linenumber = 1
+        for line in content:
+            linenumber += 1
+            if len(line) > maxcols:
+                maxcols = len(line)
+        print("{}: {}".format(path, maxcols))
+    return maxcols
