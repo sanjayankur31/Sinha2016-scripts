@@ -24,24 +24,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from config import Config
-import pytest
-import os
+from nestpp.utils import get_config
 
 
 class TestConfig:
 
     """Test the config parser."""
 
-    @pytest.fixture(scope="module")
-    def setup_class(self):
-        if os.path.isfile("tests/config_test.ini"):
-            aconfig = Config("tests/config_test.ini")
-            aconfig.populate()
-            return aconfig
+    def test_graphlist(self):
+        config = get_config("tests/config_test.ini")
+        assert (bool(config) is not False)
 
-    def test_graphlist(self, setup_class):
-        aconfig = self.setup_class()
         correct_graph_list = ['firing_rates', 'firing_rate_snapshots', 'grids',
                               'conductances', 'syn_elms',
                               'syn_turnover',
@@ -50,12 +43,12 @@ class TestConfig:
                               'calcium_snapshots', 'histograms', 'snrs',
                               'rasters']
 
-        assert (sorted(set(aconfig.graph_list)) ==
+        assert (sorted(set(config['graphs'])) ==
                 sorted(set(correct_graph_list)))
 
         wrong_graph_list = ['something_random', 'hark_more_random',
                             'syn_elms', 'syn_turnover',
                             'calcium_concentration', 'histograms', 'snr']
 
-        assert (sorted(set(aconfig.graphlist)) !=
+        assert (sorted(set(config['graphs'])) !=
                 sorted(set(wrong_graph_list)))
