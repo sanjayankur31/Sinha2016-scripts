@@ -27,6 +27,7 @@ import os
 import pandas
 import numpy
 import subprocess
+from subprocess import CalledProcessError
 from select import select
 import logging
 
@@ -39,6 +40,7 @@ class Postprocess:
         """Initialise."""
         logging.basicConfig(level=logging.DEBUG)
         self.cfg_file = "config.ini"
+        self.cfg = Config()
 
         # set up logging
         self.lgr = logging.getLogger(__name__)
@@ -97,8 +99,8 @@ class Postprocess:
                             "inputfile='{}'".format(
                                 syn_elms_ind_DF_filename),
                             os.path.join(
-                                self.cfg.postprocessHome,
-                                self.cfg.gnuplotFilesDir,
+                                self.cfg.postprocess_home,
+                                self.cfg.gnuplot_files_dir,
                                 'plot-ind-synaptic-elements-metrics.plt')]
                     subprocess.call(args)
                     print("E neuron synaptic elements graph" +
@@ -135,8 +137,8 @@ class Postprocess:
                             "inputfile='{}'".format(
                                 syn_elms_ind_DF_filename),
                             os.path.join(
-                                self.cfg.postprocessHome,
-                                self.cfg.gnuplotFilesDir,
+                                self.cfg.postprocess_home,
+                                self.cfg.gnuplot_files_dir,
                                 'plot-ind-synaptic-elements-metrics.plt')]
                     subprocess.call(args)
                     print("I neuron synaptic elements graph" +
@@ -228,15 +230,15 @@ class Postprocess:
                 syn_elms_DF_lpz__I = syn_elms_DF_lpz__I.append([0])
 
             args = (os.path.join(
-                self.cfg.postprocessHome,
-                self.cfg.gnuplotFilesDir,
+                self.cfg.postprocess_home,
+                self.cfg.gnuplot_files_dir,
                     'plot-synaptic-elements-metrics.plt'))
             subprocess.call(['gnuplot',
                             args])
 
             args = (os.path.join(
-                self.cfg.postprocessHome,
-                self.cfg.gnuplotFilesDir,
+                self.cfg.postprocess_home,
+                self.cfg.gnuplot_files_dir,
                     'plot-lpz-synaptic-elements-metrics.plt'))
             subprocess.call(['gnuplot',
                             args])
@@ -284,8 +286,8 @@ class Postprocess:
                             "-e", "plottitle='Growth curves for E neurons'",
                             "-e", "xmax={}".format(xmax),
                             os.path.join(
-                                self.cfg.postprocessHome,
-                                self.cfg.gnuplotFilesDir,
+                                self.cfg.postprocess_home,
+                                self.cfg.gnuplot_files_dir,
                                 'plot-growthcurves.plt'))
                     subprocess.call(['gnuplot'] + list(args))
                     print("Growth curves plotted..")
@@ -325,8 +327,8 @@ class Postprocess:
                             "-e", "plottitle='Growth curves for I neurons'",
                             "-e", "xmax={}".format(xmax),
                             os.path.join(
-                                self.cfg.postprocessHome,
-                                self.cfg.gnuplotFilesDir,
+                                self.cfg.postprocess_home,
+                                self.cfg.gnuplot_files_dir,
                                 'plot-growthcurves.plt'))
                     subprocess.call(['gnuplot'] + list(args))
                     print("Growth curves plotted..")
@@ -386,8 +388,8 @@ class Postprocess:
             if (not calDF_lpz_E.empty) and (not calDF_lpz_I.empty) and \
                     (not calDF_E.empty) and (not calDF_I.empty):
                 args = (os.path.join(
-                    self.cfg.postprocessHome,
-                    self.cfg.gnuplotFilesDir,
+                    self.cfg.postprocess_home,
+                    self.cfg.gnuplot_files_dir,
                         'plot-cal-metrics.plt'))
                 subprocess.call(['gnuplot',
                                 args])
@@ -540,8 +542,8 @@ class Postprocess:
                     (not conductancesDF_II.empty)
             ):
                 args = (os.path.join(
-                    self.cfg.postprocessHome,
-                    self.cfg.gnuplotFilesDir,
+                    self.cfg.postprocess_home,
+                    self.cfg.gnuplot_files_dir,
                     'plot-conductance-metrics.plt'))
                 subprocess.call(['gnuplot',
                                  args])
@@ -606,8 +608,8 @@ class Postprocess:
 
     def __postprocess_spikes(self):
         """Postprocess combined spike files."""
-        if self.cfg.timegraphs:
-            print("Generating timegraph..")
+        if "spikes" in self.cfg.graphslist:
+            self.lgr.info("Generating graphs vs time")
             import nestpp.timeGraphPlotter as TGP
             tgp = TGP.timeGraphPlotter(self.cfg)
             if self.__reprocess_raw_files(["firing-", "std-", "cv-"]):
@@ -820,8 +822,8 @@ class Postprocess:
                         current_time = row[1]
 
             args = ['gnuplot', os.path.join(
-                    self.cfg.postprocessHome,
-                    self.cfg.gnuplotFilesDir,
+                    self.cfg.postprocess_home,
+                    self.cfg.gnuplot_files_dir,
                     'plot-turnover.plt')]
             subprocess.call(args)
 
@@ -873,6 +875,52 @@ class Postprocess:
 
         self.lgr.info("Got {} patterns".format(i))
         return i
+
+    def plot_using_gnuplot_binary(self, plt_file, arglist=[]):
+        """Run a gnuplot script to plot a graph.
+
+        This will complete the path of the file by appending the required bits.
+
+        :plt_file: plt script file
+        :arglist: other arguments to be passed to gnuplot
+        :returns: return code from gnuplot or -99 if missing script
+
+        """
+        args = []
+        retcode = 0
+        plt_file = ((os.path.join(
+            self.cfg.postprocess_home,
+            self.cfg.gnuplot_files_dir,
+            plt_file)))
+
+        if os.path.exists(plt_file):
+            for arg in arglist:
+                args.append(['-e', arg])
+
+            args.append(plt_file)
+            self.lgr.info("Plotting {}".format(
+                plt_file))
+            try:
+                status = subprocess.run(args=['gnuplot'] + args,
+                                        stdout=subprocess.PIPE,
+                                        stderr=subprocess.PIPE)
+                status.check_returncode()
+            except CalledProcessError as cpe:
+                self.lgr.error(
+                    "{} errored with return code {}".format(
+                        cpe.cmd, cpe.returncode))
+                self.lgr.error("\n" + cpe.stderr.decode())
+                retcode = cpe.returncode
+            else:
+                self.lgr.info("{} plotted".format(plt_file))
+                retcode = status.returncode
+        else:
+            self.lgr.error(
+                "File {} not found. Not plotting graph.".format(
+                    plt_file))
+            return -99
+
+        return retcode
 
     def main(self):
         """Do everything."""
