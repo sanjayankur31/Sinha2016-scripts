@@ -23,6 +23,7 @@ this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import configparser
 import os
+import csv
 
 
 def get_config(taskfile="config.ini"):
@@ -77,3 +78,19 @@ def get_config(taskfile="config.ini"):
     config['prefixes'] = prefixes
 
     return config
+
+
+def check_csv_file(path):
+    """Check a csv file for errors."""
+    with open(path, 'r') as f:
+        reader = csv.reader(f)
+        linenumber = 1
+        try:
+            for row in reader:
+                linenumber += 1
+                print("Read {}".format(linenumber))
+        except Exception as e:
+            print("Error line {}: {} {}".format(
+                linenumber, str(type(e)), e.message))
+            return False
+    return True
