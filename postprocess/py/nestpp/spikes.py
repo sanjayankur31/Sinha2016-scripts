@@ -32,7 +32,7 @@ from loggerpp import get_module_logger
 lgr = get_module_logger(__name__)
 
 
-def get_firing_rate_metrics(self, neuronset, spike_fn, num_neurons=8000.,
+def get_firing_rate_metrics(neuronset, spike_fn, num_neurons=8000.,
                             rows=50000000.):
     """Get various metrics from raster spike files.
 
