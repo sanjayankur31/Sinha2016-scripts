@@ -54,7 +54,7 @@ class TestUtils:
         assert (sorted(set(config['time_graphs'])) !=
                 sorted(set(wrong_graph_list)))
 
-    def test_gnuplotter(self):
+    def test_binary_gnuplotter(self):
         """Test the gnuplotter method.  """
         plots_dir = "tests/"
         assert plot_using_gnuplot_binary(
