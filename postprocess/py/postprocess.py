@@ -30,9 +30,11 @@ import subprocess
 from select import select
 
 # module imports
-from nestpp.utils import get_config, plot_using_gnuplot_binary
+from nestpp.utils import (get_config, plot_using_gnuplot_binary,
+                          plot_histograms, plot_location_grid)
 from nestpp.loggerpp import get_module_logger
-from nestpp.spikes import get_firing_rate_metrics
+from nestpp.spikes import (get_firing_rate_metrics,
+                           get_individual_firing_rate_snapshots)
 
 
 class Postprocess:
@@ -669,18 +671,24 @@ class Postprocess:
                 print("Doing the work.")
                 rasterPlotter.run(self.cfg.histogram_timelist)
 
-        if self.cfg.grid:
-            print("Generating grids..")
-            import nestpp.gridPlotter as gp
+    def plot_neuron_locations(self):
+        """Plot graphs showing locations of neurons."""
+        self.lgr.info("Generating locations of various neuron sets.")
+        graph_dict = {}
+        # lpz E regions
+        for key, value in self.neurons.items():
+            if "lpz" in key and "E" in key:
+                graph_dict[key] = value
+        plot_location_grid(graph_dict)
 
-            gridplotter = gp.gridPlotter()
-            gridplotter.setup(self.cfg)
-            gridplotter.read_files()
-            gridplotter.plot_E_graph()
-            gridplotter.plot_I_graph()
-            gridplotter.plot_EI_graph()
-            gridplotter.plot_single_pattern_graphs()
-            gridplotter.plot_all_pattern_graph()
+        # add patterns to that image
+        for key, value in self.neurons.items():
+            if "pattern-" in key:
+                graph_dict[key] = value
+        plot_location_grid(graph_dict)
+
+    def __postprocess_spikes(self):
+        """Postprocess combined spike files."""
 
         if self.cfg.grid and len(self.cfg.gridplots_timelist) > 0:
             print("Generating grid rate snapshots")
@@ -882,8 +890,11 @@ class Postprocess:
         """Do everything."""
         self.__load_config()
         self.__populate_neuron_lists()
-        if "firing_rates" in self.cfg.graph_list:
-            self.generate_firing_rate_graphs()
+
+        self.plot_neuron_locations()
+
+        self.generate_firing_rate_graphs()
+        self.generate_histograms()
 
         self.__postprocess_synaptic_elements_all()
         self.__postprocess_synaptic_elements_individual()

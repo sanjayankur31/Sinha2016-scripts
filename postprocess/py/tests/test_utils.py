@@ -22,7 +22,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 
-from nestpp.utils import (get_config, plot_using_gnuplot_binary)
+# system imports
+import random
+import os
+
+# module imports
+from nestpp.utils import (get_config, plot_using_gnuplot_binary,
+                          plot_location_grid)
 
 
 class TestUtils:
@@ -57,3 +63,21 @@ class TestUtils:
             plt_file=plots_dir+"test_gnuplot_good.plt") == 0
         assert plot_using_gnuplot_binary(
             plt_file=plots_dir+"test_gnuplot_bad.plt") != 0
+
+    def test_location_plotter(self):
+        """Test neuron location plotter."""
+        graphdict = {}
+        location_list = []
+        for i in range(0, 100):
+            location_list.append([i, random.randrange(1, 100),
+                                  random.randrange(1, 100)])
+        graphdict['E'] = location_list
+
+        for i in range(0, 50):
+            location_list.append([i, random.randrange(1, 50),
+                                  random.randrange(1, 50)])
+        graphdict['I'] = location_list
+
+        assert plot_location_grid(graphdict) is True
+
+        os.remove("Grid-plot-E-I.png")

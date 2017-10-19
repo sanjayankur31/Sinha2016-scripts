@@ -203,3 +203,30 @@ def plot_histograms(neurons_sets, snapshot_time):
     plt.legend(loc="upper right")
     plt.savefig(o_fn)
     plt.close()
+
+
+def plot_location_grid(neuron_sets_dict):
+    """Plot a grid plot with specified neuron sets.
+
+    :neuron_sets_dict: dict with keys as neuron sets and values as the set of
+                        lists of [nid, xpos, ypos]
+
+    """
+    plt.figure(num=None, figsize=(16, 20), dpi=80)
+    plt.xlabel("extent (micro metres)")
+    plt.ylabel("extent (micro metres)")
+    plot_fn = "Grid-plot-"
+    for neuron_set, position_lists in neuron_sets_dict.items():
+        x = []
+        y = []
+        for nrn in position_lists:
+            x.append(nrn[1])
+            y.append(nrn[2])
+        plt.plot(x, y, "x", markersize=6, label=neuron_set)
+        plot_fn += "{}-".format(neuron_set)
+
+    plot_fn = plot_fn[:-1] + ".png"
+    plt.legend(loc="upper right")
+    plt.savefig(plot_fn)
+
+    return True
