@@ -26,7 +26,7 @@ import math
 import pandas
 import gc
 import os
-from loggerpp import get_module_logger
+from nestpp.loggerpp import get_module_logger
 
 
 lgr = get_module_logger(__name__)
@@ -54,7 +54,7 @@ def get_firing_rate_metrics(neuronset, spike_fn, num_neurons=8000.,
     old_neuronIDs = numpy.array([])
     old_times = numpy.array([])
     lgr.info("Processing {}.".format(spike_fn))
-    if not os.file.exists(spike_fn):
+    if not os.path.exists(spike_fn):
         lgr.error("File not found {}".format(spike_fn))
         return False
 
@@ -130,8 +130,8 @@ def get_firing_rate_metrics(neuronset, spike_fn, num_neurons=8000.,
                 spikesnum = float(len(thiswindow_neuronIDs))
                 # total neuronIDs by number of neurons
                 print(
-                    "{}\t{}\n".format(current_time/1000.,
-                                      (spikesnum/num_neurons)),
+                    "{}\t{}".format(current_time/1000.,
+                                    (spikesnum/num_neurons)),
                     file=fh1, flush=True)
 
                 # STD of firing rates and ISI cv - it
@@ -164,8 +164,8 @@ def get_firing_rate_metrics(neuronset, spike_fn, num_neurons=8000.,
                     lgr.info("std being calculated from {} values".format(
                         len(bin5rates)))
                     print(
-                        "{}\t{}\n".format(current_time/1000.,
-                                          numpy.std(bin5rates)),
+                        "{}\t{}".format(current_time/1000.,
+                                        numpy.std(bin5rates)),
                         file=fh2, flush=True)
 
                     # ISI stats
@@ -203,8 +203,8 @@ def get_firing_rate_metrics(neuronset, spike_fn, num_neurons=8000.,
                                     ISI_cvs.append(ISI_cv)
 
                         print(
-                            "{}\t{}\n".format(current_time/1000.,
-                                              numpy.mean(ISI_cvs)),
+                            "{}\t{}".format(current_time/1000.,
+                                            numpy.mean(ISI_cvs)),
                             file=fh3, flush=True)
 
                 current_time += dt
