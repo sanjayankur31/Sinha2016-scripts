@@ -535,11 +535,11 @@ class Postprocess:
             else:
                 print("Conductance graphs not generated.")
 
-    def __load_neurons(self, file):
+    def __load_neurons(self, file, cols=[0, 1, 2]):
         """Get a neuron list from a file."""
         neurons = []
         if os.path.exists(file):
-            neurons = (numpy.loadtxt(file, delimiter='\t'))
+            neurons = (numpy.loadtxt(file, delimiter='\t', usecols=cols))
             self.lgr.info("Read {} neurons from {}".format(
                 len(neurons), file))
         else:
@@ -551,7 +551,10 @@ class Postprocess:
     def __populate_neuron_lists(self):
         """Populate neuron lists."""
         # Excitatory neurons
-        self.neurons['E'] = self.__load_neurons("00-neuron-locations-E.txt")
+        # nid   gridx   gridy   posx    posy
+        self.neurons['E'] = self.__load_neurons("00-neuron-locations-E.txt",
+                                                cols=[0, 3, 4])
+        # nid   posx    posy
         self.neurons['lpz_c_E'] = self.__load_neurons(
             "00-lpz-centre-neuron-locations-E.txt")
         self.neurons['lpz_b_E'] = self.__load_neurons(
@@ -561,7 +564,10 @@ class Postprocess:
             "00-peri-lpz-neuron-locations-E.txt")
 
         # Inhibitory neurons
-        self.neurons['I'] = self.__load_neurons("00-neuron-locations-I.txt")
+        # nid   gridx   gridy   posx    posy
+        self.neurons['I'] = self.__load_neurons("00-neuron-locations-I.txt",
+                                                cols=[0, 3, 4])
+        # nid   posx    posy
         self.neurons['lpz_c_I'] = self.__load_neurons(
             "00-lpz-centre-neuron-locations-I.txt")
         self.neurons['lpz_b_I'] = self.__load_neurons(
@@ -590,12 +596,16 @@ class Postprocess:
 
     def generate_firing_rate_graphs(self):
         """Generate firing rate graphs."""
+        if "firing_rates" not in self.cfg.graph_list:
+            return True
+
         self.lgr.info("Generating mean firing rate graphs vs time")
 
         if self.__reprocess_raw_files(["firing-", "std-", "cv-"]):
             for neuron_set in self.neurons.keys():
                 get_firing_rate_metrics(
-                    neuron_set, "spikes-{}.gdf".format(neuron_set))
+                    neuron_set, "spikes-{}.gdf".format(neuron_set),
+                    len(self.neurons[neuron_set]))
 
             self.lgr.info("Generating firing rate graphs")
             plot_using_gnuplot_binary(
@@ -618,30 +628,38 @@ class Postprocess:
             plot_using_gnuplot_binary(
                 os.path.join(self.cfg.plots_dir, 'plot-std.plt'))
 
-    def __postprocess_spikes(self):
-        """Postprocess combined spike files."""
-        if self.cfg.histograms:
-            print("Generating histograms..")
-            import nestpp.dualHistogramPlotter as pltH
-            import nestpp.getFiringRates as rg
-            rateGetterE = rg.getFiringRates()
-            if rateGetterE.setup(self.cfg.filenameE, 'E',
-                                 self.cfg.neuronsE,
-                                 self.cfg.rows_per_read):
-                rateGetterE.run(self.cfg.histogram_timelist)
+    def generate_histograms(self):
+        """Generate histograms."""
+        # firing rate histograms for E and I neurons
+        histlist = ['E', 'I']
+        self.lgr.info("Generating histograms for {}".format(histlist))
+        if len(self.cfg.snapshots['histograms']) > 0:
+            for neuron_set in histlist:
+                get_individual_firing_rate_snapshots(
+                    neuron_set, "spikes-{}.gdf".format(neuron_set),
+                    len(self.neurons[neuron_set]),
+                    self.cfg.snapshots['histograms'])
 
-            rateGetterI = rg.getFiringRates()
-            if rateGetterI.setup(self.cfg.filenameI, 'I',
-                                 self.cfg.neuronsI,
-                                 self.cfg.rows_per_read):
-                rateGetterI.run(self.cfg.histogram_timelist)
+            for time in self.cfg.snapshots['histograms']:
+                plot_histograms(histlist, time)
 
-            plotterEI = pltH.dualHistogramPlotter()
-            if plotterEI.setup('E', 'I', self.cfg.neuronsE,
-                               self.cfg.neuronsI):
-                plotterEI.run()
+    def generate_firing_rate_grid_snapshots(self):
+        """Generate top view firing rate snapshots."""
+        fr_grid_list = ['E']
+        self.lgr.info("Generating histograms for {}".format(fr_grid_list))
+        if len(self.cfg.snapshots['firing_rates']) > 0:
+            for neuron_set in fr_grid_list:
+                get_individual_firing_rate_snapshots(
+                    neuron_set, "spikes-{}.gdf".format(neuron_set),
+                    len(self.neurons[neuron_set]),
+                    self.cfg.snapshots['firing_rates'])
 
-        if self.cfg.rasters:
+            for time in self.cfg.snapshots['firing_rates']:
+                plot_histograms(fr_grid_list, time)
+
+    def generate_raster_graphs(self):
+        # rasters for E I only for the moment
+        if len(self.cfg.snapshots['rasters']) > 0:
             import nestpp.rasterPlotter as pltR
             rasterPlotter = pltR.rasterPlotter()
             optiondict = [
