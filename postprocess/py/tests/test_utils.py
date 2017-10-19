@@ -33,22 +33,19 @@ class TestUtils:
         config = get_config("tests/config_test.ini")
         assert (bool(config) is not False)
 
-        correct_graph_list = ['firing_rates', 'firing_rate_snapshots', 'grids',
+        correct_graph_list = ['firing_rates',
                               'conductances', 'syn_elms',
                               'syn_turnover',
-                              'syn_elms_snapshots',
-                              'syn_turnover_snapshots', 'calciums',
-                              'calcium_snapshots', 'histograms', 'snrs',
-                              'rasters']
+                              'calciums']
 
-        assert (sorted(set(config['graphs'])) ==
+        assert (sorted(set(config['time_graphs'])) ==
                 sorted(set(correct_graph_list)))
 
         wrong_graph_list = ['something_random', 'hark_more_random',
                             'syn_elms', 'syn_turnover',
                             'calcium_concentration', 'histograms', 'snr']
 
-        assert (sorted(set(config['graphs'])) !=
+        assert (sorted(set(config['time_graphs'])) !=
                 sorted(set(wrong_graph_list)))
 
     def test_gnuplotter(self):

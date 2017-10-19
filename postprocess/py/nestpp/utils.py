@@ -41,7 +41,7 @@ def get_config(taskfile="config.ini"):
     p.read(taskfile)
 
     # Some configs
-    graph_list = p['default']['graphs'].split()
+    graph_list = p['default']['time_graphs'].split()
     postprocess_home = p['default']['postprocess_home']
     plots_dir = p['default']['plots_dir']
 
@@ -75,7 +75,7 @@ def get_config(taskfile="config.ini"):
     prefixes['synelm'] = p['prefixes']['synelm']
 
     config = {}
-    config['graphs'] = graph_list
+    config['time_graphs'] = graph_list
     config['home'] = postprocess_home
     config['plots_dir'] = os.path.join(postprocess_home, plots_dir)
     config['datadir'] = data_dir
