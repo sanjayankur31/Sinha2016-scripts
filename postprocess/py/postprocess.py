@@ -30,7 +30,7 @@ import subprocess
 from select import select
 
 # module imports
-from nestpp.utils import get_config
+from nestpp.utils import get_config, plot_using_gnuplot_binary
 from nestpp.loggerpp import get_module_logger
 from nestpp.spikes import get_firing_rate_metrics
 
@@ -594,6 +594,27 @@ class Postprocess:
             for neuron_set in self.neurons.keys():
                 get_firing_rate_metrics(
                     neuron_set, "spikes-{}.gdf".format(neuron_set))
+
+            self.lgr.info("Generating firing rate graphs")
+            plot_using_gnuplot_binary(
+                os.path.join(self.cfg.plots_dir, 'plot-firing-rates-IE.plt')
+            )
+
+            if self.numpats > 0:
+                self.lgr.info("Generating pattern graphs")
+                plot_using_gnuplot_binary(
+                    os.path.join(self.cfg.plots_dir,
+                                 'plot-firing-rates-patterns.plt'),
+                    ['-e', 'numpats={}'.format(self.numpats)]
+                )
+
+            self.lgr.info("Generating ISI cv graphs")
+            plot_using_gnuplot_binary(
+                os.path.join(self.cfg.plots_dir, 'plot-cvs.plt'))
+
+            self.lgr.info("Generating STD of firing rates graphs")
+            plot_using_gnuplot_binary(
+                os.path.join(self.cfg.plots_dir, 'plot-std.plt'))
 
     def __postprocess_spikes(self):
         """Postprocess combined spike files."""
