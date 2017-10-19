@@ -24,6 +24,12 @@ this program.  If not, see <http://www.gnu.org/licenses/>.
 import configparser
 import os
 import csv
+import subprocess
+from subprocess import CalledProcessError
+from nestpp.loggerpp import get_module_logger
+
+
+lgr = get_module_logger(__name__)
 
 
 def get_config(taskfile="config.ini"):
@@ -109,3 +115,46 @@ def get_max_csv_cols(path):
                 maxcols = len(line)
         print("{}: {}".format(path, maxcols))
     return maxcols
+
+
+def plot_using_gnuplot_binary(plt_file, arglist=[]):
+    """Run a gnuplot script to plot a graph.
+
+    This will complete the path of the file by appending the required bits.
+
+    :plt_file: plt script file
+    :arglist: other arguments to be passed to gnuplot
+    :returns: return code from gnuplot or -99 if missing script
+
+    """
+    args = []
+    retcode = 0
+
+    if os.path.exists(plt_file):
+        for arg in arglist:
+            args.append(['-e', arg])
+
+        args.append(plt_file)
+        lgr.info("Plotting {}".format(
+            plt_file))
+        try:
+            status = subprocess.run(args=['gnuplot'] + args,
+                                    stdout=subprocess.PIPE,
+                                    stderr=subprocess.PIPE)
+            status.check_returncode()
+        except CalledProcessError as cpe:
+            lgr.error(
+                "{} errored with return code {}".format(
+                    cpe.cmd, cpe.returncode))
+            lgr.error("\n" + cpe.stderr.decode())
+            retcode = cpe.returncode
+        else:
+            lgr.info("{} plotted".format(plt_file))
+            retcode = status.returncode
+    else:
+        lgr.error(
+            "File {} not found. Not plotting graph.".format(
+                plt_file))
+        return -99
+
+    return retcode
