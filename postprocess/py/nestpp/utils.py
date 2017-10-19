@@ -27,6 +27,10 @@ import csv
 import subprocess
 from subprocess import CalledProcessError
 from nestpp.loggerpp import get_module_logger
+import numpy
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt  # NOQA
 
 
 lgr = get_module_logger(__name__)
@@ -158,3 +162,44 @@ def plot_using_gnuplot_binary(plt_file, arglist=[]):
         return -99
 
     return retcode
+
+
+def plot_histograms(neurons_sets, snapshot_time):
+    """Plot histograms of neuron sets
+
+    This only plots the histograms. The firing rate snapshot files must be
+    generated before this function is called.
+
+    :neuron_sets: list of neuron sets to plot in this histogram
+    :snapshot_time: time point for which this snapshot is being generated
+    :returns: True if everything went OK, False otherwise.
+
+    """
+    data = {}
+    for neuron_set in neurons_sets:
+        with open(
+                "firing-rate-{}-{}.gdf".format(neuron_set, snapshot_time)
+        ) as f1:
+            data1 = numpy.loadtxt(f1, delimiter='\t', dtype='float')
+            data[neuron_set] = data1
+
+    plt.figure(num=None, figsize=(16, 9), dpi=80)
+    plt. xlabel("Firing rates")
+    plt.ylabel("Number of neurons")
+    snapshot_time = float(snapshot_time)
+
+    plt.xticks(numpy.arange(0, 220, 20))
+    plt.axis((0, 205, 0, 8000))
+    plot_title = "Histogram ("
+    o_fn = "histogram-"
+    for neuron_set, values in data:
+        plt.hist(values, bins=100, alpha=0.5, label=neuron_set)
+        plot_title += (neuron_set + ", ")
+        o_fn += (neuron_set + "-")
+
+    plot_title = plot_title[:-1] + " at time {}".format(snapshot_time)
+    o_fn += "{}png".format(snapshot_time)  # snapshot_time has a period already
+    lgr.info("Storing {}".format(o_fn))
+    plt.legend(loc="upper right")
+    plt.savefig(o_fn)
+    plt.close()
