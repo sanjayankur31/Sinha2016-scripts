@@ -336,7 +336,12 @@ def get_individual_firing_rate_snapshots(neuronset, spikes_fn, num_neurons,
 
 
 def validate_raster_df(dataframe):
-    """Check to see the input file is a two column file."""
+    """Check to see the input file is a two column file.
+
+    :dataframe: dataframe to validate
+    :returns: True if valid, False otherwise
+
+    """
     if dataframe.shape[1] != 2:
         lgr.error("Data seems incorrect - should have 2 columns. " +
                   "Please check and re-run")
