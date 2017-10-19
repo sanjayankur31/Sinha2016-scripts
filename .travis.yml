@@ -4,7 +4,7 @@ python:
   - "nightly"
 install: pip install -r requirements.txt
 before_script: cd postprocess/py/
-script: pwd && pytest --cov=./ -v tests/
+script: pwd && PYTHONPATH=. pytest --cov=./ tests
 after_success: pwd && codecov
 notifications:
   email:
