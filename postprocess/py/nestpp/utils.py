@@ -37,7 +37,7 @@ def get_config(taskfile="config.ini"):
     # Some configs
     graph_list = p['default']['graphs'].split()
     postprocess_home = p['default']['postprocess_home']
-    gnuplot_files_dir = p['default']['gnuplot_files_dir']
+    plots_dir = p['default']['plots_dir']
 
     # where the unconsolidated files are
     # because its easier to consolidate raster files using sort
@@ -71,7 +71,7 @@ def get_config(taskfile="config.ini"):
     config = {}
     config['graphs'] = graph_list
     config['home'] = postprocess_home
-    config['plots_dir'] = gnuplot_files_dir
+    config['plots_dir'] = plots_dir
     config['datadir'] = data_dir
     config['sp_enabled_at'] = sp_enabled_at
     config['snapshots'] = snapshots
