@@ -2,7 +2,11 @@ language: python
 python:
   - "3.6"
   - "nightly"
-install: pip install -r requirements.txt
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y gnuplot
+install:
+  - pip install -r requirements.txt
 before_script: cd postprocess/py/
 script: pwd && PYTHONPATH=. pytest --cov=./ tests
 after_success: pwd && codecov
