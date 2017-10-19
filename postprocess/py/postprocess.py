@@ -21,35 +21,29 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from nestpp.utils import get_config
+# system imports
 import sys
 import os
 import pandas
 import numpy
 import subprocess
-from subprocess import CalledProcessError
 from select import select
-import logging
+
+# module imports
+from nestpp.utils import get_config
+from nestpp.loggerpp import get_module_logger
 
 
 class Postprocess:
 
     """Main post process worker class."""
 
-    def __init__(self):
+    def __init__(self, configfile):
         """Initialise."""
-        logging.basicConfig(level=logging.DEBUG)
-        self.cfg = get_config("config.ini")
+        self.cfg = get_config(configfile)
+        self.lrg = get_module_logger(__name__)
 
         # set up logging
-        self.lgr = logging.getLogger(__name__)
-        self.lgr.setLevel(logging.DEBUG)
-        handler = logging.StreamHandler()
-        handler.setLevel(logging.DEBUG)
-        formatter = logging.Formatter(
-            '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        handler.setFormatter(formatter)
-        self.lgr.addHandler(handler)
 
     def __postprocess_synaptic_elements_individual(self):
         """Post process synaptic elements from individual neuronal files."""
@@ -864,52 +858,6 @@ class Postprocess:
 
         self.lgr.info("Got {} patterns".format(i))
         return i
-
-    def plot_using_gnuplot_binary(self, plt_file, arglist=[]):
-        """Run a gnuplot script to plot a graph.
-
-        This will complete the path of the file by appending the required bits.
-
-        :plt_file: plt script file
-        :arglist: other arguments to be passed to gnuplot
-        :returns: return code from gnuplot or -99 if missing script
-
-        """
-        args = []
-        retcode = 0
-        plt_file = ((os.path.join(
-            self.cfg.postprocess_home,
-            self.cfg.gnuplot_files_dir,
-            plt_file)))
-
-        if os.path.exists(plt_file):
-            for arg in arglist:
-                args.append(['-e', arg])
-
-            args.append(plt_file)
-            self.lgr.info("Plotting {}".format(
-                plt_file))
-            try:
-                status = subprocess.run(args=['gnuplot'] + args,
-                                        stdout=subprocess.PIPE,
-                                        stderr=subprocess.PIPE)
-                status.check_returncode()
-            except CalledProcessError as cpe:
-                self.lgr.error(
-                    "{} errored with return code {}".format(
-                        cpe.cmd, cpe.returncode))
-                self.lgr.error("\n" + cpe.stderr.decode())
-                retcode = cpe.returncode
-            else:
-                self.lgr.info("{} plotted".format(plt_file))
-                retcode = status.returncode
-        else:
-            self.lgr.error(
-                "File {} not found. Not plotting graph.".format(
-                    plt_file))
-            return -99
-
-        return retcode
 
     def main(self):
         """Do everything."""
