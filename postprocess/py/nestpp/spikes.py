@@ -21,11 +21,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+# system imports
 import numpy
 import math
 import pandas
 import gc
 import os
+import collections
+
+# local imports
 from nestpp.loggerpp import get_module_logger
 
 
@@ -217,7 +221,117 @@ def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
             del times
             gc.collect()
 
-    lgr.info("Finished processing {}".format(spike_fn))
+    lgr.info("Finished processing {}".format(spikes_fn))
+    return True
+
+
+def get_individual_firing_rate_snapshots(neuronset, spikes_fn, num_neurons,
+                                         timelist, rows=50000000):
+    """Get firing rates for individual neurons at a particular point in time.
+
+    This information is used to generate histograms, for example.
+
+    :neuronset: name of neuron set
+    :spikes_fn: name of spikes file
+    :timelist: list of times for which snapshots will be generated
+    :returns: True if everything went OK, else False
+
+    """
+    sorted_timelist = numpy.sort(timelist)
+
+    current = 0
+    old_spikes = numpy.array([])
+    old_times = numpy.array([])
+    start = 0.
+    end = 0.
+
+    lgr.info("Reading spikes file {}".format(spikes_fn))
+    for chunk in pandas.read_csv(spikes_fn, sep='\s+',
+                                 names=["neuronID",
+                                        "spike_time"],
+                                 dtype={'neuronID': numpy.uint16,
+                                        'spike_time': float},
+                                 lineterminator="\n",
+                                 skipinitialspace=True,
+                                 header=None, index_col=None,
+                                 chunksize=rows):
+
+        if not validate_raster_df(chunk):
+            lgr.error("Error in file. Skipping.")
+            return False
+
+        # Only if you find the item do you print, else you read the next
+        # chunk. Now, if all chunks are read and the item wasn't found, the
+        # next items cannot be in the file either, since we're sorting the
+        # file
+        spikes = numpy.array(chunk.values[:, 0])
+        times = numpy.array(chunk.values[:, 1])
+
+        # 200 spikes per second = 2 spikes per 0.01 second (dt) per neuron
+        # this implies 2 * 10000 spikes for 10000 neurons need to be kept
+        # to make sure I have a proper sliding window of chunks
+        if len(old_spikes) > 0:
+            spikes = numpy.append(old_spikes, spikes)
+            times = numpy.append(old_times, times)
+
+        lgr.debug(
+            "Times from {} to {} being analysed containing {} rows".format(
+                times[0], times[-1], len(times)))
+
+        while True:
+            time = sorted_timelist[current]
+            lgr.debug("Looking for {}.".format(time))
+            time *= 1000.
+
+            # Find our values
+            start = numpy.searchsorted(times,
+                                       time - 1000.,
+                                       side='left')
+            end = numpy.searchsorted(times,
+                                     time,
+                                     side='right')
+            # Not found at all, don't process anything
+            if start == len(times):
+                lgr.debug("Neurons not found, reading next chunk.")
+                break
+            elif start < len(times) and end == len(times):
+                lgr.debug("Found a boundary - reading another chunk.")
+                break
+            else:
+                neurons = spikes[start:end]
+                rates = collections.Counter(neurons)
+                lgr.debug("Neurons found: {}".format(len(rates)))
+
+                # Fill up missing neurons
+                for i in range(1, num_neurons + 1):
+                    if i not in rates:
+                        rates[i] = 0
+                lgr.debug("Neurons after appending zeros: {}".format(
+                    len(rates)))
+
+                o_fn = "firing-rate-{}-{}.gdf".format(
+                    neuronset, time)
+                lgr.info("Printing neuronal firing rate values to {}".format(
+                    o_fn))
+
+                with open(o_fn, 'w') as fh:
+                    for nrn in rates:
+                        print("{}\t{}".format(nrn, rates[nrn]), file=fh)
+
+                current += 1
+                if current >= len(sorted_timelist):
+                    break
+
+        if current >= len(sorted_timelist):
+            break
+        if start < len(times):
+            old_times = numpy.array(times[(start - len(times)):])
+            old_spikes = numpy.array(spikes[(start - len(spikes)):])
+
+        del spikes
+        del times
+        gc.collect()
+
     return True
 
 
