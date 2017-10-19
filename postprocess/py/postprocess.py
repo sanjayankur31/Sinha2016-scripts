@@ -32,6 +32,7 @@ from select import select
 # module imports
 from nestpp.utils import get_config
 from nestpp.loggerpp import get_module_logger
+from nestpp.spikes import get_firing_rate_metrics
 
 
 class Postprocess:
@@ -41,9 +42,8 @@ class Postprocess:
     def __init__(self, configfile):
         """Initialise."""
         self.cfg = get_config(configfile)
-        self.lrg = get_module_logger(__name__)
-
-        # set up logging
+        self.lgr = get_module_logger(__name__)
+        self.neurons = {}
 
     def __postprocess_synaptic_elements_individual(self):
         """Post process synaptic elements from individual neuronal files."""
@@ -549,30 +549,28 @@ class Postprocess:
     def __populate_neuron_lists(self):
         """Populate neuron lists."""
         # Excitatory neurons
-        self.neurons_E = self.__load_neurons("00-neuron-locations-E.txt")
-        self.neurons_lpz_c_E = self.__load_neurons(
+        self.neurons['E'] = self.__load_neurons("00-neuron-locations-E.txt")
+        self.neurons['lpz_c_E'] = self.__load_neurons(
             "00-lpz-centre-neuron-locations-E.txt")
-        self.neurons_lpz_b_E = self.__load_neurons(
+        self.neurons['lpz_b_E'] = self.__load_neurons(
             "00-lpz-border-neuron-locations-E.txt")
-        self.neurons_lpz_E = (self.neurons_lpz_b_E + self.neurons_lpz_c_E)
-        self.neurons_peri_lpz_E = self.__load_neurons(
+        self.neurons['lpz_E'] = (self.neurons_lpz_b_E + self.neurons_lpz_c_E)
+        self.neurons['peri_lpz_E'] = self.__load_neurons(
             "00-peri-lpz-neuron-locations-E.txt")
 
         # Inhibitory neurons
-        self.neurons_I = self.__load_neurons("00-neuron-locations-I.txt")
-        self.neurons_lpz_c_I = self.__load_neurons(
+        self.neurons['I'] = self.__load_neurons("00-neuron-locations-I.txt")
+        self.neurons['lpz_c_I'] = self.__load_neurons(
             "00-lpz-centre-neuron-locations-I.txt")
-        self.neurons_lpz_b_I = self.__load_neurons(
+        self.neurons['lpz_b_I'] = self.__load_neurons(
             "00-lpz-border-neuron-locations-I.txt")
-        self.neurons_lpz_I = (self.neurons_lpz_b_I + self.neurons_lpz_c_I)
-        self.neurons_peri_lpz_I = self.__load_neurons(
+        self.neurons['lpz_I'] = (self.neurons_lpz_b_I + self.neurons_lpz_c_I)
+        self.neurons['peri_lpz_I'] = self.__load_neurons(
             "00-peri-lpz-neuron-locations-I.txt")
 
         # Populate pattern lists and calculate the overlap percentage between
         # each pattern and the LPZ
         self.numpats = self.__get_numpats()
-        self.neurons_P = []
-        self.neurons_B = []
         with open("00-pattern-overlap.txt", 'w') as f:
             for i in range(1, self.numpats + 1):
                 neurons_P = self.__load_neurons(
@@ -580,8 +578,8 @@ class Postprocess:
                 neurons_B = self.__load_neurons(
                     "00-background-neurons-" + str(i) + ".txt")
 
-                self.neurons_P.append(neurons_P)
-                self.neurons_B.append(neurons_B)
+                self.neurons['pattern-{}'.format(i)] = neurons_P
+                self.neurons['background-{}'.format(i)] = neurons_B
 
                 overlapping_neurons = set(self.neurons_lpz_E).intersection(
                     set(neurons_P))
@@ -591,11 +589,11 @@ class Postprocess:
     def generate_firing_rate_graphs(self):
         """Generate firing rate graphs."""
         self.lgr.info("Generating mean firing rate graphs vs time")
-        import nestpp.timeGraphPlotter as TGP
-        tgp = TGP.timeGraphPlotter(self.cfg)
+
         if self.__reprocess_raw_files(["firing-", "std-", "cv-"]):
-            tgp.get_firing_rates_from_spikes()
-        tgp.plot_all()
+            for neuron_set in self.neurons.keys():
+                get_firing_rate_metrics(
+                    neuron_set, "spikes-{}.gdf".format(neuron_set))
 
     def __postprocess_spikes(self):
         """Postprocess combined spike files."""
