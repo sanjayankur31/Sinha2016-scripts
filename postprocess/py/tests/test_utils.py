@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
 """
-Test the config parser.
+Enter one line description here.
 
-It's really hard to test input. The test parser will have to do the checks.
-Writing tests doesn't quite cut it.
-
-File: test_config.py
+File:
 
 Copyright 2017 Ankur Sinha
 Author: Ankur Sinha <sanjay DOT ankur AT gmail DOT com>
@@ -24,12 +21,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from nestpp.utils import get_config
+
+from nestpp.utils import (get_config, plot_using_gnuplot_binary)
 
 
-class TestConfig:
+class TestUtils:
 
-    """Test the config parser."""
+    """Test utility functions."""
 
     def test_graphlist(self):
         config = get_config("tests/config_test.ini")
@@ -52,3 +50,13 @@ class TestConfig:
 
         assert (sorted(set(config['graphs'])) !=
                 sorted(set(wrong_graph_list)))
+
+    def test_gnuplotter(self):
+        """Test the gnuplotter method.  """
+        plots_dir = "tests/"
+        assert plot_using_gnuplot_binary(
+            plt_file=plots_dir+"this_file_does_not_exist.plt") != 0
+        assert plot_using_gnuplot_binary(
+            plt_file=plots_dir+"test_gnuplot_good.plt") == 0
+        assert plot_using_gnuplot_binary(
+            plt_file=plots_dir+"test_gnuplot_bad.plt") != 0
