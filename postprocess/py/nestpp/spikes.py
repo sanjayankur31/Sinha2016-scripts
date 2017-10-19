@@ -32,15 +32,15 @@ from nestpp.loggerpp import get_module_logger
 lgr = get_module_logger(__name__)
 
 
-def get_firing_rate_metrics(neuronset, spike_fn, num_neurons=8000.,
+def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
                             rows=50000000.):
     """Get various metrics from raster spike files.
 
     :neuronset: name of neuron set being looked at
-    :spike_fn: file name of spikes file
+    :spikes_fn: file name of spikes file
     :num_neurons: number of neurons in neuron set
     :rows: rows to be read in each pandas chunk
-    :returns: TODO
+    :returns: True if everything went OK, else False
 
     """
     # Initial indices
@@ -53,16 +53,16 @@ def get_firing_rate_metrics(neuronset, spike_fn, num_neurons=8000.,
     current_time = 50.
     old_neuronIDs = numpy.array([])
     old_times = numpy.array([])
-    lgr.info("Processing {}.".format(spike_fn))
-    if not os.path.exists(spike_fn):
-        lgr.error("File not found {}".format(spike_fn))
+    lgr.info("Processing {}.".format(spikes_fn))
+    if not os.path.exists(spikes_fn):
+        lgr.error("File not found {}".format(spikes_fn))
         return False
 
     with open("mean-firing-rates-{}.txt".format(neuronset), 'w') as fh1, \
             open("std-firing-rates-{}.txt".format(neuronset), 'w') as fh2, \
             open("ISI-cv-{}.txt".format(neuronset), 'w') as fh3:
 
-        for chunk in pandas.read_csv(spike_fn, sep='\s+',
+        for chunk in pandas.read_csv(spikes_fn, sep='\s+',
                                      names=["neuronID",
                                             "spike_time"],
                                      dtype={'neuronID': numpy.uint16,
@@ -76,7 +76,7 @@ def get_firing_rate_metrics(neuronset, spike_fn, num_neurons=8000.,
             # Drop rows with nan
             chunk = chunk.dropna(how='any')
             if not validate_raster_df(chunk):
-                lgr.error("Error in {}. Skipping.".format(spike_fn))
+                lgr.error("Error in {}. Skipping.".format(spikes_fn))
                 return False
 
             neuronIDs = numpy.array(chunk.values[:, 0])
