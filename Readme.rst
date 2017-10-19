@@ -7,6 +7,7 @@ Tread lightly ;)
 Everything here is under the GPLv3 license.
 
 Master:
+
 .. image:: https://travis-ci.org/sanjayankur31/Sinha2016-scripts.svg?branch=master
     :target: https://travis-ci.org/sanjayankur31/Sinha2016-scripts
 
@@ -14,6 +15,7 @@ Master:
     :target: https://codecov.io/gh/sanjayankur31/Sinha2016-scripts?branch=master
 
 Develop:
+
 .. image:: https://travis-ci.org/sanjayankur31/Sinha2016-scripts.svg?branch=develop
     :target: https://travis-ci.org/sanjayankur31/Sinha2016-scripts
 
