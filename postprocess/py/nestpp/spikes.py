@@ -90,11 +90,11 @@ def get_firing_rate_metrics(neuronset, spike_fn, num_neurons=8000.,
                 neuronIDs = numpy.append(old_neuronIDs, neuronIDs)
                 times = numpy.append(old_times, times)
 
-            lgr.info(
+            lgr.debug(
                 "Times from {} to {} being analysed containing {} rows".format(
                     times[0], times[-1], len(times)))
 
-            lgr.info("Current time is {}".format(current_time))
+            lgr.debug("Current time is {}".format(current_time))
 
             # Reset chunks
             left = 0
@@ -161,7 +161,7 @@ def get_firing_rate_metrics(neuronset, spike_fn, num_neurons=8000.,
                         bin5rates.append(firing_rate)
                         bin5time = bin5time + dt
 
-                    lgr.info("std being calculated from {} values".format(
+                    lgr.debug("std being calculated from {} values".format(
                         len(bin5rates)))
                     print(
                         "{}\t{}".format(current_time/1000.,
@@ -171,9 +171,9 @@ def get_firing_rate_metrics(neuronset, spike_fn, num_neurons=8000.,
                     # ISI stats
                     neurons = set(thiswindow_neuronIDs)
                     if len(neurons) == 0:
-                        lgr.info("No neurons found in window. Skipping")
+                        lgr.warning("No neurons found in window. Skipping")
                     else:
-                        lgr.info("{} neurons being analysed.".format(
+                        lgr.debug("{} neurons being analysed.".format(
                             len(neurons)))
                         # for all neurons in this window
                         ISI_cvs = []
@@ -209,7 +209,7 @@ def get_firing_rate_metrics(neuronset, spike_fn, num_neurons=8000.,
 
                 current_time += dt
 
-            lgr.info("Printed till {}".format(current_time))
+            lgr.debug("Printed till {}".format(current_time))
             old_times = numpy.array(times[(left - len(times)):])
             old_neuronIDs = numpy.array(neuronIDs[(left - len(neuronIDs)):])
 
@@ -217,6 +217,7 @@ def get_firing_rate_metrics(neuronset, spike_fn, num_neurons=8000.,
             del times
             gc.collect()
 
+    lgr.info("Finished processing {}".format(spike_fn))
     return True
 
 
