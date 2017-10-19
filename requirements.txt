@@ -4,3 +4,4 @@ pytest
 configparser
 pytest-cov
 codecov
+matplotlib
