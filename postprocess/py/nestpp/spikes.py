@@ -234,6 +234,7 @@ def get_individual_firing_rate_snapshots(neuronset, spikes_fn, num_neurons,
     :neuronset: name of neuron set
     :spikes_fn: name of spikes file
     :timelist: list of times for which snapshots will be generated
+    :rows: number of rows to be read in each pandas chunk
     :returns: True if everything went OK, else False
 
     """
@@ -350,3 +351,104 @@ def validate_raster_df(dataframe):
         lgr.info("Read " + str(dataframe.shape[0]) +
                  " rows.")
         return True
+
+
+def extract_spikes(neuron_set, spikes_fn, snapshot_time_list,
+                   rows=50000000):
+    """Extract spikes for neuron set at particular times.
+
+    Ideally, one specifies all the times at which spikes are needed so that
+    only one pass is required over the various neuron spike files.
+
+    :neuron_set: neuron set that spikes should be extracted for.
+    :spikes_fn: file name of spikes file
+    :snapshot_time_list: times at which spikes are to be extracted for
+    :rows: rows to be read in each pandas chunk
+    :returns: True if everything went OK, False otherwise
+
+    """
+    snapshot_time_list = numpy.sort(snapshot_time_list)
+    current = 0
+    old_spikes = numpy.array([])
+    old_times = numpy.array([])
+
+    lgr.info("Reading spikes file {}".format(spikes_fn))
+    for chunk in pandas.read_csv(spikes_fn, sep='\s+',
+                                 names=["neuronID",
+                                        "spike_time"],
+                                 dtype={'neuronID': numpy.uint16,
+                                        'spike_time': float},
+                                 lineterminator="\n",
+                                 skipinitialspace=True,
+                                 header=None, index_col=None,
+                                 chunksize=rows):
+
+        if current == len(snapshot_time_list):
+            lgr.info("Processed all time values. Done.")
+            break
+
+        if not validate_raster_df(chunk):
+            lgr.error("Error in file. Skipping.")
+            return False
+
+        # Only if you find the item do you print, else you read the next
+        # chunk. Now, if all chunks are read and the item wasn't found, the
+        # next items cannot be in the file either, since we're sorting the
+        # file
+        spikes = numpy.array(chunk.values[:, 0])
+        times = numpy.array(chunk.values[:, 1])
+
+        # 200 spikes per second = 2 spikes per 0.01 second (dt) per neuron
+        # this implies 2 * 10000 spikes for 10000 neurons need to be kept
+        # to make sure I have a proper sliding window of chunks
+        if len(old_spikes) > 0:
+            spikes = numpy.append(old_spikes, spikes)
+            times = numpy.append(old_times, times)
+
+        lgr.debug(
+            "Times from {} to {} being analysed containing {} rows".format(
+                times[0], times[-1], len(times)))
+
+        while True:
+            time = snapshot_time_list[current]
+            lgr.debug("Looking for #{} - {}.".format(current, time))
+            o_fn = ("spikes-" + neuron_set + "-" + str(time) + ".gdf")
+            time *= 1000.
+
+            # Find our values
+            start = numpy.searchsorted(times,
+                                       time - 1000.,
+                                       side='left')
+            end = numpy.searchsorted(times,
+                                     time,
+                                     side='right')
+            # Not found at all, don't process anything
+            if start == len(times):
+                lgr.warning("Neurons not found, reading next chunk.")
+                break
+            elif start < len(times) and end == len(times):
+                lgr.debug("Found a boundary - reading another chunk.")
+                break
+            else:
+                neurons = spikes[start:end]
+                spiketimes = times[start:end]
+                lgr.debug("Neurons and times found: {} {}".format(
+                    len(neurons), len(spiketimes)))
+
+                with open(o_fn, mode='wt') as f:
+                    for i in range(0, len(neurons)):
+                        print("{}\t{}".format(
+                            neurons[i], spiketimes[i]), file=f)
+
+                current += 1
+                if current == len(snapshot_time_list):
+                    break
+
+        if start < len(times):
+            old_times = numpy.array(times[(start - len(times)):])
+            old_spikes = numpy.array(spikes[(start - len(spikes)):])
+
+        del spikes
+        del times
+        gc.collect()
+    return True
