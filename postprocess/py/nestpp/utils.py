@@ -28,6 +28,7 @@ import subprocess
 from subprocess import CalledProcessError
 from nestpp.loggerpp import get_module_logger
 import numpy
+import pandas
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt  # NOQA
@@ -164,11 +165,14 @@ def plot_using_gnuplot_binary(plt_file, arglist=[]):
     return retcode
 
 
-def plot_histograms(neurons_sets, snapshot_time):
+def plot_histograms(neuron_sets, snapshot_time):
     """Plot histograms of neuron sets
 
     This only plots the histograms. The firing rate snapshot files must be
     generated before this function is called.
+
+    The firing rate file must contain firing rates of all neurons in the set,
+    even for ones that did not fire. They will have a firing rate of 0Hz.
 
     :neuron_sets: list of neuron sets to plot in this histogram
     :snapshot_time: time point for which this snapshot is being generated
@@ -176,7 +180,7 @@ def plot_histograms(neurons_sets, snapshot_time):
 
     """
     data = {}
-    for neuron_set in neurons_sets:
+    for neuron_set in neuron_sets:
         with open(
                 "firing-rate-{}-{}.gdf".format(neuron_set, snapshot_time)
         ) as f1:
@@ -184,7 +188,7 @@ def plot_histograms(neurons_sets, snapshot_time):
             data[neuron_set] = data1
 
     plt.figure(num=None, figsize=(16, 9), dpi=80)
-    plt. xlabel("Firing rates")
+    plt.xlabel("Firing rates")
     plt.ylabel("Number of neurons")
     snapshot_time = float(snapshot_time)
 
@@ -230,3 +234,41 @@ def plot_location_grid(neuron_sets_dict):
     plt.savefig(plot_fn)
 
     return True
+
+
+def plot_rasters(neuron_sets_dict, snapshot_time):
+    """Plot raster graphs for various neuron sets.
+
+    Note that this function only plots the graphs. The spikes must be extracted
+    and available before this function is called.
+
+    :neuron_sets: dictionary of neuron sets and the total number of neurons
+                    they have
+    :snapshot_time: time for which raster is being generated
+    :returns: True if everything went OK, False otherwise
+
+    """
+    matplotlib.rcParams.update({'font.size': 30})
+    plt.figure(num=None, figsize=(32, 18), dpi=80)
+    plt. xlabel("Neurons")
+    plt.ylabel("Time (ms)")
+    plt.xticks(numpy.arange(0, 10020, 1000))
+    for neuron_set, num_neurons in neuron_sets_dict.items():
+            f1 = "spikes-{}-{}.gdf".format(neuron_set, snapshot_time)
+            neurons1DF = pandas.read_csv(f1, sep='\s+',
+                                         lineterminator="\n",
+                                         skipinitialspace=True,
+                                         header=None, index_col=None)
+            neurons1 = neurons1DF.values
+            # Must complete the figure with missing neurons
+            # Must also restack the neurons so that each neuron set is
+            # contiguous
+            neuron_ids = sorted(list(set(neurons1[:, 1])))
+            packed_ids = {}
+            for i in range(1, num_neurons):
+                
+
+
+
+            plt.plot(neurons1[:, 0], neurons1[:, 1], ".", markersize=0.6,
+                     label=neuron_set)

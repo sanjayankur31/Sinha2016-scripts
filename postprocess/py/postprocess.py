@@ -34,7 +34,8 @@ from nestpp.utils import (get_config, plot_using_gnuplot_binary,
                           plot_histograms, plot_location_grid)
 from nestpp.loggerpp import get_module_logger
 from nestpp.spikes import (get_firing_rate_metrics,
-                           get_individual_firing_rate_snapshots)
+                           get_individual_firing_rate_snapshots,
+                           extract_spikes)
 
 
 class Postprocess:
@@ -660,34 +661,9 @@ class Postprocess:
     def generate_raster_graphs(self):
         # rasters for E I only for the moment
         if len(self.cfg.snapshots['rasters']) > 0:
-            import nestpp.rasterPlotter as pltR
-            rasterPlotter = pltR.rasterPlotter()
-            optiondict = [
-                {
-                    'neuronSet': 'E',
-                    'neuronsFileName': self.cfg.neuronListE,
-                    'spikesFileName': self.cfg.filenameE
-                },
-                {
-                    'neuronSet': 'I',
-                    'neuronsFileName': self.cfg.neuronListI,
-                    'spikesFileName': self.cfg.filenameI
-                },
-            ]
-            if rasterPlotter.setup(optiondict):
-                print("Doing the work.")
-                rasterPlotter.run(self.cfg.histogram_timelist)
-
-            optiondict = [
-                {
-                    'neuronSet': 'LPZE',
-                    'neuronsFileName': self.cfg.neuronListLPZE,
-                    'spikesFileName': self.cfg.filenameLPZE
-                },
-            ]
-            if rasterPlotter.setup(optiondict):
-                print("Doing the work.")
-                rasterPlotter.run(self.cfg.histogram_timelist)
+            for neuron_set in ['E', 'I']:
+                extract_spikes(neuron_set, "spikes-{}.gdf".format(neuron_set),
+                               self.cfg.snapshots['rasters'])
 
     def plot_neuron_locations(self):
         """Plot graphs showing locations of neurons."""
