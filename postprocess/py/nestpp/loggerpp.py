@@ -24,13 +24,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import logging
 
 
-def get_module_logger(module_name):
-    """Get a logger for the module."""
-    logging.basicConfig(level=logging.DEBUG)
+def get_module_logger(module_name, logging_level=logging.DEBUG):
+    """Get a logger for the module.
+
+    :module_name: name of the module
+    :logging_level: logging level
+    :returns: created logger
+
+    """
+    logging.basicConfig(level=logging_level)
     lgr = logging.getLogger(module_name)
-    lgr.setLevel(logging.DEBUG)
+    lgr.setLevel(logging_level)
     handler = logging.StreamHandler()
-    handler.setLevel(logging.DEBUG)
+    handler.setLevel(logging_level)
     formatter = logging.Formatter(
         '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     handler.setFormatter(formatter)
