@@ -7,7 +7,7 @@ before_install:
 install:
   - pip install -r requirements.txt
 before_script: cd postprocess/py/
-script: pwd && PYTHONPATH=. pytest --cov=./ tests
+script: pwd && PYTHONPATH=. pytest --cov=nestpp/ tests
 after_success: pwd && codecov
 notifications:
   email:
