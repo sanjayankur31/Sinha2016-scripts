@@ -236,15 +236,16 @@ def plot_location_grid(neuron_sets_dict):
     return True
 
 
-def plot_rasters(neuron_sets_dict, snapshot_time):
+def plot_rasters(neuron_sets_dict, snapshot_time, proportion=0.1):
     """Plot raster graphs for various neuron sets.
 
     Note that this function only plots the graphs. The spikes must be extracted
     and available before this function is called.
 
-    :neuron_sets: dictionary of neuron sets and the total number of neurons
-                    they have
+    :neuron_sets: dictionary of neuron sets and [nid_start, nid_end] for each
+                    set
     :snapshot_time: time for which raster is being generated
+    :proportion: what percentage of all neurons to pick for the raster
     :returns: True if everything went OK, False otherwise
 
     """
@@ -253,22 +254,33 @@ def plot_rasters(neuron_sets_dict, snapshot_time):
     plt. xlabel("Neurons")
     plt.ylabel("Time (ms)")
     plt.xticks(numpy.arange(0, 10020, 1000))
-    for neuron_set, num_neurons in neuron_sets_dict.items():
-            f1 = "spikes-{}-{}.gdf".format(neuron_set, snapshot_time)
-            neurons1DF = pandas.read_csv(f1, sep='\s+',
-                                         lineterminator="\n",
-                                         skipinitialspace=True,
-                                         header=None, index_col=None)
-            neurons1 = neurons1DF.values
-            # Must complete the figure with missing neurons
-            # Must also restack the neurons so that each neuron set is
-            # contiguous
-            neuron_ids = sorted(list(set(neurons1[:, 1])))
-            packed_ids = {}
-            for i in range(1, num_neurons):
-                
+    newset_start = 0
+    for neuron_set, [nid_start, nid_end] in neuron_sets_dict.items():
+        num_neurons = nid_end - nid_start
+        f1 = "spikes-{}-{}.gdf".format(neuron_set, snapshot_time)
+        neurons1DF = pandas.read_csv(f1, sep='\s+',
+                                     lineterminator="\n",
+                                     skipinitialspace=True,
+                                     header=None, index_col=None)
+        neurons1 = neurons1DF.values
 
+        # pick a smaller contiguous subset
+        neuron_ids = sorted(list(set(neurons1[:, 1])))
+        picked_ids = []
+        data_to_plot = []
+        if len(neuron_ids) > int(num_neurons * proportion):
+            # pick first contiguous subset
+            picked_ids = [x for x in neuron_ids if x < (nid_start +
+                                                        int(num_neurons *
+                                                            proportion))]
+            for spike_time, nid in neurons1:
+                if nid in picked_ids:
+                    data_to_plot.append([spike_time,
+                                         nid - nid_start + newset_start])
+        else:
+            data_to_plot = neurons1
 
+        plt.plot(data_to_plot[:, 0], data_to_plot[:, 1], ".",
+                 markersize=0.6, label=neuron_set)
 
-            plt.plot(neurons1[:, 0], neurons1[:, 1], ".", markersize=0.6,
-                     label=neuron_set)
+        newset_start += int(num_neurons * proportion)
