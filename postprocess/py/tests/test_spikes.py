@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import random
 import os
-from nestpp.spikes import get_firing_rate_metrics
+from nestpp.spikes import (get_firing_rate_metrics, extract_spikes)
 
 
 class TestSpikes:
@@ -50,7 +50,30 @@ class TestSpikes:
 
         get_firing_rate_metrics("test", "spikes-test.gdf", num_neurons, 500.)
 
+        assert(os.path.exists("mean-firing-rates-test.txt") is True)
+        assert(os.path.exists("std-firing-rates-test.txt") is True)
+        assert(os.path.exists("ISI-cv-test.txt") is True)
+
         os.remove("spikes-test.gdf")
         os.remove("mean-firing-rates-test.txt")
         os.remove("std-firing-rates-test.txt")
         os.remove("ISI-cv-test.txt")
+
+    def test_spike_extractor(self):
+        """Test the spike extracter."""
+        with open('spikes-Y.gdf', 'w') as f:
+            t = 5001  # ms
+            for i in range(0, 50000):
+                for j in range(0, 10):
+                    print("{}\t{}".format(
+                        random.randrange(801, 1000), t),
+                          file=f)
+                t += 0.1
+
+        assert(extract_spikes("Y", 'spikes-Y.gdf', [6.5, 7.5]) is True)
+        assert(os.path.exists("spikes-Y-7.5.gdf") is True)
+        assert(os.path.exists("spikes-Y-6.5.gdf") is True)
+
+        os.remove("spikes-Y-7.5.gdf")
+        os.remove("spikes-Y-6.5.gdf")
+        os.remove("spikes-Y.gdf")
