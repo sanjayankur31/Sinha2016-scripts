@@ -31,7 +31,7 @@ from select import select
 
 # module imports
 from nestpp.utils import (get_config, plot_using_gnuplot_binary,
-                          plot_histograms, plot_location_grid)
+                          plot_histograms, plot_location_grid, plot_rasters)
 from nestpp.loggerpp import get_module_logger
 from nestpp.spikes import (get_firing_rate_metrics,
                            get_individual_firing_rate_snapshots,
@@ -664,6 +664,13 @@ class Postprocess:
             for neuron_set in ['E', 'I']:
                 extract_spikes(neuron_set, "spikes-{}.gdf".format(neuron_set),
                                self.cfg.snapshots['rasters'])
+
+            for t in self.cfg.snapshots['raster']:
+                neuron_dict = {
+                    'E': [self.neurons['E'][0][0], self.neurons['E'][-1][0]],
+                    'I': [self.neurons['I'][0][0], self.neurons['I'][-1][0]],
+                }
+                plot_rasters(neuron_dict, t, proportion=0.1)
 
     def plot_neuron_locations(self):
         """Plot graphs showing locations of neurons."""
