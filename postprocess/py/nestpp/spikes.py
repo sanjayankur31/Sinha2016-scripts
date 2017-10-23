@@ -362,7 +362,7 @@ def extract_spikes(neuron_set, spikes_fn, snapshot_time_list,
 
     :neuron_set: neuron set that spikes should be extracted for.
     :spikes_fn: file name of spikes file
-    :snapshot_time_list: times at which spikes are to be extracted for
+    :snapshot_time_list: times at which spikes are to be extracted in seconds
     :rows: rows to be read in each pandas chunk
     :returns: True if everything went OK, False otherwise
 
