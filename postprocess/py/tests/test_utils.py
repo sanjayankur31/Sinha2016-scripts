@@ -28,7 +28,7 @@ import os
 
 # module imports
 from nestpp.utils import (get_config, plot_using_gnuplot_binary,
-                          plot_location_grid)
+                          plot_location_grid, plot_rasters)
 
 
 class TestUtils:
@@ -81,3 +81,61 @@ class TestUtils:
         assert plot_location_grid(graphdict) is True
 
         os.remove("Grid-plot-E-I.png")
+
+    def test_raster_plotter(self):
+        """Test raster plotter."""
+        neuron_dict = {
+            'E': [0, 800],
+            'I': [801, 1000]
+        }
+        snapshot_time = 3.
+
+        with open('spikes-E-3.0.gdf', 'w') as f:
+            t = 2.001
+            for i in range(0, 1000):
+                for j in range(0, 50):
+                    print("{}\t{}".format(
+                        t, random.randrange(0, 800)),
+                          file=f)
+                t += 0.001
+        with open('spikes-I-3.0.gdf', 'w') as f:
+            t = 2.001
+            for i in range(0, 1000):
+                for j in range(0, 50):
+                    print("{}\t{}".format(
+                        t, random.randrange(801, 1000)),
+                          file=f)
+                t += 0.001
+
+        assert(plot_rasters(neuron_dict, snapshot_time) is True)
+        os.remove("raster-E-I-3.0.png")
+        os.remove("spikes-E-3.0.gdf")
+        os.remove("spikes-I-3.0.gdf")
+
+        neuron_dict = {
+            'Y': [801, 1000],
+            'X': [0, 800],
+        }
+        snapshot_time = 5.5
+        with open('spikes-Y-5.5.gdf', 'w') as f:
+            t = 5.001
+            for i in range(0, 1000):
+                for j in range(0, 50):
+                    print("{}\t{}".format(
+                        t, random.randrange(801, 1000)),
+                          file=f)
+                t += 0.001
+        with open('spikes-X-5.5.gdf', 'w') as f:
+            t = 4.501
+            for i in range(0, 1000):
+                for j in range(0, 50):
+                    print("{}\t{}".format(
+                        t, random.randrange(0, 800)),
+                          file=f)
+                t += 0.001
+
+        assert(plot_rasters(neuron_dict, snapshot_time, proportion=0.5) is
+               True)
+        os.remove("raster-Y-X-5.5.png")
+        os.remove("spikes-Y-5.5.gdf")
+        os.remove("spikes-X-5.5.gdf")

@@ -244,18 +244,20 @@ def plot_rasters(neuron_sets_dict, snapshot_time, proportion=0.1):
 
     :neuron_sets: dictionary of neuron sets and [nid_start, nid_end] for each
                     set
-    :snapshot_time: time for which raster is being generated
+    :snapshot_time: time for which raster is being generated in seconds
     :proportion: what percentage of all neurons to pick for the raster
     :returns: True if everything went OK, False otherwise
 
     """
     matplotlib.rcParams.update({'font.size': 30})
     plt.figure(num=None, figsize=(32, 18), dpi=80)
-    plt. xlabel("Neurons")
-    plt.ylabel("Time (ms)")
-    plt.xticks(numpy.arange(0, 10020, 1000))
+    plt.ylabel("Neurons")
+    plt.xlabel("Time (s)")
+    plt.xticks(numpy.arange(snapshot_time - 1., snapshot_time + 0.1, 0.2))
     newset_start = 0
+    plot_fn = "raster-"
     for neuron_set, [nid_start, nid_end] in neuron_sets_dict.items():
+        plot_fn += "{}-".format(neuron_set)
         num_neurons = nid_end - nid_start
         f1 = "spikes-{}-{}.gdf".format(neuron_set, snapshot_time)
         neurons1DF = pandas.read_csv(f1, sep='\s+',
@@ -277,10 +279,18 @@ def plot_rasters(neuron_sets_dict, snapshot_time, proportion=0.1):
                 if nid in picked_ids:
                     data_to_plot.append([spike_time,
                                          nid - nid_start + newset_start])
+
+            data_to_plot = numpy.array(data_to_plot)
         else:
             data_to_plot = neurons1
 
         plt.plot(data_to_plot[:, 0], data_to_plot[:, 1], ".",
-                 markersize=0.6, label=neuron_set)
+                 markersize=5.0, label=neuron_set)
 
         newset_start += int(num_neurons * proportion)
+
+    plot_fn = plot_fn[:-1] + "-{}.png".format(snapshot_time)
+    plt.legend(loc="upper right")
+    plt.savefig(plot_fn)
+
+    return True
