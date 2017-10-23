@@ -95,7 +95,7 @@ class TestUtils:
             for i in range(0, 1000):
                 for j in range(0, 50):
                     print("{}\t{}".format(
-                        t, random.randrange(0, 800)),
+                        random.randrange(0, 800), t),
                           file=f)
                 t += 0.001
         with open('spikes-I-3.0.gdf', 'w') as f:
@@ -103,7 +103,7 @@ class TestUtils:
             for i in range(0, 1000):
                 for j in range(0, 50):
                     print("{}\t{}".format(
-                        t, random.randrange(801, 1000)),
+                        random.randrange(801, 1000), t),
                           file=f)
                 t += 0.001
 
@@ -122,7 +122,7 @@ class TestUtils:
             for i in range(0, 1000):
                 for j in range(0, 50):
                     print("{}\t{}".format(
-                        t, random.randrange(801, 1000)),
+                        random.randrange(801, 1000), t),
                           file=f)
                 t += 0.001
         with open('spikes-X-5.5.gdf', 'w') as f:
@@ -130,7 +130,7 @@ class TestUtils:
             for i in range(0, 1000):
                 for j in range(0, 50):
                     print("{}\t{}".format(
-                        t, random.randrange(0, 800)),
+                        random.randrange(0, 800), t),
                           file=f)
                 t += 0.001
 

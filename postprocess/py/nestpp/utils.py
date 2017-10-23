@@ -267,7 +267,7 @@ def plot_rasters(neuron_sets_dict, snapshot_time, proportion=0.1):
         neurons1 = neurons1DF.values
 
         # pick a smaller contiguous subset
-        neuron_ids = sorted(list(set(neurons1[:, 1])))
+        neuron_ids = sorted(list(set(neurons1[:, 0])))
         picked_ids = []
         data_to_plot = []
         if len(neuron_ids) > int(num_neurons * proportion):
@@ -275,16 +275,16 @@ def plot_rasters(neuron_sets_dict, snapshot_time, proportion=0.1):
             picked_ids = [x for x in neuron_ids if x < (nid_start +
                                                         int(num_neurons *
                                                             proportion))]
-            for spike_time, nid in neurons1:
+            for nid, spike_time in neurons1:
                 if nid in picked_ids:
-                    data_to_plot.append([spike_time,
-                                         nid - nid_start + newset_start])
+                    data_to_plot.append([nid - nid_start + newset_start,
+                                         spike_time])
 
             data_to_plot = numpy.array(data_to_plot)
         else:
             data_to_plot = neurons1
 
-        plt.plot(data_to_plot[:, 0], data_to_plot[:, 1], ".",
+        plt.plot(data_to_plot[:, 1], data_to_plot[:, 0], ".",
                  markersize=5.0, label=neuron_set)
 
         newset_start += int(num_neurons * proportion)
