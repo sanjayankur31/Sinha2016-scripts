@@ -640,7 +640,7 @@ class Postprocess:
             for neuron_set in histlist:
                 get_individual_firing_rate_snapshots(
                     neuron_set, "spikes-{}.gdf".format(neuron_set),
-                    len(self.neurons[neuron_set]),
+                    self.neurons[neuron_set],
                     self.cfg.snapshots['histograms'])
 
             for time in self.cfg.snapshots['histograms']:
