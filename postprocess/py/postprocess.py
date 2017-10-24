@@ -22,20 +22,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 # system imports
-import sys
 import os
 import pandas
 import numpy
 import subprocess
-from select import select
 
 # module imports
-from nestpp.utils import (get_config, plot_using_gnuplot_binary,
-                          plot_histograms, plot_location_grid, plot_rasters)
+from nestpp.utils import (get_config)
+from nestpp.plotting_utils import (plot_using_gnuplot_binary, plot_histograms,
+                                   plot_location_grid, plot_rasters)
 from nestpp.loggerpp import get_module_logger
-from nestpp.spikes import (get_firing_rate_metrics,
-                           get_individual_firing_rate_snapshots,
-                           extract_spikes)
+from nestpp.spike_utils import (get_firing_rate_metrics,
+                                get_individual_firing_rate_snapshots,
+                                extract_spikes)
 
 
 class Postprocess:
@@ -382,6 +381,20 @@ class Postprocess:
             else:
                 print("No calcium metric graphs generated.")
 
+    def generate_conductance_graphs(self):
+        """Post process conductances and generate all graphs.
+
+        The conductance sets do not change, so this doesn't require so much
+        configuration.
+
+        :returns: True if all went well, else False
+
+        """
+        if "conductances" not in self.cfg.graph_list:
+            return True
+
+        self.lgr.info("Generating conductance graphs vs time")
+
     def __postprocess_conductances(self):
         """Post process conductances, print means."""
         if self.cfg.conductancesMetrics:
@@ -526,12 +539,9 @@ class Postprocess:
                     (not conductancesDF_IE.empty) and
                     (not conductancesDF_II.empty)
             ):
-                args = (os.path.join(
-                    self.cfg.postprocess_home,
-                    self.cfg.gnuplot_files_dir,
-                    'plot-conductance-metrics.plt'))
-                subprocess.call(['gnuplot',
-                                 args])
+                plot_using_gnuplot_binary(
+                    os.path.join(self.cfg.plots_dir,
+                                 'plot-firing-rates-IE.plt'))
                 print("Conductance graphs plotted..")
             else:
                 print("Conductance graphs not generated.")
@@ -707,32 +717,6 @@ class Postprocess:
 
     def __postprocess_spikes(self):
         """Postprocess combined spike files."""
-
-        if self.cfg.grid and len(self.cfg.gridplots_timelist) > 0:
-            print("Generating grid rate snapshots")
-            import nestpp.gridRatePlotter as grp
-            import nestpp.getFiringRates as rg
-            rateGetter = rg.getFiringRates()
-
-            # sufficient - covers all neurons
-            # no need to also do it for various other sets
-            if rateGetter.setup(
-                self.cfg.filenameE, 'E',
-                self.cfg.neuronsE,
-                self.cfg.rows_per_read
-            ):
-                rateGetter.run(self.cfg.gridplots_timelist)
-
-            # Note, if rate files were also generated for histograms,
-            # gridrateplotter will currently also plot them - the output file
-            # pattern is the same
-            gridrateplotterE = grp.gridRatePlotter(self.cfg)
-            # could even pass in the neuron list directly, but it isn't worth
-            # the trouble. A single file read wont hurt anyone. It makes the
-            # script also usable in isolation.
-            gridrateplotterE.setup('E', self.cfg.neuronListE)
-            gridrateplotterE.run()
-
         if self.cfg.snr:
             import nestpp.getFiringRates as rg
             import nestpp.calculateSNR as snr
@@ -855,58 +839,8 @@ class Postprocess:
                     'plot-turnover.plt')]
             subprocess.call(args)
 
-    def __reprocess_raw_files(self, prefixlist):
-        """Ask if files should be reprocessed if found."""
-        filelist = os.listdir()
-        filesfound = []
-        for entry in filelist:
-            for prefix in prefixlist:
-                if prefix in entry:
-                    if ".png" not in entry:
-                        filesfound.append(entry)
-
-        if len(filesfound) == 0:
-            return True
-
-        filesfound.sort()
-        if len(filesfound) > 0:
-            print("Generated files found: {}".format(len(filesfound)))
-            for entry in filesfound:
-                print("- {}".format(entry))
-
-            while True:
-                regen = self.__input_with_timeout(
-                    "Regenerate(Y/N/y/n defaults to Y in 15 seconds)? ", 15.0)
-                if regen == "N" or regen == "n":
-                    return False
-                elif regen == "Y" or regen == "y":
-                    return True
-
-    def __input_with_timeout(self, prompt, timeout=30.0):
-        """Input but with timeout."""
-        astring = 'Y'
-        print(prompt, end='', flush=True)
-        rlist, _, _ = select([sys.stdin], [], [], timeout)
-        if rlist:
-            astring = sys.stdin.readline()[0]
-        else:
-            print("Timed out.. Proceeding..")
-        return astring
-
-    def __get_numpats(self):
-        """Get number of patterns from list of files in directory."""
-        filelist = os.listdir()
-        i = 0
-        for entry in filelist:
-            if entry.startswith('00-pattern-neurons-'):
-                i = i+1
-
-        self.lgr.info("Got {} patterns".format(i))
-        return i
-
     def main(self):
         """Do everything."""
-        self.__load_config()
         self.__populate_neuron_lists()
 
         self.plot_neuron_locations()
@@ -918,7 +852,6 @@ class Postprocess:
 
         self.__postprocess_synaptic_elements_all()
         self.__postprocess_synaptic_elements_individual()
-        self.__postprocess_conductances()
         self.__postprocess_calcium()
         self.__postprocess_turnovers()
 
