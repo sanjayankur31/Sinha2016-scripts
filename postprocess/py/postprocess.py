@@ -648,17 +648,30 @@ class Postprocess:
 
     def generate_firing_rate_grid_snapshots(self):
         """Generate top view firing rate snapshots."""
-        fr_grid_list = ['E']
-        self.lgr.info("Generating histograms for {}".format(fr_grid_list))
         if len(self.cfg.snapshots['firing_rates']) > 0:
+            fr_grid_list = ['E', 'I']
+            self.lgr.info(
+                "Generating firing rate grid snapshots for {}".format(
+                    fr_grid_list))
             for neuron_set in fr_grid_list:
                 get_individual_firing_rate_snapshots(
                     neuron_set, "spikes-{}.gdf".format(neuron_set),
-                    len(self.neurons[neuron_set]),
+                    self.neurons[neuron_set],
                     self.cfg.snapshots['firing_rates'])
 
-            for time in self.cfg.snapshots['firing_rates']:
-                plot_histograms(fr_grid_list, time)
+                for time in self.cfg.snapshots['firing_rates']:
+                    i_fn = "firing-rates-{}-{}.gdf".format(neuron_set, time)
+                    o_fn = "firing-rate-grid-plot-{}-{}.png".format(neuron_set,
+                                                                    time)
+                    args = ['-e', "o_fn='{}'".format(o_fn),
+                            '-e', "neuron_set='{}'".format(neuron_set),
+                            '-e', "plot_time='{}'".format(time),
+                            '-e', "i_fn='{}'".format(i_fn),
+                            ]
+                    plot_using_gnuplot_binary(
+                        os.path.join(self.cfg.plots_dir,
+                                     'plot-firing-rates-IE.plt'),
+                        args)
 
     def generate_raster_graphs(self):
         # rasters for E I only for the moment
@@ -900,6 +913,8 @@ class Postprocess:
 
         self.generate_firing_rate_graphs()
         self.generate_histograms()
+        self.generate_raster_graphs()
+        self.generate_firing_rate_grid_snapshots()
 
         self.__postprocess_synaptic_elements_all()
         self.__postprocess_synaptic_elements_individual()
