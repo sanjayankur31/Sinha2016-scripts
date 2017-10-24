@@ -185,7 +185,10 @@ def plot_histograms(neuron_sets, snapshot_time):
         with open(
                 "firing-rate-{}-{}.gdf".format(neuron_set, snapshot_time)
         ) as f1:
-            data1 = numpy.loadtxt(f1, delimiter='\t', dtype='float')
+            # the file format is:
+            # nid xcor ycor rates
+            # so we only need the 3rd column
+            data1 = numpy.loadtxt(f1, delimiter='\t', dtype='float', cols=[3])
             data[neuron_set] = data1
 
     plt.figure(num=None, figsize=(16, 9), dpi=80)

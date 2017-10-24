@@ -225,20 +225,27 @@ def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
     return True
 
 
-def get_individual_firing_rate_snapshots(neuronset, spikes_fn, num_neurons,
-                                         timelist, rows=50000000):
+def get_individual_firing_rate_snapshots(neuronset, spikes_fn,
+                                         neuron_locations, timelist,
+                                         rows=50000000):
     """Get firing rates for individual neurons at a particular point in time.
 
-    This information is used to generate histograms, for example.
+    The output format is:
+    nid xcor ycor rate
+
+    This information is used to generate histograms, and grid firing rate
+    snapshots, for example.
 
     :neuronset: name of neuron set
     :spikes_fn: name of spikes file
+    :neuron_locations: three column array: nid xcor ycor
     :timelist: list of times for which snapshots will be generated
     :rows: number of rows to be read in each pandas chunk
     :returns: True if everything went OK, else False
 
     """
     sorted_timelist = numpy.sort(timelist)
+    num_neurons = len(neuron_locations)
 
     current = 0
     old_spikes = numpy.array([])
@@ -300,15 +307,15 @@ def get_individual_firing_rate_snapshots(neuronset, spikes_fn, num_neurons,
                 break
             else:
                 neurons = spikes[start:end]
-                rates = collections.Counter(neurons)
-                lgr.debug("Neurons found: {}".format(len(rates)))
+                rate = collections.Counter(neurons)
+                lgr.debug("Neurons found: {}".format(len(rate)))
 
                 # Fill up missing neurons
                 for i in range(1, num_neurons + 1):
-                    if i not in rates:
-                        rates[i] = 0
+                    if i not in rate:
+                        rate[i] = 0
                 lgr.debug("Neurons after appending zeros: {}".format(
-                    len(rates)))
+                    len(rate)))
 
                 o_fn = "firing-rate-{}-{}.gdf".format(
                     neuronset, time)
@@ -316,8 +323,10 @@ def get_individual_firing_rate_snapshots(neuronset, spikes_fn, num_neurons,
                     o_fn))
 
                 with open(o_fn, 'w') as fh:
-                    for nrn in rates:
-                        print("{}\t{}".format(nrn, rates[nrn]), file=fh)
+                    for neuron in neuron_locations:
+                        print("{}\t{}\t{}\t{}".format(neuron, neuron[1],
+                                                      neuron[2],
+                                                      rate[neuron]), file=fh)
 
                 current += 1
                 if current >= len(sorted_timelist):
