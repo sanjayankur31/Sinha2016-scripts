@@ -550,11 +550,14 @@ class Postprocess:
         return neurons
 
     def __populate_neuron_lists(self):
-        """Populate neuron lists."""
+        """Populate neuron lists.
+
+        Load all the information once so that other functions do not need to
+        read files again and again.
+        """
         # Excitatory neurons
-        # nid   gridx   gridy   posx    posy
         self.neurons['E'] = self.__load_neurons("00-neuron-locations-E.txt",
-                                                cols=[0, 3, 4])
+                                                cols=[0, 1, 2, 3, 4])
         # nid   posx    posy
         self.neurons['lpz_c_E'] = self.__load_neurons(
             "00-lpz-centre-neuron-locations-E.txt")
@@ -565,9 +568,8 @@ class Postprocess:
             "00-peri-lpz-neuron-locations-E.txt")
 
         # Inhibitory neurons
-        # nid   gridx   gridy   posx    posy
         self.neurons['I'] = self.__load_neurons("00-neuron-locations-I.txt",
-                                                cols=[0, 3, 4])
+                                                cols=[0, 1, 2, 3, 4])
         # nid   posx    posy
         self.neurons['lpz_c_I'] = self.__load_neurons(
             "00-lpz-centre-neuron-locations-I.txt")
