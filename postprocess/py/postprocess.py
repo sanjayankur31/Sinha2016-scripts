@@ -676,13 +676,15 @@ class Postprocess:
         """Plot graphs showing locations of neurons."""
         self.lgr.info("Generating locations of various neuron sets.")
         graph_dict = {}
-        # lpz E regions
+        # LPZ E regions
+        # LPZ neuron sets are [nid, xcor, ycor]
         for key, value in self.neurons.items():
             if "lpz" in key and "E" in key:
                 graph_dict[key] = value
         plot_location_grid(graph_dict)
 
         # add patterns to that image
+        # Patterns are also [nid, xcor, ycor]
         for key, value in self.neurons.items():
             if "pattern-" in key:
                 graph_dict[key] = value
