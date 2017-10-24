@@ -24,10 +24,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import random
 import os
-from nestpp.spikes import (get_firing_rate_metrics, extract_spikes)
+from nestpp.spike_utils import (get_firing_rate_metrics, extract_spikes)
 
 
-class TestSpikes:
+class TestSpikeUtils:
 
     """Test methods processing spiking data."""
 
