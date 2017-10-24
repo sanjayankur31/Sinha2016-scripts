@@ -25,6 +25,7 @@ import configparser
 import os
 import csv
 import subprocess
+import re
 from subprocess import CalledProcessError
 from nestpp.loggerpp import get_module_logger
 import numpy
@@ -294,3 +295,168 @@ def plot_rasters(neuron_sets_dict, snapshot_time, proportion=0.1):
     plt.savefig(plot_fn)
 
     return True
+
+
+def getTimedFileList(directory, prefix):
+    """Get list of files for each snapshot time."""
+    completefilelist = getFileList(directory, prefix)
+    timelist = []
+
+    if not completefilelist:
+        return None
+
+    for afile in completefilelist:
+        filename = afile[len(directory):]
+        time = (filename.split('-')[5])[0:-4]
+        timelist.append(time)
+
+    timelist = set(timelist)
+    filedict = {}
+
+    for afile in completefilelist:
+        for time in timelist:
+            if ("-" + time + ".txt") in afile:
+                if time in filedict:
+                    filedict[time].append(afile)
+                else:
+                    filedict[time] = [afile]
+
+    if len(filedict) > 0:
+        return filedict
+    return None
+
+
+def getFileList(directory, prefix):
+    """Get list of files with prefix."""
+    directorylist = os.listdir(directory)
+    prefixregex = re.compile(re.escape(prefix))
+    filelist = []
+
+    for entry in directorylist:
+        fullentry = os.path.join(directory + '/' + entry)
+        if os.path.isfile(fullentry):
+            if(prefixregex.match(entry)):
+                filelist.append(fullentry)
+
+    if len(filelist) > 0:
+        return filelist
+    return None
+
+
+def combineTimedTSVColDataFiles(directory, prefix):
+    """Combine TSV files columnwise."""
+    filedict = getTimedFileList(directory, prefix)
+    if not filedict:
+        return {}
+
+    combineddataframelist = {}
+
+    for time, filelist in filedict.items():
+        dataframes = []
+        for entry in filelist:
+            print("Reading {}".format(entry))
+            dataframe = pandas.read_csv(entry, skiprows=1, sep='\t',
+                                        skipinitialspace=True,
+                                        skip_blank_lines=True, dtype=float,
+                                        warn_bad_lines=True,
+                                        lineterminator='\n', header=None,
+                                        index_col=0, error_bad_lines=False)
+
+            dataframes.append(dataframe)
+
+        print("Combined dataframe..")
+        combineddataframe = pandas.concat(dataframes, axis=0)
+        combineddataframelist[time] = combineddataframe.sort_index()
+
+    return combineddataframelist
+
+
+def combineCSVRowLists(directory, prefix):
+    """
+    Combine comma separated files row wise.
+
+    Each line may have a different number of fields.
+
+    Format:
+    time, comma separated values
+
+    Returns:
+    time, comma separated values concatenated from all files.
+    """
+    filelist = getFileList(directory, prefix)
+    if not filelist:
+        return pandas.DataFrame()
+
+    dataframes = []
+
+    for entry in filelist:
+        print("Reading {}".format(entry))
+        if os.stat(entry).st_size != 0:
+            # Last line contains the maximum number of fields in any line,
+            # so use this to size our df. Pandas can manage lines shorter
+            # than previous lines by using NA, but it cannot handle lines
+            # longer and crashes
+            # Ignore ',\n'
+            max_columns = int(float(
+                subprocess.check_output(['tail', '-1', entry])[0:-2])) + 1
+            print("Max cols is: {}".format(max_columns))
+
+            dataframe = pandas.read_csv(entry, skiprows=1, sep=',',
+                                        skipinitialspace=True,
+                                        skip_blank_lines=True, dtype=float,
+                                        warn_bad_lines=True,
+                                        lineterminator='\n', header=None,
+                                        names=range(0, max_columns),
+                                        mangle_dupe_cols=True,
+                                        index_col=0, error_bad_lines=False)
+            # Drop last row which isn't data, it's metadata
+            dataframe = dataframe.drop(dataframe.index[len(dataframe) - 1])
+            dataframe = dataframe.dropna(axis=1, how='all')
+
+            dataframes.append(dataframe)
+        else:
+            print("Skipping empty file, {}".format(entry))
+
+    print("Combining dataframes..")
+    combineddataframe = pandas.concat(dataframes, axis=1)
+
+    return combineddataframe
+
+
+def combineTSVRowData(directory, prefix):
+    """
+    Combine tab separated files row wise.
+
+    The difference here is that the columns depict different things, unlike
+    the csv lists in the other method.
+
+    Format:
+    time    info1   info2   info3   info4..
+
+    Returns:
+        time    sumoffiles(info1)   sumoffiles(info2)...
+    """
+    filelist = getFileList(directory, prefix)
+    if not filelist:
+        return pandas.DataFrame()
+
+    dataframes = []
+
+    for entry in filelist:
+        if os.stat(entry).st_size != 0:
+            dataframe = pandas.read_csv(entry, skiprows=1, sep='\t',
+                                        skipinitialspace=True,
+                                        skip_blank_lines=True, dtype=float,
+                                        warn_bad_lines=True,
+                                        lineterminator='\n', header=None,
+                                        index_col=0, error_bad_lines=False)
+
+            dataframes.append(dataframe)
+        else:
+            print("Skipping empty file, {}".format(entry))
+
+    summeddf = dataframes.pop(0)
+    for dataframe in dataframes:
+        summeddf = summeddf.add(dataframe)
+
+    return summeddf
