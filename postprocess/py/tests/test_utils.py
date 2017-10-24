@@ -24,13 +24,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # system imports
 import random
-import os
+import pytest
 
 # module imports
 from nestpp.utils import (get_config, plot_using_gnuplot_binary,
                           plot_location_grid, plot_rasters)
 
 
+@pytest.mark.usefixtures("module_setup")
 class TestUtils:
 
     """Test utility functions."""
@@ -80,8 +81,6 @@ class TestUtils:
 
         assert plot_location_grid(graphdict) is True
 
-        os.remove("Grid-plot-E-I.png")
-
     def test_raster_plotter(self):
         """Test raster plotter."""
         neuron_dict = {
@@ -108,16 +107,13 @@ class TestUtils:
                 t += 0.001
 
         assert(plot_rasters(neuron_dict, snapshot_time) is True)
-        os.remove("raster-E-I-3.0.png")
-        os.remove("spikes-E-3.0.gdf")
-        os.remove("spikes-I-3.0.gdf")
 
         neuron_dict = {
-            'Y': [801, 1000],
-            'X': [0, 800],
+            'A': [801, 1000],
+            'B': [0, 800],
         }
         snapshot_time = 5.5
-        with open('spikes-Y-5.5.gdf', 'w') as f:
+        with open('spikes-A-5.5.gdf', 'w') as f:
             t = 5.001
             for i in range(0, 1000):
                 for j in range(0, 50):
@@ -125,7 +121,7 @@ class TestUtils:
                         random.randrange(801, 1000), t),
                           file=f)
                 t += 0.001
-        with open('spikes-X-5.5.gdf', 'w') as f:
+        with open('spikes-B-5.5.gdf', 'w') as f:
             t = 4.501
             for i in range(0, 1000):
                 for j in range(0, 50):
@@ -136,6 +132,3 @@ class TestUtils:
 
         assert(plot_rasters(neuron_dict, snapshot_time, proportion=0.5) is
                True)
-        os.remove("raster-Y-X-5.5.png")
-        os.remove("spikes-Y-5.5.gdf")
-        os.remove("spikes-X-5.5.gdf")
