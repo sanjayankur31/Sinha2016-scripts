@@ -11,11 +11,11 @@ set cbrange [0:20]
 set xlabel "Neurons"
 set ylabel "Neurons"
 
-if (file_exists(inputfile)) {
-    set output plotname
-    set title plottitle
+if (file_exists(i_fn)) {
+    set output o_fn
+    set title "Firing rate grid plot for ".neuron_set."at t=".plot_time
     # row is y, not x
     set view map
-    plot inputfile using 1:2:3 with image
+    plot i_fn using 2:3:4 with image
 }
 
