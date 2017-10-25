@@ -35,6 +35,8 @@ from nestpp.loggerpp import get_module_logger
 from nestpp.spike_utils import (get_firing_rate_metrics,
                                 get_individual_firing_rate_snapshots,
                                 extract_spikes)
+from nestpp.file_utils import (reprocess_raw_files,
+                               combine_var_csv_files_column_wise)
 
 
 class Postprocess:
@@ -394,157 +396,139 @@ class Postprocess:
             return True
 
         self.lgr.info("Generating conductance graphs vs time")
-
-    def __postprocess_conductances(self):
-        """Post process conductances, print means."""
-        if self.cfg.conductancesMetrics:
-            print("Processing conductances..")
-            conductancesDF_EE = pandas.DataFrame()
-            conductancesDF_EI = pandas.DataFrame()
-            conductancesDF_IE = pandas.DataFrame()
-            conductancesDF_II = pandas.DataFrame()
-            import nestpp.combineFiles
-            if self.__reprocess_raw_files(
-                    [self.cfg.filenamePrefixConductancesEE]):
-                combiner = nestpp.combineFiles.CombineFiles()
-                conductancesDF_EE = combiner.combineCSVRowLists(
-                    self.cfg.unconsolidatedFilesDir,
-                    self.cfg.filenamePrefixConductancesEE)
-                if not conductancesDF_EE.empty:
-                    conductanceMetricsEE = pandas.concat(
-                        [conductancesDF_EE.mean(axis=1),
-                         conductancesDF_EE.std(axis=1)],
-                        axis=1)
-                    conductancesMetricsEEfile = (
-                        self.cfg.filenamePrefixConductancesEE +
-                        'mean-all.txt'
+        # EE
+        conductances_EE = pandas.DataFrame()
+        if reprocess_raw_files("01-synaptic-weights-EE-*"):
+            conductances_EE = combine_var_csv_files_column_wise(
+                "../", "01-synaptic-weights-EE-*.txt")
+            if not conductances_EE.empty:
+                conductances_mean_EE = pandas.concat(
+                    [conductances_EE.mean(axis=1),
+                     conductances_EE.std(axis=1)],
+                    axis=1)
+                conductances_mean_fn_EE = (
+                    "01-synaptic-weights-EE-mean-all.txt"
                     )
-                    conductanceMetricsEE.to_csv(
-                        conductancesMetricsEEfile, sep='\t',
-                        header=None, line_terminator='\n')
+                conductances_mean_EE.to_csv(
+                    conductances_mean_fn_EE, sep='\t',
+                    header=None, line_terminator='\n')
 
-                    conductanceMetricsTotalsEE = conductancesDF_EE.sum(axis=1)
-                    conductancesMetricsTotalsEEfile = (
-                        self.cfg.filenamePrefixConductancesEE +
-                        'total-all.txt'
-                    )
-                    conductanceMetricsTotalsEE.to_csv(
-                        conductancesMetricsTotalsEEfile, sep='\t',
-                        header=None)
-                    print("Processed EE conductances..")
-                else:
-                    print("No dataframe for EE conductances. Skipping.")
+                conductances_totals_EE = conductances_EE.sum(axis=1)
+                conductances_total_fn_EE = (
+                    "01-synaptic-weights-EE-total-all.txt"
+                )
+                conductances_totals_EE.to_csv(
+                    conductances_total_fn_EE, sep='\t',
+                    header=None)
+                self.lgr.info("Processed EE conductances..")
             else:
-                conductancesDF_EE = conductancesDF_EE.append([0])
-
-            if self.__reprocess_raw_files(
-                    [self.cfg.filenamePrefixConductancesEI]):
-                conductancesDF_EI = combiner.combineCSVRowLists(
-                    self.cfg.unconsolidatedFilesDir,
-                    self.cfg.filenamePrefixConductancesEI)
-                if not conductancesDF_EI.empty:
-                    conductanceMetricsEI = pandas.concat(
-                        [conductancesDF_EI.mean(axis=1),
-                         conductancesDF_EI.std(axis=1)],
-                        axis=1)
-                    conductancesMetricsEIfile = (
-                        self.cfg.filenamePrefixConductancesEI +
-                        'mean-all.txt'
+                self.lgr.warning("No dataframe for EE conductances. Skipping.")
+        # If I decide to skip the processing, still permit plotting
+        else:
+            conductances_EE = conductances_EE.append([0])
+        # EI
+        conductances_EI = pandas.DataFrame()
+        if reprocess_raw_files("01-synaptic-weights-EI-*"):
+            conductances_EI = combine_var_csv_files_column_wise(
+                "../", "01-synaptic-weights-EI-*.txt")
+            if not conductances_EI.empty:
+                conductances_mean_EI = pandas.concat(
+                    [conductances_EI.mean(axis=1),
+                     conductances_EI.std(axis=1)],
+                    axis=1)
+                conductances_mean_fn_EI = (
+                    "01-synaptic-weights-EI-mean-all.txt"
                     )
-                    conductanceMetricsEI.to_csv(
-                        conductancesMetricsEIfile, sep='\t',
-                        header=None, line_terminator='\n')
+                conductances_mean_EI.to_csv(
+                    conductances_mean_fn_EI, sep='\t',
+                    header=None, line_terminator='\n')
 
-                    conductanceMetricsTotalsEI = conductancesDF_EI.sum(axis=1)
-                    conductancesMetricsTotalsEIfile = (
-                        self.cfg.filenamePrefixConductancesEI +
-                        'total-all.txt'
-                    )
-                    conductanceMetricsTotalsEI.to_csv(
-                        conductancesMetricsTotalsEIfile, sep='\t',
-                        header=None)
-                    print("Processed EI conductances..")
-                else:
-                    print("No dataframe for EI conductances. Skipping.")
+                conductances_totals_EI = conductances_EI.sum(axis=1)
+                conductances_total_fn_EI = (
+                    "01-synaptic-weights-EI-total-all.txt"
+                )
+                conductances_totals_EI.to_csv(
+                    conductances_total_fn_EI, sep='\t',
+                    header=None)
+                self.lgr.info("Processed EI conductances..")
             else:
-                conductancesDF_EI = conductancesDF_EI.append([0])
-
-            if self.__reprocess_raw_files(
-                    [self.cfg.filenamePrefixConductancesII]):
-                conductancesDF_II = combiner.combineCSVRowLists(
-                    self.cfg.unconsolidatedFilesDir,
-                    self.cfg.filenamePrefixConductancesII)
-                if not conductancesDF_II.empty:
-                    conductanceMetricsII = pandas.concat(
-                        [conductancesDF_II.mean(axis=1),
-                         conductancesDF_II.std(axis=1)],
-                        axis=1)
-                    conductancesMetricsIIfile = (
-                        self.cfg.filenamePrefixConductancesII +
-                        'mean-all.txt'
+                self.lgr.warning("No dataframe for EI conductances. Skipping.")
+        # If I decide to skip the processing, still permit plotting
+        else:
+            conductances_EI = conductances_EI.append([0])
+        # II
+        conductances_II = pandas.DataFrame()
+        if reprocess_raw_files("01-synaptic-weights-II-*"):
+            conductances_II = combine_var_csv_files_column_wise(
+                "../", "01-synaptic-weights-II-*.txt")
+            if not conductances_II.empty:
+                conductances_mean_II = pandas.concat(
+                    [conductances_II.mean(axis=1),
+                     conductances_II.std(axis=1)],
+                    axis=1)
+                conductances_mean_fn_II = (
+                    "01-synaptic-weights-II-mean-all.txt"
                     )
-                    conductanceMetricsII.to_csv(
-                        conductancesMetricsIIfile, sep='\t',
-                        header=None, line_terminator='\n')
+                conductances_mean_II.to_csv(
+                    conductances_mean_fn_II, sep='\t',
+                    header=None, line_terminator='\n')
 
-                    conductanceMetricsTotalsII = conductancesDF_II.sum(axis=1)
-                    conductancesMetricsTotalsIIfile = (
-                        self.cfg.filenamePrefixConductancesII +
-                        'total-all.txt'
-                    )
-                    conductanceMetricsTotalsII.to_csv(
-                        conductancesMetricsTotalsIIfile, sep='\t',
-                        header=None)
-                    print("Processed II conductances..")
-                else:
-                    print("No dataframe for II conductances. Skipping.")
+                conductances_totals_II = conductances_II.sum(axis=1)
+                conductances_total_fn_II = (
+                    "01-synaptic-weights-II-total-all.txt"
+                )
+                conductances_totals_II.to_csv(
+                    conductances_total_fn_II, sep='\t',
+                    header=None)
+                self.lgr.info("Processed II conductances..")
             else:
-                conductancesDF_II = conductancesDF_II.append([0])
-
-            if self.__reprocess_raw_files(
-                    [self.cfg.filenamePrefixConductancesIE]):
-                conductancesDF_IE = combiner.combineCSVRowLists(
-                    self.cfg.unconsolidatedFilesDir,
-                    self.cfg.filenamePrefixConductancesIE)
-                if not conductancesDF_IE.empty:
-                    conductanceMetricsIE = pandas.concat(
-                        [conductancesDF_IE.mean(axis=1),
-                         conductancesDF_IE.std(axis=1)],
-                        axis=1)
-                    conductancesMetricsIEfile = (
-                        self.cfg.filenamePrefixConductancesIE +
-                        'mean-all.txt'
+                self.lgr.warning("No dataframe for II conductances. Skipping.")
+        # If I decide to skip the processing, still permit plotting
+        else:
+            conductances_II = conductances_II.append([0])
+        # IE
+        conductances_IE = pandas.DataFrame()
+        if reprocess_raw_files("01-synaptic-weights-IE-*"):
+            conductances_IE = combine_var_csv_files_column_wise(
+                "../", "01-synaptic-weights-IE-*.txt")
+            if not conductances_IE.empty:
+                conductances_mean_IE = pandas.concat(
+                    [conductances_IE.mean(axis=1),
+                     conductances_IE.std(axis=1)],
+                    axis=1)
+                conductances_mean_fn_IE = (
+                    "01-synaptic-weights-IE-mean-all.txt"
                     )
-                    conductanceMetricsIE.to_csv(
-                        conductancesMetricsIEfile, sep='\t',
-                        header=None, line_terminator='\n')
+                conductances_mean_IE.to_csv(
+                    conductances_mean_fn_IE, sep='\t',
+                    header=None, line_terminator='\n')
 
-                    conductanceMetricsTotalsIE = conductancesDF_IE.sum(axis=1)
-                    conductancesMetricsTotalsIEfile = (
-                        self.cfg.filenamePrefixConductancesIE +
-                        'total-all.txt'
-                    )
-                    conductanceMetricsTotalsIE.to_csv(
-                        conductancesMetricsTotalsIEfile, sep='\t',
-                        header=None)
-                    print("Processed IE conductances..")
-                else:
-                    print("No dataframe for IE conductances. Skipping")
+                conductances_totals_IE = conductances_IE.sum(axis=1)
+                conductances_total_fn_IE = (
+                    "01-synaptic-weights-IE-total-all.txt"
+                )
+                conductances_totals_IE.to_csv(
+                    conductances_total_fn_IE, sep='\t',
+                    header=None)
+                self.lgr.info("Processed IE conductances..")
             else:
-                conductancesDF_IE = conductancesDF_IE.append([0])
+                self.lgr.warning("No dataframe for IE conductances. Skipping.")
+        # If I decide to skip the processing, still permit plotting
+        else:
+            conductances_IE = conductances_IE.append([0])
 
-            if (
-                    (not conductancesDF_EE.empty) and
-                    (not conductancesDF_EI.empty) and
-                    (not conductancesDF_IE.empty) and
-                    (not conductancesDF_II.empty)
-            ):
-                plot_using_gnuplot_binary(
-                    os.path.join(self.cfg.plots_dir,
-                                 'plot-firing-rates-IE.plt'))
-                print("Conductance graphs plotted..")
-            else:
-                print("Conductance graphs not generated.")
+        if (
+                (not conductances_EE.empty) and
+                (not conductances_EI.empty) and
+                (not conductances_IE.empty) and
+                (not conductances_II.empty)
+        ):
+            plot_using_gnuplot_binary(
+                os.path.join(self.cfg.plots_dir,
+                             'plot-conductance-metrics.plt'))
+            self.lgr.info("Conductance graphs plotted..")
+        else:
+            self.lgr.warning("Conductance graphs not generated.")
 
     def __load_neurons(self, file, cols=[0, 1, 2]):
         """Get a neuron list from a file."""
