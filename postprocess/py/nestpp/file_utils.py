@@ -46,9 +46,9 @@ def check_csv_file(path):
         try:
             for row in reader:
                 linenumber += 1
-                print("Read {}".format(linenumber))
+                lgr.debug("Read {}".format(linenumber))
         except Exception as e:
-            print("Error line {}: {} {}".format(
+            lgr.error("Error line {}: {} {}".format(
                 linenumber, str(type(e)), e.message))
             return False
     return True
@@ -71,7 +71,7 @@ def get_max_csv_cols(path):
             linenumber += 1
             if len(line) > maxcols:
                 maxcols = len(line)
-        print("{}: {}".format(path, maxcols))
+        lgr.info("{}: {}".format(path, maxcols))
     return maxcols
 
 
