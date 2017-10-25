@@ -194,7 +194,14 @@ def sum_columns_in_multiple_files(directory, shell_glob):
 
 
 def reprocess_raw_files(shell_globs):
-    """Ask if files should be reprocessed if found."""
+    """Ask if files should be reprocessed when generated files have been found.
+
+    Contains a 15 second time out after which it returns True
+
+    :shell_globs: shell globs matching file names to look for
+    :returns: True if yes, False if no
+
+    """
     files_found = []
     for shell_glob in shell_globs:
         files_found.append(glob.glob("./{}".format(shell_glob)))
