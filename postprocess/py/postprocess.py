@@ -48,6 +48,68 @@ class Postprocess:
         self.cfg = get_config(configfile)
         self.lgr = get_module_logger(__name__)
         self.neurons = {}
+        self.__populate_neuron_lists()
+
+    def __load_neurons(self, file, cols=[0, 1, 2]):
+        """Get a neuron list from a file."""
+        neurons = []
+        if os.path.exists(file):
+            neurons = (numpy.loadtxt(file, delimiter='\t', usecols=cols))
+            self.lgr.info("Read {} neurons from {}".format(
+                len(neurons), file))
+        else:
+            self.lgr.error(
+                "Unable to find {}. Neurons not loaded.".format(file))
+
+        return neurons
+
+    def __populate_neuron_lists(self):
+        """Populate neuron lists.
+
+        Load all the information once so that other functions do not need to
+        read files again and again.
+        """
+        # Excitatory neurons
+        self.neurons['E'] = self.__load_neurons("00-neuron-locations-E.txt",
+                                                cols=[0, 1, 2, 3, 4])
+        # nid   posx    posy
+        self.neurons['lpz_c_E'] = self.__load_neurons(
+            "00-lpz-centre-neuron-locations-E.txt")
+        self.neurons['lpz_b_E'] = self.__load_neurons(
+            "00-lpz-border-neuron-locations-E.txt")
+        self.neurons['lpz_E'] = (self.neurons_lpz_b_E + self.neurons_lpz_c_E)
+        self.neurons['peri_lpz_E'] = self.__load_neurons(
+            "00-peri-lpz-neuron-locations-E.txt")
+
+        # Inhibitory neurons
+        self.neurons['I'] = self.__load_neurons("00-neuron-locations-I.txt",
+                                                cols=[0, 1, 2, 3, 4])
+        # nid   posx    posy
+        self.neurons['lpz_c_I'] = self.__load_neurons(
+            "00-lpz-centre-neuron-locations-I.txt")
+        self.neurons['lpz_b_I'] = self.__load_neurons(
+            "00-lpz-border-neuron-locations-I.txt")
+        self.neurons['lpz_I'] = (self.neurons_lpz_b_I + self.neurons_lpz_c_I)
+        self.neurons['peri_lpz_I'] = self.__load_neurons(
+            "00-peri-lpz-neuron-locations-I.txt")
+
+        # Populate pattern lists and calculate the overlap percentage between
+        # each pattern and the LPZ
+        self.numpats = self.__get_numpats()
+        with open("00-pattern-overlap.txt", 'w') as f:
+            for i in range(1, self.numpats + 1):
+                neurons_P = self.__load_neurons(
+                    "00-pattern-neurons-" + str(i) + ".txt")
+                neurons_B = self.__load_neurons(
+                    "00-background-neurons-" + str(i) + ".txt")
+
+                self.neurons['pattern-{}'.format(i)] = neurons_P
+                self.neurons['background-{}'.format(i)] = neurons_B
+
+                overlapping_neurons = set(self.neurons_lpz_E).intersection(
+                    set(neurons_P))
+                overlapping_percent = len(overlapping_neurons)/len(neurons_P)
+                print("{}\t{}".format(i, overlapping_percent), file=f)
 
     def __postprocess_synaptic_elements_individual(self):
         """Post process synaptic elements from individual neuronal files."""
@@ -530,67 +592,6 @@ class Postprocess:
         else:
             self.lgr.warning("Conductance graphs not generated.")
 
-    def __load_neurons(self, file, cols=[0, 1, 2]):
-        """Get a neuron list from a file."""
-        neurons = []
-        if os.path.exists(file):
-            neurons = (numpy.loadtxt(file, delimiter='\t', usecols=cols))
-            self.lgr.info("Read {} neurons from {}".format(
-                len(neurons), file))
-        else:
-            self.lgr.error(
-                "Unable to find {}. Neurons not loaded.".format(file))
-
-        return neurons
-
-    def __populate_neuron_lists(self):
-        """Populate neuron lists.
-
-        Load all the information once so that other functions do not need to
-        read files again and again.
-        """
-        # Excitatory neurons
-        self.neurons['E'] = self.__load_neurons("00-neuron-locations-E.txt",
-                                                cols=[0, 1, 2, 3, 4])
-        # nid   posx    posy
-        self.neurons['lpz_c_E'] = self.__load_neurons(
-            "00-lpz-centre-neuron-locations-E.txt")
-        self.neurons['lpz_b_E'] = self.__load_neurons(
-            "00-lpz-border-neuron-locations-E.txt")
-        self.neurons['lpz_E'] = (self.neurons_lpz_b_E + self.neurons_lpz_c_E)
-        self.neurons['peri_lpz_E'] = self.__load_neurons(
-            "00-peri-lpz-neuron-locations-E.txt")
-
-        # Inhibitory neurons
-        self.neurons['I'] = self.__load_neurons("00-neuron-locations-I.txt",
-                                                cols=[0, 1, 2, 3, 4])
-        # nid   posx    posy
-        self.neurons['lpz_c_I'] = self.__load_neurons(
-            "00-lpz-centre-neuron-locations-I.txt")
-        self.neurons['lpz_b_I'] = self.__load_neurons(
-            "00-lpz-border-neuron-locations-I.txt")
-        self.neurons['lpz_I'] = (self.neurons_lpz_b_I + self.neurons_lpz_c_I)
-        self.neurons['peri_lpz_I'] = self.__load_neurons(
-            "00-peri-lpz-neuron-locations-I.txt")
-
-        # Populate pattern lists and calculate the overlap percentage between
-        # each pattern and the LPZ
-        self.numpats = self.__get_numpats()
-        with open("00-pattern-overlap.txt", 'w') as f:
-            for i in range(1, self.numpats + 1):
-                neurons_P = self.__load_neurons(
-                    "00-pattern-neurons-" + str(i) + ".txt")
-                neurons_B = self.__load_neurons(
-                    "00-background-neurons-" + str(i) + ".txt")
-
-                self.neurons['pattern-{}'.format(i)] = neurons_P
-                self.neurons['background-{}'.format(i)] = neurons_B
-
-                overlapping_neurons = set(self.neurons_lpz_E).intersection(
-                    set(neurons_P))
-                overlapping_percent = len(overlapping_neurons)/len(neurons_P)
-                print("{}\t{}".format(i, overlapping_percent), file=f)
-
     def generate_firing_rate_graphs(self):
         """Generate firing rate graphs."""
         if "firing_rates" not in self.cfg.graph_list:
@@ -825,7 +826,6 @@ class Postprocess:
 
     def main(self):
         """Do everything."""
-        self.__populate_neuron_lists()
 
         self.plot_neuron_locations()
 
@@ -833,6 +833,7 @@ class Postprocess:
         self.generate_histograms()
         self.generate_raster_graphs()
         self.generate_firing_rate_grid_snapshots()
+        self.generate_conductance_graphs()
 
         self.__postprocess_synaptic_elements_all()
         self.__postprocess_synaptic_elements_individual()
