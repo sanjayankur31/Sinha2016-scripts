@@ -87,7 +87,7 @@ def combine_tsv_files_column_wise(directory, shell_glob):
     if not file_list:
         return {}
 
-    combineddataframe = pandas.DataFrame()
+    combined_dataframe = pandas.DataFrame()
     dataframes = []
     for entry in file_list:
         lgr.info("Reading {}".format(entry))
@@ -101,9 +101,9 @@ def combine_tsv_files_column_wise(directory, shell_glob):
         dataframes.append(dataframe)
 
         lgr.info("Combined dataframe..")
-        combineddataframe = pandas.concat(dataframes, axis=0)
+        combined_dataframe = pandas.concat(dataframes, axis=0)
 
-    return combineddataframe
+    return combined_dataframe
 
 
 def combine_var_csv_files_column_wise(directory, shell_glob):
@@ -128,6 +128,7 @@ def combine_var_csv_files_column_wise(directory, shell_glob):
         return pandas.DataFrame()
 
     dataframes = []
+    combined_dataframe = pandas.DataFrame()
 
     for entry in file_list:
         lgr.info("Reading {}".format(entry))
@@ -158,9 +159,9 @@ def combine_var_csv_files_column_wise(directory, shell_glob):
             lgr.warning("Skipping empty file, {}".format(entry))
 
     lgr.info("Combining dataframes..")
-    combineddataframe = pandas.concat(dataframes, axis=1)
+    combined_dataframe = pandas.concat(dataframes, axis=1)
 
-    return combineddataframe
+    return combined_dataframe
 
 
 def sum_columns_in_multiple_files(directory, shell_glob):
@@ -175,7 +176,7 @@ def sum_columns_in_multiple_files(directory, shell_glob):
 
     :directory: the directory to act in
     :shell_glob: the shell_glob of the various files
-    :returns: summed up dataframe
+    :returns: summed up dataframe or empty dataframe if files weren't found
 
     """
     file_list = glob.glob('{}/{}'.format(directory, shell_glob))
@@ -183,6 +184,7 @@ def sum_columns_in_multiple_files(directory, shell_glob):
         return pandas.DataFrame()
 
     dataframes = []
+    summed_df = pandas.DataFrame()
 
     for entry in file_list:
         if os.stat(entry).st_size != 0:
@@ -197,11 +199,11 @@ def sum_columns_in_multiple_files(directory, shell_glob):
         else:
             lgr.warning("Skipping empty file, {}".format(entry))
 
-    summeddf = dataframes.pop(0)
+    summed_df = dataframes.pop(0)
     for dataframe in dataframes:
-        summeddf = summeddf.add(dataframe)
+        summed_df = summed_df.add(dataframe)
 
-    return summeddf
+    return summed_df
 
 
 def reprocess_raw_files(shell_globs):
