@@ -55,7 +55,13 @@ def check_csv_file(path):
 
 
 def get_max_csv_cols(path):
-    """Get maximum number of columns."""
+    """Get maximum number of columns in a csv files with rows of varying column
+    lengths.
+
+    :path: path to file
+    :returns: value of maximum number of columns in the file
+
+    """
     maxcols = 0
     content = ""
     with open(path, 'r') as f:
