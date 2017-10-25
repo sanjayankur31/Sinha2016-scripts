@@ -36,7 +36,8 @@ from nestpp.spike_utils import (get_firing_rate_metrics,
                                 get_individual_firing_rate_snapshots,
                                 extract_spikes)
 from nestpp.file_utils import (reprocess_raw_files,
-                               combine_var_csv_files_column_wise)
+                               combine_var_csv_files_column_wise,
+                               get_info_from_file_series)
 
 
 class Postprocess:
@@ -292,149 +293,82 @@ class Postprocess:
                             args])
             print("Synaptic elements graphs generated..")
 
-    def __postprocess_calcium(self):
+    def generate_calcium_graphs(self):
         """Postprocess calcium files."""
-        if self.cfg.calciumMetrics:
-            import nestpp.combineFiles
-            calDF_E = pandas.DataFrame()
-            calDF_I = pandas.DataFrame()
-            calDF_lpz_E = pandas.DataFrame()
-            calDF_lpz_I = pandas.DataFrame()
-            print("Processing calcium concentration information..")
-            if self.__reprocess_raw_files(
-                    [self.cfg.filenamePrefixCalciumE]):
-                combiner = nestpp.combineFiles.CombineFiles()
+        if "calcium" not in self.cfg.graph_list:
+            return True
 
-                calDF_E = combiner.combineCSVRowLists(
-                    self.cfg.unconsolidatedFilesDir,
-                    self.cfg.filenamePrefixCalciumE)
+        self.lgr.info("Generating calcium graphs..")
+        # get times where the info was logged since these need to be combined
+        # first - from any file series for one rank
+        time_list = get_info_from_file_series("../02-calcium-lpz_b_E-0-",
+                                              ".txt")
+        rank_list = get_info_from_file_series("../02-calcium-lpz_b_E-",
+                                              "-time_list[0].txt")
 
-                if not calDF_E.empty:
-                    calMetricsE = pandas.concat(
-                        [calDF_E.mean(axis=1),
-                         calDF_E.std(axis=1)],
-                        axis=1)
-                    xmax = calDF_E.values.max()
-                    calMetricsEfile = (
-                        self.cfg.filenamePrefixCalciumE + 'all.txt'
-                    )
-                    calMetricsE.to_csv(
-                        calMetricsEfile, sep='\t',
-                        header=None, line_terminator='\n')
-                    print("Processed cal metrics for E neurons..")
+        for neuron_set in ["lpz_c_E", "lpz_b_E", "p_lpz_E"]:
+            neuron_set_o_fn = "02-calcium-{}-all.txt".format(neuron_set)
+            eps = 0.
+            xmax = 0.
+            if reprocess_raw_files("02-calcium-{}-.txt".format(
+                    neuron_set)):
+                with open(neuron_set_o_fn, 'w') as f:
+                    for atime in time_list:
+                        cals_at_time = []
+                        dataframes = []
+                        for rank in rank_list:
+                            fn = "02-calcium-{}-{}-{}.txt".format(
+                                neuron_set, rank, atime)
+                            dataframes.append(
+                                pandas.read_csv(
+                                    fn, sep='\t', skipinitialspace=True,
+                                    skip_blank_lines=True, dtype=float,
+                                    warn_bad_lines=True, lineterminator='\n',
+                                    header=None, index_col=0,
+                                    error_bad_lines=False
+                                )
+                            )
+                        cals_at_time = pandas.concat(dataframes, axis=1)
+                        o_fn = "02-calcium-{}-{}.txt".format(
+                            neuron_set, atime)
+                        cals_at_time.to_csv(
+                            o_fn, sep='\t',
+                            header=None, line_terminator='\n')
 
-                    eps_e = calMetricsE.loc[
-                        self.cfg.rewiringEnabledAt * 1000.][0]
-                    eta_a_e = 0.56 * eps_e
-                    eta_d_e = 0.14 * eps_e
-                    args = ("-e", "etad={}".format(eta_d_e),
-                            "-e", "etaa={}".format(eta_a_e),
-                            "-e", "epsilon={}".format(eps_e),
-                            "-e", "outputfilename='growth-curves-E.png'",
-                            "-e", "plottitle='Growth curves for E neurons'",
-                            "-e", "xmax={}".format(xmax),
-                            os.path.join(
-                                self.cfg.postprocess_home,
-                                self.cfg.gnuplot_files_dir,
-                                'plot-growthcurves.plt'))
-                    subprocess.call(['gnuplot'] + list(args))
-                    print("Growth curves plotted..")
-                else:
-                    print("No cal metric df for E neurons. Skipping.")
+                        print("{}\t{}\t{}".format(
+                            atime, cals_at_time.mean(axis=1),
+                            cals_at_time.std(axis=1)), file=f)
+                        if xmax < cals_at_time.mean(axis=1):
+                            xmax = cals_at_time.mean(axis=1)
+                        if atime == str(self.cfg.sp_enabled_at * 1000.):
+                            eps = cals_at_time.mean(axis=1)
+                            eta_a = 0.56 * eps
+                            eta_d = 0.14 * eps
+                            args = (
+                                "-e", "etad={}".format(eta_d), "-e",
+                                "etaa={}".format(eta_a), "-e",
+                                "epsilon={}".format(eps), "-e",
+                                "o_fn='growth-curves-{}.png'".format(
+                                    neuron_set),
+                                "-e",
+                                "plot_title='Growth curves for {}'".format(
+                                    neuron_set),
+                                "-e", "xmax={}".format(xmax),
+                            )
+                            plot_using_gnuplot_binary(self.cfg.plots_dir +
+                                                      'plot-growthcurves.plt',
+                                                      args)
+
+                self.lgr.info(
+                    "Processed cal metrics for {} neurons..".format(
+                        neuron_set))
+
             else:
-                calDF_E = calDF_E.append([0])
+                cals_E = cals_E.append([0])
 
-            if self.__reprocess_raw_files(
-                    [self.cfg.filenamePrefixCalciumI]):
-                calDF_I = combiner.combineCSVRowLists(
-                    self.cfg.unconsolidatedFilesDir,
-                    self.cfg.filenamePrefixCalciumI)
 
-                if not calDF_I.empty:
-                    calMetricsI = pandas.concat(
-                        [calDF_I.mean(axis=1),
-                         calDF_I.std(axis=1)],
-                        axis=1)
-                    xmax = calDF_I.values.max()
-                    calMetricsIfile = (
-                        self.cfg.filenamePrefixCalciumI + 'all.txt'
-                    )
-                    calMetricsI.to_csv(
-                        calMetricsIfile, sep='\t',
-                        header=None, line_terminator='\n')
-                    print("Processed cal metrics for I neurons..")
-
-                    eps_i = calMetricsI.loc[
-                        self.cfg.rewiringEnabledAt * 1000.][0]
-                    eta_a_i = 0.56 * eps_i
-                    eta_d_i = 0.14 * eps_i
-                    args = ("-e", "etad={}".format(eta_d_i),
-                            "-e", "etaa={}".format(eta_a_i),
-                            "-e", "epsilon={}".format(eps_i),
-                            "-e", "outputfilename='growth-curves-I.png'",
-                            "-e", "plottitle='Growth curves for I neurons'",
-                            "-e", "xmax={}".format(xmax),
-                            os.path.join(
-                                self.cfg.postprocess_home,
-                                self.cfg.gnuplot_files_dir,
-                                'plot-growthcurves.plt'))
-                    subprocess.call(['gnuplot'] + list(args))
-                    print("Growth curves plotted..")
-                else:
-                    print("No cal metric df for I neurons. Skipping.")
-            else:
-                calDF_I = calDF_I.append([0])
-
-            if self.__reprocess_raw_files(
-                    [self.cfg.filenamePrefixCalciumLPZE]):
-                combiner = nestpp.combineFiles.CombineFiles()
-
-                calDF_lpz_E = combiner.combineCSVRowLists(
-                    self.cfg.unconsolidatedFilesDir,
-                    self.cfg.filenamePrefixCalciumLPZE)
-
-                if not calDF_lpz_E.empty:
-                    calMetricsLPZE = pandas.concat(
-                        [calDF_lpz_E.mean(axis=1),
-                         calDF_lpz_E.std(axis=1)],
-                        axis=1)
-                    calMetricsLPZEfile = (
-                        self.cfg.filenamePrefixCalciumLPZE + 'all.txt'
-                    )
-                    calMetricsLPZE.to_csv(
-                        calMetricsLPZEfile, sep='\t',
-                        header=None, line_terminator='\n')
-                    print("Processed cal metrics for LPZE neurons..")
-                else:
-                    print("No cal metric df for LPZE neurons. Skipping.")
-            else:
-                calDF_lpz_E = calDF_lpz_E.append([0])
-
-            if self.__reprocess_raw_files(
-                    [self.cfg.filenamePrefixCalciumLPZI]):
-                calDF_lpz_I = combiner.combineCSVRowLists(
-                    self.cfg.unconsolidatedFilesDir,
-                    self.cfg.filenamePrefixCalciumLPZI)
-
-                if not calDF_lpz_I.empty:
-                    calMetricsLPZI = pandas.concat(
-                        [calDF_lpz_I.mean(axis=1),
-                         calDF_lpz_I.std(axis=1)],
-                        axis=1)
-                    calMetricsLPZIfile = (
-                        self.cfg.filenamePrefixCalciumLPZI + 'all.txt'
-                    )
-                    calMetricsLPZI.to_csv(
-                        calMetricsLPZIfile, sep='\t',
-                        header=None, line_terminator='\n')
-                    print("Processed cal metrics for LPZI neurons..")
-                else:
-                    print("No cal metric df for LPZI neurons. Skipping.")
-            else:
-                calDF_lpz_I = calDF_lpz_I.append([0])
-
-            if (not calDF_lpz_E.empty) and (not calDF_lpz_I.empty) and \
-                    (not calDF_E.empty) and (not calDF_I.empty):
+            if (not cals_lpz_E.empty) and (not cals_lpz_I.empty) and \
+                    (not cals_E.empty) and (not cals_I.empty):
                 args = (os.path.join(
                     self.cfg.postprocess_home,
                     self.cfg.gnuplot_files_dir,
@@ -669,6 +603,7 @@ class Postprocess:
                         args)
 
     def generate_raster_graphs(self):
+        """Plot raster graphs for E and I neurons."""
         # rasters for E I only for the moment
         if len(self.cfg.snapshots['rasters']) > 0:
             for neuron_set in ['E', 'I']:

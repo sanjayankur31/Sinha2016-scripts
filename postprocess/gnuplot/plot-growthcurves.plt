@@ -4,7 +4,7 @@ v=0.0001
 #etad=0.1
 #etaa=0.4
 #epsilon=0.7
-#outputfilename
+#o_fn
 
 xid=(etad+epsilon)/2.0
 xia=(etaa+epsilon)/2.0
@@ -13,8 +13,8 @@ zetad=(etad-epsilon)/1.6651092223153954
 zetaa=(etaa-epsilon)/1.6651092223153954
 dzdt(x, zeta, xi)= (v * ((2.0 * exp(-(((x - xi)/zeta)**2.0))) - 1.0))
 
-set output outputfilename
-set title plottitle
+set output o_fn
+set title plot_title
 set xlabel "Calcium concentration"
 set ylabel "dz/dt"
 set label "{/Symbol h}_d" at (etad + 0.01), 0.00001
