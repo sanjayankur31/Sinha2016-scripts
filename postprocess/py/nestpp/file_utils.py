@@ -34,7 +34,12 @@ lgr = get_module_logger(__name__)
 
 
 def check_csv_file(path):
-    """Check a csv file for errors."""
+    """Check a csv file for errors
+
+    :path: path to file
+    :returns: True if file is OK, False if not
+
+    """
     with open(path, 'r') as f:
         reader = csv.reader(f)
         linenumber = 1
