@@ -38,3 +38,4 @@ class TestFileUtils:
         """Test get_info_from_file_series function."""
         test_list = get_info_from_file_series("tests/test_", ".py")
         assert('file_utils' in test_list)
+        assert('test_file_utils.py' not in test_list)
