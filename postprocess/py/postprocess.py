@@ -394,7 +394,7 @@ class Postprocess:
         self.lgr.info("Generating conductance graphs vs time")
         # EE
         conductances_EE = pandas.DataFrame()
-        if reprocess_raw_files("01-synaptic-weights-EE-*"):
+        if reprocess_raw_files(".", ["01-synaptic-weights-EE-*"]):
             conductances_EE = var_combine_files_column_wise(
                 "../", "01-synaptic-weights-EE-*.txt", ',')
             if not conductances_EE.empty:
@@ -424,7 +424,7 @@ class Postprocess:
             conductances_EE = conductances_EE.append([0])
         # EI
         conductances_EI = pandas.DataFrame()
-        if reprocess_raw_files("01-synaptic-weights-EI-*"):
+        if reprocess_raw_files(".", ["01-synaptic-weights-EI-*"]):
             conductances_EI = var_combine_files_column_wise(
                 "../", "01-synaptic-weights-EI-*.txt", ',')
             if not conductances_EI.empty:
@@ -454,7 +454,7 @@ class Postprocess:
             conductances_EI = conductances_EI.append([0])
         # II
         conductances_II = pandas.DataFrame()
-        if reprocess_raw_files("01-synaptic-weights-II-*"):
+        if reprocess_raw_files(".", ["01-synaptic-weights-II-*"]):
             conductances_II = var_combine_files_column_wise(
                 "../", "01-synaptic-weights-II-*.txt", ',')
             if not conductances_II.empty:
@@ -484,7 +484,7 @@ class Postprocess:
             conductances_II = conductances_II.append([0])
         # IE
         conductances_IE = pandas.DataFrame()
-        if reprocess_raw_files("01-synaptic-weights-IE-*"):
+        if reprocess_raw_files(".", ["01-synaptic-weights-IE-*"]):
             conductances_IE = var_combine_files_column_wise(
                 "../", "01-synaptic-weights-IE-*.txt", ',')
             if not conductances_IE.empty:
