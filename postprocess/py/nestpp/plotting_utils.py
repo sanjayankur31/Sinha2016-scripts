@@ -42,7 +42,7 @@ def plot_using_gnuplot_binary(plt_file, arglist=[]):
 
     This will complete the path of the file by appending the required bits.
 
-    :plt_file: plt script file
+    :plt_file: full path to plt script file
     :arglist: other arguments to be passed to gnuplot
     :returns: return code from gnuplot or -99 if missing script
 
