@@ -37,7 +37,8 @@ from nestpp.spike_utils import (get_firing_rate_metrics,
                                 extract_spikes)
 from nestpp.file_utils import (reprocess_raw_files,
                                var_combine_files_column_wise,
-                               get_info_from_file_series)
+                               get_info_from_file_series,
+                               combine_files_row_wise)
 
 
 class Postprocess:
@@ -294,60 +295,56 @@ class Postprocess:
             print("Synaptic elements graphs generated..")
 
     def generate_calcium_graphs(self):
-        """Postprocess calcium files."""
+        """Postprocess calcium files.
+
+        Collates various files from ranks and the different times and generates
+        the plot that shows the mean and standard deviation of the calcium
+        concentration of neuron sets as they vary with time.
+
+        While it generates these graphs and prints the mean and STD values to a
+        file for each neuron set, it does not print the collated values at each
+        time to a file at the moment. This will be added later if a per neuron
+        analysis is required.
+        """
         if "calcium" not in self.cfg.graph_list:
             return True
 
         self.lgr.info("Generating calcium graphs..")
         # get times where the info was logged since these need to be combined
         # first - from any file series for one rank
-        time_list = get_info_from_file_series("../02-calcium-lpz_b_E-0-",
+        time_list = get_info_from_file_series("..", "02-calcium-lpz_b_E-0-",
                                               ".txt")
-        rank_list = get_info_from_file_series("../02-calcium-lpz_b_E-",
-                                              "-time_list[0].txt")
 
-        for neuron_set in ["lpz_c_E", "lpz_b_E", "p_lpz_E"]:
+        for neuron_set in ["lpz_c_E", "lpz_b_E", "p_lpz_E", "lpz_c_I",
+                           "lpz_b_I", "p_lpz_I"]:
             neuron_set_o_fn = "02-calcium-{}-all.txt".format(neuron_set)
             eps = 0.
             xmax = 0.
-            if reprocess_raw_files("02-calcium-{}-.txt".format(
-                    neuron_set)):
+            if reprocess_raw_files(".", ["02-calcium-{}-*.txt".format(
+                    neuron_set)]):
                 with open(neuron_set_o_fn, 'w') as f:
                     for atime in time_list:
-                        cals_at_time = []
-                        dataframes = []
-                        for rank in rank_list:
-                            fn = "02-calcium-{}-{}-{}.txt".format(
-                                neuron_set, rank, atime)
-                            dataframes.append(
-                                pandas.read_csv(
-                                    fn, sep='\t', skipinitialspace=True,
-                                    skip_blank_lines=True, dtype=float,
-                                    warn_bad_lines=True, lineterminator='\n',
-                                    header=None, index_col=0,
-                                    error_bad_lines=False
-                                )
-                            )
-                        cals_at_time = pandas.concat(dataframes, axis=1)
-                        o_fn = "02-calcium-{}-{}.txt".format(
-                            neuron_set, atime)
-                        cals_at_time.to_csv(
-                            o_fn, sep='\t',
-                            header=None, line_terminator='\n')
+                        cals = pandas.DataFrame()
+                        cals = combine_files_row_wise(
+                            "..", "02-calcium-{}-*-{}.txt".format(
+                                neuron_set, atime), '\t')
 
                         print("{}\t{}\t{}".format(
-                            atime, cals_at_time.mean(axis=1),
-                            cals_at_time.std(axis=1)), file=f)
-                        if xmax < cals_at_time.mean(axis=1):
-                            xmax = cals_at_time.mean(axis=1)
+                            atime, cals.mean(axis=1),
+                            cals.std(axis=1)), file=f)
+
+                        # growth curves
+                        if xmax < cals.mean(axis=1):
+                            xmax = cals.mean(axis=1)
                         if atime == str(self.cfg.sp_enabled_at * 1000.):
-                            eps = cals_at_time.mean(axis=1)
+                            eps = cals.mean(axis=1)
                             eta_a = 0.56 * eps
                             eta_d = 0.14 * eps
                             args = (
-                                "-e", "etad={}".format(eta_d), "-e",
-                                "etaa={}".format(eta_a), "-e",
-                                "epsilon={}".format(eps), "-e",
+                                "-e", "etad={}".format(eta_d),
+                                "-e", "etaa={}".format(eta_a),
+                                "-e", "epsilon={}".format(eps),
+                                "-e",
                                 "o_fn='growth-curves-{}.png'".format(
                                     neuron_set),
                                 "-e",
@@ -355,29 +352,16 @@ class Postprocess:
                                     neuron_set),
                                 "-e", "xmax={}".format(xmax),
                             )
-                            plot_using_gnuplot_binary(self.cfg.plots_dir +
-                                                      'plot-growthcurves.plt',
-                                                      args)
+                            plot_using_gnuplot_binary(
+                                os.path.join(self.cfg.plots_dir,
+                                             'plot-growthcurves.plt'),
+                                args)
 
-                self.lgr.info(
-                    "Processed cal metrics for {} neurons..".format(
-                        neuron_set))
+            self.lgr.info(
+                "Processed cal metrics for {} neurons..".format(neuron_set))
 
-            else:
-                cals_E = cals_E.append([0])
-
-
-            if (not cals_lpz_E.empty) and (not cals_lpz_I.empty) and \
-                    (not cals_E.empty) and (not cals_I.empty):
-                args = (os.path.join(
-                    self.cfg.postprocess_home,
-                    self.cfg.gnuplot_files_dir,
-                        'plot-cal-metrics.plt'))
-                subprocess.call(['gnuplot',
-                                args])
-
-            else:
-                print("No calcium metric graphs generated.")
+        plot_using_gnuplot_binary(os.path.join(self.cfg.plots_dir,
+                                               'plot-cal-metrics.plt'))
 
     def generate_conductance_graphs(self):
         """Post process conductances and generate all graphs.
