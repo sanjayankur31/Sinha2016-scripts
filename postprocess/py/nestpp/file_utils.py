@@ -209,18 +209,19 @@ def sum_columns_in_multiple_files(directory, shell_glob, separator):
     return summed_df
 
 
-def reprocess_raw_files(shell_globs):
+def reprocess_raw_files(directory, shell_globs):
     """Ask if files should be reprocessed when generated files have been found.
 
     Contains a 15 second time out after which it returns True
 
-    :shell_globs: shell globs matching file names to look for
+    :directory: directory in which files reside
+    :shell_globs: list of shell globs matching file names to look for
     :returns: True if yes, False if no
 
     """
     files_found = []
     for shell_glob in shell_globs:
-        files_found.append(glob.glob("./{}".format(shell_glob)))
+        files_found.append(glob.glob('{}/{}'.format(directory, shell_glob)))
 
     if len(files_found) == 0:
         return True
@@ -265,3 +266,29 @@ def get_info_from_file_series(prefix_glob, suffix_glob):
         )
 
     return info_list
+
+
+def combine_files_row_wise(directory, shell_glob, separator):
+    """Combine files with fixed fields row wise.
+
+    :directory: directory in which files reside
+    :shell_glob: shell_glob for files
+    :separator: field separator - usually '\t', or ','
+    :returns: concatenated data frame
+
+    """
+    dataframes = []
+    resultant_df = pandas.DataFrame()
+    file_list = glob.glob('{}/{}'.format(directory, shell_glob))
+    for fn in file_list:
+        dataframes.append(
+            pandas.read_csv(
+                fn, sep=separator, skipinitialspace=True,
+                skip_blank_lines=True, dtype=float,
+                warn_bad_lines=True, lineterminator='\n',
+                header=None, index_col=0,
+                error_bad_lines=False
+            )
+        )
+    resultant_df = pandas.concat(dataframes, axis=1)
+    return resultant_df
