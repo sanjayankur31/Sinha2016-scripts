@@ -658,93 +658,70 @@ class Postprocess:
                         print("{}\t{}".format(
                             self.cfg.snr_timelist[j], snr), file=f)
 
-    def __postprocess_turnovers(self):
-        """Process synaptic turnover graphs."""
-        plotting_interval = 1000.
-        if self.cfg.SETurnoverMetrics:
-            formed_filename = os.path.join(
-                self.cfg.unconsolidatedFilesDir +
-                (self.cfg.filenameSETurnoverFormed + "0.txt"))
-            deleted_filename = os.path.join(
-                self.cfg.unconsolidatedFilesDir +
-                (self.cfg.filenameSETurnoverDeleted + "0.txt"))
-            formed_DF = pandas.read_csv(formed_filename, delimiter='\t',
+    def generate_total_synapse_change_graphs(self, plotting_interval=1000.):
+        """Process total synapse change graphs.
+
+        :plotting_interval: specify the time intervals between data points
+        """
+        if "syn_turnover" not in self.cfg.graph_list:
+            return True
+
+        for neuron_set in ["lpz_c_E", "lpz_b_E", "p_lpz_E", "lpz_c_I",
+                           "lpz_b_I", "p_lpz_I"]:
+            formed_fn = os.path.join(
+                "..", "04-synapses-formed-{}-0.txt".format(neuron_set))
+            deleted_fn = os.path.join(
+                "..", "04-synapses-deleted-{}-0.txt".format(neuron_set))
+
+            formed_DF = pandas.read_csv(formed_fn, delimiter='\t',
                                         engine='c', skipinitialspace=True,
                                         lineterminator='\n', dtype=float)
-            deleted_DF = pandas.read_csv(deleted_filename, delimiter='\t',
+            deleted_DF = pandas.read_csv(deleted_fn, delimiter='\t',
                                          engine='c', skipinitialspace=True,
                                          lineterminator='\n', dtype=float)
-            with open(self.cfg.filenameSETurnoverFormed + "totals.txt",
-                      'w') as fout, open(self.cfg.filenameSETurnoverFormed +
-                                         "LPZ-totals.txt", 'w') as lpzfout:
-                current_time = formed_DF.iloc[0][0]
+
+            with open("04-synapses-formed-{}-totals.txt".format(neuron_set),
+                      'w') as f:
+                current_plot_time = formed_DF.iloc[0][0]
                 current_count = 0
-                current_lpz_count = 0
+                # index is row[0], so time is row[1]
+                # different when using iloc
                 for row in formed_DF.itertuples():
                     if (
-                            int(row[1]/plotting_interval) ==
-                            int(current_time/plotting_interval)
+                            row[1] - current_plot_time <= plotting_interval
                     ):
                         current_count += row[3]
-                        if row[2] in self.neurons_lpz_E:
-                            current_lpz_count += row[3]
 
-                    if (
-                            int(row[1]/plotting_interval) >
-                            int(current_time/plotting_interval)
-                    ):
+                    else:
                         print("{}\t{}".format(
-                            int(current_time/plotting_interval),
-                            current_count), file=fout)
-                        print("{}\t{}".format(
-                            int(current_time/plotting_interval),
-                            current_lpz_count), file=lpzfout)
+                            int(current_plot_time/plotting_interval),
+                            current_count), file=f)
+
                         # Ready for the next iteration
                         current_count = row[3]
-                        if row[2] in self.neurons_lpz_E:
-                            current_lpz_count = row[3]
-                        else:
-                            current_lpz_count = 0
-                        current_time = row[1]
+                        current_plot_time = row[1]
 
-            with open(self.cfg.filenameSETurnoverDeleted + "totals.txt",
-                      'w') as fout, open(self.cfg.filenameSETurnoverDeleted
-                                         + "LPZ-totals.txt", 'w') as lpzfout:
-                current_time = deleted_DF.iloc[0][0]
+            with open("04-synapses-deleted-{}-totals.txt".format(neuron_set),
+                      'w') as f:
+                current_plot_time = deleted_DF.iloc[0][0]
                 current_count = 0
-                current_lpz_count = 0
                 for row in deleted_DF.itertuples():
                     if (
-                            int(row[1]/plotting_interval) ==
-                            int(current_time/plotting_interval)
+                            row[1] - current_plot_time <= plotting_interval
                     ):
                         current_count += row[4]
-                        if row[2] in self.neurons_lpz_E:
-                            current_lpz_count += row[4]
 
-                    if (
-                            int(row[1]/plotting_interval) >
-                            int(current_time/plotting_interval)
-                    ):
+                    else:
                         print("{}\t{}".format(
-                            int(current_time/plotting_interval),
-                            current_count), file=fout)
-                        print("{}\t{}".format(
-                            int(current_time/plotting_interval),
-                            current_lpz_count), file=lpzfout)
+                            int(current_plot_time/plotting_interval),
+                            current_count), file=f)
+
                         # Ready for the next iteration
                         current_count = row[4]
-                        if row[2] in self.neurons_lpz_E:
-                            current_lpz_count = row[4]
-                        else:
-                            current_lpz_count = 0
-                        current_time = row[1]
+                        current_plot_time = row[1]
 
-            args = ['gnuplot', os.path.join(
-                    self.cfg.postprocess_home,
-                    self.cfg.gnuplot_files_dir,
-                    'plot-turnover.plt')]
-            subprocess.call(args)
+        plot_using_gnuplot_binary(
+            os.path.join(self.cfg.plots_dir, 'plot-total_synapse_change.plt'))
 
     def main(self):
         """Do everything."""
@@ -756,12 +733,12 @@ class Postprocess:
         self.generate_raster_graphs()
         self.generate_firing_rate_grid_snapshots()
         self.generate_conductance_graphs()
+        self.generate_total_synapse_change_graphs()
 
         #  self.plot_snrs()
         self.__postprocess_synaptic_elements_all()
         self.__postprocess_synaptic_elements_individual()
         self.__postprocess_calcium()
-        self.__postprocess_turnovers()
 
 
 if __name__ == "__main__":
