@@ -84,7 +84,7 @@ def combine_files_column_wise(directory, shell_glob, separator):
     :returns: combined dataframe or empty dataframe if files not found
 
     """
-    file_list = glob.glob('{}/{}'.format(directory, shell_glob))
+    file_list = glob.glob(os.path.join(directory, shell_glob))
     if not file_list:
         return {}
 
@@ -125,7 +125,7 @@ def var_combine_files_column_wise(directory, shell_glob, separator):
     :returns: combined dataframe or empty dataframe if files not found.
 
     """
-    file_list = glob.glob('{}/{}'.format(directory, shell_glob))
+    file_list = glob.glob(os.path.join(directory, shell_glob))
     if not file_list:
         return pandas.DataFrame()
 
@@ -182,7 +182,7 @@ def sum_columns_in_multiple_files(directory, shell_glob, separator):
     :returns: summed up dataframe or empty dataframe if files weren't found
 
     """
-    file_list = glob.glob('{}/{}'.format(directory, shell_glob))
+    file_list = glob.glob(os.path.join(directory, shell_glob))
     if not file_list:
         return pandas.DataFrame()
 
@@ -221,7 +221,7 @@ def reprocess_raw_files(directory, shell_globs):
     """
     files_found = []
     for shell_glob in shell_globs:
-        files_found.append(glob.glob('{}/{}'.format(directory, shell_glob)))
+        files_found.append(glob.glob(os.path.join(directory, shell_glob)))
 
     if len(files_found) == 0:
         return True
@@ -241,7 +241,7 @@ def reprocess_raw_files(directory, shell_globs):
                 return True
 
 
-def get_info_from_file_series(directory, prefix_glob, suffix_glob):
+def get_info_from_file_series(directory, prefix, suffix):
     """From a list of file names with the same prefixes and suffixes, extract
     the information sandwiched between the common prefix and common suffix.
 
@@ -250,19 +250,19 @@ def get_info_from_file_series(directory, prefix_glob, suffix_glob):
     is ".txt". The information returned will be a list of <time>s.
 
     :directory: directory in which files reside
-    :prefix_glob: prefix glob of files including directory location
-    :suffix_glob: suffix glog of files (eg, extension)
+    :prefix: prefix of files
+    :suffix: suffix of files (eg, extension)
     :returns: list of info as strings, or empty list if files not found
 
     """
     info_list = []
-    complete_glob = directory + "/" + prefix_glob + "*" + suffix_glob
+    complete_prefix = os.path.join(directory, prefix)
+    complete_glob = complete_prefix + "*" + suffix
     file_list = glob.glob(complete_glob)
 
     for af in file_list:
         info_list.append(
-            (af.replace(directory + "/", '').replace(
-                prefix_glob, '')).replace(suffix_glob, '')
+            (af.replace(complete_prefix, '')).replace(suffix, '')
         )
 
     return info_list
@@ -279,7 +279,7 @@ def combine_files_row_wise(directory, shell_glob, separator):
     """
     dataframes = []
     resultant_df = pandas.DataFrame()
-    file_list = glob.glob('{}/{}'.format(directory, shell_glob))
+    file_list = glob.glob(os.path.join(directory, shell_glob))
     for fn in file_list:
         dataframes.append(
             pandas.read_csv(
