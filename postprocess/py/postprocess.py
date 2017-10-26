@@ -733,12 +733,12 @@ class Postprocess:
         self.generate_raster_graphs()
         self.generate_firing_rate_grid_snapshots()
         self.generate_conductance_graphs()
+        self.generate_calcium_graphs()
         self.generate_total_synapse_change_graphs()
 
         #  self.plot_snrs()
         self.__postprocess_synaptic_elements_all()
         self.__postprocess_synaptic_elements_individual()
-        self.__postprocess_calcium()
 
 
 if __name__ == "__main__":
