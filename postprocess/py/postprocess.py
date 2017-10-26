@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os
 import pandas
 import numpy
-import subprocess
 
 # module imports
 from nestpp.utils import (get_config)
@@ -113,186 +112,36 @@ class Postprocess:
                 overlapping_percent = len(overlapping_neurons)/len(neurons_P)
                 print("{}\t{}".format(i, overlapping_percent), file=f)
 
-    def __postprocess_synaptic_elements_individual(self):
+    def generate_synaptic_element_graphs(self):
         """Post process synaptic elements from individual neuronal files."""
-        if self.cfg.SEIndividualMetrics:
-            print("Processing synaptic elements for individual neurons..")
-            import nestpp.combineFiles
-            combiner = nestpp.combineFiles.CombineFiles()
+        if "syn_elms" not in self.cfg.graph_list:
+            return True
 
-            # E neurons
-            timeddfDict = combiner.combineTimedTSVColDataFiles(
-                self.cfg.unconsolidatedFilesDir,
-                self.cfg.filenamePrefixSEIndividualE)
+        self.lgr.info("Processing synaptic elements..")
+        time_list = get_info_from_file_series("..", "05-se-lpz_b_E-0-",
+                                              ".txt")
+        for neuron_set in ["lpz_c_E", "lpz_b_E", "p_lpz_E", "lpz_c_I",
+                           "lpz_b_I", "p_lpz_I"]:
+            neuron_set_o_fn = "05-se-{}-all.txt".format(neuron_set)
+            if reprocess_raw_files(".", ["05-se-{}-*.txt".format(
+                    neuron_set)]):
+                with open(neuron_set_o_fn, 'w') as f:
+                    for atime in time_list:
+                        ses = pandas.DataFrame()
+                        ses = combine_files_row_wise(
+                            "..", "05-se-{}-*-{}.txt".format(
+                                neuron_set, atime), '\t')
 
-            if timeddfDict:
-                for time, df in timeddfDict.items():
-                    syn_elms_ind_DF_filename = (
-                        self.cfg.filenamePrefixSEIndividualE +
-                        str(time) + ".txt")
-                    df.to_csv(
-                        syn_elms_ind_DF_filename, sep='\t',
-                        header=None, line_terminator='\n')
-                    print("Processed synaptic elements for E neurons" +
-                          " at time {}..".format(time))
+                        print("{}\t{}\t{}".format(
+                            atime, ses.mean(axis=1),
+                            ses.std(axis=1)), file=f)
 
-                    args = ['gnuplot',
-                            '-e',
-                            "plotname='{}'".format(
-                                self.cfg.filenamePrefixSEIndividualE +
-                                str(time) + ".png"),
-                            '-e',
-                            'plottitle={}'.format(
-                                "'Synaptic elements at time {}'".format(
-                                    str(time))),
-                            '-e',
-                            "inputfile='{}'".format(
-                                syn_elms_ind_DF_filename),
-                            os.path.join(
-                                self.cfg.postprocess_home,
-                                self.cfg.gnuplot_files_dir,
-                                'plot-ind-synaptic-elements-metrics.plt')]
-                    subprocess.call(args)
-                    print("E neuron synaptic elements graph" +
-                          " at time {} generated.".format(time))
-            else:
-                print("No dataframes for E synaptic elements. Skipping.")
+            self.lgr.info(
+                "Processed syn elms metrics for {} neurons..".format(
+                    neuron_set))
 
-            # I neurons
-            timeddfDict = combiner.combineTimedTSVColDataFiles(
-                self.cfg.unconsolidatedFilesDir,
-                self.cfg.filenamePrefixSEIndividualI)
-
-            if timeddfDict:
-                for time, df in timeddfDict.items():
-                    syn_elms_ind_DF_filename = (
-                        self.cfg.filenamePrefixSEIndividualI +
-                        str(time) + ".txt")
-                    df.to_csv(
-                        syn_elms_ind_DF_filename, sep='\t',
-                        header=None, line_terminator='\n')
-                    print("Processed synaptic elements for I neurons" +
-                          " at time {}..".format(time))
-
-                    args = ['gnuplot',
-                            '-e',
-                            "plotname='{}'".format(
-                                self.cfg.filenamePrefixSEIndividualI +
-                                str(time) + ".png"),
-                            '-e',
-                            'plottitle={}'.format(
-                                "'Synaptic elements at time {}'".format(
-                                    str(time))),
-                            '-e',
-                            "inputfile='{}'".format(
-                                syn_elms_ind_DF_filename),
-                            os.path.join(
-                                self.cfg.postprocess_home,
-                                self.cfg.gnuplot_files_dir,
-                                'plot-ind-synaptic-elements-metrics.plt')]
-                    subprocess.call(args)
-                    print("I neuron synaptic elements graph" +
-                          " at time {} generated.".format(time))
-            else:
-                print("No dataframes for I synaptic elements. Skipping.")
-
-    def __postprocess_synaptic_elements_all(self):
-        """Post total synaptic element files."""
-        if self.cfg.SETotalsMetrics:
-            print("Processing synaptic element information..")
-            import nestpp.combineFiles
-            combiner = nestpp.combineFiles.CombineFiles()
-
-            syn_elms_DF_E = pandas.DataFrame()
-            syn_elms_DF_I = pandas.DataFrame()
-            syn_elms_DF_lpz__E = pandas.DataFrame()
-            syn_elms_DF_lpz__I = pandas.DataFrame()
-            if self.__reprocess_raw_files(
-                    [self.cfg.filenamePrefixSETotalsE]):
-                syn_elms_DF_E = combiner.combineTSVRowData(
-                    self.cfg.unconsolidatedFilesDir,
-                    self.cfg.filenamePrefixSETotalsE)
-
-                if not syn_elms_DF_E.empty:
-                    syn_elms_E_filename = (
-                        self.cfg.filenamePrefixSETotalsE + 'all.txt'
-                    )
-                    syn_elms_DF_E.to_csv(
-                        syn_elms_E_filename, sep='\t',
-                        header=None, line_terminator='\n')
-                    print("Processed synaptic elements for E neurons..")
-                else:
-                    print("No dataframe for all E syn elements. Skipping.")
-            else:
-                syn_elms_DF_E = syn_elms_DF_E.append([0])
-
-            if self.__reprocess_raw_files(
-                    [self.cfg.filenamePrefixSETotalsLPZE]):
-                syn_elms_DF_lpz__E = combiner.combineTSVRowData(
-                    self.cfg.unconsolidatedFilesDir,
-                    self.cfg.filenamePrefixSETotalsLPZE)
-
-                if not syn_elms_DF_lpz__E.empty:
-                    syn_elms_E_filename = (
-                        self.cfg.filenamePrefixSETotalsLPZE + 'all.txt'
-                    )
-                    syn_elms_DF_lpz__E.to_csv(
-                        syn_elms_E_filename, sep='\t',
-                        header=None, line_terminator='\n')
-                    print("Processed synaptic elements for LPZ E neurons..")
-                else:
-                    print("No dataframe for all E syn elements. Skipping.")
-            else:
-                syn_elms_DF_lpz__E = syn_elms_DF_lpz__E.append([0])
-
-            if self.__reprocess_raw_files(
-                    [self.cfg.filenamePrefixSETotalsI]):
-                syn_elms_DF_I = combiner.combineTSVRowData(
-                    self.cfg.unconsolidatedFilesDir,
-                    self.cfg.filenamePrefixSETotalsI)
-
-                if not syn_elms_DF_I.empty:
-                    syn_elms_I_filename = (
-                        self.cfg.filenamePrefixSETotalsI + 'all.txt'
-                    )
-                    syn_elms_DF_I.to_csv(
-                        syn_elms_I_filename, sep='\t',
-                        header=None, line_terminator='\n')
-                    print("Processed synaptic elements for I neurons..")
-            else:
-                syn_elms_DF_I = syn_elms_DF_I.append([0])
-
-            if self.__reprocess_raw_files(
-                    [self.cfg.filenamePrefixSETotalsLPZI]):
-                syn_elms_DF_lpz__I = combiner.combineTSVRowData(
-                    self.cfg.unconsolidatedFilesDir,
-                    self.cfg.filenamePrefixSETotalsLPZI)
-
-                if not syn_elms_DF_lpz__I.empty:
-                    syn_elms_I_filename = (
-                        self.cfg.filenamePrefixSETotalsLPZI + 'all.txt'
-                    )
-                    syn_elms_DF_lpz__I.to_csv(
-                        syn_elms_I_filename, sep='\t',
-                        header=None, line_terminator='\n')
-                    print("Processed synaptic elements for LPZ I neurons..")
-            else:
-                syn_elms_DF_lpz__I = syn_elms_DF_lpz__I.append([0])
-
-            args = (os.path.join(
-                self.cfg.postprocess_home,
-                self.cfg.gnuplot_files_dir,
-                    'plot-synaptic-elements-metrics.plt'))
-            subprocess.call(['gnuplot',
-                            args])
-
-            args = (os.path.join(
-                self.cfg.postprocess_home,
-                self.cfg.gnuplot_files_dir,
-                    'plot-lpz-synaptic-elements-metrics.plt'))
-            subprocess.call(['gnuplot',
-                            args])
-            print("Synaptic elements graphs generated..")
+        plot_using_gnuplot_binary(os.path.join(self.cfg.plots_dir,
+                                               'plot-cal-metrics.plt'))
 
     def generate_calcium_graphs(self):
         """Postprocess calcium files.
@@ -735,10 +584,9 @@ class Postprocess:
         self.generate_conductance_graphs()
         self.generate_calcium_graphs()
         self.generate_total_synapse_change_graphs()
+        self.generate_synaptic_element_graphs()
 
         #  self.plot_snrs()
-        self.__postprocess_synaptic_elements_all()
-        self.__postprocess_synaptic_elements_individual()
 
 
 if __name__ == "__main__":
