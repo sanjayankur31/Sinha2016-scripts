@@ -619,8 +619,11 @@ class Postprocess:
                 graph_dict[key] = value
         plot_location_grid(graph_dict)
 
-    def __postprocess_spikes(self):
-        """Postprocess combined spike files."""
+    def plot_snrs(self):
+        """Postprocess combined spike files.
+
+        TODO: INCOMPLETE
+        """
         if self.cfg.snr:
             import nestpp.getFiringRates as rg
             import nestpp.calculateSNR as snr
