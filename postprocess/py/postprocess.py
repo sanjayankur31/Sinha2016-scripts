@@ -36,7 +36,7 @@ from nestpp.spike_utils import (get_firing_rate_metrics,
                                 get_individual_firing_rate_snapshots,
                                 extract_spikes)
 from nestpp.file_utils import (reprocess_raw_files,
-                               combine_var_csv_files_column_wise,
+                               var_combine_files_column_wise,
                                get_info_from_file_series)
 
 
@@ -395,8 +395,8 @@ class Postprocess:
         # EE
         conductances_EE = pandas.DataFrame()
         if reprocess_raw_files("01-synaptic-weights-EE-*"):
-            conductances_EE = combine_var_csv_files_column_wise(
-                "../", "01-synaptic-weights-EE-*.txt")
+            conductances_EE = var_combine_files_column_wise(
+                "../", "01-synaptic-weights-EE-*.txt", ',')
             if not conductances_EE.empty:
                 conductances_mean_EE = pandas.concat(
                     [conductances_EE.mean(axis=1),
@@ -425,8 +425,8 @@ class Postprocess:
         # EI
         conductances_EI = pandas.DataFrame()
         if reprocess_raw_files("01-synaptic-weights-EI-*"):
-            conductances_EI = combine_var_csv_files_column_wise(
-                "../", "01-synaptic-weights-EI-*.txt")
+            conductances_EI = var_combine_files_column_wise(
+                "../", "01-synaptic-weights-EI-*.txt", ',')
             if not conductances_EI.empty:
                 conductances_mean_EI = pandas.concat(
                     [conductances_EI.mean(axis=1),
@@ -455,8 +455,8 @@ class Postprocess:
         # II
         conductances_II = pandas.DataFrame()
         if reprocess_raw_files("01-synaptic-weights-II-*"):
-            conductances_II = combine_var_csv_files_column_wise(
-                "../", "01-synaptic-weights-II-*.txt")
+            conductances_II = var_combine_files_column_wise(
+                "../", "01-synaptic-weights-II-*.txt", ',')
             if not conductances_II.empty:
                 conductances_mean_II = pandas.concat(
                     [conductances_II.mean(axis=1),
@@ -485,8 +485,8 @@ class Postprocess:
         # IE
         conductances_IE = pandas.DataFrame()
         if reprocess_raw_files("01-synaptic-weights-IE-*"):
-            conductances_IE = combine_var_csv_files_column_wise(
-                "../", "01-synaptic-weights-IE-*.txt")
+            conductances_IE = var_combine_files_column_wise(
+                "../", "01-synaptic-weights-IE-*.txt", ',')
             if not conductances_IE.empty:
                 conductances_mean_IE = pandas.concat(
                     [conductances_IE.mean(axis=1),

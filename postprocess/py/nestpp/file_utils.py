@@ -75,11 +75,12 @@ def get_max_csv_cols(path):
     return maxcols
 
 
-def combine_tsv_files_column_wise(directory, shell_glob):
-    """Combines tab separated files with constant number of fields
+def combine_files_column_wise(directory, shell_glob, separator):
+    """Combines columnar files with constant number of fields
 
     :directory: directory to work in
     :shell_glob: shell_glob of files
+    :separator: field separator - usually ',' or '\t'
     :returns: combined dataframe or empty dataframe if files not found
 
     """
@@ -91,7 +92,7 @@ def combine_tsv_files_column_wise(directory, shell_glob):
     dataframes = []
     for entry in file_list:
         lgr.info("Reading {}".format(entry))
-        dataframe = pandas.read_csv(entry, skiprows=1, sep='\t',
+        dataframe = pandas.read_csv(entry, skiprows=1, sep=separator,
                                     skipinitialspace=True,
                                     skip_blank_lines=True, dtype=float,
                                     warn_bad_lines=True,
@@ -106,20 +107,21 @@ def combine_tsv_files_column_wise(directory, shell_glob):
     return combined_dataframe
 
 
-def combine_var_csv_files_column_wise(directory, shell_glob):
-    """Combines comma separated files with variable numbers of fields in each row.
+def var_combine_files_column_wise(directory, shell_glob, separator):
+    """Combines columnar files with variable numbers of fields in each row.
 
     If the m input files are of all of the form:
-    time, n comma separated values
+    time, n field separated values
 
     then, this returns:
-    time, (m x n) comma separated values
+    time, (m x n) field separated values
 
     Note that each line may have a different number of columns, and lines with
     same index in different files may also have different numbers of columns.
 
     :directory: directory where files are
     :shell_glob: shell_glob of files
+    :separator: field separator - usually ',' or '\t'
     :returns: combined dataframe or empty dataframe if files not found.
 
     """
@@ -142,7 +144,7 @@ def combine_var_csv_files_column_wise(directory, shell_glob):
                 subprocess.check_output(['tail', '-1', entry])[0:-2])) + 1
             lgr.debug("Max cols is: {}".format(max_columns))
 
-            dataframe = pandas.read_csv(entry, skiprows=1, sep=',',
+            dataframe = pandas.read_csv(entry, skiprows=1, sep=separator,
                                         skipinitialspace=True,
                                         skip_blank_lines=True, dtype=float,
                                         warn_bad_lines=True,
@@ -164,7 +166,7 @@ def combine_var_csv_files_column_wise(directory, shell_glob):
     return combined_dataframe
 
 
-def sum_columns_in_multiple_files(directory, shell_glob):
+def sum_columns_in_multiple_files(directory, shell_glob, separator):
     """Sums up the columns in different rank files.
 
     If the input files are each of the form:
@@ -176,6 +178,7 @@ def sum_columns_in_multiple_files(directory, shell_glob):
 
     :directory: the directory to act in
     :shell_glob: the shell_glob of the various files
+    :separator: field separator - usually ',' or '\t'
     :returns: summed up dataframe or empty dataframe if files weren't found
 
     """
@@ -188,7 +191,7 @@ def sum_columns_in_multiple_files(directory, shell_glob):
 
     for entry in file_list:
         if os.stat(entry).st_size != 0:
-            dataframe = pandas.read_csv(entry, skiprows=1, sep='\t',
+            dataframe = pandas.read_csv(entry, skiprows=1, sep=separator,
                                         skipinitialspace=True,
                                         skip_blank_lines=True, dtype=float,
                                         warn_bad_lines=True,
