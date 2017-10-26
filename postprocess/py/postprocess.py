@@ -721,7 +721,7 @@ class Postprocess:
                         current_plot_time = row[1]
 
         plot_using_gnuplot_binary(
-            os.path.join(self.cfg.plots_dir, 'plot-total_synapse_change.plt'))
+            os.path.join(self.cfg.plots_dir, 'plot-total-synapse-changes.plt'))
 
     def main(self):
         """Do everything."""
