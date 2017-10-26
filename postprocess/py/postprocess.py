@@ -306,7 +306,7 @@ class Postprocess:
         time to a file at the moment. This will be added later if a per neuron
         analysis is required.
         """
-        if "calcium" not in self.cfg.graph_list:
+        if "calciums" not in self.cfg.graph_list:
             return True
 
         self.lgr.info("Generating calcium graphs..")
