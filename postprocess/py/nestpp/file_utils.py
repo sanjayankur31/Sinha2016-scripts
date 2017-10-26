@@ -241,28 +241,28 @@ def reprocess_raw_files(directory, shell_globs):
                 return True
 
 
-def get_info_from_file_series(prefix_glob, suffix_glob):
+def get_info_from_file_series(directory, prefix_glob, suffix_glob):
     """From a list of file names with the same prefixes and suffixes, extract
     the information sandwiched between the common prefix and common suffix.
 
     For example, a file may be named: calcium-1000.0.txt, so the series becomes
     calcium-<time>.txt, where the prefix_glob is "calcium-" and the suffix_glob
-    is ".txt". The information returned will be a list of <time>s. Note that if
-    the files are in a different directory than the current one, this must be
-    included in the prefix glob. For example, "../calcium-".
+    is ".txt". The information returned will be a list of <time>s.
 
+    :directory: directory in which files reside
     :prefix_glob: prefix glob of files including directory location
     :suffix_glob: suffix glog of files (eg, extension)
     :returns: list of info as strings, or empty list if files not found
 
     """
     info_list = []
-    complete_glob = prefix_glob + "*" + suffix_glob
+    complete_glob = directory + "/" + prefix_glob + "*" + suffix_glob
     file_list = glob.glob(complete_glob)
 
     for af in file_list:
         info_list.append(
-            (af.replace(prefix_glob, '')).replace(suffix_glob, '')
+            (af.replace(directory + "/", '').replace(
+                prefix_glob, '')).replace(suffix_glob, '')
         )
 
     return info_list
