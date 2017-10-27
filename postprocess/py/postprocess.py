@@ -133,8 +133,8 @@ class Postprocess:
                                 neuron_set, atime), '\t')
 
                         print("{}\t{}\t{}".format(
-                            atime, ses.mean(axis=1),
-                            ses.std(axis=1)), file=f)
+                            atime, ses.mean(axis=0),
+                            ses.std(axis=0)), file=f)
 
             self.lgr.info(
                 "Processed syn elms metrics for {} neurons..".format(
@@ -179,14 +179,14 @@ class Postprocess:
                                 neuron_set, atime), '\t')
 
                         print("{}\t{}\t{}".format(
-                            atime, cals.mean(axis=1),
-                            cals.std(axis=1)), file=f)
+                            atime, cals.mean(axis=0),
+                            cals.std(axis=0)), file=f)
 
                         # growth curves
-                        if xmax < cals.mean(axis=1):
-                            xmax = cals.mean(axis=1)
+                        if xmax < cals.mean(axis=0):
+                            xmax = cals.mean(axis=0)
                         if atime == str(self.cfg.sp_enabled_at * 1000.):
-                            eps = cals.mean(axis=1)
+                            eps = cals.mean(axis=0)
                             eta_a = 0.56 * eps
                             eta_d = 0.14 * eps
                             args = (
