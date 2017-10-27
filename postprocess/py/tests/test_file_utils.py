@@ -59,4 +59,5 @@ class TestFileUtils:
                                                     "row_combiner_test-*.gdf",
                                                     '\t')
         assert combined_dataframe.shape[0] == 2000
-        assert combined_dataframe.shape[1] == 2
+        # 0th column  is the index column
+        assert combined_dataframe.shape[1] == 1

@@ -3,6 +3,11 @@ Utilities dealing with files.
 
 File: file_utils.py
 
+
+Note that we always use the 0th column as the index column, and we never
+specify a header row while reading dataframes. This is a convention that must
+be followed while using these functions.
+
 Copyright 2017 Ankur Sinha
 Author: Ankur Sinha <sanjay DOT ankur AT gmail DOT com>
 
@@ -286,7 +291,7 @@ def combine_files_row_wise(directory, shell_glob, separator):
                 fn, sep=separator, skipinitialspace=True,
                 skip_blank_lines=True, dtype=float,
                 warn_bad_lines=True, lineterminator='\n',
-                header=None, index_col=None,
+                header=None, index_col=0,
                 error_bad_lines=False
             )
         )
