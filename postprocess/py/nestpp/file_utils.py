@@ -51,7 +51,6 @@ def check_csv_file(path):
         try:
             for row in reader:
                 linenumber += 1
-                lgr.debug("Read {}".format(linenumber))
         except Exception as e:
             lgr.error("Error line {}: {} {}".format(
                 linenumber, str(type(e)), e.message))
