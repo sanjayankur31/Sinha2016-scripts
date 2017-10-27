@@ -29,7 +29,8 @@ import random
 # module imports
 from nestpp.file_utils import (check_csv_file,
                                get_info_from_file_series,
-                               combine_files_row_wise)
+                               combine_files_row_wise,
+                               get_max_csv_cols)
 
 
 @pytest.mark.usefixtures("module_setup")
@@ -46,6 +47,19 @@ class TestFileUtils:
                       file=f)
         assert check_csv_file("good-csv.gdf") is True
         # I can't remember what a bad CSV file was..
+
+    def test_get_max_csv_cols(self):
+        """Test get_max_csv_cols."""
+        written_max_cols = 0
+        with open("good-csv-cols.gdf", 'w') as f:
+            for i in range(0, 100):
+                spam = ["asdw"] * random.randrange(0, 20)
+                if len(spam) > written_max_cols:
+                    written_max_cols = len(spam)
+                spam_string = ",".join(spam)
+                print("{}".format(spam_string), file=f)
+
+        assert get_max_csv_cols("good-csv-cols.gdf") is written_max_cols
 
     def test_get_info_from_file_series(self):
         """Test get_info_from_file_series function."""
