@@ -24,9 +24,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # system imports
 import pytest
+import random
 
 # module imports
-from nestpp.file_utils import (get_info_from_file_series)
+from nestpp.file_utils import (get_info_from_file_series,
+                               combine_files_row_wise)
 
 
 @pytest.mark.usefixtures("module_setup")
@@ -39,3 +41,22 @@ class TestFileUtils:
         test_list = get_info_from_file_series("tests", "test_", ".py")
         assert('file_utils' in test_list)
         assert('test_file_utils.py' not in test_list)
+
+    def test_combine_files_row_wise(self):
+        """Test combining files row wise."""
+        with open("row_combiner_test-1.gdf", 'w') as f:
+            for i in range(0, 1000):
+                print("{}\t{}".format(random.randrange(0, 800),
+                                      random.randrange(0, 800)),
+                      file=f)
+
+        with open("row_combiner_test-2.gdf", 'w') as f:
+            for i in range(0, 1000):
+                print("{}\t{}".format(random.randrange(0, 800),
+                                      random.randrange(0, 800)),
+                      file=f)
+        combined_dataframe = combine_files_row_wise(".",
+                                                    "row_combiner_test-*.gdf",
+                                                    '\t')
+        assert combined_dataframe.shape[0] == 2000
+        assert combined_dataframe.shape[1] == 2
