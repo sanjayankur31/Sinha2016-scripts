@@ -27,7 +27,8 @@ import pytest
 import random
 
 # module imports
-from nestpp.file_utils import (get_info_from_file_series,
+from nestpp.file_utils import (check_csv_file,
+                               get_info_from_file_series,
                                combine_files_row_wise)
 
 
@@ -35,6 +36,16 @@ from nestpp.file_utils import (get_info_from_file_series,
 class TestFileUtils:
 
     """Test utility functions."""
+    def test_check_csv_file(self):
+        """Test check_csv_file."""
+        with open("good-csv.gdf", 'w') as f:
+            for i in range(0, 100):
+                print("{},{},{}".format(random.randrange(0, 10),
+                                        random.randrange(0, 10),
+                                        random.randrange(0, 10)),
+                      file=f)
+        assert check_csv_file("good-csv.gdf") is True
+        # I can't remember what a bad CSV file was..
 
     def test_get_info_from_file_series(self):
         """Test get_info_from_file_series function."""
