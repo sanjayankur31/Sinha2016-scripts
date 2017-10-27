@@ -29,11 +29,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import pytest
 import os
 import glob
+from distutils import dir_util
 
 
 @pytest.fixture(scope="module")
 def module_setup(request):
-    """Fixtures for the module."""
+    """Fixtures for the module.
+    """
     def clean_up():
         """Clean up generated temporary files."""
         graphs = glob.glob("./*.png")
@@ -44,3 +46,22 @@ def module_setup(request):
 
     request.addfinalizer(clean_up)
     return True
+
+
+@pytest.fixture(scope="function")
+def datadir(tmpdir, request):
+    """Fixtures for the module.
+
+    This loads the data files from a folder that has the same name as the test
+    file into a temporary directory to enable the tests to use them there.
+
+    Taken from:
+    https://stackoverflow.com/questions/29627341/pytest-where-to-store-expected-data
+    """
+    filename = request.module.__file__
+    test_dir, _ = os.path.splitext(filename)
+
+    if os.path.isdir(test_dir):
+        dir_util.copy_tree(test_dir, bytes(tmpdir))
+
+    return tmpdir
