@@ -286,9 +286,9 @@ def combine_files_row_wise(directory, shell_glob, separator):
                 fn, sep=separator, skipinitialspace=True,
                 skip_blank_lines=True, dtype=float,
                 warn_bad_lines=True, lineterminator='\n',
-                header=None, index_col=0,
+                header=None, index_col=None,
                 error_bad_lines=False
             )
         )
-    resultant_df = pandas.concat(dataframes, axis=1)
+    resultant_df = pandas.concat(dataframes, axis=0)
     return resultant_df
