@@ -29,6 +29,7 @@ import pytest
 from nestpp.file_utils import (check_csv_file,
                                get_max_csv_cols,
                                combine_files_column_wise,
+                               var_combine_files_column_wise,
                                combine_files_row_wise,
                                get_info_from_file_series)
 
@@ -56,6 +57,16 @@ class TestFileUtils:
             datadir, "col_combiner_test_*.txt", '\t')
         # first row is a header
         assert combined_dataframe.shape[0] == 999
+        # 0th columns are the common index
+        assert combined_dataframe.shape[1] == 2
+
+    def test_var_combine_files_column_wise(self, datadir):
+        """Test combine_files_column_wise."""
+        combined_dataframe = var_combine_files_column_wise(
+            datadir, "var_col_combiner_test_*.txt", '\t')
+        # first row is a header
+        assert combined_dataframe.shape[0] == 999
+        #  print(combined_dataframe)
         # 0th columns are the common index
         assert combined_dataframe.shape[1] == 2
 
