@@ -210,12 +210,12 @@ def sum_columns_in_multiple_files(directory, shell_glob, separator):
     :returns: summed up dataframe or empty dataframe if files weren't found
 
     """
+    summed_df = pandas.DataFrame()
     file_list = glob.glob(os.path.join(directory, shell_glob))
     if not file_list:
-        return pandas.DataFrame()
+        return summed_df
 
     dataframes = []
-    summed_df = pandas.DataFrame()
 
     for entry in file_list:
         if os.stat(entry).st_size != 0:
