@@ -88,11 +88,12 @@ def combine_files_column_wise(directory, shell_glob, separator):
     :returns: combined dataframe or empty dataframe if files not found
 
     """
+    combined_dataframe = pandas.DataFrame()
     file_list = glob.glob(os.path.join(directory, shell_glob))
     if not file_list:
-        return {}
+        lgr.error("Files not found!")
+        return combined_dataframe
 
-    combined_dataframe = pandas.DataFrame()
     dataframes = []
     for entry in file_list:
         lgr.info("Reading {}".format(entry))
