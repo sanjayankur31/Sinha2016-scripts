@@ -107,7 +107,7 @@ def combine_files_column_wise(directory, shell_glob, separator):
         dataframes.append(dataframe)
 
         lgr.info("Combined dataframe..")
-        combined_dataframe = pandas.concat(dataframes, axis=0)
+        combined_dataframe = pandas.concat(dataframes, axis=1)
 
     return combined_dataframe
 
