@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 
+import ast
 import csv
 import os
 import pandas
@@ -124,6 +125,16 @@ def var_combine_files_column_wise(directory, shell_glob, separator):
     Note that each line may have a different number of columns, and lines with
     same index in different files may also have different numbers of columns.
 
+    The last line of the file must say what the maximum number of columns in
+    the file is. This is required by pandas to allocated the dataframe. So, the
+    last line should be of the form:
+
+    some unique marker, maxcols
+
+    While processing, the line with this unique marker is dropped from the
+    dataframe. I use -1, because in my files the index column is time, and
+    cannot be negative.
+
     :directory: directory where files are
     :shell_glob: shell_glob of files
     :separator: field separator - usually ',' or '\t'
@@ -144,9 +155,14 @@ def var_combine_files_column_wise(directory, shell_glob, separator):
             # so use this to size our df. Pandas can manage lines shorter
             # than previous lines by using NA, but it cannot handle lines
             # longer and crashes
-            # Ignore ',\n'
-            max_columns = int(float(
-                subprocess.check_output(['tail', '-1', entry])[0:-2])) + 1
+
+            # first, get the info from the file
+            output = (subprocess.check_output(['tail', '-1', entry]))
+            # decode byte string to utf8, then if it's tsv, replace it with a
+            # comma to make it a set, then let ast.literal_eval convert it into
+            # a set, the last value of which is the maxcols
+            max_columns = ast.literal_eval(
+                (output.decode("utf-8")).replace('\t', ', ')[:-1])[-1]
             lgr.debug("Max cols is: {}".format(max_columns))
 
             dataframe = pandas.read_csv(entry, skiprows=1, sep=separator,
@@ -158,8 +174,15 @@ def var_combine_files_column_wise(directory, shell_glob, separator):
                                         mangle_dupe_cols=True,
                                         index_col=0, error_bad_lines=False)
             # Drop last row which isn't data, it's metadata
+            lgr.debug("Read dataframe of shape: {}".format(dataframe.shape))
+            lgr.debug("Dropping index : {}".format(
+                dataframe.index[len(dataframe) - 1]))
             dataframe = dataframe.drop(dataframe.index[len(dataframe) - 1])
+            lgr.debug("Dropped last row to get shape: {}".format(
+                dataframe.shape))
             dataframe = dataframe.dropna(axis=1, how='all')
+            lgr.debug("Dropped na values to get shape: {}".format(
+                dataframe.shape))
 
             dataframes.append(dataframe)
         else:
