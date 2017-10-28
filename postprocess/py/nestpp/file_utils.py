@@ -201,7 +201,7 @@ def sum_columns_in_multiple_files(directory, shell_glob, separator):
     time    info1   info2   info3   info4..
 
     This will return a dataframe:
-        time    sumoffiles(info1)   sumoffiles(info2)...
+    time    sumoffiles(info1)   sumoffiles(info2)...
 
 
     :directory: the directory to act in
