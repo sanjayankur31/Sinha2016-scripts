@@ -289,7 +289,7 @@ def combine_files_row_wise(directory, shell_glob, separator):
         dataframes.append(
             pandas.read_csv(
                 fn, sep=separator, skipinitialspace=True,
-                skip_blank_lines=True, dtype=float,
+                skiprows=1, skip_blank_lines=True, dtype=float,
                 warn_bad_lines=True, lineterminator='\n',
                 header=None, index_col=0,
                 error_bad_lines=False
