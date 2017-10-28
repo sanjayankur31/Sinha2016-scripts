@@ -36,7 +36,7 @@ from nestpp.file_utils import (check_csv_file,
 @pytest.mark.usefixtures("module_setup")
 class TestFileUtils:
 
-    """Test utility functions."""
+    """Test file related utility functions."""
     def test_check_csv_file(self, datadir):
         """Test check_csv_file."""
         assert check_csv_file(datadir.join("good-csv.txt")) is True
@@ -50,8 +50,14 @@ class TestFileUtils:
         assert (get_max_csv_cols(datadir.join("max-csv-cols.txt")) is
                 written_max_cols)
 
-    def test_combine_files_column_wise(self):
+    def test_combine_files_column_wise(self, datadir):
         """Test combine_files_column_wise."""
+        combined_dataframe = combine_files_column_wise(
+            datadir, "col_combiner_test_*.txt", '\t')
+        # first row is a header
+        assert combined_dataframe.shape[0] == 999
+        # 0th columns are the common index
+        assert combined_dataframe.shape[1] == 2
 
     def test_get_info_from_file_series(self):
         """Test get_info_from_file_series function."""
@@ -62,8 +68,9 @@ class TestFileUtils:
     def test_combine_files_row_wise(self, datadir):
         """Test combining files row wise."""
         combined_dataframe = combine_files_row_wise(datadir,
-                                                    "row_combiner_test-*.txt",
+                                                    "row_combiner_test_*.txt",
                                                     '\t')
-        assert combined_dataframe.shape[0] == 2000
+        # first rows are headers
+        assert combined_dataframe.shape[0] == 1998
         # 0th column  is the index column
         assert combined_dataframe.shape[1] == 1
