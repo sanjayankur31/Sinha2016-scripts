@@ -71,28 +71,28 @@ class Postprocess:
         read files again and again.
         """
         # Excitatory neurons
-        self.neurons['E'] = self.__load_neurons("00-neuron-locations-E.txt",
+        self.neurons['E'] = self.__load_neurons("00-locations-E.txt",
                                                 cols=[0, 1, 2, 3, 4])
         # nid   posx    posy
         self.neurons['lpz_c_E'] = self.__load_neurons(
-            "00-lpz-centre-neuron-locations-E.txt")
+            "00-locations-lpz_c_E.txt")
         self.neurons['lpz_b_E'] = self.__load_neurons(
-            "00-lpz-border-neuron-locations-E.txt")
+            "00-locations_lpz_b_E.txt")
         self.neurons['lpz_E'] = (self.neurons_lpz_b_E + self.neurons_lpz_c_E)
         self.neurons['peri_lpz_E'] = self.__load_neurons(
-            "00-peri-lpz-neuron-locations-E.txt")
+            "00-locations_p_lpz_E.txt")
 
         # Inhibitory neurons
-        self.neurons['I'] = self.__load_neurons("00-neuron-locations-I.txt",
+        self.neurons['I'] = self.__load_neurons("00-locations-I.txt",
                                                 cols=[0, 1, 2, 3, 4])
         # nid   posx    posy
         self.neurons['lpz_c_I'] = self.__load_neurons(
-            "00-lpz-centre-neuron-locations-I.txt")
+            "00-locations-lpz_c_I.txt")
         self.neurons['lpz_b_I'] = self.__load_neurons(
-            "00-lpz-border-neuron-locations-I.txt")
+            "00-locations-lpz_b_I.txt")
         self.neurons['lpz_I'] = (self.neurons_lpz_b_I + self.neurons_lpz_c_I)
         self.neurons['peri_lpz_I'] = self.__load_neurons(
-            "00-peri-lpz-neuron-locations-I.txt")
+            "00-locations-p_lpz_I.txt")
 
         # Populate pattern lists and calculate the overlap percentage between
         # each pattern and the LPZ
