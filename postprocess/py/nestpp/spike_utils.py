@@ -62,9 +62,9 @@ def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
         lgr.error("File not found {}".format(spikes_fn))
         return False
 
-    with open("mean-firing-rates-{}.txt".format(neuronset), 'w') as fh1, \
-            open("std-firing-rates-{}.txt".format(neuronset), 'w') as fh2, \
-            open("ISI-cv-{}.txt".format(neuronset), 'w') as fh3:
+    with open("mean-firing-rates-{}.gdf".format(neuronset), 'w') as fh1, \
+            open("std-firing-rates-{}.gdf".format(neuronset), 'w') as fh2, \
+            open("ISI-cv-{}.gdf".format(neuronset), 'w') as fh3:
 
         for chunk in pandas.read_csv(spikes_fn, sep='\s+',
                                      names=["neuronID",
