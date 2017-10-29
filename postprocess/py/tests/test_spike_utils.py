@@ -50,14 +50,14 @@ class TestSpikeUtils:
 
         get_firing_rate_metrics("test", "spikes-test.gdf", num_neurons, 500.)
 
-        assert(os.path.exists("mean-firing-rates-test.txt") is True)
-        assert(os.path.exists("std-firing-rates-test.txt") is True)
-        assert(os.path.exists("ISI-cv-test.txt") is True)
+        assert(os.path.exists("mean-firing-rates-test.gdf") is True)
+        assert(os.path.exists("std-firing-rates-test.gdf") is True)
+        assert(os.path.exists("ISI-cv-test.gdf") is True)
 
         os.remove("spikes-test.gdf")
-        os.remove("mean-firing-rates-test.txt")
-        os.remove("std-firing-rates-test.txt")
-        os.remove("ISI-cv-test.txt")
+        os.remove("mean-firing-rates-test.gdf")
+        os.remove("std-firing-rates-test.gdf")
+        os.remove("ISI-cv-test.gdf")
 
     def test_spike_extractor(self):
         """Test the spike extracter."""
