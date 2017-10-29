@@ -24,7 +24,7 @@ this program.  If not, see <http://www.gnu.org/licenses/>.
 import configparser
 import os
 import sys
-import select
+from select import select
 from nestpp.loggerpp import get_module_logger
 
 
@@ -97,7 +97,7 @@ def input_with_timeout(prompt, timeout=30.0):
     return astring
 
 
-def get_numpats(self):
+def get_numpats():
     """Get number of patterns from list of files in directory."""
     filelist = os.listdir()
     i = 0

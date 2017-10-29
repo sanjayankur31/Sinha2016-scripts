@@ -32,7 +32,6 @@ def get_module_logger(module_name, logging_level=logging.DEBUG):
     :returns: created logger
 
     """
-    logging.basicConfig(level=logging_level)
     lgr = logging.getLogger(module_name)
     lgr.setLevel(logging_level)
     handler = logging.StreamHandler()

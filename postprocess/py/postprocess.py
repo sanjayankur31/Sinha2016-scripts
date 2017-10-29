@@ -27,7 +27,7 @@ import pandas
 import numpy
 
 # module imports
-from nestpp.utils import (get_config)
+from nestpp.utils import (get_config, get_numpats)
 from nestpp.plotting_utils import (plot_using_gnuplot_binary, plot_histograms,
                                    plot_location_grid, plot_rasters)
 from nestpp.loggerpp import get_module_logger
@@ -77,10 +77,11 @@ class Postprocess:
         self.neurons['lpz_c_E'] = self.__load_neurons(
             "00-locations-lpz_c_E.txt")
         self.neurons['lpz_b_E'] = self.__load_neurons(
-            "00-locations_lpz_b_E.txt")
-        self.neurons['lpz_E'] = (self.neurons_lpz_b_E + self.neurons_lpz_c_E)
+            "00-locations-lpz_b_E.txt")
+        self.neurons['lpz_E'] = numpy.concatenate(
+            (self.neurons['lpz_b_E'], self.neurons['lpz_c_E']), axis=0)
         self.neurons['peri_lpz_E'] = self.__load_neurons(
-            "00-locations_p_lpz_E.txt")
+            "00-locations-p_lpz_E.txt")
 
         # Inhibitory neurons
         self.neurons['I'] = self.__load_neurons("00-locations-I.txt",
@@ -90,13 +91,14 @@ class Postprocess:
             "00-locations-lpz_c_I.txt")
         self.neurons['lpz_b_I'] = self.__load_neurons(
             "00-locations-lpz_b_I.txt")
-        self.neurons['lpz_I'] = (self.neurons_lpz_b_I + self.neurons_lpz_c_I)
+        self.neurons['lpz_I'] = numpy.concatenate(
+            (self.neurons['lpz_b_I'], self.neurons['lpz_c_I']), axis=0)
         self.neurons['peri_lpz_I'] = self.__load_neurons(
             "00-locations-p_lpz_I.txt")
 
         # Populate pattern lists and calculate the overlap percentage between
         # each pattern and the LPZ
-        self.numpats = self.__get_numpats()
+        self.numpats = get_numpats()
         with open("00-pattern-overlap.txt", 'w') as f:
             for i in range(1, self.numpats + 1):
                 neurons_P = self.__load_neurons(
@@ -114,7 +116,7 @@ class Postprocess:
 
     def generate_synaptic_element_graphs(self):
         """Post process synaptic elements from individual neuronal files."""
-        if "syn_elms" not in self.cfg.graph_list:
+        if "syn_elms" not in self.cfg['time_graphs']:
             return True
 
         self.lgr.info("Processing synaptic elements..")
@@ -140,7 +142,7 @@ class Postprocess:
                 "Processed syn elms metrics for {} neurons..".format(
                     neuron_set))
 
-        plot_using_gnuplot_binary(os.path.join(self.cfg.plots_dir,
+        plot_using_gnuplot_binary(os.path.join(self.cfg['plots_dir'],
                                                'plot-cal-metrics.plt'))
 
     def generate_calcium_graphs(self):
@@ -155,7 +157,7 @@ class Postprocess:
         time to a file at the moment. This will be added later if a per neuron
         analysis is required.
         """
-        if "calciums" not in self.cfg.graph_list:
+        if "calciums" not in self.cfg['time_graphs']:
             return True
 
         self.lgr.info("Generating calcium graphs..")
@@ -185,7 +187,7 @@ class Postprocess:
                         # growth curves
                         if xmax < cals.mean(axis=0):
                             xmax = cals.mean(axis=0)
-                        if atime == str(self.cfg.sp_enabled_at * 1000.):
+                        if atime == str(self.cfg['sp_enabled_at'] * 1000.):
                             eps = cals.mean(axis=0)
                             eta_a = 0.56 * eps
                             eta_d = 0.14 * eps
@@ -202,14 +204,14 @@ class Postprocess:
                                 "-e", "xmax={}".format(xmax),
                             )
                             plot_using_gnuplot_binary(
-                                os.path.join(self.cfg.plots_dir,
+                                os.path.join(self.cfg['plots_dir'],
                                              'plot-growthcurves.plt'),
                                 args)
 
             self.lgr.info(
                 "Processed cal metrics for {} neurons..".format(neuron_set))
 
-        plot_using_gnuplot_binary(os.path.join(self.cfg.plots_dir,
+        plot_using_gnuplot_binary(os.path.join(self.cfg['plots_dir'],
                                                'plot-cal-metrics.plt'))
 
     def generate_conductance_graphs(self):
@@ -221,7 +223,7 @@ class Postprocess:
         :returns: True if all went well, else False
 
         """
-        if "conductances" not in self.cfg.graph_list:
+        if "conductances" not in self.cfg['time_graphs']:
             return True
 
         self.lgr.info("Generating conductance graphs vs time")
@@ -353,7 +355,7 @@ class Postprocess:
                 (not conductances_II.empty)
         ):
             plot_using_gnuplot_binary(
-                os.path.join(self.cfg.plots_dir,
+                os.path.join(self.cfg['plots_dir'],
                              'plot-conductance-metrics.plt'))
             self.lgr.info("Conductance graphs plotted..")
         else:
@@ -361,12 +363,12 @@ class Postprocess:
 
     def generate_firing_rate_graphs(self):
         """Generate firing rate graphs."""
-        if "firing_rates" not in self.cfg.graph_list:
+        if "firing_rates" not in self.cfg['time_graphs']:
             return True
 
         self.lgr.info("Generating mean firing rate graphs vs time")
 
-        if self.__reprocess_raw_files(["firing-", "std-", "cv-"]):
+        if reprocess_raw_files(".", ["firing-*", "std-*", "cv-*"]):
             for neuron_set in self.neurons.keys():
                 get_firing_rate_metrics(
                     neuron_set, "spikes-{}.gdf".format(neuron_set),
@@ -374,43 +376,43 @@ class Postprocess:
 
             self.lgr.info("Generating firing rate graphs")
             plot_using_gnuplot_binary(
-                os.path.join(self.cfg.plots_dir, 'plot-firing-rates-IE.plt')
+                os.path.join(self.cfg['plots_dir'], 'plot-firing-rates-IE.plt')
             )
 
             if self.numpats > 0:
                 self.lgr.info("Generating pattern graphs")
                 plot_using_gnuplot_binary(
-                    os.path.join(self.cfg.plots_dir,
+                    os.path.join(self.cfg['plots_dir'],
                                  'plot-firing-rates-patterns.plt'),
                     ['-e', 'numpats={}'.format(self.numpats)]
                 )
 
             self.lgr.info("Generating ISI cv graphs")
             plot_using_gnuplot_binary(
-                os.path.join(self.cfg.plots_dir, 'plot-cvs.plt'))
+                os.path.join(self.cfg['plots_dir'], 'plot-cvs.plt'))
 
             self.lgr.info("Generating STD of firing rates graphs")
             plot_using_gnuplot_binary(
-                os.path.join(self.cfg.plots_dir, 'plot-std.plt'))
+                os.path.join(self.cfg['plots_dir'], 'plot-std.plt'))
 
     def generate_histograms(self):
         """Generate histograms."""
         # firing rate histograms for E and I neurons
         histlist = ['E', 'I']
         self.lgr.info("Generating histograms for {}".format(histlist))
-        if len(self.cfg.snapshots['histograms']) > 0:
+        if len(self.cfg['snapshots']['histograms']) > 0:
             for neuron_set in histlist:
                 get_individual_firing_rate_snapshots(
                     neuron_set, "spikes-{}.gdf".format(neuron_set),
                     self.neurons[neuron_set],
-                    self.cfg.snapshots['histograms'])
+                    self.cfg['snapshots']['histograms'])
 
-            for time in self.cfg.snapshots['histograms']:
+            for time in self.cfg['snapshots']['histograms']:
                 plot_histograms(histlist, time)
 
     def generate_firing_rate_grid_snapshots(self):
         """Generate top view firing rate snapshots."""
-        if len(self.cfg.snapshots['firing_rates']) > 0:
+        if len(self.cfg['snapshots']['firing_rates']) > 0:
             fr_grid_list = ['E', 'I']
             self.lgr.info(
                 "Generating firing rate grid snapshots for {}".format(
@@ -419,9 +421,9 @@ class Postprocess:
                 get_individual_firing_rate_snapshots(
                     neuron_set, "spikes-{}.gdf".format(neuron_set),
                     self.neurons[neuron_set],
-                    self.cfg.snapshots['firing_rates'])
+                    self.cfg['snapshots']['firing_rates'])
 
-                for time in self.cfg.snapshots['firing_rates']:
+                for time in self.cfg['snapshots']['firing_rates']:
                     i_fn = "firing-rates-{}-{}.gdf".format(neuron_set, time)
                     o_fn = "firing-rate-grid-plot-{}-{}.png".format(neuron_set,
                                                                     time)
@@ -431,19 +433,19 @@ class Postprocess:
                             '-e', "i_fn='{}'".format(i_fn),
                             ]
                     plot_using_gnuplot_binary(
-                        os.path.join(self.cfg.plots_dir,
+                        os.path.join(self.cfg['plots_dir'],
                                      'plot-firing-rates-IE.plt'),
                         args)
 
     def generate_raster_graphs(self):
         """Plot raster graphs for E and I neurons."""
         # rasters for E I only for the moment
-        if len(self.cfg.snapshots['rasters']) > 0:
+        if len(self.cfg['snapshots']['rasters']) > 0:
             for neuron_set in ['E', 'I']:
                 extract_spikes(neuron_set, "spikes-{}.gdf".format(neuron_set),
-                               self.cfg.snapshots['rasters'])
+                               self.cfg['snapshots']['rasters'])
 
-            for t in self.cfg.snapshots['raster']:
+            for t in self.cfg['snapshots']['raster']:
                 neuron_dict = {
                     'E': [self.neurons['E'][0][0], self.neurons['E'][-1][0]],
                     'I': [self.neurons['I'][0][0], self.neurons['I'][-1][0]],
@@ -473,6 +475,8 @@ class Postprocess:
 
         TODO: INCOMPLETE
         """
+        return True
+
         if self.cfg.snr:
             import nestpp.getFiringRates as rg
             import nestpp.calculateSNR as snr
@@ -512,7 +516,7 @@ class Postprocess:
 
         :plotting_interval: specify the time intervals between data points
         """
-        if "syn_turnover" not in self.cfg.graph_list:
+        if "syn_turnover" not in self.cfg['time_graphs']:
             return True
 
         for neuron_set in ["lpz_c_E", "lpz_b_E", "p_lpz_E", "lpz_c_I",
@@ -570,7 +574,8 @@ class Postprocess:
                         current_plot_time = row[1]
 
         plot_using_gnuplot_binary(
-            os.path.join(self.cfg.plots_dir, 'plot-total-synapse-changes.plt'))
+            os.path.join(self.cfg['plots_dir'],
+                         'plot-total-synapse-changes.plt'))
 
     def main(self):
         """Do everything."""
@@ -590,5 +595,5 @@ class Postprocess:
 
 
 if __name__ == "__main__":
-    runner = Postprocess()
+    runner = Postprocess("config.ini")
     runner.main()

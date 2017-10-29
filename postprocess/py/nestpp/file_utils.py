@@ -249,7 +249,7 @@ def reprocess_raw_files(directory, shell_globs):
     """
     files_found = []
     for shell_glob in shell_globs:
-        files_found.append(glob.glob(os.path.join(directory, shell_glob)))
+        files_found += (glob.glob(os.path.join(directory, shell_glob)))
 
     if len(files_found) == 0:
         return True
