@@ -80,7 +80,7 @@ mv spikes-p_lpz_I.gdf consolidated_files
 mv spikes-I.gdf consolidated_files
 
 echo "Moving neuron location files"
-cp -- 00-locations*.txt consolidated_files/ -v
+cp -v -- 00-locations*.txt consolidated_files/
 
 # echo "Removed $SORTTMPDIR"
 # rm -rf $SORTTMPDIR
