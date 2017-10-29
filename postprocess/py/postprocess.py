@@ -129,21 +129,27 @@ class Postprocess:
                     neuron_set)]):
                 with open(neuron_set_o_fn, 'w') as f:
                     for atime in time_list:
+                        self.lgr.debug(
+                            "Processing syn elms for {} at {}".format(
+                                neuron_set, atime))
                         ses = pandas.DataFrame()
                         ses = combine_files_row_wise(
                             "..", "05-se-{}-*-{}.txt".format(
                                 neuron_set, atime), '\t')
 
+                        means = [str(x) for x in ses.mean(axis=0).values]
+                        stds = [str(x) for x in ses.std(axis=0).values]
                         print("{}\t{}\t{}".format(
-                            atime, ses.mean(axis=0),
-                            ses.std(axis=0)), file=f)
+                            atime, '\t'.join(means), '\t'.join(stds)),
+                              file=f)
 
             self.lgr.info(
                 "Processed syn elms metrics for {} neurons..".format(
                     neuron_set))
 
-        plot_using_gnuplot_binary(os.path.join(self.cfg['plots_dir'],
-                                               'plot-cal-metrics.plt'))
+        plot_using_gnuplot_binary(
+            os.path.join(self.cfg['plots_dir'],
+                         'plot-synaptic-elements-metrics.plt'))
 
     def generate_calcium_graphs(self):
         """Postprocess calcium files.
