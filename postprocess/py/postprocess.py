@@ -424,10 +424,10 @@ class Postprocess:
         """Generate top view firing rate snapshots."""
         if len(self.cfg['snapshots']['firing_rates']) > 0:
             fr_grid_list = ['E', 'I']
-            self.lgr.info(
-                "Generating firing rate grid snapshots for {}".format(
-                    fr_grid_list))
             for neuron_set in fr_grid_list:
+                self.lgr.debug(
+                    "Generating firing rate snapshots for {}".format(
+                        neuron_set))
                 get_individual_firing_rate_snapshots(
                     neuron_set, "spikes-{}.gdf".format(neuron_set),
                     self.neurons[neuron_set],
@@ -435,8 +435,8 @@ class Postprocess:
 
                 for time in self.cfg['snapshots']['firing_rates']:
                     i_fn = "firing-rates-{}-{}.gdf".format(neuron_set, time)
-                    o_fn = "firing-rate-grid-plot-{}-{}.png".format(neuron_set,
-                                                                    time)
+                    o_fn = "firing-rates-grid-plot-{}-{}.png".format(
+                        neuron_set, time)
                     args = ['-e', "o_fn='{}'".format(o_fn),
                             '-e', "neuron_set='{}'".format(neuron_set),
                             '-e', "plot_time='{}'".format(time),
@@ -444,7 +444,7 @@ class Postprocess:
                             ]
                     plot_using_gnuplot_binary(
                         os.path.join(self.cfg['plots_dir'],
-                                     'plot-firing-rates-IE.plt'),
+                                     'plot-firing-rates-snapshot.plt'),
                         args)
 
     def generate_raster_graphs(self):
@@ -531,6 +531,8 @@ class Postprocess:
 
         for neuron_set in ["lpz_c_E", "lpz_b_E", "p_lpz_E", "lpz_c_I",
                            "lpz_b_I", "p_lpz_I"]:
+            self.lgr.info(
+                "Processing synaptic change graphs for {}".format(neuron_set))
             formed_fn = os.path.join(
                 "..", "04-synapses-formed-{}-0.txt".format(neuron_set))
             deleted_fn = os.path.join(

@@ -317,16 +317,17 @@ def get_individual_firing_rate_snapshots(neuronset, spikes_fn,
                 lgr.debug("Neurons after appending zeros: {}".format(
                     len(rate)))
 
-                o_fn = "firing-rate-{}-{}.gdf".format(
-                    neuronset, time)
+                o_fn = "firing-rates-{}-{}.gdf".format(
+                    neuronset, time/1000.)
                 lgr.info("Printing neuronal firing rate values to {}".format(
                     o_fn))
 
                 with open(o_fn, 'w') as fh:
                     for neuron in neuron_locations:
-                        print("{}\t{}\t{}\t{}".format(neuron, neuron[1],
+                        print("{}\t{}\t{}\t{}".format(neuron[0], neuron[1],
                                                       neuron[2],
-                                                      rate[neuron]), file=fh)
+                                                      rate[neuron[0]]),
+                              file=fh)
 
                 current += 1
                 if current >= len(sorted_timelist):
