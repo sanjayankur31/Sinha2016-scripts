@@ -51,8 +51,7 @@ def plot_using_gnuplot_binary(plt_file, arglist=[]):
     retcode = 0
 
     if os.path.exists(plt_file):
-        for arg in arglist:
-            args.append(['-e', arg])
+        args += arglist
 
         args.append(plt_file)
         lgr.info("Plotting {}".format(
