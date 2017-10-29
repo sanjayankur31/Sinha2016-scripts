@@ -47,7 +47,7 @@ class Postprocess:
     def __init__(self, configfile):
         """Initialise."""
         self.cfg = get_config(configfile)
-        self.lgr = get_module_logger(__name__)
+        self.lgr = get_module_logger("Postprocessor")
         self.neurons = {}
         self.__populate_neuron_lists()
 
