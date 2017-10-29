@@ -64,21 +64,39 @@ for pat in $(seq 1 "$NUMPATS"); do
     mv "00-recall-neurons-""$pat"".txt" consolidated_files
 done
 
-echo "Combining E files"
-LC_ALL=C sort -k "2" -n --parallel=16 -T "$SORTTMPDIR" spikes-E*.gdf > spikes-E.gdf
+echo "Combining lpz_c_E files"
+LC_ALL=C sort -k "2" -n --parallel=16 -T "$SORTTMPDIR" spikes-lpz_c_E*.gdf > spikes-lpz_c_E.gdf
+
+echo "Combining lpz_b_E files"
+LC_ALL=C sort -k "2" -n --parallel=16 -T "$SORTTMPDIR" spikes-lpz_b_E*.gdf > spikes-lpz_b_E.gdf
+
+echo "Combining p_lpz_E files"
+LC_ALL=C sort -k "2" -n --parallel=16 -T "$SORTTMPDIR" spikes-p_lpz_E*.gdf > spikes-p_lpz_E.gdf
+
+echo "Combining all E files"
+LC_ALL=C sort -k "2" -n --parallel=16 -T "$SORTTMPDIR" spikes-p_lpz_E.gdf spikes-lpz_c_E.gdf spikes-lpz_b_E.gdf > spikes-E.gdf
+
+mv spikes-lpz_c_E.gdf consolidated_files
+mv spikes-lpz_b_E.gdf consolidated_files
+mv spikes-p_lpz_E.gdf consolidated_files
 mv spikes-E.gdf consolidated_files
 
-echo "Combining I files"
-LC_ALL=C sort -k "2" -n --parallel=16 -T "$SORTTMPDIR" spikes-I*.gdf > spikes-I.gdf
+echo "Combining lpz_c_I files"
+LC_ALL=C sort -k "2" -n --parallel=16 -T "$SORTTMPDIR" spikes-lpz_c_I*.gdf > spikes-lpz_c_I.gdf
+
+echo "Combining lpz_b_I files"
+LC_ALL=C sort -k "2" -n --parallel=16 -T "$SORTTMPDIR" spikes-lpz_b_I*.gdf > spikes-lpz_b_I.gdf
+
+echo "Combining p_lpz_I files"
+LC_ALL=C sort -k "2" -n --parallel=16 -T "$SORTTMPDIR" spikes-p_lpz_I*.gdf > spikes-p_lpz_I.gdf
+
+echo "Combining all I files"
+LC_ALL=C sort -k "2" -n --parallel=16 -T "$SORTTMPDIR" spikes-p_lpz_I.gdf spikes-lpz_c_I.gdf spikes-lpz_b_I.gdf > spikes-I.gdf
+
+mv spikes-lpz_c_I.gdf consolidated_files
+mv spikes-lpz_b_I.gdf consolidated_files
+mv spikes-p_lpz_I.gdf consolidated_files
 mv spikes-I.gdf consolidated_files
-
-echo "Combining LPZ E files"
-LC_ALL=C sort -k "2" -n --parallel=16 -T "$SORTTMPDIR" spikes-lpz-E*.gdf > spikes-lpz-E.gdf
-mv spikes-lpz-E.gdf consolidated_files
-
-echo "Combining LPZ I files"
-LC_ALL=C sort -k "2" -n --parallel=16 -T "$SORTTMPDIR" spikes-lpz-I*.gdf > spikes-lpz-I.gdf
-mv spikes-lpz-I.gdf consolidated_files
 
 echo "Combining growth curve parameter files for E neurons"
 LC_ALL=C cat 21-gaussian-params-E-*txt > 21-gaussian-params-E-all.txt
