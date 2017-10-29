@@ -77,10 +77,11 @@ class Postprocess:
         self.neurons['lpz_c_E'] = self.__load_neurons(
             "00-locations-lpz_c_E.txt")
         self.neurons['lpz_b_E'] = self.__load_neurons(
-            "00-locations_lpz_b_E.txt")
-        self.neurons['lpz_E'] = (self.neurons_lpz_b_E + self.neurons_lpz_c_E)
+            "00-locations-lpz_b_E.txt")
+        self.neurons['lpz_E'] = numpy.concatenate(
+            (self.neurons['lpz_b_E'], self.neurons['lpz_c_E']), axis=0)
         self.neurons['peri_lpz_E'] = self.__load_neurons(
-            "00-locations_p_lpz_E.txt")
+            "00-locations-p_lpz_E.txt")
 
         # Inhibitory neurons
         self.neurons['I'] = self.__load_neurons("00-locations-I.txt",
@@ -90,7 +91,8 @@ class Postprocess:
             "00-locations-lpz_c_I.txt")
         self.neurons['lpz_b_I'] = self.__load_neurons(
             "00-locations-lpz_b_I.txt")
-        self.neurons['lpz_I'] = (self.neurons_lpz_b_I + self.neurons_lpz_c_I)
+        self.neurons['lpz_I'] = numpy.concatenate(
+            (self.neurons['lpz_b_I'], self.neurons['lpz_c_I']), axis=0)
         self.neurons['peri_lpz_I'] = self.__load_neurons(
             "00-locations-p_lpz_I.txt")
 
