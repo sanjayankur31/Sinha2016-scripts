@@ -137,6 +137,8 @@ class Postprocess:
                             "..", "05-se-{}-*-{}.txt".format(
                                 neuron_set, atime), '\t')
 
+                        # mean of more than one column, so this needs to be
+                        # done.
                         means = [str(x) for x in ses.mean(axis=0).values]
                         stds = [str(x) for x in ses.std(axis=0).values]
                         print("{}\t{}\t{}".format(
@@ -186,18 +188,20 @@ class Postprocess:
                             "..", "02-calcium-{}-*-{}.txt".format(
                                 neuron_set, atime), '\t')
 
+                        means = [str(x) for x in cals.mean(axis=0).values]
+                        stds = [str(x) for x in cals.std(axis=0).values]
                         print("{}\t{}\t{}".format(
-                            atime, cals.mean(axis=0),
-                            cals.std(axis=0)), file=f)
+                            atime, '\t'.join(means),
+                            '\t'.join(stds)), file=f)
 
                         # growth curves
-                        if xmax < cals.mean(axis=0):
-                            xmax = cals.mean(axis=0)
+                        if xmax < cals.mean(axis=0).values[0]:
+                            xmax = cals.mean(axis=0).values[0]
                         if atime == str(self.cfg['sp_enabled_at'] * 1000.):
-                            eps = cals.mean(axis=0)
+                            eps = cals.mean(axis=0).values[0]
                             eta_a = 0.56 * eps
                             eta_d = 0.14 * eps
-                            args = (
+                            args = [
                                 "-e", "etad={}".format(eta_d),
                                 "-e", "etaa={}".format(eta_a),
                                 "-e", "epsilon={}".format(eps),
@@ -207,8 +211,8 @@ class Postprocess:
                                 "-e",
                                 "plot_title='Growth curves for {}'".format(
                                     neuron_set),
-                                "-e", "xmax={}".format(xmax),
-                            )
+                                "-e", "xmax={}".format(xmax*1.5),
+                            ]
                             plot_using_gnuplot_binary(
                                 os.path.join(self.cfg['plots_dir'],
                                              'plot-growthcurves.plt'),
