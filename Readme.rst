@@ -11,13 +11,13 @@ Master:
 .. image:: https://travis-ci.org/sanjayankur31/Sinha2016-scripts.svg?branch=master
     :target: https://travis-ci.org/sanjayankur31/Sinha2016-scripts
 
-.. image:: https://img.shields.io/codecov/c/github/sanjayankur31/Sinha2016-scripts/master.svg?maxAge=2592000
-    :target: https://codecov.io/gh/sanjayankur31/Sinha2016-scripts?branch=master
+.. image:: https://img.shields.io/codecov/c/github/sanjayankur31/Sinha2016-scripts/master.svg
+    :target: https://codecov.io/gh/sanjayankur31/Sinha2016-scripts/branch/master
 
 Develop:
 
 .. image:: https://travis-ci.org/sanjayankur31/Sinha2016-scripts.svg?branch=develop
     :target: https://travis-ci.org/sanjayankur31/Sinha2016-scripts
 
-.. image:: https://img.shields.io/codecov/c/github/sanjayankur31/Sinha2016-scripts/develop.svg?maxAge=2592000
-    :target: https://codecov.io/gh/sanjayankur31/Sinha2016-scripts?branch=develop
+.. image:: https://img.shields.io/codecov/c/github/sanjayankur31/Sinha2016-scripts/develop.svg
+    :target: https://codecov.io/gh/sanjayankur31/Sinha2016-scripts/branch/develop
