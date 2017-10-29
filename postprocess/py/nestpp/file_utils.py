@@ -32,6 +32,7 @@ import os
 import pandas
 import glob
 import subprocess
+from natsort import natsorted
 from nestpp.loggerpp import get_module_logger
 from nestpp.utils import input_with_timeout
 
@@ -96,16 +97,19 @@ def combine_files_column_wise(directory, shell_glob, separator):
         return combined_dataframe
 
     dataframes = []
-    for entry in file_list:
-        lgr.info("Reading {}".format(entry))
-        dataframe = pandas.read_csv(entry, skiprows=1, sep=separator,
-                                    skipinitialspace=True,
-                                    skip_blank_lines=True, dtype=float,
-                                    warn_bad_lines=True,
-                                    lineterminator='\n', header=None,
-                                    index_col=0, error_bad_lines=False)
-
-        dataframes.append(dataframe)
+    for fn in file_list:
+        lgr.info("Reading {}".format(fn))
+        try:
+            dataframe = pandas.read_csv(fn, skiprows=1, sep=separator,
+                                        skipinitialspace=True,
+                                        skip_blank_lines=True, dtype=float,
+                                        warn_bad_lines=True,
+                                        lineterminator='\n', header=None,
+                                        index_col=0, error_bad_lines=False)
+        except pandas.errors.EmptyDataError as e:
+            lgr.error("File empty: {}. Moving on".format(fn))
+        else:
+            dataframes.append(dataframe)
 
         lgr.info("Combined dataframe..")
         combined_dataframe = pandas.concat(dataframes, axis=1)
@@ -148,24 +152,24 @@ def var_combine_files_column_wise(directory, shell_glob, separator):
     dataframes = []
     combined_dataframe = pandas.DataFrame()
 
-    for entry in file_list:
-        lgr.info("Reading {}".format(entry))
-        if os.stat(entry).st_size != 0:
-            # Last line contains the maximum number of fields in any line,
-            # so use this to size our df. Pandas can manage lines shorter
-            # than previous lines by using NA, but it cannot handle lines
-            # longer and crashes
+    for fn in file_list:
+        lgr.info("Reading {}".format(fn))
+        # Last line contains the maximum number of fields in any line,
+        # so use this to size our df. Pandas can manage lines shorter
+        # than previous lines by using NA, but it cannot handle lines
+        # longer and crashes
 
-            # first, get the info from the file
-            output = (subprocess.check_output(['tail', '-1', entry]))
-            # decode byte string to utf8, then if it's tsv, replace it with a
-            # comma to make it a set, then let ast.literal_eval convert it into
-            # a set, the last value of which is the maxcols
-            max_columns = ast.literal_eval(
-                (output.decode("utf-8")).replace('\t', ', ')[:-1])[-1]
-            lgr.debug("Max cols is: {}".format(max_columns))
+        # first, get the info from the file
+        output = (subprocess.check_output(['tail', '-1', fn]))
+        # decode byte string to utf8, then if it's tsv, replace it with a
+        # comma to make it a set, then let ast.literal_eval convert it into
+        # a set, the last value of which is the maxcols
+        max_columns = ast.literal_eval(
+            (output.decode("utf-8")).replace('\t', ', ')[:-1])[-1]
+        lgr.debug("Max cols is: {}".format(max_columns))
 
-            dataframe = pandas.read_csv(entry, skiprows=1, sep=separator,
+        try:
+            dataframe = pandas.read_csv(fn, skiprows=1, sep=separator,
                                         skipinitialspace=True,
                                         skip_blank_lines=True, dtype=float,
                                         warn_bad_lines=True,
@@ -173,8 +177,12 @@ def var_combine_files_column_wise(directory, shell_glob, separator):
                                         names=range(0, max_columns),
                                         mangle_dupe_cols=True,
                                         index_col=0, error_bad_lines=False)
+        except pandas.errors.EmptyDataError as e:
+            lgr.error("File empty: {}. Moving on".format(fn))
+        else:
             # Drop last row which isn't data, it's metadata
-            lgr.debug("Read dataframe of shape: {}".format(dataframe.shape))
+            lgr.debug("Read dataframe of shape: {}".format(
+                dataframe.shape))
             lgr.debug("Dropping index : {}".format(
                 dataframe.index[len(dataframe) - 1]))
             dataframe = dataframe.drop(dataframe.index[len(dataframe) - 1])
@@ -185,8 +193,6 @@ def var_combine_files_column_wise(directory, shell_glob, separator):
                 dataframe.shape))
 
             dataframes.append(dataframe)
-        else:
-            lgr.warning("Skipping empty file, {}".format(entry))
 
     lgr.info("Combining dataframes..")
     combined_dataframe = pandas.concat(dataframes, axis=1)
@@ -211,24 +217,24 @@ def sum_columns_in_multiple_files(directory, shell_glob, separator):
 
     """
     summed_df = pandas.DataFrame()
-    file_list = glob.glob(os.path.join(directory, shell_glob))
+    file_list = natsorted(glob.glob(os.path.join(directory, shell_glob)))
     if not file_list:
         return summed_df
 
     dataframes = []
 
-    for entry in file_list:
-        if os.stat(entry).st_size != 0:
-            dataframe = pandas.read_csv(entry, skiprows=1, sep=separator,
+    for fn in file_list:
+        try:
+            dataframe = pandas.read_csv(fn, skiprows=1, sep=separator,
                                         skipinitialspace=True,
                                         skip_blank_lines=True, dtype=float,
                                         warn_bad_lines=True,
                                         lineterminator='\n', header=None,
                                         index_col=0, error_bad_lines=False)
-
-            dataframes.append(dataframe)
+        except pandas.errors.EmptyDataError as e:
+            lgr.error("File empty: {}. Moving on".format(fn))
         else:
-            lgr.warning("Skipping empty file, {}".format(entry))
+            dataframes.append(dataframe)
 
     summed_df = dataframes.pop(0)
     for dataframe in dataframes:
@@ -249,7 +255,7 @@ def reprocess_raw_files(directory, shell_globs):
     """
     files_found = []
     for shell_glob in shell_globs:
-        files_found += (glob.glob(os.path.join(directory, shell_glob)))
+        files_found += natsorted(glob.glob(os.path.join(directory, shell_glob)))
 
     if len(files_found) == 0:
         return True
@@ -286,14 +292,14 @@ def get_info_from_file_series(directory, prefix, suffix):
     info_list = []
     complete_prefix = os.path.join(directory, prefix)
     complete_glob = complete_prefix + "*" + suffix
-    file_list = glob.glob(complete_glob)
+    file_list = natsorted(glob.glob(complete_glob))
 
     for af in file_list:
         info_list.append(
             (af.replace(complete_prefix, '')).replace(suffix, '')
         )
 
-    return info_list
+    return natsorted(info_list)
 
 
 def combine_files_row_wise(directory, shell_glob, separator):
@@ -307,16 +313,21 @@ def combine_files_row_wise(directory, shell_glob, separator):
     """
     dataframes = []
     resultant_df = pandas.DataFrame()
-    file_list = glob.glob(os.path.join(directory, shell_glob))
+    file_list = natsorted(glob.glob(os.path.join(directory, shell_glob)))
     for fn in file_list:
-        dataframes.append(
-            pandas.read_csv(
+        lgr.debug("Processing {}".format(fn))
+        try:
+            df = pandas.read_csv(
                 fn, sep=separator, skipinitialspace=True,
                 skiprows=1, skip_blank_lines=True, dtype=float,
                 warn_bad_lines=True, lineterminator='\n',
                 header=None, index_col=0,
                 error_bad_lines=False
             )
-        )
+        except pandas.errors.EmptyDataError as e:
+            lgr.error("File empty: {}. Moving on".format(fn))
+        else:
+            dataframes.append(df)
+
     resultant_df = pandas.concat(dataframes, axis=0)
     return resultant_df
