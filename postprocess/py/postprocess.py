@@ -398,9 +398,9 @@ class Postprocess:
     def generate_histograms(self):
         """Generate histograms."""
         # firing rate histograms for E and I neurons
-        histlist = ['E', 'I']
-        self.lgr.info("Generating histograms for {}".format(histlist))
         if len(self.cfg['snapshots']['histograms']) > 0:
+            histlist = ['E', 'I']
+            self.lgr.info("Generating histograms for {}".format(histlist))
             for neuron_set in histlist:
                 get_individual_firing_rate_snapshots(
                     neuron_set, "spikes-{}.gdf".format(neuron_set),
