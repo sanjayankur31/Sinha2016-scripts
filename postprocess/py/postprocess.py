@@ -27,7 +27,7 @@ import pandas
 import numpy
 
 # module imports
-from nestpp.utils import (get_config)
+from nestpp.utils import (get_config, get_numpats)
 from nestpp.plotting_utils import (plot_using_gnuplot_binary, plot_histograms,
                                    plot_location_grid, plot_rasters)
 from nestpp.loggerpp import get_module_logger
@@ -96,7 +96,7 @@ class Postprocess:
 
         # Populate pattern lists and calculate the overlap percentage between
         # each pattern and the LPZ
-        self.numpats = self.__get_numpats()
+        self.numpats = get_numpats()
         with open("00-pattern-overlap.txt", 'w') as f:
             for i in range(1, self.numpats + 1):
                 neurons_P = self.__load_neurons(
@@ -366,7 +366,7 @@ class Postprocess:
 
         self.lgr.info("Generating mean firing rate graphs vs time")
 
-        if self.__reprocess_raw_files(["firing-", "std-", "cv-"]):
+        if reprocess_raw_files(".", ["firing-*", "std-*", "cv-*"]):
             for neuron_set in self.neurons.keys():
                 get_firing_rate_metrics(
                     neuron_set, "spikes-{}.gdf".format(neuron_set),
