@@ -38,30 +38,11 @@ for pat in $(seq 1 "$NUMPATS"); do
     LC_ALL=C sort -k "2" -n --parallel=16 -T "$SORTTMPDIR" "spikes-background-""$pat"*.gdf  > "spikes-background-""$pat"".gdf"
     mv "spikes-background-""$pat"".gdf" consolidated_files
 
-    echo "Combining recall spike files"
-    LC_ALL=C sort -k "2" -n --parallel=16 -T "$SORTTMPDIR" "spikes-recall-""$pat"*.gdf  > "spikes-recall-""$pat"".gdf"
-    mv "spikes-recall-""$pat"".gdf" consolidated_files
-
-    echo "Combining lpz-pattern spike files"
-    LC_ALL=C sort -k "2" -n --parallel=16 -T "$SORTTMPDIR" "spikes-lpz-pattern-""$pat"*.gdf  > "spikes-lpz-pattern-""$pat"".gdf"
-    mv "spikes-lpz-pattern-""$pat"".gdf" consolidated_files
-
-    echo "Combining lpz-bg-E spike files"
-    LC_ALL=C sort -k "2" -n --parallel=16 -T "$SORTTMPDIR" "spikes-lpz-bg-E-""$pat"*.gdf  > "spikes-lpz-bg-E-""$pat"".gdf"
-    mv "spikes-lpz-bg-E-""$pat"".gdf" consolidated_files
-
-    echo "Combining lpz-bg-I spike files"
-    LC_ALL=C sort -k "2" -n --parallel=16 -T "$SORTTMPDIR" "spikes-lpz-bg-I-""$pat"*.gdf  > "spikes-lpz-bg-I-""$pat"".gdf"
-    mv "spikes-lpz-bg-I-""$pat"".gdf" consolidated_files
-
     echo "Moving pattern neuron files"
     mv "00-pattern-neurons-""$pat"".txt" consolidated_files
 
     echo "Moving background neuron files"
     mv "00-background-neurons-""$pat"".txt" consolidated_files
-
-    echo "Moving recall neuron files"
-    mv "00-recall-neurons-""$pat"".txt" consolidated_files
 done
 
 echo "Combining lpz_c_E files"
@@ -98,16 +79,8 @@ mv spikes-lpz_b_I.gdf consolidated_files
 mv spikes-p_lpz_I.gdf consolidated_files
 mv spikes-I.gdf consolidated_files
 
-echo "Combining growth curve parameter files for E neurons"
-LC_ALL=C cat 21-gaussian-params-E-*txt > 21-gaussian-params-E-all.txt
-mv 21-gaussian-params-E-all.txt consolidated_files
-
-echo "Combining growth curve parameter files for I neurons"
-LC_ALL=C cat 21-gaussian-params-I-*txt > 21-gaussian-params-I-all.txt
-mv 21-gaussian-params-I-all.txt consolidated_files
-
 echo "Moving neuron location files"
-cp -- *neuron* consolidated_files/ -v
+cp -- 00-locations*.txt consolidated_files/ -v
 
 # echo "Removed $SORTTMPDIR"
 # rm -rf $SORTTMPDIR
