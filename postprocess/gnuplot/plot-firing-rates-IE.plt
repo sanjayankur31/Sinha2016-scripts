@@ -18,23 +18,23 @@ plot "mean-firing-rates-I.gdf" with lines ls 6 title "I", "mean-firing-rates-E.g
 
 set output "mean-firing-rates-lpz-centre-I-E-zoomed.png"
 set title "Mean firing rate for lpz neurons"
-plot "mean-firing-rates-lpz-center-I.gdf" with lines ls 6 title "lpz center I", "mean-firing-rates-lpz-center-E.gdf" with lines ls 1  title "lpz center E", 3 with lines ls 9 title "T";
+plot "mean-firing-rates-lpz_c_I.gdf" with lines ls 6 title "lpz center I", "mean-firing-rates-lpz_c_E.gdf" with lines ls 1  title "lpz center E", 3 with lines ls 9 title "T";
 
-set output "mean-firing-rates-lpz-border-I-E-zoomed.png"
+set output "mean-firing-rates-lpz_b_I-E-zoomed.png"
 set title "Mean firing rate for lpz neurons"
-plot "mean-firing-rates-lpz-border-I.gdf" with lines ls 6 title "lpz border I", "mean-firing-rates-lpz-border-E.gdf" with lines ls 1  title "lpz border E", 3 with lines ls 9 title "T";
+plot "mean-firing-rates-lpz_b_I.gdf" with lines ls 6 title "lpz border I", "mean-firing-rates-lpz_b_E.gdf" with lines ls 1  title "lpz border E", 3 with lines ls 9 title "T";
 
-set output "mean-firing-rates-peri-lpz-I-E-zoomed.png"
+set output "mean-firing-rates-p_lpz_I-E-zoomed.png"
 set title "Mean firing rate for lpz neurons"
-plot "mean-firing-rates-peri-lpz-I.gdf" with lines ls 6 title "peri lpz I", "mean-firing-rates-peri-lpz-E.gdf" with lines ls 1  title "peri lpz E", 3 with lines ls 9 title "T";
+plot "mean-firing-rates-p_lpz_I.gdf" with lines ls 6 title "peri lpz I", "mean-firing-rates-p_lpz_E.gdf" with lines ls 1  title "peri lpz E", 3 with lines ls 9 title "T";
 
 set output "mean-firing-rates-all-E-zoomed.png"
 set title "Mean firing rate for neurons in various regions"
-plot "mean-firing-rates-lpz-center-E.gdf" with lines ls 1  title "lpz center E", "mean-firing-rates-lpz-border-E.gdf" with lines ls 1  title "lpz border E", "mean-firing-rates-peri-lpz-E.gdf" with lines ls 1  title "peri lpz E", 3 with lines ls 9 title "T";
+plot "mean-firing-rates-lpz_c_E.gdf" with lines ls 1  title "lpz center E", "mean-firing-rates-lpz_b_E.gdf" with lines ls 1  title "lpz border E", "mean-firing-rates-p_lpz_E.gdf" with lines ls 1  title "peri lpz E", 3 with lines ls 9 title "T";
 
 set output "mean-firing-rates-all-I-zoomed.png"
 set title "Mean firing rate for neurons in various regions"
-plot "mean-firing-rates-lpz-center-I.gdf" with lines ls 1  title "lpz center I", "mean-firing-rates-lpz-border-I.gdf" with lines ls 1  title "lpz border I", "mean-firing-rates-peri-lpz-I.gdf" with lines ls 1  title "peri lpz I", 3 with lines ls 9 title "T";
+plot "mean-firing-rates-lpz_c_I.gdf" with lines ls 1  title "lpz center I", "mean-firing-rates-lpz_b_I.gdf" with lines ls 1  title "lpz border I", "mean-firing-rates-p_lpz_I.gdf" with lines ls 1  title "peri lpz I", 3 with lines ls 9 title "T";
 
 set xrange [3990:4010]
 set output "mean-firing-rates-I-E-deaff-zoomed.png"
