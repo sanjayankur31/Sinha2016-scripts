@@ -475,6 +475,8 @@ class Postprocess:
 
         TODO: INCOMPLETE
         """
+        return True
+
         if self.cfg.snr:
             import nestpp.getFiringRates as rg
             import nestpp.calculateSNR as snr
