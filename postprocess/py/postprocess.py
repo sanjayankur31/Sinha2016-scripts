@@ -55,7 +55,8 @@ class Postprocess:
         """Get a neuron list from a file."""
         neurons = []
         if os.path.exists(file):
-            neurons = (numpy.loadtxt(file, delimiter='\t', usecols=cols))
+            neurons = (numpy.loadtxt(file, delimiter='\t', usecols=cols,
+                                     skiprows=1))
             self.lgr.info("Read {} neurons from {}".format(
                 len(neurons), file))
         else:
