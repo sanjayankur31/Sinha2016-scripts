@@ -476,6 +476,7 @@ class Postprocess:
                 graph_dict[key] = value
         plot_location_grid(graph_dict)
 
+        graph_dict = {}
         for key, value in self.neurons.items():
             if "I" in key:
                 # skip, we're already doing the centre and border. This
