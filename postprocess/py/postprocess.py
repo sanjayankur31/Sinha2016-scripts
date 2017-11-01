@@ -52,7 +52,13 @@ class Postprocess:
         self.__populate_neuron_lists()
 
     def __load_neurons(self, file, cols=[0, 1, 2]):
-        """Get a neuron list from a file."""
+        """Read neuron list from a file
+
+        :file: name of file containing neuron IDs and locations
+        :cols: columns to read from file
+        :returns: numpy array with nid, x, y coordinates etc.
+
+        """
         neurons = []
         if os.path.exists(file):
             neurons = (numpy.loadtxt(file, delimiter='\t', usecols=cols,
