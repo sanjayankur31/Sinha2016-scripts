@@ -17,6 +17,10 @@ set output "05-se-p_lpz_E-all.png"
 set title "Synaptic elements for P LPZ E neurons"
 plot "05-se-p_lpz_E-all.txt" using ($1/1000):2 with linespoints lw 5 title "Total ax", "05-se-p_lpz_E-all.txt" using ($1/1000):3 with linespoints lw 5 title "Connected ax", "05-se-p_lpz_E-all.txt" using ($1/1000):4 with linespoints lw 5 title "Total ex d", "05-se-p_lpz_E-all.txt" using ($1/1000):5 with linespoints lw 5 title "Connected ex d", "05-se-p_lpz_E-all.txt" using ($1/1000):6 with linespoints lw 5 title "Total in d", "05-se-p_lpz_E-all.txt" using ($1/1000):7 with linespoints lw 5 title "Connected in d";
 
+set output "05-se-o_E-all.png"
+set title "Synaptic elements for non LPZ E neurons"
+plot "05-se-o_E-all.txt" using ($1/1000):2 with linespoints lw 5 title "Total ax", "05-se-o_E-all.txt" using ($1/1000):3 with linespoints lw 5 title "Connected ax", "05-se-o_E-all.txt" using ($1/1000):4 with linespoints lw 5 title "Total ex d", "05-se-o_E-all.txt" using ($1/1000):5 with linespoints lw 5 title "Connected ex d", "05-se-o_E-all.txt" using ($1/1000):6 with linespoints lw 5 title "Total in d", "05-se-o_E-all.txt" using ($1/1000):7 with linespoints lw 5 title "Connected in d";
+
 set output "05-se-lpz_c_I-all.png"
 set title "Synaptic elements for LPZ C I neurons"
 plot "05-se-lpz_c_I-all.txt" using ($1/1000):2 with linespoints lw 5 title "Total ax", "05-se-lpz_c_I-all.txt" using ($1/1000):3 with linespoints lw 5 title "Connected ax", "05-se-lpz_c_I-all.txt" using ($1/1000):4 with linespoints lw 5 title "Total ex d", "05-se-lpz_c_I-all.txt" using ($1/1000):5 with linespoints lw 5 title "Connected ex d", "05-se-lpz_c_I-all.txt" using ($1/1000):6 with linespoints lw 5 title "Total in d", "05-se-lpz_c_I-all.txt" using ($1/1000):7 with linespoints lw 5 title "Connected in d";
@@ -28,3 +32,7 @@ plot "05-se-lpz_b_I-all.txt" using ($1/1000):2 with linespoints lw 5 title "Tota
 set output "05-se-p_lpz_I-all.png"
 set title "Synaptic elements for P LPZ I neurons"
 plot "05-se-p_lpz_I-all.txt" using ($1/1000):2 with linespoints lw 5 title "Total ax", "05-se-p_lpz_I-all.txt" using ($1/1000):3 with linespoints lw 5 title "Connected ax", "05-se-p_lpz_I-all.txt" using ($1/1000):4 with linespoints lw 5 title "Total ex d", "05-se-p_lpz_I-all.txt" using ($1/1000):5 with linespoints lw 5 title "Connected ex d", "05-se-p_lpz_I-all.txt" using ($1/1000):6 with linespoints lw 5 title "Total in d", "05-se-p_lpz_I-all.txt" using ($1/1000):7 with linespoints lw 5 title "Connected in d";
+
+set output "05-se-o_I-all.png"
+set title "Synaptic elements for non LPZ I neurons"
+plot "05-se-o_I-all.txt" using ($1/1000):2 with linespoints lw 5 title "Total ax", "05-se-o_I-all.txt" using ($1/1000):3 with linespoints lw 5 title "Connected ax", "05-se-o_I-all.txt" using ($1/1000):4 with linespoints lw 5 title "Total ex d", "05-se-o_I-all.txt" using ($1/1000):5 with linespoints lw 5 title "Connected ex d", "05-se-o_I-all.txt" using ($1/1000):6 with linespoints lw 5 title "Total in d", "05-se-o_I-all.txt" using ($1/1000):7 with linespoints lw 5 title "Connected in d";
