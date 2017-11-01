@@ -54,12 +54,16 @@ LC_ALL=C sort -k "2" -n --parallel=16 -T "$SORTTMPDIR" spikes-lpz_b_E*.gdf > spi
 echo "Combining p_lpz_E files"
 LC_ALL=C sort -k "2" -n --parallel=16 -T "$SORTTMPDIR" spikes-p_lpz_E*.gdf > spikes-p_lpz_E.gdf
 
+echo "Combining o_E files"
+LC_ALL=C sort -k "2" -n --parallel=16 -T "$SORTTMPDIR" spikes-o_E*.gdf > spikes-o_E.gdf
+
 echo "Combining all E files"
-LC_ALL=C sort -k "2" -n --parallel=16 -T "$SORTTMPDIR" spikes-p_lpz_E.gdf spikes-lpz_c_E.gdf spikes-lpz_b_E.gdf > spikes-E.gdf
+LC_ALL=C sort -k "2" -n --parallel=16 -T "$SORTTMPDIR" spikes-p_lpz_E.gdf spikes-lpz_c_E.gdf spikes-lpz_b_E.gdf spikes-o_E.gdf > spikes-E.gdf
 
 mv spikes-lpz_c_E.gdf consolidated_files
 mv spikes-lpz_b_E.gdf consolidated_files
 mv spikes-p_lpz_E.gdf consolidated_files
+mv spikes-o_E.gdf consolidated_files
 mv spikes-E.gdf consolidated_files
 
 echo "Combining lpz_c_I files"
@@ -71,12 +75,16 @@ LC_ALL=C sort -k "2" -n --parallel=16 -T "$SORTTMPDIR" spikes-lpz_b_I*.gdf > spi
 echo "Combining p_lpz_I files"
 LC_ALL=C sort -k "2" -n --parallel=16 -T "$SORTTMPDIR" spikes-p_lpz_I*.gdf > spikes-p_lpz_I.gdf
 
+echo "Combining o_I files"
+LC_ALL=C sort -k "2" -n --parallel=16 -T "$SORTTMPDIR" spikes-o_I*.gdf > spikes-o_I.gdf
+
 echo "Combining all I files"
-LC_ALL=C sort -k "2" -n --parallel=16 -T "$SORTTMPDIR" spikes-p_lpz_I.gdf spikes-lpz_c_I.gdf spikes-lpz_b_I.gdf > spikes-I.gdf
+LC_ALL=C sort -k "2" -n --parallel=16 -T "$SORTTMPDIR" spikes-p_lpz_I.gdf spikes-lpz_c_I.gdf spikes-lpz_b_I.gdf spikes-o_I.gdf > spikes-I.gdf
 
 mv spikes-lpz_c_I.gdf consolidated_files
 mv spikes-lpz_b_I.gdf consolidated_files
 mv spikes-p_lpz_I.gdf consolidated_files
+mv spikes-o_I.gdf consolidated_files
 mv spikes-I.gdf consolidated_files
 
 echo "Moving neuron location files"
