@@ -89,6 +89,8 @@ class Postprocess:
             (self.neurons['lpz_b_E'], self.neurons['lpz_c_E']), axis=0)
         self.neurons['p_lpz_E'] = self.__load_neurons(
             "00-locations-p_lpz_E.txt")
+        self.neurons['o_E'] = self.__load_neurons(
+            "00-locations-o_E.txt")
 
         # Inhibitory neurons
         self.neurons['I'] = self.__load_neurons("00-locations-I.txt",
@@ -102,6 +104,8 @@ class Postprocess:
             (self.neurons['lpz_b_I'], self.neurons['lpz_c_I']), axis=0)
         self.neurons['p_lpz_I'] = self.__load_neurons(
             "00-locations-p_lpz_I.txt")
+        self.neurons['o_I'] = self.__load_neurons(
+            "00-locations-o_I.txt")
 
         # Populate pattern lists and calculate the overlap percentage between
         # each pattern and the LPZ
@@ -129,8 +133,8 @@ class Postprocess:
         self.lgr.info("Processing synaptic elements..")
         time_list = get_info_from_file_series("..", "05-se-lpz_b_E-0-",
                                               ".txt")
-        for neuron_set in ["lpz_c_E", "lpz_b_E", "p_lpz_E", "lpz_c_I",
-                           "lpz_b_I", "p_lpz_I"]:
+        for neuron_set in ["lpz_c_E", "lpz_b_E", "p_lpz_E", "o_E", "lpz_c_I",
+                           "lpz_b_I", "p_lpz_I", "o_I"]:
             neuron_set_o_fn = "05-se-{}-all.txt".format(neuron_set)
             if reprocess_raw_files(".", ["05-se-{}-*.txt".format(
                     neuron_set)]):
@@ -181,8 +185,8 @@ class Postprocess:
         time_list = get_info_from_file_series("..", "02-calcium-lpz_b_E-0-",
                                               ".txt")
 
-        for neuron_set in ["lpz_c_E", "lpz_b_E", "p_lpz_E", "lpz_c_I",
-                           "lpz_b_I", "p_lpz_I"]:
+        for neuron_set in ["lpz_c_E", "lpz_b_E", "p_lpz_E", "o_E", "lpz_c_I",
+                           "lpz_b_I", "p_lpz_I", "o_I"]:
             neuron_set_o_fn = "02-calcium-{}-all.txt".format(neuron_set)
             eps = 0.
             xmax = 0.
