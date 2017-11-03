@@ -616,9 +616,10 @@ class Postprocess:
     def generate_synapse_graphs(self):
         """Generate synapse geometry plots."""
         self.lgr.info("Processing synapse graphs..")
-        time_list = get_info_from_file_series("..", "08-syn_conns-EE-0-"
+        time_list = get_info_from_file_series("..", "08-syn_conns-EE-0-",
                                               ".txt")
-        for synapse_set in ["EE", "EI", "II", "IE"]:
+        #  for synapse_set in ["EE", "EI", "II", "IE"]:
+        for synapse_set in ["EE"]:
             # all connections first
             synapse_set_o_fn = "08-syn_conns-{}-all.txt".format(
                 synapse_set)
@@ -633,20 +634,20 @@ class Postprocess:
                         syn_conns = combine_files_row_wise(
                             "..", "08-syn_conns-{}-*-{}.txt".format(
                                 synapse_set, atime), '\t')
+                        print(syn_conns)
                         # for the dot file
-                        print("digraph {}_synapses {".format(
+                        print("digraph {}_synapses {{".format(
                             synapse_set), file=f)
                         # set the locations for the neurons
-                        for nrn in set(self.neurons[synapse_set[0]] +
-                                       self.neurons[synapse_set[1]]):
+                        for nrn in self.neurons['E']:
                             print(
                                 "{} [shape=\"point\", pos=\"{}, {}!\"]".format(
                                     nrn[0], nrn[3], nrn[4]), file=f
                             )
                         # the edges
-                        for index, row in syn_conns:
-                            print("{} -> {}".format(index, row), file=f)
-                        print("}", file=f)
+                        for index, row in syn_conns.iterrows():
+                            print("{} -> {}".format(row[0], row[1]), file=f)
+                        print("}}", file=f)
 
             args = ["-Tpng", "-O"]
             plot_using_neato_binary(os.path.join('./', synapse_set_o_fn), args)
@@ -659,14 +660,14 @@ class Postprocess:
 
         self.plot_neuron_locations()
 
-        self.generate_firing_rate_graphs()
-        self.generate_histograms()
-        self.generate_raster_graphs()
-        self.generate_firing_rate_grid_snapshots()
-        self.generate_conductance_graphs()
-        self.generate_calcium_graphs()
-        self.generate_total_synapse_change_graphs()
-        self.generate_synaptic_element_graphs()
+        #  self.generate_firing_rate_graphs()
+        #  self.generate_histograms()
+        #  self.generate_raster_graphs()
+        #  self.generate_firing_rate_grid_snapshots()
+        #  self.generate_conductance_graphs()
+        #  self.generate_calcium_graphs()
+        #  self.generate_total_synapse_change_graphs()
+        #  self.generate_synaptic_element_graphs()
         self.generate_synapse_graphs()
 
         #  self.plot_snrs()
