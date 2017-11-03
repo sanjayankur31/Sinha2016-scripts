@@ -29,7 +29,8 @@ import numpy
 # module imports
 from nestpp.utils import (get_config, get_numpats)
 from nestpp.plotting_utils import (plot_using_gnuplot_binary, plot_histograms,
-                                   plot_location_grid, plot_rasters)
+                                   plot_location_grid, plot_rasters,
+                                   plot_using_neato_binary)
 from nestpp.loggerpp import get_module_logger
 from nestpp.spike_utils import (get_firing_rate_metrics,
                                 get_individual_firing_rate_snapshots,
@@ -612,6 +613,47 @@ class Postprocess:
             os.path.join(self.cfg['plots_dir'],
                          'plot-total-synapse-changes.plt'))
 
+    def generate_synapse_graphs(self):
+        """Generate synapse geometry plots."""
+        self.lgr.info("Processing synapse graphs..")
+        time_list = get_info_from_file_series("..", "08-syn_conns-EE-0-"
+                                              ".txt")
+        for synapse_set in ["EE", "EI", "II", "IE"]:
+            # all connections first
+            synapse_set_o_fn = "08-syn_conns-{}-all.txt".format(
+                synapse_set)
+            if reprocess_raw_files(".", ["08-syn_conns-{}-*.txt".format(
+                    synapse_set)]):
+                with open(synapse_set_o_fn, 'w') as f:
+                    for atime in time_list:
+                        self.lgr.debug(
+                            "Processing syn conns for {} at {}".format(
+                                synapse_set, atime))
+                        syn_conns = pandas.DataFrame()
+                        syn_conns = combine_files_row_wise(
+                            "..", "08-syn_conns-{}-*-{}.txt".format(
+                                synapse_set, atime), '\t')
+                        # for the dot file
+                        print("digraph {}_synapses {".format(
+                            synapse_set), file=f)
+                        # set the locations for the neurons
+                        for nrn in set(self.neurons[synapse_set[0]] +
+                                       self.neurons[synapse_set[1]]):
+                            print(
+                                "{} [shape=\"point\", pos=\"{}, {}!\"]".format(
+                                    nrn[0], nrn[3], nrn[4]), file=f
+                            )
+                        # the edges
+                        for index, row in syn_conns:
+                            print("{} -> {}".format(index, row), file=f)
+                        print("}", file=f)
+
+            args = ["-Tpng", "-O"]
+            plot_using_neato_binary(os.path.join('./', synapse_set_o_fn), args)
+            self.lgr.info(
+                "Processed syn conns for {} neurons..".format(
+                    synapse_set))
+
     def main(self):
         """Do everything."""
 
@@ -625,6 +667,7 @@ class Postprocess:
         self.generate_calcium_graphs()
         self.generate_total_synapse_change_graphs()
         self.generate_synaptic_element_graphs()
+        self.generate_synapse_graphs()
 
         #  self.plot_snrs()
 
