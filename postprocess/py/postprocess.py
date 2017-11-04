@@ -641,7 +641,7 @@ class Postprocess:
                         for nrn in self.neurons['E']:
                             print(
                                 "{} [shape=\"point\", pos=\"{}, {}!\"]".format(
-                                    nrn[0], nrn[3], nrn[4]), file=f
+                                    nrn[0], nrn[3]/1000., nrn[4]/1000), file=f
                             )
                         # the edges
                         for row in syn_conns.itertuples(index=True, name=None):
@@ -659,15 +659,15 @@ class Postprocess:
 
         self.plot_neuron_locations()
 
-        #  self.generate_firing_rate_graphs()
-        #  self.generate_histograms()
-        #  self.generate_raster_graphs()
-        #  self.generate_firing_rate_grid_snapshots()
-        #  self.generate_conductance_graphs()
-        #  self.generate_calcium_graphs()
-        #  self.generate_total_synapse_change_graphs()
-        #  self.generate_synaptic_element_graphs()
-        self.generate_synapse_graphs()
+        self.generate_firing_rate_graphs()
+        self.generate_histograms()
+        self.generate_raster_graphs()
+        self.generate_firing_rate_grid_snapshots()
+        self.generate_conductance_graphs()
+        self.generate_calcium_graphs()
+        self.generate_total_synapse_change_graphs()
+        self.generate_synaptic_element_graphs()
+        #  self.generate_synapse_graphs()
 
         #  self.plot_snrs()
 
