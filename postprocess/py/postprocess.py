@@ -634,7 +634,6 @@ class Postprocess:
                         syn_conns = combine_files_row_wise(
                             "..", "08-syn_conns-{}-*-{}.txt".format(
                                 synapse_set, atime), '\t')
-                        print(syn_conns)
                         # for the dot file
                         print("digraph {}_synapses {{".format(
                             synapse_set), file=f)
@@ -645,9 +644,9 @@ class Postprocess:
                                     nrn[0], nrn[3], nrn[4]), file=f
                             )
                         # the edges
-                        for index, row in syn_conns.iterrows():
+                        for row in syn_conns.itertuples(index=True, name=None):
                             print("{} -> {}".format(row[0], row[1]), file=f)
-                        print("}}", file=f)
+                        print("}", file=f)
 
             args = ["-Tpng", "-O"]
             plot_using_neato_binary(os.path.join('./', synapse_set_o_fn), args)
