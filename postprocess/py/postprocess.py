@@ -482,7 +482,7 @@ class Postprocess:
             if "E" in key:
                 # skip, we're already doing the centre and border. This
                 # overwrites it.
-                if key == "lpz_E":
+                if key == "lpz_E" or key == "E":
                     continue
                 graph_dict[key] = value
         plot_location_grid(graph_dict)
@@ -492,7 +492,7 @@ class Postprocess:
             if "I" in key:
                 # skip, we're already doing the centre and border. This
                 # overwrites it.
-                if key == "lpz_I":
+                if key == "lpz_I" or key == "I":
                     continue
                 graph_dict[key] = value
         plot_location_grid(graph_dict)
