@@ -36,6 +36,7 @@ set xrange[0:6000]
 eps=system("head -1 09-growth-curve-params-lpz_c_I.txt  | awk '{print $3}'")
 etaa=system("head -1 09-growth-curve-params-lpz_c_I.txt  | awk '{print $2}'")
 etad=system("head -1 09-growth-curve-params-lpz_c_I.txt  | awk '{print $1}'")
+unset arrow
 set arrow from 0,etad to xmax/1000,etad nohead lw 1
 set arrow from 0,eps to xmax/1000, eps nohead lw 1
 set arrow from 0,etaa to xmax/1000,etaa nohead lw 1
