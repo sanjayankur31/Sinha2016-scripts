@@ -253,7 +253,7 @@ class Postprocess:
         conductances_EE = pandas.DataFrame()
         if reprocess_raw_files(".", ["01-synaptic-weights-EE-*"]):
             conductances_EE = var_combine_files_column_wise(
-                "../", "01-synaptic-weights-EE-*.txt", ',')
+                "../", "01-synaptic-weights-EE-*.txt", '\t')
             if not conductances_EE.empty:
                 conductances_mean_EE = pandas.concat(
                     [conductances_EE.mean(axis=1),
@@ -283,7 +283,7 @@ class Postprocess:
         conductances_EI = pandas.DataFrame()
         if reprocess_raw_files(".", ["01-synaptic-weights-EI-*"]):
             conductances_EI = var_combine_files_column_wise(
-                "../", "01-synaptic-weights-EI-*.txt", ',')
+                "../", "01-synaptic-weights-EI-*.txt", '\t')
             if not conductances_EI.empty:
                 conductances_mean_EI = pandas.concat(
                     [conductances_EI.mean(axis=1),
@@ -313,7 +313,7 @@ class Postprocess:
         conductances_II = pandas.DataFrame()
         if reprocess_raw_files(".", ["01-synaptic-weights-II-*"]):
             conductances_II = var_combine_files_column_wise(
-                "../", "01-synaptic-weights-II-*.txt", ',')
+                "../", "01-synaptic-weights-II-*.txt", '\t')
             if not conductances_II.empty:
                 conductances_mean_II = pandas.concat(
                     [conductances_II.mean(axis=1),
@@ -343,7 +343,7 @@ class Postprocess:
         conductances_IE = pandas.DataFrame()
         if reprocess_raw_files(".", ["01-synaptic-weights-IE-*"]):
             conductances_IE = var_combine_files_column_wise(
-                "../", "01-synaptic-weights-IE-*.txt", ',')
+                "../", "01-synaptic-weights-IE-*.txt", '\t')
             if not conductances_IE.empty:
                 conductances_mean_IE = pandas.concat(
                     [conductances_IE.mean(axis=1),
