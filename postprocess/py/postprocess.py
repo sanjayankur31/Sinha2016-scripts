@@ -634,7 +634,6 @@ class Postprocess:
                         syn_conns = combine_files_row_wise(
                             "..", "08-syn_conns-{}-*-{}.txt".format(
                                 synapse_set, atime), '\t')
-                        print(syn_conns)
                         # for the dot file
                         print("digraph {}_synapses {{".format(
                             synapse_set), file=f)
@@ -642,12 +641,12 @@ class Postprocess:
                         for nrn in self.neurons['E']:
                             print(
                                 "{} [shape=\"point\", pos=\"{}, {}!\"]".format(
-                                    nrn[0], nrn[3], nrn[4]), file=f
+                                    nrn[0], nrn[3]/1000., nrn[4]/1000), file=f
                             )
                         # the edges
-                        for index, row in syn_conns.iterrows():
+                        for row in syn_conns.itertuples(index=True, name=None):
                             print("{} -> {}".format(row[0], row[1]), file=f)
-                        print("}}", file=f)
+                        print("}", file=f)
 
             args = ["-Tpng", "-O"]
             plot_using_neato_binary(os.path.join('./', synapse_set_o_fn), args)
@@ -660,15 +659,15 @@ class Postprocess:
 
         self.plot_neuron_locations()
 
-        #  self.generate_firing_rate_graphs()
-        #  self.generate_histograms()
-        #  self.generate_raster_graphs()
-        #  self.generate_firing_rate_grid_snapshots()
-        #  self.generate_conductance_graphs()
-        #  self.generate_calcium_graphs()
-        #  self.generate_total_synapse_change_graphs()
-        #  self.generate_synaptic_element_graphs()
-        self.generate_synapse_graphs()
+        self.generate_firing_rate_graphs()
+        self.generate_histograms()
+        self.generate_raster_graphs()
+        self.generate_firing_rate_grid_snapshots()
+        self.generate_conductance_graphs()
+        self.generate_calcium_graphs()
+        self.generate_total_synapse_change_graphs()
+        self.generate_synaptic_element_graphs()
+        #  self.generate_synapse_graphs()
 
         #  self.plot_snrs()
 
