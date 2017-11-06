@@ -231,9 +231,9 @@ class Postprocess:
                                 args)
                             # print the growth curve params to a file too
                             with open("09-growth-curve-params-{}.txt".format(
-                                    neuron_set), 'w') as f:
+                                    neuron_set), 'w') as fx:
                                 print("{}\t{}\t{}".format(eta_d, eta_a, eps),
-                                      file=f)
+                                      file=fx)
 
             self.lgr.info(
                 "Processed cal metrics for {} neurons..".format(neuron_set))
