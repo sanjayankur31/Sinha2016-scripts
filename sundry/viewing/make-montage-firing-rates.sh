@@ -1,12 +1,12 @@
 #!/bin/bash
 # Generate a montage of images so that they can be all seen at once
-# This file includes graphs to do with structural plasticity
+# This file includes graphs that show various firing rates
 
 PREFIX=""
 
 usage()
 {
-    echo "montage.sh -y <year prefix>"
+    echo "make-montage-firing-rates.sh -y <year prefix>"
     echo "Note, prefix has a trailing dash in it so that it can be left empty if required."
 }
 
