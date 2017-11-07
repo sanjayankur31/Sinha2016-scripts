@@ -6,7 +6,7 @@ PREFIX=""
 
 usage()
 {
-    echo "montage.sh -y <year prefix>"
+    echo "make-montage-structural-graphs.sh -y <year prefix>"
     echo "Note, prefix has a trailing dash in it so that it can be left empty if required."
 }
 
@@ -25,7 +25,7 @@ main ()
         "$PREFIX"05-se-p_lpz_I-all.png \
         "$PREFIX"05-se-o_E-all.png \
         "$PREFIX"05-se-o_I-all.png \
-        -tile 2x6 -geometry +2+2  "$PREFIX"montage.png
+        -tile 2x6 -geometry +2+2  "$PREFIX"structural-plasticity-montage.png
 }
 
 
