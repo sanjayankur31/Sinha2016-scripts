@@ -15,7 +15,7 @@ main ()
     montage \
         "$PREFIX"all-mean-conductances.png \
         "$PREFIX"all-total-conductances.png \
-        -tile 2x1 -geometry +2+2  "$PREFIX"conductance-montage.png
+        -tile 1x2 -geometry +2+2  "$PREFIX"conductance-montage.png
 }
 
 
