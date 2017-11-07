@@ -6,7 +6,7 @@ PREFIX=""
 
 usage()
 {
-    echo "montage.sh -y <year prefix>"
+    echo "make-montage-conductances.sh -y <year prefix>"
     echo "Note, prefix has a trailing dash in it so that it can be left empty if required."
 }
 
