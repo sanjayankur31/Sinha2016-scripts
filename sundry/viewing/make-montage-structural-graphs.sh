@@ -1,5 +1,6 @@
 #!/bin/bash
 # Generate a montage of images so that they can be all seen at once
+# This file includes graphs to do with structural plasticity
 
 PREFIX=""
 
