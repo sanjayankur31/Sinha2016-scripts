@@ -629,11 +629,55 @@ class Postprocess:
         for key, value in self.neurons.items():
             if key != 'E' and key != 'I' and key != 'lpz_E' and key != 'lpz_I':
                 regions.append(key)
+        self.lgr.debug("{} regions identified: {}".format(
+            len(regions), regions))
 
         # make source destination pairs
         src_dest_pairs = list(
             itertools.product(regions, repeat=2)
         )
+        self.lgr.debug("Total src dest pairs are {}".format(
+            len(src_dest_pairs)))
+
+        # set up proper samples for neuron sets to improve visualisation
+        sample = {}
+        sample['E'] = (
+            random.sample(list(self.neurons['lpz_c_E'][:, 0]),
+                          k=int(len(self.neurons['lpz_c_E'])*0.02)) +
+            random.sample(list(self.neurons['lpz_b_E'][:, 0]),
+                          k=int(len(self.neurons['lpz_b_E'])*0.02)) +
+            random.sample(list(self.neurons['p_lpz_E'][:, 0]),
+                          k=int(len(self.neurons['p_lpz_E'])*0.02)) +
+            random.sample(list(self.neurons['o_E'][:, 0]),
+                          k=int(len(self.neurons['o_E'])*0.02))
+        )
+        sample['I'] = (
+            random.sample(list(self.neurons['lpz_c_I'][:, 0]),
+                          k=int(len(self.neurons['lpz_c_I'])*0.02)) +
+            random.sample(list(self.neurons['lpz_b_I'][:, 0]),
+                          k=int(len(self.neurons['lpz_b_I'])*0.02)) +
+            random.sample(list(self.neurons['p_lpz_I'][:, 0]),
+                          k=int(len(self.neurons['p_lpz_I'])*0.02)) +
+            random.sample(list(self.neurons['o_I'][:, 0]),
+                          k=int(len(self.neurons['o_I'])*0.02))
+        )
+        # get origin and radii to draw circles to show different regions
+        o_x = (max(self.neurons['o_E'][:, 1]) -
+               min(self.neurons['o_E'][:, 1]))/2
+        o_y = (max(self.neurons['o_E'][:, 2]) -
+               min(self.neurons['o_E'][:, 2]))/2
+        self.lgr.debug("Centre is: {}, {}".format(o_x, o_y))
+        lpz_c_max_y = (max(self.neurons['lpz_c_E'][:, 2]))
+        rad_lpz_c = lpz_c_max_y - o_y
+        self.lgr.debug("Rad of lpz c is: {}".format(rad_lpz_c))
+
+        lpz_b_max_y = (max(self.neurons['lpz_b_E'][:, 2]))
+        rad_lpz_b = lpz_b_max_y - o_y
+        self.lgr.debug("Rad of lpz b is: {}".format(rad_lpz_b))
+
+        p_lpz_max_y = (max(self.neurons['p_lpz_E'][:, 2]))
+        rad_p_lpz = p_lpz_max_y - o_y
+        self.lgr.debug("Rad of p lpz is: {}".format(rad_p_lpz))
 
         #  for synapse_set in ["EE", "EI", "II", "IE"]:
         for synapse_set in ["EE"]:
@@ -642,11 +686,10 @@ class Postprocess:
             # get ids of subsets for the top view graphs
             # plotting all synapse connections makes the plot useless since it
             # ends up too dense to be able to see anything
-            src_sample = random.sample(self.neurons[src_set][:, 0],
-                                       k=int(len(self.neurons[src_set]*0.05)))
-            dest_sample = random.sample(self.neurons[dest_set][:, 0],
-                                        k=int(
-                                            len(self.neurons[dest_set]*0.05)))
+            src_sample = sample[src_set]
+            dest_sample = sample[dest_set]
+            self.lgr.debug("Sample: {} {} and {} {}".format(
+                len(src_sample), src_set, len(dest_sample), dest_set))
 
             # set up a dictionary that contains information on various regions
             # for this synapse set
