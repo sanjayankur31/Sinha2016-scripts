@@ -626,8 +626,8 @@ class Postprocess:
                                               ".txt")
         # Get our regions of interest
         regions = []
-        for key, value in self.neurons:
-            if key != 'E' and key != 'I':
+        for key, value in self.neurons.items():
+            if key != 'E' and key != 'I' and key != 'lpz_E' and key != 'lpz_I':
                 regions.append(key)
 
         # make source destination pairs
