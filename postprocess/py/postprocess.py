@@ -25,12 +25,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os
 import pandas
 import numpy
+import itertools
+import random
 
 # module imports
 from nestpp.utils import (get_config, get_numpats)
 from nestpp.plotting_utils import (plot_using_gnuplot_binary, plot_histograms,
-                                   plot_location_grid, plot_rasters,
-                                   plot_using_neato_binary)
+                                   plot_location_grid, plot_rasters)
 from nestpp.loggerpp import get_module_logger
 from nestpp.spike_utils import (get_firing_rate_metrics,
                                 get_individual_firing_rate_snapshots,
@@ -623,41 +624,122 @@ class Postprocess:
         self.lgr.info("Processing synapse graphs..")
         time_list = get_info_from_file_series("..", "08-syn_conns-EE-0-",
                                               ".txt")
+        # Get our regions of interest
+        regions = []
+        for key, value in self.neurons:
+            if key != 'E' and key != 'I':
+                regions.append(key)
+
+        # make source destination pairs
+        src_dest_pairs = list(
+            itertools.product(regions, repeat=2)
+        )
+
         #  for synapse_set in ["EE", "EI", "II", "IE"]:
         for synapse_set in ["EE"]:
+            src_set = synapse_set[0]
+            dest_set = synapse_set[1]
+            # get ids of subsets for the top view graphs
+            # plotting all synapse connections makes the plot useless since it
+            # ends up too dense to be able to see anything
+            src_sample = random.sample(self.neurons[src_set][:, 0],
+                                       k=int(len(self.neurons[src_set]*0.05)))
+            dest_sample = random.sample(self.neurons[dest_set][:, 0],
+                                        k=int(
+                                            len(self.neurons[dest_set]*0.05)))
+
+            # set up a dictionary that contains information on various regions
+            # for this synapse set
+            synapse_set_regions = {}
+            for src, dest in src_dest_pairs:
+                # only relevant regions are selected. For example, for an EE
+                # synapse, all I regions are useless. There won't be any
+                # EE synapses between neurons in those regions.
+                if src_set in src and dest_set in dest:
+                    synapses_name = "{}-to-{}".format(src, dest)
+                    newdict = {}
+                    newdict['src'] = src
+                    newdict['dest'] = dest
+                    newdict['num'] = 0
+                    newdict['o_fn'] = ("08-syn_conns-{}-{}.txt".format(
+                            synapses_name, synapse_set))
+                    newdict['o_fh'] = open(newdict['o_fn'], 'w')
+                    synapse_set_regions[synapses_name] = newdict
+
             # all connections first
-            synapse_set_o_fn = "08-syn_conns-{}-all.txt".format(
-                synapse_set)
             if reprocess_raw_files(".", ["08-syn_conns-{}-*.txt".format(
                     synapse_set)]):
-                with open(synapse_set_o_fn, 'w') as f:
-                    for atime in time_list:
-                        self.lgr.debug(
-                            "Processing syn conns for {} at {}".format(
-                                synapse_set, atime))
-                        syn_conns = pandas.DataFrame()
-                        syn_conns = combine_files_row_wise(
-                            "..", "08-syn_conns-{}-*-{}.txt".format(
-                                synapse_set, atime), '\t')
-                        # for the dot file
-                        print("digraph {}_synapses {{".format(
-                            synapse_set), file=f)
-                        # set the locations for the neurons
-                        for nrn in self.neurons['E']:
-                            print(
-                                "{} [shape=\"point\", pos=\"{}, {}!\"]".format(
-                                    nrn[0], nrn[3]/1000., nrn[4]/1000), file=f
-                            )
-                        # the edges
-                        for row in syn_conns.itertuples(index=True, name=None):
-                            print("{} -> {}".format(row[0], row[1]), file=f)
-                        print("}", file=f)
+                for atime in time_list:
+                    self.lgr.debug(
+                        "Processing syn conns for {} at {}".format(
+                            synapse_set, atime/1000.))
+                    syn_conns = pandas.DataFrame()
+                    syn_conns = combine_files_row_wise(
+                        "..", "08-syn_conns-{}-*-{}.txt".format(
+                            synapse_set, atime), '\t')
 
-            args = ["-Tpng", "-O"]
-            plot_using_neato_binary(os.path.join('./', synapse_set_o_fn), args)
+                    # sample for top view at each time
+                    synapse_set_o_fn = "08-syn_conns-top-{}-{}.txt".format(
+                        synapse_set, atime/1000.)
+                    syn_set_o_fh = open(synapse_set_o_fn, 'w')
+
+                    # reset counts
+                    for key, value in synapse_set_regions:
+                        value['num'] = 0
+
+                    for row in syn_conns.itertuples(index=True, name=None):
+                        # only print the ones that are in our sample for the
+                        # top view plot
+                        if row[0] in src_sample and row[1] in dest_sample:
+                            print("{}\t{}\t{}\t".format(
+                                self.neurons[src_set][row[0]][3],
+                                self.neurons[src_set][row[0]][4],
+                                self.neurons[dest_set][row[0]][3],
+                                self.neurons[dest_set][row[0]][4],
+                            ), file=syn_set_o_fh)
+
+                        # count synapses in different regions
+                        for key, value in synapse_set_regions:
+                            if row[0] in self.neurons[value['src']] and\
+                                    row[1] in self.neurons[value['dest']]:
+                                value['num'] += 1
+
+                    # close output plot file for this time
+                    syn_set_o_fh.close()
+                    # plot top view graph for this time
+                    synapse_set_p_fn = "08-syn_conns-top-{}-{}.png".format(
+                        synapse_set, atime/1000.)
+                    args = [
+                        "-e",
+                        "o_fn='{}'".format(synapse_set_p_fn),
+                        "-e",
+                        "i_fn='{}'".format(synapse_set_o_fn),
+                        "-e",
+                        "plot_title='Synapses for {}'".format(
+                            synapse_set),
+                    ]
+                    plot_using_gnuplot_binary(
+                        os.path.join(self.cfg['plots_dir'],
+                                     'plot-top-view-connections.plt'),
+                        args)
+
+                    # print synapse counts for different regions
+                    for key, value in synapse_set_regions:
+                        print("{}\t{}".format(atime/1000., value['num']),
+                              f=value['o_fh'])
+
+            # close file handlers for each region file for this synapse type:
+            for key, value in synapse_set_regions:
+                f = value['o_fh']
+                f.close()
+                self.lgr.info("Closed {}".format(value['o_fn']))
+
             self.lgr.info(
                 "Processed syn conns for {} neurons..".format(
                     synapse_set))
+
+        plot_using_gnuplot_binary(
+            os.path.join(self.cfg['plots_dir'], 'plot-regional-synapses.plt'))
 
     def main(self):
         """Do everything."""
@@ -672,7 +754,7 @@ class Postprocess:
         self.generate_calcium_graphs()
         self.generate_total_synapse_change_graphs()
         self.generate_synaptic_element_graphs()
-        #  self.generate_synapse_graphs()
+        self.generate_synapse_graphs()
 
         #  self.plot_snrs()
 
