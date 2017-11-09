@@ -746,8 +746,8 @@ class Postprocess:
 
                         # count synapses in different regions
                         for key, value in synapse_set_regions.items():
-                            if row[0] in self.neurons[value['src']][0, :] and\
-                                    row[1] in self.neurons[value['dest']][0, :]:
+                            if row[0] in self.neurons[value['src']][:, 0] and\
+                                    row[1] in self.neurons[value['dest']][:, 0]:
                                 value['num'] += 1
 
                     # close output plot file for this time
