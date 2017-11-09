@@ -1,4 +1,4 @@
-set term pngcairo font "OpenSans, 28" size 1920,1028
+set term pngcairo font "OpenSans, 28" size 1920,1024
 set xlabel "Time (seconds)"
 set ylabel "Number of incoming synapses"
 set ytics border nomirror
