@@ -621,6 +621,9 @@ class Postprocess:
 
     def generate_synapse_graphs(self):
         """Generate synapse geometry plots."""
+        if "synapses" not in self.cfg['time_graphs']:
+            return True
+
         self.lgr.info("Processing synapse graphs..")
         time_list = get_info_from_file_series("..", "08-syn_conns-EE-0-",
                                               ".txt")
