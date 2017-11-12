@@ -41,7 +41,7 @@ class TestUtils:
         correct_graph_list = ['firing_rates',
                               'conductances', 'syn_elms',
                               'syn_turnover',
-                              'calciums']
+                              'calciums', 'synapses']
 
         assert (sorted(set(config['time_graphs'])) ==
                 sorted(set(correct_graph_list)))
