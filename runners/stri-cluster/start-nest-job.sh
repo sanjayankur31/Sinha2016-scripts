@@ -42,6 +42,7 @@ function queue_task
 function setup_env
 {
     CUR_SIM_PATH="$SIM_PATH""$SIM_TIME"
+    echo "Setting up simulation: $SIM_TIME/$GIT_COMMIT"
     echo "This simulation will run in: $CUR_SIM_PATH"
     mkdir -pv "$CUR_SIM_PATH"
 
@@ -79,7 +80,6 @@ function setup_env
         popd
 
         mkdir -v result/consolidated_files/
-        cp -v "$SCRIPT_PATH/config.ini" result/consolidated_files/
     popd
 }
 
