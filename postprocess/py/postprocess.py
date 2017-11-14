@@ -689,6 +689,8 @@ class Postprocess:
             # ends up too dense to be able to see anything
             src_sample = sample[src_set]
             dest_sample = sample[dest_set]
+            connection_sample = frozenset(itertools.product(src_sample,
+                                                            dest_sample))
             self.lgr.debug("Sample: {} {} and {} {}".format(
                 len(src_sample), src_set, len(dest_sample), dest_set))
 
@@ -710,6 +712,14 @@ class Postprocess:
                         newdict['o_fn'] = ("08-syn_conns-{}-{}.txt".format(
                                 synapses_name, synapse_set))
                         newdict['o_fh'] = open(newdict['o_fn'], 'w')
+                        # all possible connections between the src and dest
+                        # hopefully precomputing these will speed up the
+                        # postprocessing somewhat
+                        # frozenset is immutable and faster than set
+                        newdict['conns'] = frozenset(
+                            itertools.product(self.neurons[src][:, 0],
+                                              self.neurons[dest][:, 0])
+                        )
                         synapse_set_regions[synapses_name] = newdict
                 self.lgr.debug("{} Synapse sets regions are: {}".format(
                     len(synapse_set_regions), synapse_set_regions))
@@ -736,7 +746,7 @@ class Postprocess:
                     for row in syn_conns.itertuples(index=True, name=None):
                         # only print the ones that are in our sample for the
                         # top view plot
-                        if row[0] in src_sample and row[1] in dest_sample:
+                        if (row[0], row[1]) in connection_sample:
                             print("{}\t{}\t{}\t{}".format(
                                 self.neurons[src_set][int(row[0] - 1)][3],
                                 self.neurons[src_set][int(row[0] - 1)][4],
@@ -746,8 +756,7 @@ class Postprocess:
 
                         # count synapses in different regions
                         for key, value in synapse_set_regions.items():
-                            if row[0] in self.neurons[value['src']][:, 0] and\
-                                    row[1] in self.neurons[value['dest']][:, 0]:
+                            if (row[0], row[1]) in value['conns']:
                                 value['num'] += 1
 
                     # close output plot file for this time
