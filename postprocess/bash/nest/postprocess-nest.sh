@@ -110,7 +110,6 @@ pypostprocess ()
 {
     pushd "$DIRNAME/$CONSOLIDATED_DIR"
         cp -v "$SCRIPTS_HOME/config.ini" .
-        rm -f -- *.png
         python3 "$SCRIPTS_HOME/postprocess/py/postprocess.py"
     popd
 }
