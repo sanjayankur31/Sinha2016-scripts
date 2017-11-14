@@ -1,18 +1,18 @@
 #!/bin/bash
 
-# Copyright 2015 Ankur Sinha 
-# Author: Ankur Sinha <sanjay DOT ankur AT gmail DOT com> 
+# Copyright 2015 Ankur Sinha
+# Author: Ankur Sinha <sanjay DOT ankur AT gmail DOT com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
@@ -42,6 +42,7 @@ function queue_task
 function setup_env
 {
     CUR_SIM_PATH="$SIM_PATH""$SIM_TIME"
+    echo "Setting up simulation: $SIM_TIME/$GIT_COMMIT"
     echo "This simulation will run in: $CUR_SIM_PATH"
     mkdir -pv "$CUR_SIM_PATH"
 
@@ -59,7 +60,7 @@ function setup_env
             fi
         popd
 
-        if [ "xyes" ==  x"$ERROR" ] 
+        if [ "xyes" ==  x"$ERROR" ]
         then
             exit -1
         fi
@@ -79,7 +80,6 @@ function setup_env
         popd
 
         mkdir -v result/consolidated_files/
-        cp -v "$SCRIPT_PATH/config.ini" result/consolidated_files/
     popd
 }
 

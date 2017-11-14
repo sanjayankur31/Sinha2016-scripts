@@ -110,7 +110,6 @@ pypostprocess ()
 {
     pushd "$DIRNAME/$CONSOLIDATED_DIR"
         cp -v "$SCRIPTS_HOME/config.ini" .
-        rm -f -- *.png
         python3 "$SCRIPTS_HOME/postprocess/py/postprocess.py"
     popd
 }
@@ -122,7 +121,10 @@ rename_files ()
     pushd "$DIRNAME/$CONSOLIDATED_DIR"
         for i in *.png;
         do
-            mv "$i" "$DIRNAME-$i" -v
+            # only rename a file if it isn't already renamed
+            if [[ "$i" != "$DIRNAME-"* ]]; then
+                mv "$i" "$DIRNAME-$i" -v
+            fi
         done
     popd
 }

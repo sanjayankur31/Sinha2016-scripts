@@ -402,26 +402,26 @@ class Postprocess:
                     neuron_set, "spikes-{}.gdf".format(neuron_set),
                     len(self.neurons[neuron_set]))
 
-            self.lgr.info("Generating firing rate graphs")
+        self.lgr.info("Generating firing rate graphs")
+        plot_using_gnuplot_binary(
+            os.path.join(self.cfg['plots_dir'], 'plot-firing-rates-IE.plt')
+        )
+
+        if self.numpats > 0:
+            self.lgr.info("Generating pattern graphs")
             plot_using_gnuplot_binary(
-                os.path.join(self.cfg['plots_dir'], 'plot-firing-rates-IE.plt')
+                os.path.join(self.cfg['plots_dir'],
+                             'plot-firing-rates-patterns.plt'),
+                ['-e', 'numpats={}'.format(self.numpats)]
             )
 
-            if self.numpats > 0:
-                self.lgr.info("Generating pattern graphs")
-                plot_using_gnuplot_binary(
-                    os.path.join(self.cfg['plots_dir'],
-                                 'plot-firing-rates-patterns.plt'),
-                    ['-e', 'numpats={}'.format(self.numpats)]
-                )
+        self.lgr.info("Generating ISI cv graphs")
+        plot_using_gnuplot_binary(
+            os.path.join(self.cfg['plots_dir'], 'plot-cvs.plt'))
 
-            self.lgr.info("Generating ISI cv graphs")
-            plot_using_gnuplot_binary(
-                os.path.join(self.cfg['plots_dir'], 'plot-cvs.plt'))
-
-            self.lgr.info("Generating STD of firing rates graphs")
-            plot_using_gnuplot_binary(
-                os.path.join(self.cfg['plots_dir'], 'plot-std.plt'))
+        self.lgr.info("Generating STD of firing rates graphs")
+        plot_using_gnuplot_binary(
+            os.path.join(self.cfg['plots_dir'], 'plot-std.plt'))
 
     def generate_histograms(self):
         """Generate histograms."""
@@ -621,6 +621,9 @@ class Postprocess:
 
     def generate_synapse_graphs(self):
         """Generate synapse geometry plots."""
+        if "synapses" not in self.cfg['time_graphs']:
+            return True
+
         self.lgr.info("Processing synapse graphs..")
         time_list = get_info_from_file_series("..", "08-syn_conns-EE-0-",
                                               ".txt")
