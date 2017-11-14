@@ -402,26 +402,26 @@ class Postprocess:
                     neuron_set, "spikes-{}.gdf".format(neuron_set),
                     len(self.neurons[neuron_set]))
 
-            self.lgr.info("Generating firing rate graphs")
+        self.lgr.info("Generating firing rate graphs")
+        plot_using_gnuplot_binary(
+            os.path.join(self.cfg['plots_dir'], 'plot-firing-rates-IE.plt')
+        )
+
+        if self.numpats > 0:
+            self.lgr.info("Generating pattern graphs")
             plot_using_gnuplot_binary(
-                os.path.join(self.cfg['plots_dir'], 'plot-firing-rates-IE.plt')
+                os.path.join(self.cfg['plots_dir'],
+                             'plot-firing-rates-patterns.plt'),
+                ['-e', 'numpats={}'.format(self.numpats)]
             )
 
-            if self.numpats > 0:
-                self.lgr.info("Generating pattern graphs")
-                plot_using_gnuplot_binary(
-                    os.path.join(self.cfg['plots_dir'],
-                                 'plot-firing-rates-patterns.plt'),
-                    ['-e', 'numpats={}'.format(self.numpats)]
-                )
+        self.lgr.info("Generating ISI cv graphs")
+        plot_using_gnuplot_binary(
+            os.path.join(self.cfg['plots_dir'], 'plot-cvs.plt'))
 
-            self.lgr.info("Generating ISI cv graphs")
-            plot_using_gnuplot_binary(
-                os.path.join(self.cfg['plots_dir'], 'plot-cvs.plt'))
-
-            self.lgr.info("Generating STD of firing rates graphs")
-            plot_using_gnuplot_binary(
-                os.path.join(self.cfg['plots_dir'], 'plot-std.plt'))
+        self.lgr.info("Generating STD of firing rates graphs")
+        plot_using_gnuplot_binary(
+            os.path.join(self.cfg['plots_dir'], 'plot-std.plt'))
 
     def generate_histograms(self):
         """Generate histograms."""
