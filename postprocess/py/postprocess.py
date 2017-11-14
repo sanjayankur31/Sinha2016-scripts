@@ -725,8 +725,8 @@ class Postprocess:
                                               self.neurons[dest][:, 0])
                         )
                         synapse_set_regions[synapses_name] = newdict
-                self.lgr.debug("{} Synapse sets regions are: {}".format(
-                    len(synapse_set_regions), synapse_set_regions))
+                        self.lgr.debug("Synapse set up: {}".format(
+                            synapses_name))
 
                 # start
                 for atime in time_list:
