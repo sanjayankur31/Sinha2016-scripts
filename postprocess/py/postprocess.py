@@ -749,12 +749,15 @@ class Postprocess:
                     # only print the ones that are in our sample for the
                     # top view plot
                     if (row[0], row[1]) in connection_sample:
+                        src_info = self.neurons[src_set][int(
+                            row[0] - self.neurons[src_set][0][0])]
+                        dest_info = self.neurons[dest_set][int(
+                            row[1] - self.neurons[dest_set][0][0])]
+
                         print("{}\t{}\t{}\t{}".format(
-                            self.neurons[src_set][int(row[0] - 1)][3],
-                            self.neurons[src_set][int(row[0] - 1)][4],
-                            self.neurons[dest_set][int(row[1] - 1)][3],
-                            self.neurons[dest_set][int(row[1] - 1)][4],
-                        ), file=syn_set_o_fh)
+                                src_info[3], src_info[4],
+                                dest_info[3], dest_info[4]),
+                              file=syn_set_o_fh)
 
                     # count synapses in different regions
                     for key, value in synapse_set_regions.items():
