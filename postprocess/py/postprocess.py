@@ -817,36 +817,28 @@ class Postprocess:
         self.plot_neuron_locations()
 
         self.lgr.info("Running a separate process each for different bits.")
-        p1 = Process(target=self.generate_firing_rate_graphs())
-        p1.start()
-        p2 = Process(target=self.generate_histograms())
-        p2.start()
-        p3 = Process(target=self.generate_raster_graphs())
-        p3.start()
-        p4 = Process(target=self.generate_firing_rate_grid_snapshots())
-        p4.start()
-        p5 = Process(target=self.generate_conductance_graphs())
-        p5.start()
-        p6 = Process(target=self.generate_calcium_graphs())
-        p6.start()
-        p7 = Process(target=self.generate_total_synapse_change_graphs())
-        p7.start()
-        p8 = Process(target=self.generate_synaptic_element_graphs())
-        p8.start()
-        p9 = Process(target=self.generate_synapse_graphs())
-        p9.start()
+        processes = []
+        processes.append(Process(target=self.generate_firing_rate_graphs))
+        processes.append(Process(target=self.generate_histograms))
+        processes.append(Process(target=self.generate_raster_graphs))
+        processes.append(
+            Process(target=self.generate_firing_rate_grid_snapshots))
+        processes.append(Process(target=self.generate_conductance_graphs))
+        processes.append(Process(target=self.generate_calcium_graphs))
+        processes.append(
+            Process(target=self.generate_total_synapse_change_graphs))
+        processes.append(
+            Process(target=self.generate_synaptic_element_graphs))
+        processes.append(Process(target=self.generate_synapse_graphs))
+
+        self.lgr.info("Starting all processes")
+        for proc in processes:
+            proc.start()
 
         #  self.plot_snrs()
         self.lgr.info("Waiting for all processes to finish")
-        p1.join()
-        p2.join()
-        p3.join()
-        p4.join()
-        p5.join()
-        p6.join()
-        p7.join()
-        p8.join()
-        p9.join()
+        for proc in processes:
+            proc.join()
 
 
 if __name__ == "__main__":
