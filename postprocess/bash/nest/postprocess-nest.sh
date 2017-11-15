@@ -93,7 +93,10 @@ combine ()
 
         echo "Moving neuron location files"
         cp -v -- 00-locations*.txt "$CONSOLIDATED_DIR"/
+        echo "Moving commit info file"
         cp -v -- 00-GIT* "$CONSOLIDATED_DIR"/
+        echo "Moving parameter info file"
+        cp -v -- ../99* "$CONSOLIDATED_DIR"/
     popd
 }
 
