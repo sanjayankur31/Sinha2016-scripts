@@ -4,7 +4,7 @@ set ylabel "Number of incoming synapses"
 set ytics border nomirror
 set xtics border nomirror
 set xrange[0:]
-set yrange[0:120000]
+set yrange[0:]
 
 set output "08-syn_conns-E-to-lpz_c_E.png"
 set title "Incoming E connections to LPZ C E"
@@ -16,7 +16,7 @@ plot "08-syn_conns-o_E-to-lpz_b_E-EE.txt" with linespoints lw 5 title "from non 
 
 set output "08-syn_conns-E-to-p_lpz_E.png"
 set title "Incoming E connections to P LPZ E"
-plot "08-syn_conns-o_E-to-p_lpz_E-EE.txt" with linespoints lw 5 title "from non lpz", "08-syn_conns-p_lpz_E-to-p_lpz_E-EE.txt" with linespoints lw 5 title "from peri lpz", "08-syn_conns-p_lpz_E-to-p_lpz_E-EE.txt" with linespoints lw 5 title "from lpz b", "08-syn_conns-lpz_c_E-to-p_lpz_E-EE.txt" with linespoints lw 5 title "from lpz c";
+plot "08-syn_conns-o_E-to-p_lpz_E-EE.txt" with linespoints lw 5 title "from non lpz", "08-syn_conns-p_lpz_E-to-p_lpz_E-EE.txt" with linespoints lw 5 title "from peri lpz", "08-syn_conns-lpz_b_E-to-p_lpz_E-EE.txt" with linespoints lw 5 title "from lpz b", "08-syn_conns-lpz_c_E-to-p_lpz_E-EE.txt" with linespoints lw 5 title "from lpz c";
 
 set output "08-syn_conns-E-to-o_E.png"
 set title "Incoming E connections to non LPZ E"
@@ -49,7 +49,7 @@ plot "08-syn_conns-o_E-to-lpz_b_I-EI.txt" with linespoints lw 5 title "from non 
 
 set output "08-syn_conns-E-to-p_lpz_I.png"
 set title "Incoming E connections to P LPZ I"
-plot "08-syn_conns-o_E-to-p_lpz_I-EI.txt" with linespoints lw 5 title "from non lpz", "08-syn_conns-p_lpz_E-to-p_lpz_I-EI.txt" with linespoints lw 5 title "from peri lpz", "08-syn_conns-p_lpz_E-to-p_lpz_I-EI.txt" with linespoints lw 5 title "from lpz b", "08-syn_conns-lpz_c_E-to-p_lpz_I-EI.txt" with linespoints lw 5 title "from lpz c";
+plot "08-syn_conns-o_E-to-p_lpz_I-EI.txt" with linespoints lw 5 title "from non lpz", "08-syn_conns-p_lpz_E-to-p_lpz_I-EI.txt" with linespoints lw 5 title "from peri lpz", "08-syn_conns-lpz_b_E-to-p_lpz_I-EI.txt" with linespoints lw 5 title "from lpz b", "08-syn_conns-lpz_c_E-to-p_lpz_I-EI.txt" with linespoints lw 5 title "from lpz c";
 
 set output "08-syn_conns-E-to-o_I.png"
 set title "Incoming E connections to non LPZ I"
