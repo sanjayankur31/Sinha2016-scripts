@@ -833,7 +833,7 @@ class Postprocess:
         processes.append(
             Process(target=self.generate_synaptic_element_graphs))
         processes.append(Process(target=self.generate_synapse_graphs,
-                                 args=(0.02)))
+                                 args=(0.02,)))
 
         self.lgr.info("Starting all processes")
         for proc in processes:
