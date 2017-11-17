@@ -686,8 +686,7 @@ class Postprocess:
         rad_p_lpz = p_lpz_max_y - o_y
         self.lgr.debug("Rad of p lpz is: {}".format(rad_p_lpz))
 
-        #  for synapse_set in ["EE", "EI", "II", "IE"]:
-        for synapse_set in ["EE"]:
+        for synapse_set in ["EE", "EI", "II", "IE"]:
             self.lgr.debug("Processing {} connections".format(synapse_set))
             src_set = synapse_set[0]
             dest_set = synapse_set[1]
