@@ -661,6 +661,8 @@ class Postprocess:
             len(src_dest_pairs)))
 
         # set up proper samples for neuron sets to improve visualisation
+        # set a seed so that whenever we post process we get the same samples
+        random.seed(21)
         sample = {}
         sample['E'] = (
             random.sample(list(self.neurons['lpz_c_E'][:, 0]),
