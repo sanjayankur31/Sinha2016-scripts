@@ -28,6 +28,7 @@ import numpy
 import itertools
 import random
 from multiprocessing import Process
+import sys
 
 # module imports
 from nestpp.utils import (get_config, get_numpats)
@@ -47,19 +48,31 @@ class Postprocess:
 
     """Main post process worker class."""
 
-    def __init__(self, configfile):
+    def __init__(self):
         """Initialise."""
-        self.cfg = get_config(configfile)
         self.lgr = get_module_logger("Postprocessor")
         self.neurons = {}
+        self.ready = True
+
+    def setup(self, configfile):
+        """Read info required for postprocessing
+
+        :configfile: path to config file
+        """
+        self.cfg = get_config(configfile)
         self.__populate_neuron_lists()
+
+        if not self.ready:
+            self.lgr.critical("Error reading initial files. Exiting.")
+            sys.exit(-1)
 
     def __load_neurons(self, file, cols=[0, 1, 2]):
         """Read neuron list from a file
 
         :file: name of file containing neuron IDs and locations
         :cols: columns to read from file
-        :returns: numpy array with nid, x, y coordinates etc.
+        :returns: numpy array with nid, x, y coordinates etc. and False if
+                    files are not found.
 
         """
         neurons = []
@@ -71,6 +84,7 @@ class Postprocess:
         else:
             self.lgr.error(
                 "Unable to find {}. Neurons not loaded.".format(file))
+            self.ready = False
 
         return neurons
 
@@ -846,5 +860,6 @@ class Postprocess:
 
 
 if __name__ == "__main__":
-    runner = Postprocess("config.ini")
+    runner = Postprocess()
+    runner.setup("config.ini")
     runner.main()
