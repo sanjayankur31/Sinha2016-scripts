@@ -157,8 +157,7 @@ usage ()
         to how you want it
 
     -r  prepend directory name to generated png files
-        iterates over all pngs and appends the dirname prefix. If they're
-        already prefixed, it'll prefix again - so tread carefully!
+        iterates over all pngs and appends the dirname prefix.
 
 EOF
 
