@@ -2,8 +2,8 @@ load '/home/asinha/Documents/02_Code/00_repos/00_mine/Sinha2016-scripts/postproc
 file_exists(file) = system("[ -f '".file."' ] && echo '1' || echo '0'") + 0
 set term pngcairo font "OpenSans, 28" size 1440, 1920
 set size ratio -1
-set xrange [0:80]
-set yrange [0:100]
+set xrange [0:xmax]
+set yrange [0:ymax]
 set xtics border nomirror
 set ytics border nomirror
 set cblabel "Firing rate (Hz)"

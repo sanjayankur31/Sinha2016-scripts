@@ -458,6 +458,13 @@ class Postprocess:
         if len(self.cfg['snapshots']['firing_rates']) > 0:
             fr_grid_list = ['E', 'I']
             for neuron_set in fr_grid_list:
+                if neuron_set == 'E':
+                    xmax = 80
+                    ymax = 100
+                else:
+                    xmax = 40
+                    ymax = 50
+
                 self.lgr.debug(
                     "Generating firing rate snapshots for {}".format(
                         neuron_set))
@@ -474,6 +481,8 @@ class Postprocess:
                             '-e', "neuron_set='{}'".format(neuron_set),
                             '-e', "plot_time='{}'".format(time),
                             '-e', "i_fn='{}'".format(i_fn),
+                            '-e', "xmax='{}'".format(xmax),
+                            '-e', "ymax='{}'".format(ymax),
                             ]
                     plot_using_gnuplot_binary(
                         os.path.join(self.cfg['plots_dir'],
