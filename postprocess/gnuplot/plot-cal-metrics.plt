@@ -3,6 +3,7 @@ set xlabel "Time (seconds)"
 set ylabel "Calcium concentrations"
 set ytics border nomirror
 set xtics border nomirror
+set yrange[0:]
 
 # to also plot the three values for easier analysis
 xmax=system("tail -1 02-calcium-lpz_c_E-all.txt | awk '{print $1}'")
