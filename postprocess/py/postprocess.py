@@ -38,8 +38,7 @@ from nestpp.loggerpp import get_module_logger
 from nestpp.spike_utils import (get_firing_rate_metrics,
                                 get_individual_firing_rate_snapshots,
                                 extract_spikes)
-from nestpp.file_utils import (reprocess_raw_files,
-                               var_combine_files_column_wise,
+from nestpp.file_utils import (var_combine_files_column_wise,
                                get_info_from_file_series,
                                combine_files_row_wise)
 
@@ -153,25 +152,23 @@ class Postprocess:
         for neuron_set in ["lpz_c_E", "lpz_b_E", "p_lpz_E", "o_E", "lpz_c_I",
                            "lpz_b_I", "p_lpz_I", "o_I"]:
             neuron_set_o_fn = "05-se-{}-all.txt".format(neuron_set)
-            if reprocess_raw_files(".", ["05-se-{}-*.txt".format(
-                    neuron_set)]):
-                with open(neuron_set_o_fn, 'w') as f:
-                    for atime in time_list:
-                        self.lgr.debug(
-                            "Processing syn elms for {} at {}".format(
-                                neuron_set, atime))
-                        ses = pandas.DataFrame()
-                        ses = combine_files_row_wise(
-                            "..", "05-se-{}-*-{}.txt".format(
-                                neuron_set, atime), '\t')
+            with open(neuron_set_o_fn, 'w') as f:
+                for atime in time_list:
+                    self.lgr.debug(
+                        "Processing syn elms for {} at {}".format(
+                            neuron_set, atime))
+                    ses = pandas.DataFrame()
+                    ses = combine_files_row_wise(
+                        "..", "05-se-{}-*-{}.txt".format(
+                            neuron_set, atime), '\t')
 
-                        # mean of more than one column, so this needs to be
-                        # done.
-                        means = [str(x) for x in ses.mean(axis=0).values]
-                        stds = [str(x) for x in ses.std(axis=0).values]
-                        print("{}\t{}\t{}".format(
-                            atime, '\t'.join(means), '\t'.join(stds)),
-                              file=f)
+                    # mean of more than one column, so this needs to be
+                    # done.
+                    means = [str(x) for x in ses.mean(axis=0).values]
+                    stds = [str(x) for x in ses.std(axis=0).values]
+                    print("{}\t{}\t{}".format(
+                        atime, '\t'.join(means), '\t'.join(stds)),
+                          file=f)
 
             self.lgr.info(
                 "Processed syn elms metrics for {} neurons..".format(
@@ -207,49 +204,47 @@ class Postprocess:
             neuron_set_o_fn = "02-calcium-{}-all.txt".format(neuron_set)
             eps = 0.
             xmax = 0.
-            if reprocess_raw_files(".", ["02-calcium-{}-*.txt".format(
-                    neuron_set)]):
-                with open(neuron_set_o_fn, 'w') as f:
-                    for atime in time_list:
-                        cals = pandas.DataFrame()
-                        cals = combine_files_row_wise(
-                            "..", "02-calcium-{}-*-{}.txt".format(
-                                neuron_set, atime), '\t')
+            with open(neuron_set_o_fn, 'w') as f:
+                for atime in time_list:
+                    cals = pandas.DataFrame()
+                    cals = combine_files_row_wise(
+                        "..", "02-calcium-{}-*-{}.txt".format(
+                            neuron_set, atime), '\t')
 
-                        means = [str(x) for x in cals.mean(axis=0).values]
-                        stds = [str(x) for x in cals.std(axis=0).values]
-                        print("{}\t{}\t{}".format(
-                            atime, '\t'.join(means),
-                            '\t'.join(stds)), file=f)
+                    means = [str(x) for x in cals.mean(axis=0).values]
+                    stds = [str(x) for x in cals.std(axis=0).values]
+                    print("{}\t{}\t{}".format(
+                        atime, '\t'.join(means),
+                        '\t'.join(stds)), file=f)
 
-                        # growth curves
-                        if xmax < cals.mean(axis=0).values[0]:
-                            xmax = cals.mean(axis=0).values[0]
-                        if atime == str(self.cfg['sp_enabled_at'] * 1000.):
-                            eps = cals.mean(axis=0).values[0]
-                            eta_a = 0.56 * eps
-                            eta_d = 0.14 * eps
-                            args = [
-                                "-e", "etad={}".format(eta_d),
-                                "-e", "etaa={}".format(eta_a),
-                                "-e", "epsilon={}".format(eps),
-                                "-e",
-                                "o_fn='growth-curves-{}.png'".format(
-                                    neuron_set),
-                                "-e",
-                                "plot_title='Growth curves for {}'".format(
-                                    neuron_set),
-                                "-e", "xmax={}".format(xmax*1.5),
-                            ]
-                            plot_using_gnuplot_binary(
-                                os.path.join(self.cfg['plots_dir'],
-                                             'plot-growthcurves.plt'),
-                                args)
-                            # print the growth curve params to a file too
-                            with open("09-growth-curve-params-{}.txt".format(
-                                    neuron_set), 'w') as fx:
-                                print("{}\t{}\t{}".format(eta_d, eta_a, eps),
-                                      file=fx)
+                    # growth curves
+                    if xmax < cals.mean(axis=0).values[0]:
+                        xmax = cals.mean(axis=0).values[0]
+                    if atime == str(self.cfg['sp_enabled_at'] * 1000.):
+                        eps = cals.mean(axis=0).values[0]
+                        eta_a = 0.56 * eps
+                        eta_d = 0.14 * eps
+                        args = [
+                            "-e", "etad={}".format(eta_d),
+                            "-e", "etaa={}".format(eta_a),
+                            "-e", "epsilon={}".format(eps),
+                            "-e",
+                            "o_fn='growth-curves-{}.png'".format(
+                                neuron_set),
+                            "-e",
+                            "plot_title='Growth curves for {}'".format(
+                                neuron_set),
+                            "-e", "xmax={}".format(xmax*1.5),
+                        ]
+                        plot_using_gnuplot_binary(
+                            os.path.join(self.cfg['plots_dir'],
+                                         'plot-growthcurves.plt'),
+                            args)
+                        # print the growth curve params to a file too
+                        with open("09-growth-curve-params-{}.txt".format(
+                                neuron_set), 'w') as fx:
+                            print("{}\t{}\t{}".format(eta_d, eta_a, eps),
+                                  file=fx)
 
             self.lgr.info(
                 "Processed cal metrics for {} neurons..".format(neuron_set))
@@ -272,124 +267,108 @@ class Postprocess:
         self.lgr.info("Generating conductance graphs vs time")
         # EE
         conductances_EE = pandas.DataFrame()
-        if reprocess_raw_files(".", ["01-synaptic-weights-EE-*"]):
-            conductances_EE = var_combine_files_column_wise(
-                "../", "01-synaptic-weights-EE-*.txt", '\t')
-            if not conductances_EE.empty:
-                conductances_mean_EE = pandas.concat(
-                    [conductances_EE.mean(axis=1),
-                     conductances_EE.std(axis=1)],
-                    axis=1)
-                conductances_mean_fn_EE = (
-                    "01-synaptic-weights-EE-mean-all.txt"
-                    )
-                conductances_mean_EE.to_csv(
-                    conductances_mean_fn_EE, sep='\t',
-                    header=None, line_terminator='\n')
-
-                conductances_totals_EE = conductances_EE.sum(axis=1)
-                conductances_total_fn_EE = (
-                    "01-synaptic-weights-EE-total-all.txt"
+        conductances_EE = var_combine_files_column_wise(
+            "../", "01-synaptic-weights-EE-*.txt", '\t')
+        if not conductances_EE.empty:
+            conductances_mean_EE = pandas.concat(
+                [conductances_EE.mean(axis=1),
+                 conductances_EE.std(axis=1)],
+                axis=1)
+            conductances_mean_fn_EE = (
+                "01-synaptic-weights-EE-mean-all.txt"
                 )
-                conductances_totals_EE.to_csv(
-                    conductances_total_fn_EE, sep='\t',
-                    header=None)
-                self.lgr.info("Processed EE conductances..")
-            else:
-                self.lgr.warning("No dataframe for EE conductances. Skipping.")
-        # If I decide to skip the processing, still permit plotting
+            conductances_mean_EE.to_csv(
+                conductances_mean_fn_EE, sep='\t',
+                header=None, line_terminator='\n')
+
+            conductances_totals_EE = conductances_EE.sum(axis=1)
+            conductances_total_fn_EE = (
+                "01-synaptic-weights-EE-total-all.txt"
+            )
+            conductances_totals_EE.to_csv(
+                conductances_total_fn_EE, sep='\t',
+                header=None)
+            self.lgr.info("Processed EE conductances..")
         else:
-            conductances_EE = conductances_EE.append([0])
+            self.lgr.warning("No dataframe for EE conductances. Skipping.")
         # EI
         conductances_EI = pandas.DataFrame()
-        if reprocess_raw_files(".", ["01-synaptic-weights-EI-*"]):
-            conductances_EI = var_combine_files_column_wise(
-                "../", "01-synaptic-weights-EI-*.txt", '\t')
-            if not conductances_EI.empty:
-                conductances_mean_EI = pandas.concat(
-                    [conductances_EI.mean(axis=1),
-                     conductances_EI.std(axis=1)],
-                    axis=1)
-                conductances_mean_fn_EI = (
-                    "01-synaptic-weights-EI-mean-all.txt"
-                    )
-                conductances_mean_EI.to_csv(
-                    conductances_mean_fn_EI, sep='\t',
-                    header=None, line_terminator='\n')
-
-                conductances_totals_EI = conductances_EI.sum(axis=1)
-                conductances_total_fn_EI = (
-                    "01-synaptic-weights-EI-total-all.txt"
+        conductances_EI = var_combine_files_column_wise(
+            "../", "01-synaptic-weights-EI-*.txt", '\t')
+        if not conductances_EI.empty:
+            conductances_mean_EI = pandas.concat(
+                [conductances_EI.mean(axis=1),
+                 conductances_EI.std(axis=1)],
+                axis=1)
+            conductances_mean_fn_EI = (
+                "01-synaptic-weights-EI-mean-all.txt"
                 )
-                conductances_totals_EI.to_csv(
-                    conductances_total_fn_EI, sep='\t',
-                    header=None)
-                self.lgr.info("Processed EI conductances..")
-            else:
-                self.lgr.warning("No dataframe for EI conductances. Skipping.")
-        # If I decide to skip the processing, still permit plotting
+            conductances_mean_EI.to_csv(
+                conductances_mean_fn_EI, sep='\t',
+                header=None, line_terminator='\n')
+
+            conductances_totals_EI = conductances_EI.sum(axis=1)
+            conductances_total_fn_EI = (
+                "01-synaptic-weights-EI-total-all.txt"
+            )
+            conductances_totals_EI.to_csv(
+                conductances_total_fn_EI, sep='\t',
+                header=None)
+            self.lgr.info("Processed EI conductances..")
         else:
-            conductances_EI = conductances_EI.append([0])
+            self.lgr.warning("No dataframe for EI conductances. Skipping.")
         # II
         conductances_II = pandas.DataFrame()
-        if reprocess_raw_files(".", ["01-synaptic-weights-II-*"]):
-            conductances_II = var_combine_files_column_wise(
-                "../", "01-synaptic-weights-II-*.txt", '\t')
-            if not conductances_II.empty:
-                conductances_mean_II = pandas.concat(
-                    [conductances_II.mean(axis=1),
-                     conductances_II.std(axis=1)],
-                    axis=1)
-                conductances_mean_fn_II = (
-                    "01-synaptic-weights-II-mean-all.txt"
-                    )
-                conductances_mean_II.to_csv(
-                    conductances_mean_fn_II, sep='\t',
-                    header=None, line_terminator='\n')
-
-                conductances_totals_II = conductances_II.sum(axis=1)
-                conductances_total_fn_II = (
-                    "01-synaptic-weights-II-total-all.txt"
+        conductances_II = var_combine_files_column_wise(
+            "../", "01-synaptic-weights-II-*.txt", '\t')
+        if not conductances_II.empty:
+            conductances_mean_II = pandas.concat(
+                [conductances_II.mean(axis=1),
+                 conductances_II.std(axis=1)],
+                axis=1)
+            conductances_mean_fn_II = (
+                "01-synaptic-weights-II-mean-all.txt"
                 )
-                conductances_totals_II.to_csv(
-                    conductances_total_fn_II, sep='\t',
-                    header=None)
-                self.lgr.info("Processed II conductances..")
-            else:
-                self.lgr.warning("No dataframe for II conductances. Skipping.")
-        # If I decide to skip the processing, still permit plotting
+            conductances_mean_II.to_csv(
+                conductances_mean_fn_II, sep='\t',
+                header=None, line_terminator='\n')
+
+            conductances_totals_II = conductances_II.sum(axis=1)
+            conductances_total_fn_II = (
+                "01-synaptic-weights-II-total-all.txt"
+            )
+            conductances_totals_II.to_csv(
+                conductances_total_fn_II, sep='\t',
+                header=None)
+            self.lgr.info("Processed II conductances..")
         else:
-            conductances_II = conductances_II.append([0])
+            self.lgr.warning("No dataframe for II conductances. Skipping.")
         # IE
         conductances_IE = pandas.DataFrame()
-        if reprocess_raw_files(".", ["01-synaptic-weights-IE-*"]):
-            conductances_IE = var_combine_files_column_wise(
-                "../", "01-synaptic-weights-IE-*.txt", '\t')
-            if not conductances_IE.empty:
-                conductances_mean_IE = pandas.concat(
-                    [conductances_IE.mean(axis=1),
-                     conductances_IE.std(axis=1)],
-                    axis=1)
-                conductances_mean_fn_IE = (
-                    "01-synaptic-weights-IE-mean-all.txt"
-                    )
-                conductances_mean_IE.to_csv(
-                    conductances_mean_fn_IE, sep='\t',
-                    header=None, line_terminator='\n')
-
-                conductances_totals_IE = conductances_IE.sum(axis=1)
-                conductances_total_fn_IE = (
-                    "01-synaptic-weights-IE-total-all.txt"
+        conductances_IE = var_combine_files_column_wise(
+            "../", "01-synaptic-weights-IE-*.txt", '\t')
+        if not conductances_IE.empty:
+            conductances_mean_IE = pandas.concat(
+                [conductances_IE.mean(axis=1),
+                 conductances_IE.std(axis=1)],
+                axis=1)
+            conductances_mean_fn_IE = (
+                "01-synaptic-weights-IE-mean-all.txt"
                 )
-                conductances_totals_IE.to_csv(
-                    conductances_total_fn_IE, sep='\t',
-                    header=None)
-                self.lgr.info("Processed IE conductances..")
-            else:
-                self.lgr.warning("No dataframe for IE conductances. Skipping.")
-        # If I decide to skip the processing, still permit plotting
+            conductances_mean_IE.to_csv(
+                conductances_mean_fn_IE, sep='\t',
+                header=None, line_terminator='\n')
+
+            conductances_totals_IE = conductances_IE.sum(axis=1)
+            conductances_total_fn_IE = (
+                "01-synaptic-weights-IE-total-all.txt"
+            )
+            conductances_totals_IE.to_csv(
+                conductances_total_fn_IE, sep='\t',
+                header=None)
+            self.lgr.info("Processed IE conductances..")
         else:
-            conductances_IE = conductances_IE.append([0])
+            self.lgr.warning("No dataframe for IE conductances. Skipping.")
 
         if (
                 (not conductances_EE.empty) and
@@ -411,11 +390,10 @@ class Postprocess:
 
         self.lgr.info("Generating mean firing rate graphs vs time")
 
-        if reprocess_raw_files(".", ["firing-*", "std-*", "cv-*"]):
-            for neuron_set in self.neurons.keys():
-                get_firing_rate_metrics(
-                    neuron_set, "spikes-{}.gdf".format(neuron_set),
-                    len(self.neurons[neuron_set]))
+        for neuron_set in self.neurons.keys():
+            get_firing_rate_metrics(
+                neuron_set, "spikes-{}.gdf".format(neuron_set),
+                len(self.neurons[neuron_set]))
 
         self.lgr.info("Generating firing rate graphs")
         plot_using_gnuplot_binary(
