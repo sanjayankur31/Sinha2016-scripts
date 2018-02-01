@@ -27,7 +27,7 @@
 module unload mpi/mpich-x86_64
 module load mvapich2-1.7
 
-SIM_PATH="/stri-data/asinha/simulations-nest/"
+SIM_PATH="/beegfs/general/asinha/simulations-nest/"
 SIM_TIME=""
 PROGRAM_PATH="$SIM_PATH""$SIM_TIME""/Sinha2016/src/Sinha2016.py"
 RESULT_PATH="$SIM_PATH""$SIM_TIME""/result/"
