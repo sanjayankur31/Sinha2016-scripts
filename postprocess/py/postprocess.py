@@ -741,62 +741,65 @@ class Postprocess:
                     "..", "08-syn_conns-{}-*-{}.txt".format(
                         synapse_set, atime), '\t')
 
-                # sample for top view at each time
-                synapse_set_o_fn = "08-syn_conns-top-{}-{}.txt".format(
-                    synapse_set, float(atime)/1000.)
-                syn_set_o_fh = open(synapse_set_o_fn, 'w')
-
                 # reset counts
                 for key, value in synapse_set_regions.items():
                     value['num'] = 0
 
-                for row in syn_conns.itertuples(index=True, name=None):
-                    # only print the ones that are in our sample for the
-                    # top view plot
-                    if (row[0], row[1]) in connection_sample:
-                        src_info = self.neurons[src_set][int(
-                            row[0] - self.neurons[src_set][0][0])]
-                        dest_info = self.neurons[dest_set][int(
-                            row[1] - self.neurons[dest_set][0][0])]
+                if "synapses_top" in self.cfg['time_graphs']:
+                    # sample for top view at each time
+                    synapse_set_o_fn = "08-syn_conns-top-{}-{}.txt".format(
+                        synapse_set, float(atime)/1000.)
+                    syn_set_o_fh = open(synapse_set_o_fn, 'w')
 
-                        print("{}\t{}\t{}\t{}".format(
-                                src_info[3], src_info[4],
-                                dest_info[3], dest_info[4]),
-                              file=syn_set_o_fh)
+                for row in syn_conns.itertuples(index=True, name=None):
+                    if "synapses_top" in self.cfg['time_graphs']:
+                        # only print the ones that are in our sample for the
+                        # top view plot
+                        if (row[0], row[1]) in connection_sample:
+                            src_info = self.neurons[src_set][int(
+                                row[0] - self.neurons[src_set][0][0])]
+                            dest_info = self.neurons[dest_set][int(
+                                row[1] - self.neurons[dest_set][0][0])]
+
+                            print("{}\t{}\t{}\t{}".format(
+                                    src_info[3], src_info[4],
+                                    dest_info[3], dest_info[4]),
+                                  file=syn_set_o_fh)
 
                     # count synapses in different regions
                     for key, value in synapse_set_regions.items():
                         if (row[0], row[1]) in value['conns']:
                             value['num'] += 1
 
-                # close output plot file for this time
-                syn_set_o_fh.close()
-                # plot top view graph for this time
-                synapse_set_p_fn = "08-syn_conns-top-{}-{}.png".format(
-                    synapse_set, float(atime)/1000.)
-                args = [
-                    "-e",
-                    "o_fn='{}'".format(synapse_set_p_fn),
-                    "-e",
-                    "i_fn='{}'".format(synapse_set_o_fn),
-                    "-e",
-                    "o_x='{}'".format(o_x),
-                    "-e",
-                    "o_y='{}'".format(o_y),
-                    "-e",
-                    "r_p_lpz='{}'".format(rad_p_lpz),
-                    "-e",
-                    "r_lpz_b='{}'".format(rad_lpz_b),
-                    "-e",
-                    "r_lpz_c='{}'".format(rad_lpz_c),
-                    "-e",
-                    "plot_title='Synapses for {} at {}s'".format(
-                        synapse_set, float(atime)/1000.),
-                ]
-                plot_using_gnuplot_binary(
-                    os.path.join(self.cfg['plots_dir'],
-                                 'plot-top-view-connections.plt'),
-                    args)
+                if "synapses_top" in self.cfg['time_graphs']:
+                    # close output plot file for this time
+                    syn_set_o_fh.close()
+                    # plot top view graph for this time
+                    synapse_set_p_fn = "08-syn_conns-top-{}-{}.png".format(
+                        synapse_set, float(atime)/1000.)
+                    args = [
+                        "-e",
+                        "o_fn='{}'".format(synapse_set_p_fn),
+                        "-e",
+                        "i_fn='{}'".format(synapse_set_o_fn),
+                        "-e",
+                        "o_x='{}'".format(o_x),
+                        "-e",
+                        "o_y='{}'".format(o_y),
+                        "-e",
+                        "r_p_lpz='{}'".format(rad_p_lpz),
+                        "-e",
+                        "r_lpz_b='{}'".format(rad_lpz_b),
+                        "-e",
+                        "r_lpz_c='{}'".format(rad_lpz_c),
+                        "-e",
+                        "plot_title='Synapses for {} at {}s'".format(
+                            synapse_set, float(atime)/1000.),
+                    ]
+                    plot_using_gnuplot_binary(
+                        os.path.join(self.cfg['plots_dir'],
+                                     'plot-top-view-connections.plt'),
+                        args)
 
                 # print synapse counts for different regions
                 for key, value in synapse_set_regions.items():
