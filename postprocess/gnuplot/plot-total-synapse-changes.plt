@@ -1,4 +1,4 @@
-set term pngcairo font "OpenSans, 28" size 1920, 1028
+set term pngcairo font "OpenSans, 28" size 1920, 1080
 set xlabel "Time (seconds)"
 set ylabel "Number of synapses formed or deleted"
 set xzeroaxis ls -1 lw 2

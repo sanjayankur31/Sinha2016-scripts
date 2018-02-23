@@ -1,4 +1,4 @@
-set term pngcairo enhanced font "OpenSans, 28" size 1920,1028
+set term pngcairo enhanced font "OpenSans, 28" size 1920, 1080
 
 v=0.0001
 etad=0.1

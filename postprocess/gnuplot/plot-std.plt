@@ -1,4 +1,4 @@
-set term pngcairo font "OpenSans, 28" size 1920,1028
+set term pngcairo font "OpenSans, 28" size 1920, 1080
 unset yrange
 set ytics border nomirror 5
 set xlabel "Time (seconds)"
