@@ -5,6 +5,7 @@ set ylabel "Mean Synaptic elements"
 set ytics border nomirror
 set xtics border nomirror
 set yrange [0:]
+set lmargin at screen 0.15
 
 set output "05-se-lpz_c_E-all.png"
 set title "Mean Synaptic elements for LPZ C E neurons"

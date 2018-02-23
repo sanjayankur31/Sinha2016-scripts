@@ -5,6 +5,7 @@ set xlabel "Time (seconds)"
 set ylabel "SNR"
 set yrange [0:]
 set xtics border nomirror 50
+set lmargin at screen 0.15
 
 outfile = "SNR-patterns.png"
 set output outfile

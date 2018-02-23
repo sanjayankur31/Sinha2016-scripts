@@ -5,6 +5,7 @@ set ylabel "Mean firing rate of neurons (Hz)"
 set yrange [0:200]
 set ytics border 20
 set xtics border nomirror
+set lmargin at screen 0.15
 
 set output "mean-firing-rates-I-E.png"
 set title "Mean firing rate for neurons"

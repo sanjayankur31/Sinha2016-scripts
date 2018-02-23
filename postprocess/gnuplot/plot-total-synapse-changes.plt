@@ -4,6 +4,7 @@ set ylabel "Number of synapses formed or deleted"
 set xzeroaxis ls -1 lw 2
 set datafile missing '0'
 set xrange[0:]
+set lmargin at screen 0.15
 
 set output "04-synaptic-changes-lpz_c_E.png"
 set title "Synapses formed and deleted in LPZ C E neurons"

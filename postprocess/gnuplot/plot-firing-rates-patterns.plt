@@ -6,6 +6,7 @@ set ylabel "Mean firing rate of neurons (Hz)"
 set xrange [0:]
 set ytics border 20
 set xtics border nomirror
+set lmargin at screen 0.15
 
 do for [pat=1:numpats+0] {
     set ytics 5
