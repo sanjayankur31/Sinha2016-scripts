@@ -1,8 +1,9 @@
-set term pngcairo font "OpenSans, 28" size 1920, 1028
+set term pngcairo font "OpenSans, 28" size 1920, 1080
 set xlabel "Time (seconds)"
 set ylabel "Synaptic turnover"
 set xzeroaxis ls -1 lw 2
 set datafile missing '0'
+set lmargin at screen 0.15
 
 set output "04-synaptic-change.png"
 set title "Synapses formed and deleted in all neurons"

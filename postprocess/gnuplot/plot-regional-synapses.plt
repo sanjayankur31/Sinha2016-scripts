@@ -1,11 +1,12 @@
 load '/home/asinha/Documents/02_Code/00_repos/00_mine/gnuplot-palettes/paired.pal'
-set term pngcairo font "OpenSans, 28" size 1920,1024
+set term pngcairo font "OpenSans, 28" size 1920, 1080
 set xlabel "Time (seconds)"
 set ylabel "Number of incoming synapses"
 set ytics border nomirror
 set xtics border nomirror
 set xrange[0:]
 set yrange[0:]
+set lmargin at screen 0.15
 
 set output "08-syn_conns-E-to-lpz_c_E.png"
 set title "Incoming E connections to LPZ C E"

@@ -1,4 +1,4 @@
-set term pngcairo font "OpenSans, 28" size 1920,1028
+set term pngcairo font "OpenSans, 28" size 1920, 1080
 set xlabel "Time (seconds)"
 set ylabel "Mean firing rate of neurons (Hz)"
 set yrange [0:200]

@@ -1,7 +1,8 @@
 load '/home/asinha/Documents/02_Code/00_repos/00_mine/gnuplot-palettes/paired.pal'
-set term pngcairo font "OpenSans, 28" size 1920,1028
+set term pngcairo font "OpenSans, 28" size 1920, 1080
 set xlabel "X ({/Symbol s} = X x 150{/Symbol m})"
 set ylabel "Number of incoming connections"
+set lmargin at screen 0.15
 
 set output "08-syn_conns_to_lpz_c_E.png"
 set title "To LPZ C"

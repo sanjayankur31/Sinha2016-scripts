@@ -1,4 +1,4 @@
-set term pngcairo font "OpenSans, 28" size 1920,1028
+set term pngcairo font "OpenSans, 28" size 1920, 1080
 set xlabel "NeuronID"
 set ylabel "Synaptic elements"
 set ytics border nomirror

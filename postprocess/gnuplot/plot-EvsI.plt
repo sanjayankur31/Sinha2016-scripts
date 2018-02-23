@@ -1,4 +1,4 @@
-set term pngcairo font "OpenSans, 28" size 1920,1028
+set term pngcairo font "OpenSans, 28" size 1920, 1080
 set xlabel "Mean I (Hz)"
 set ylabel "Mean E (Hz)"
 set yrange [0:200]

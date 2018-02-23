@@ -112,7 +112,8 @@ def combine_files_column_wise(directory, shell_glob, separator):
             dataframes.append(dataframe)
 
         lgr.info("Combined dataframe..")
-        combined_dataframe = pandas.concat(dataframes, axis=1)
+        if dataframes:
+            combined_dataframe = pandas.concat(dataframes, axis=1)
 
     return combined_dataframe
 
@@ -195,7 +196,8 @@ def var_combine_files_column_wise(directory, shell_glob, separator):
             dataframes.append(dataframe)
 
     lgr.info("Combining dataframes..")
-    combined_dataframe = pandas.concat(dataframes, axis=1)
+    if dataframes:
+        combined_dataframe = pandas.concat(dataframes, axis=1)
 
     return combined_dataframe
 
@@ -329,5 +331,6 @@ def combine_files_row_wise(directory, shell_glob, separator):
         else:
             dataframes.append(df)
 
-    resultant_df = pandas.concat(dataframes, axis=0)
+    if dataframes:
+        resultant_df = pandas.concat(dataframes, axis=0)
     return resultant_df
