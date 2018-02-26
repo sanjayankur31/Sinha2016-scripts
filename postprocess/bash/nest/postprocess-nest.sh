@@ -16,6 +16,23 @@ CLUSTER_PATH="asinha@uhhpc:/beegfs/general/asinha/simulations-nest/"
 # name of generated directory
 DIRNAME=""
 
+function setup() {
+    pushd "$DIRNAME"
+        echo "Creating consolidated dir and copying info files"
+        mkdir "$CONSOLIDATED_DIR"
+
+        echo "Moving neuron location files"
+        cp -v -- 00-locations*.txt "$CONSOLIDATED_DIR"/
+        echo "Moving commit info file"
+        cp -v -- 00-GIT* "$CONSOLIDATED_DIR"/
+        echo "Moving parameter info file"
+        cp -v -- ../99* "$CONSOLIDATED_DIR"/
+
+        echo "Moving simulation output files"
+        cp -v -- ../nest*.* "$CONSOLIDATED_DIR"/
+    popd "$DIRNAME"
+}
+
 # combine spike files and the sort and move them to the $CONSOLIDATED_DIR
 combine ()
 {
@@ -30,7 +47,6 @@ combine ()
         NUMPATS="$(ls spikes-pattern* | grep -Eo 'pattern-[0-9]+' | sort  | uniq | sed 's/pattern-//' | wc -l)"
 
         echo "Combining files for NEST simulation"
-        mkdir "$CONSOLIDATED_DIR"
 
         # Merge multiple pattern files
         for pat in $(seq 1 "$NUMPATS"); do
@@ -90,13 +106,6 @@ combine ()
         mv spikes-p_lpz_I.gdf "$CONSOLIDATED_DIR"
         mv spikes-o_I.gdf "$CONSOLIDATED_DIR"
         mv spikes-I.gdf "$CONSOLIDATED_DIR"
-
-        echo "Moving neuron location files"
-        cp -v -- 00-locations*.txt "$CONSOLIDATED_DIR"/
-        echo "Moving commit info file"
-        cp -v -- 00-GIT* "$CONSOLIDATED_DIR"/
-        echo "Moving parameter info file"
-        cp -v -- ../99* "$CONSOLIDATED_DIR"/
     popd
 }
 
@@ -176,6 +185,7 @@ do
         a)
             DIRNAME=$OPTARG
             fetch
+            setup
             combine
             pypostprocess
             rename_files
@@ -183,13 +193,16 @@ do
         f)
             DIRNAME=$OPTARG
             fetch
+            setup
             ;;
         c)
             DIRNAME=$OPTARG
+            setup
             combine
             ;;
         p)
             DIRNAME=$OPTARG
+            setup
             pypostprocess
             rename_files
             ;;
