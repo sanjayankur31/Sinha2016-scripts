@@ -789,7 +789,7 @@ class Postprocess:
         plot_using_gnuplot_binary(
             os.path.join(self.cfg['plots_dir'], 'plot-regional-synapses.plt'))
 
-    def plot_groth_curves(self):
+    def plot_growth_curves(self):
         """
         Plot growth curves using values from parameter output file.
 
