@@ -30,7 +30,7 @@ function setup() {
 
         echo "Moving simulation output files"
         cp -v -- ../nest*.* "$CONSOLIDATED_DIR"/
-    popd "$DIRNAME"
+    popd
 }
 
 # combine spike files and the sort and move them to the $CONSOLIDATED_DIR
