@@ -217,35 +217,6 @@ class Postprocess:
                         atime, '\t'.join(means),
                         '\t'.join(stds)), file=f)
 
-                    # growth curves
-                    if xmax < cals.mean(axis=0).values[0]:
-                        xmax = cals.mean(axis=0).values[0]
-                    if atime == str(self.cfg['sp_enabled_at'] * 1000.):
-                        eps = cals.mean(axis=0).values[0]
-                        eta_a = 0.56 * eps
-                        eta_d = 0.14 * eps
-                        args = [
-                            "-e", "etad={}".format(eta_d),
-                            "-e", "etaa={}".format(eta_a),
-                            "-e", "epsilon={}".format(eps),
-                            "-e",
-                            "o_fn='growth-curves-{}.png'".format(
-                                neuron_set),
-                            "-e",
-                            "plot_title='Growth curves for {}'".format(
-                                neuron_set),
-                            "-e", "xmax={}".format(xmax*1.5),
-                        ]
-                        plot_using_gnuplot_binary(
-                            os.path.join(self.cfg['plots_dir'],
-                                         'plot-growthcurves.plt'),
-                            args)
-                        # print the growth curve params to a file too
-                        with open("09-growth-curve-params-{}.txt".format(
-                                neuron_set), 'w') as fx:
-                            print("{}\t{}\t{}".format(eta_d, eta_a, eps),
-                                  file=fx)
-
             self.lgr.info(
                 "Processed cal metrics for {} neurons..".format(neuron_set))
 
@@ -820,10 +791,21 @@ class Postprocess:
         plot_using_gnuplot_binary(
             os.path.join(self.cfg['plots_dir'], 'plot-regional-synapses.plt'))
 
+    def plot_groth_curves(self):
+        """
+        Plot growth curves using values from parameter output file.
+
+        """
+        # Doesn't need calcium metric calculations
+        plot_using_gnuplot_binary(os.path.join(self.cfg['plots_dir'],
+                                               'plot-growthcurves.plt'))
+        self.lgr.info("Plotted growth curves for both I and E neurons")
+
     def main(self):
         """Do everything."""
 
         self.plot_neuron_locations()
+        self.plot_growth_curves()
 
         self.lgr.info("Running a separate process each for different bits.")
         processes = []
