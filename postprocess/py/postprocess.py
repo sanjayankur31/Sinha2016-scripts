@@ -825,9 +825,9 @@ class Postprocess:
 
         # pick one E and one I neuron
         sample = {}
-        sample['E'] = (random.sample(list(self.neurons['p_lpz_E'][:, 0]),
+        sample['E'] = (random.sample(list(self.neurons['lpz_b_E'][:, 0]),
                                      k=1))
-        sample['I'] = (random.sample(list(self.neurons['lpz_c_I'][:, 0]),
+        sample['I'] = (random.sample(list(self.neurons['lpz_b_I'][:, 0]),
                                      k=1))
 
         # find and print, plot all synapses these two neurons are involved in
