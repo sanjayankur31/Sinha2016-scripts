@@ -8,6 +8,7 @@ set yrange[0:]
 set lmargin at screen 0.15
 
 # to also plot the three values for easier analysis
+# xmax is the length of the simulation
 xmax=system("tail -1 02-calcium-lpz_c_E-all.txt | awk '{print $1}'")
 epsilonE=system("grep 'epsilonE' 99-simulation_params.txt | sed 's/^.*: //'")
 etaaE=system("grep 'etaaE' 99-simulation_params.txt | sed 's/^.*: //'")
@@ -70,6 +71,5 @@ plot "02-calcium-o_I-all.txt" using ($1/1000):2:($2-$3):($2+$3) with errorbars l
 
 set output "02-calcium-I-zoomed.png"
 set title "Zoomed mean calcium concentration for various I neuron sets"
-set yrange[0:epsilonI+20]
 #plot "02-calcium-lpz_c_I-all.txt" using ($1/1000):2:($2-$3):($2+$3) with errorbars lw 6 title "", "02-calcium-lpz_c_I-all.txt" using ($1/1000):2 with linespoints lw 6 title "Mean LPZ C", "02-calcium-lpz_b_I-all.txt" using ($1/1000):2:($2-$3):($2+$3) with errorbars lw 6 title "", "02-calcium-lpz_b_I-all.txt" using ($1/1000):2 with linespoints lw 6 title "Mean LPZ B", "02-calcium-p_lpz_I-all.txt" using ($1/1000):2:($2-$3):($2+$3) with errorbars lw 6 title "", "02-calcium-p_lpz_I-all.txt" using ($1/1000):2 with linespoints lw 6 title "Mean P LPZ"
 plot "02-calcium-lpz_c_I-all.txt" using ($1/1000):2 with linespoints lw 6 title "Mean LPZ C", "02-calcium-lpz_b_I-all.txt" using ($1/1000):2 with linespoints lw 6 title "Mean LPZ B", "02-calcium-p_lpz_I-all.txt" using ($1/1000):2 with linespoints lw 6 title "Mean P LPZ", "02-calcium-o_I-all.txt" using ($1/1000):2 with linespoints lw 6 title "Mean non LPZ";
