@@ -13,6 +13,10 @@ usage()
 main ()
 {
     montage \
+        "$PREFIX"all-mean-conductances.png \
+        "$PREFIX"all-total-conductances.png \
+        "$PREFIX"growth-curves-E.png \
+        "$PREFIX"growth-curves-I.png \
         "$PREFIX"02-calcium-lpz_c_E.png \
         "$PREFIX"02-calcium-lpz_b_E.png \
         "$PREFIX"02-calcium-p_lpz_E.png \
@@ -29,9 +33,13 @@ main ()
         "$PREFIX"08-syn_conns-I-to-lpz_b_E.png \
         "$PREFIX"08-syn_conns-I-to-p_lpz_E.png \
         "$PREFIX"08-syn_conns-I-to-o_E.png \
-        -tile 4x4 -geometry +2+2  "$PREFIX"structural-plasticity-montage-E.png
+        -tile 4x5 -geometry +2+2  "$PREFIX"structural-plasticity-montage-E.png
 
     montage \
+        "$PREFIX"all-mean-conductances.png \
+        "$PREFIX"all-total-conductances.png \
+        "$PREFIX"growth-curves-E.png \
+        "$PREFIX"growth-curves-I.png \
         "$PREFIX"02-calcium-lpz_c_I.png \
         "$PREFIX"02-calcium-lpz_b_I.png \
         "$PREFIX"02-calcium-p_lpz_I.png \
@@ -48,7 +56,7 @@ main ()
         "$PREFIX"08-syn_conns-I-to-lpz_b_I.png \
         "$PREFIX"08-syn_conns-I-to-p_lpz_I.png \
         "$PREFIX"08-syn_conns-I-to-o_I.png \
-        -tile 4x4 -geometry +2+2  "$PREFIX"structural-plasticity-montage-I.png
+        -tile 4x5 -geometry +2+2  "$PREFIX"structural-plasticity-montage-I.png
 }
 
 
