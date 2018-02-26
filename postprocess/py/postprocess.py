@@ -825,10 +825,14 @@ class Postprocess:
 
         # pick one E and one I neuron
         sample = {}
+        random.seed(666)
         sample['E'] = (random.sample(list(self.neurons['lpz_b_E'][:, 0]),
                                      k=1))
+        self.lgr.debug("E sample is: {}".format(sample['E']))
+        random.seed(999)
         sample['I'] = (random.sample(list(self.neurons['lpz_b_I'][:, 0]),
                                      k=1))
+        self.lgr.debug("I sample is: {}".format(sample['I']))
 
         # find and print, plot all synapses these two neurons are involved in
         for synapse_set in ["EE", "EI", "II", "IE"]:
