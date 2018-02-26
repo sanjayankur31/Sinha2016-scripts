@@ -202,8 +202,6 @@ class Postprocess:
         for neuron_set in ["lpz_c_E", "lpz_b_E", "p_lpz_E", "o_E", "lpz_c_I",
                            "lpz_b_I", "p_lpz_I", "o_I"]:
             neuron_set_o_fn = "02-calcium-{}-all.txt".format(neuron_set)
-            eps = 0.
-            xmax = 0.
             with open(neuron_set_o_fn, 'w') as f:
                 for atime in time_list:
                     cals = pandas.DataFrame()
