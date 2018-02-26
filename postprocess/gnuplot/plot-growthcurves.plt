@@ -4,6 +4,7 @@ set term pngcairo enhanced font "OpenSans, 28" size 1920, 1080
 # define the function
 dzdt(x, nu, zeta, xi)= (nu * ((2.0 * exp(-(((x - xi)/zeta)**2.0))) - 1.0))
 
+xmax=system("tail -1 02-calcium-lpz_c_E-all.txt | awk '{print $1}'")
 eps_E=system("grep 'eps_E' 99-simulation_params.txt | sed 's/^.*: //'")
 nu_ax_E=system("grep 'nu_ax_E' 99-simulation_params.txt | sed 's/^.*: //'")
 nu_d_E_e=system("grep 'nu_d_E_e' 99-simulation_params.txt | sed 's/^.*: //'")
