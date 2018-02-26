@@ -799,11 +799,140 @@ class Postprocess:
                                                'plot-growthcurves.plt'))
         self.lgr.info("Plotted growth curves for both I and E neurons")
 
+    def plot_initial_connectivity(self):
+        """
+        Plot the initial connectivity of one neuron from each region.
+        """
+        self.lgr.info("Processing initial connectivity graphs..")
+        # get origin and radii to draw circles to show different regions
+        # can probably convert this to a function so it can be reused
+        o_x = (max(self.neurons['o_E'][:, 1]) -
+               min(self.neurons['o_E'][:, 1]))/2
+        o_y = (max(self.neurons['o_E'][:, 2]) -
+               min(self.neurons['o_E'][:, 2]))/2
+        self.lgr.debug("Centre is: {}, {}".format(o_x, o_y))
+        lpz_c_max_y = (max(self.neurons['lpz_c_E'][:, 2]))
+        rad_lpz_c = lpz_c_max_y - o_y
+        self.lgr.debug("Rad of lpz c is: {}".format(rad_lpz_c))
+
+        lpz_b_max_y = (max(self.neurons['lpz_b_E'][:, 2]))
+        rad_lpz_b = lpz_b_max_y - o_y
+        self.lgr.debug("Rad of lpz b is: {}".format(rad_lpz_b))
+
+        p_lpz_max_y = (max(self.neurons['p_lpz_E'][:, 2]))
+        rad_p_lpz = p_lpz_max_y - o_y
+        self.lgr.debug("Rad of p lpz is: {}".format(rad_p_lpz))
+
+        # pick one E and one I neuron
+        sample = {}
+        sample['E'] = (random.sample(list(self.neurons['p_lpz_E'][:, 0]),
+                                     k=1))
+        sample['I'] = (random.sample(list(self.neurons['lpz_c_I'][:, 0]),
+                                     k=1))
+
+        # find and print, plot all synapses these two neurons are involved in
+        for synapse_set in ["EE", "EI", "II", "IE"]:
+            o_fn_i = "75-initial-connections-top-{}-incoming.txt".format(
+                synapse_set)
+            o_fh_i = open(o_fn_i, 'w')
+            o_fn_o = "75-initial-connections-top-{}-outgoing.txt".format(
+                synapse_set)
+            o_fh_o = open(o_fn_o, 'w')
+            src_set = synapse_set[0]
+            dest_set = synapse_set[1]
+            syn_conns = pandas.DataFrame()
+            syn_conns = combine_files_row_wise(
+                "..", "08-syn_conns-{}-*-0.0.txt".format(
+                    synapse_set), '\t')
+
+            for row in syn_conns.itertuples(index=True, name=None):
+                # it's a source
+                if row[0] in sample[src_set]:
+                    src_info = self.neurons[src_set][int(
+                        row[0] - self.neurons[src_set][0][0])]
+                    dest_info = self.neurons[dest_set][int(
+                        row[1] - self.neurons[dest_set][0][0])]
+
+                    print("{}\t{}\t{}\t{}".format(
+                            src_info[3], src_info[4],
+                            dest_info[3], dest_info[4]),
+                          file=o_fh_i)
+
+                # it's a destination
+                if row[1] in sample[dest_set]:
+                    src_info = self.neurons[src_set][int(
+                        row[0] - self.neurons[src_set][0][0])]
+                    dest_info = self.neurons[dest_set][int(
+                        row[1] - self.neurons[dest_set][0][0])]
+
+                    print("{}\t{}\t{}\t{}".format(
+                            src_info[3], src_info[4],
+                            dest_info[3], dest_info[4]),
+                          file=o_fh_o)
+
+            o_fh_i.close()
+            o_fh_o.close()
+
+            p_fn = "75-initial-connections-top-{}-incoming.png".format(
+                synapse_set)
+            args = [
+                "-e",
+                "o_fn='{}'".format(p_fn),
+                "-e",
+                "i_fn='{}'".format(o_fn_i),
+                "-e",
+                "o_x='{}'".format(o_x),
+                "-e",
+                "o_y='{}'".format(o_y),
+                "-e",
+                "r_p_lpz='{}'".format(rad_p_lpz),
+                "-e",
+                "r_lpz_b='{}'".format(rad_lpz_b),
+                "-e",
+                "r_lpz_c='{}'".format(rad_lpz_c),
+                "-e",
+                "plot_title='Initial incoming synapses for {}'".format(
+                    synapse_set)
+            ]
+            plot_using_gnuplot_binary(
+                os.path.join(self.cfg['plots_dir'],
+                             'plot-top-view-connections.plt'),
+                args)
+
+            p_fn = "75-initial-connections-top-{}-outgoing.png".format(
+                synapse_set)
+            args = [
+                "-e",
+                "o_fn='{}'".format(p_fn),
+                "-e",
+                "i_fn='{}'".format(o_fn_o),
+                "-e",
+                "o_x='{}'".format(o_x),
+                "-e",
+                "o_y='{}'".format(o_y),
+                "-e",
+                "r_p_lpz='{}'".format(rad_p_lpz),
+                "-e",
+                "r_lpz_b='{}'".format(rad_lpz_b),
+                "-e",
+                "r_lpz_c='{}'".format(rad_lpz_c),
+                "-e",
+                "plot_title='Initial outgoing synapses for {}'".format(
+                    synapse_set)
+            ]
+            plot_using_gnuplot_binary(
+                os.path.join(self.cfg['plots_dir'],
+                             'plot-top-view-connections.plt'),
+                args)
+
+        self.lgr.info("Processed initial connectivity samples..")
+
     def main(self):
         """Do everything."""
 
         self.plot_neuron_locations()
         self.plot_growth_curves()
+        self.plot_initial_connectivity()
 
         self.lgr.info("Running a separate process each for different bits.")
         processes = []
