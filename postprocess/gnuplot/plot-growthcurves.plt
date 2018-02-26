@@ -56,8 +56,8 @@ set output "growth-curves-I.png"
 set title "Growth curves for I neurons"
 set xlabel "Calcium concentration"
 set ylabel "dz/dt"
-set label "{/Symbol h}_de" at (etad_I_e + 0.01), 0.00001
-set label "{/Symbol h}_di" at (etad_I_i + 0.01), 0.00001
+set label "{/Symbol h}_de" at (eta_d_I_e + 0.01), 0.00001
+set label "{/Symbol h}_di" at (eta_d_I_i + 0.01), 0.00001
 set label "{/Symbol h}_a" at (eta_ax_I + 0.01), 0.00001
 set label "{/Symbol e}" at (eps_I + 0.01), 0.00001
 set arrow from eta_d_I_e, -0.0001 to eta_d_I_e, 0.0001 nohead
