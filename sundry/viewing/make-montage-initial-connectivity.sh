@@ -14,21 +14,21 @@ main ()
 {
     montage \
         "$PREFIX"75-initial-connections-top-EE-incoming.png \
-        "$PREFIX"Grid-plot-lpz_c_E-lpz_b_E-p_lpz_E-o_E.png \
+        "$PREFIX"75-initial-connections-hist-EE-incoming.png \
         "$PREFIX"75-initial-connections-top-EE-outgoing.png \
-        "$PREFIX"Grid-plot-lpz_c_E-lpz_b_E-p_lpz_E-o_E.png \
+        "$PREFIX"75-initial-connections-hist-EE-outgoing.png \
         "$PREFIX"75-initial-connections-top-EI-incoming.png \
-        "$PREFIX"Grid-plot-lpz_c_I-lpz_b_I-p_lpz_I-o_I.png \
+        "$PREFIX"75-initial-connections-hist-EI-incoming.png \
         "$PREFIX"75-initial-connections-top-EI-outgoing.png \
-        "$PREFIX"Grid-plot-lpz_c_E-lpz_b_E-p_lpz_E-o_E.png \
+        "$PREFIX"75-initial-connections-hist-EI-outgoing.png \
         "$PREFIX"75-initial-connections-top-IE-incoming.png \
-        "$PREFIX"Grid-plot-lpz_c_E-lpz_b_E-p_lpz_E-o_E.png \
+        "$PREFIX"75-initial-connections-hist-IE-incoming.png \
         "$PREFIX"75-initial-connections-top-IE-outgoing.png \
-        "$PREFIX"Grid-plot-lpz_c_I-lpz_b_I-p_lpz_I-o_I.png \
+        "$PREFIX"75-initial-connections-hist-IE-outgoing.png \
         "$PREFIX"75-initial-connections-top-II-incoming.png \
-        "$PREFIX"Grid-plot-lpz_c_I-lpz_b_I-p_lpz_I-o_I.png \
+        "$PREFIX"75-initial-connections-hist-II-incoming.png \
         "$PREFIX"75-initial-connections-top-II-outgoing.png \
-        "$PREFIX"Grid-plot-lpz_c_I-lpz_b_I-p_lpz_I-o_I.png \
+        "$PREFIX"75-initial-connections-hist-II-outgoing.png \
         -tile 4x4 -geometry +2+2  "$PREFIX"75-initial-connections-montage.png
 }
 
