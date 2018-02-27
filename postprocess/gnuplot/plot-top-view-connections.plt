@@ -4,10 +4,11 @@ set xlabel "extent ({/Symbol m} m)"
 set ylabel "extent ({/Symbol m} m)"
 set xtics out border nomirror 0,4000
 set ytics out border nomirror 0,4000
-set yrange[-3000:18000]
-set xrange[-3000:15000]
+# set yrange[-3000:18000]
+# set xrange[-3000:15000]
 set size ratio -1
-set key top
+set key outside horizontal top
+set offset 200, 200, 200, 200
 
 set output o_fn;
 set title plot_title
