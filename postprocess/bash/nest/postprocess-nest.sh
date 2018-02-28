@@ -114,8 +114,8 @@ combine ()
 fetch ()
 {
     rsync -avPh "$CLUSTER_PATH/$DIRNAME"/result/ "$DIRNAME"
-    rsync -avPh "$CLUSTER_PATH/$DIRNAME"/nest*.e*/ "$DIRNAME"
-    rsync -avPh "$CLUSTER_PATH/$DIRNAME"/nest*.o*/ "$DIRNAME"
+    rsync -avPh "$CLUSTER_PATH/$DIRNAME"/nest*.e* "$DIRNAME"
+    rsync -avPh "$CLUSTER_PATH/$DIRNAME"/nest*.o* "$DIRNAME"
 }
 
 # runs the python postprocessing script that does the analysis and graph
