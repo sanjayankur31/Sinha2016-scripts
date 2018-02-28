@@ -26,10 +26,10 @@ function setup() {
         echo "Moving commit info file"
         cp -v -- 00-GIT* "$CONSOLIDATED_DIR"/
         echo "Moving parameter info file"
-        cp -v -- ../99* "$CONSOLIDATED_DIR"/
+        cp -v -- 99* "$CONSOLIDATED_DIR"/
 
         echo "Moving simulation output files"
-        cp -v -- ../nest*.* "$CONSOLIDATED_DIR"/
+        cp -v -- nest*.* "$CONSOLIDATED_DIR"/
     popd
 }
 
