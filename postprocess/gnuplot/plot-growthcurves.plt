@@ -6,7 +6,7 @@ dzdt(x, nu, zeta, xi)= (nu * ((2.0 * exp(-(((x - xi)/zeta)**2.0))) - 1.0))
 
 eps_ax_E=system("grep 'eps_ax_E' 99-simulation_params.txt | sed 's/^.*: //'")
 eps_den_E_e=system("grep 'eps_den_E_e' 99-simulation_params.txt | sed 's/^.*: //'")
-eps_den_E_i=system("grep 'eps_den_E_e' 99-simulation_params.txt | sed 's/^.*: //'")
+eps_den_E_i=system("grep 'eps_den_E_i' 99-simulation_params.txt | sed 's/^.*: //'")
 xmax_E=(eps_den_E_i+5.)
 nu_ax_E=system("grep 'nu_ax_E' 99-simulation_params.txt | sed 's/^.*: //'")
 nu_den_E_e=system("grep 'nu_den_E_e' 99-simulation_params.txt | sed 's/^.*: //'")
@@ -17,7 +17,7 @@ eta_den_E_i=system("grep 'eta_den_E_i' 99-simulation_params.txt | sed 's/^.*: //
 
 eps_ax_I=system("grep 'eps_ax_I' 99-simulation_params.txt | sed 's/^.*: //'")
 eps_den_I_e=system("grep 'eps_den_I_e' 99-simulation_params.txt | sed 's/^.*: //'")
-eps_den_I_i=system("grep 'eps_den_I_e' 99-simulation_params.txt | sed 's/^.*: //'")
+eps_den_I_i=system("grep 'eps_den_I_i' 99-simulation_params.txt | sed 's/^.*: //'")
 xmax_I=(eps_den_I_i+5.)
 nu_ax_I=system("grep 'nu_ax_I' 99-simulation_params.txt | sed 's/^.*: //'")
 nu_den_I_e=system("grep 'nu_den_I_e' 99-simulation_params.txt | sed 's/^.*: //'")
