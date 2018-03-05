@@ -30,8 +30,8 @@ xi_den_e=(eta_den_E_e+eps_den_E_e)/2.0
 xi_den_i=(eta_den_E_i+eps_den_E_i)/2.0
 xi_a=(eta_ax_E+eps_ax_E)/2.0
 
-zeta_den_E_e=(eta_den_E_e-eps_E_e)/1.6651092223153954
-zeta_den_E_i=(eta_den_E_i-eps_E_i)/1.6651092223153954
+zeta_den_E_e=(eta_den_E_e-eps_den_E_e)/1.6651092223153954
+zeta_den_E_i=(eta_den_E_i-eps_den_E_i)/1.6651092223153954
 zeta_ax_E=(eta_ax_E-eps_ax_E)/1.6651092223153954
 
 set output "growth-curves-E.png"
@@ -57,8 +57,8 @@ xi_den_e=(eta_den_I_e+eps_den_I_e)/2.0
 xi_den_i=(eta_den_I_i+eps_den_I_i)/2.0
 xi_a=(eta_ax_I+eps_ax_I)/2.0
 
-zeta_den_I_e=(eta_den_I_e-eps_I_e)/1.6651092223153954
-zeta_den_I_i=(eta_den_I_i-eps_I_i)/1.6651092223153954
+zeta_den_I_e=(eta_den_I_e-eps_den_I_e)/1.6651092223153954
+zeta_den_I_i=(eta_den_I_i-eps_den_I_i)/1.6651092223153954
 zeta_ax_I=(eta_ax_I-eps_ax_I)/1.6651092223153954
 
 set output "growth-curves-I.png"
