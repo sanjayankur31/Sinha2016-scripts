@@ -53,6 +53,8 @@ set arrow from eps_ax_E, (-1 * nu_ax_E) to eps_ax_E, nu_ax_E nohead
 plot [x=0:xmax_E] dzdt(x, nu_den_E_e, zeta_den_E_e, xi_den_e) w lines lw 2 title 'Dendritic E', [x=0:xmax_E] dzdt(x, nu_den_E_i, zeta_den_E_i, xi_den_i) w lines lw 2 title 'Dendritic I', [x=0:xmax_E] dzdt(x, nu_ax_E, zeta_ax_E, xi_a) w lines lw 2 title 'Axonal', 0 title "";
 
 # Inhibitory
+unset arrow
+unset label
 xi_den_e=(eta_den_I_e+eps_den_I_e)/2.0
 xi_den_i=(eta_den_I_i+eps_den_I_i)/2.0
 xi_a=(eta_ax_I+eps_ax_I)/2.0
