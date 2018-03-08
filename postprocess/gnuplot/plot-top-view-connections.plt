@@ -2,10 +2,10 @@ load '/home/asinha/Documents/02_Code/00_repos/00_mine/Sinha2016-scripts/postproc
 set term pngcairo font "OpenSans, 28" size 1440,1920
 set xlabel "extent ({/Symbol m} m)"
 set ylabel "extent ({/Symbol m} m)"
-set xtics out border nomirror 0,1000
-set ytics out border nomirror 0,1000
-# set yrange[-3000:18000]
-# set xrange[-3000:15000]
+set xtics out border nomirror 0,2000
+set ytics out border nomirror 0,2000
+set yrange[0:15000]
+set xrange[0:12000]
 set size ratio -1
 set key inside horizontal top
 set offset 400, 400, 400, 400
