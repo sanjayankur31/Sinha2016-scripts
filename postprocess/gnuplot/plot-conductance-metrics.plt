@@ -28,7 +28,11 @@ plot "01-synaptic-weights-IE-mean-all.txt" using ($1/1000):(-1*$2):(-1*($2-$3)):
 
 set output "all-mean-conductances.png"
 set title "All mean conductances"
-plot "01-synaptic-weights-EE-mean-all.txt" using ($1/1000):2 with linespoints lw 5 title "EE (Mean)", "01-synaptic-weights-EI-mean-all.txt" using ($1/1000):2 with linespoints lw 5 title "EI (Mean)", "01-synaptic-weights-II-mean-all.txt" using ($1/1000):(-1*$2) with linespoints lw 5 title "II (Mean)", "01-synaptic-weights-IE-mean-all.txt" using ($1/1000):(-1*$2) with linespoints lw 5 title "IE (Mean)", "01-synaptic-weights-EE-mean-all.txt" using ($1/1000):2:($2-$3):($2+$3) with errorbars lw 5 title "EE (SD) ", "01-synaptic-weights-EI-mean-all.txt" using ($1/1000):2:($2-$3):($2+$3) with errorbars lw 5 title "EI (SD)","01-synaptic-weights-II-mean-all.txt" using ($1/1000):(-1*$2):(-1*($2-$3)):(-1*($2+$3)) with errorbars lw 5 title "II (SD)",  "01-synaptic-weights-IE-mean-all.txt" using ($1/1000):(-1*$2):(-1*($2-$3)):(-1*($2+$3)) with errorbars lw 5 title "IE (SD)"
+plot "01-synaptic-weights-EE-mean-all.txt" using ($1/1000):2 with linespoints lw 5 title "EE", "01-synaptic-weights-EI-mean-all.txt" using ($1/1000):2 with linespoints lw 5 title "EI", "01-synaptic-weights-II-mean-all.txt" using ($1/1000):(-1*$2) with linespoints lw 5 title "II", "01-synaptic-weights-IE-mean-all.txt" using ($1/1000):(-1*$2) with linespoints lw 5 title "IE";
+
+set output "all-mean-std-conductances.png"
+set title "All mean conductances with STD"
+plot "01-synaptic-weights-EE-mean-all.txt" using ($1/1000):2 with linespoints lw 5 title "EE", "01-synaptic-weights-EI-mean-all.txt" using ($1/1000):2 with linespoints lw 5 title "EI", "01-synaptic-weights-II-mean-all.txt" using ($1/1000):(-1*$2) with linespoints lw 5 title "II", "01-synaptic-weights-IE-mean-all.txt" using ($1/1000):(-1*$2) with linespoints lw 5 title "IE", "01-synaptic-weights-EE-mean-all.txt" using ($1/1000):2:($2-$3):($2+$3) with errorbars lw 5 title "", "01-synaptic-weights-EI-mean-all.txt" using ($1/1000):2:($2-$3):($2+$3) with errorbars lw 5 title "","01-synaptic-weights-II-mean-all.txt" using ($1/1000):(-1*$2):(-1*($2-$3)):(-1*($2+$3)) with errorbars lw 5 title "",  "01-synaptic-weights-IE-mean-all.txt" using ($1/1000):(-1*$2):(-1*($2-$3)):(-1*($2+$3)) with errorbars lw 5 title ""
 
 unset arrow
 
@@ -51,4 +55,4 @@ plot "01-synaptic-weights-IE-total-all.txt" using ($1/1000):(-1*$2/1000) with li
 
 set output "all-total-conductances.png"
 set title "All total conductances"
-plot "01-synaptic-weights-EE-total-all.txt" using ($1/1000):($2/1000) with linespoints lw 5 title "EE (Total)", "01-synaptic-weights-EI-total-all.txt" using ($1/1000):($2/1000) with linespoints lw 5 title "EI (Total)", "01-synaptic-weights-II-total-all.txt" using ($1/1000):(-1*$2/1000) with linespoints lw 5 title "II (Total)", "01-synaptic-weights-IE-total-all.txt" using ($1/1000):(-1*$2/1000) with linespoints lw 5 title "IE (Total)"
+plot "01-synaptic-weights-EE-total-all.txt" using ($1/1000):($2/1000) with linespoints lw 5 title "EE", "01-synaptic-weights-EI-total-all.txt" using ($1/1000):($2/1000) with linespoints lw 5 title "EI", "01-synaptic-weights-II-total-all.txt" using ($1/1000):(-1*$2/1000) with linespoints lw 5 title "II", "01-synaptic-weights-IE-total-all.txt" using ($1/1000):(-1*$2/1000) with linespoints lw 5 title "IE"
