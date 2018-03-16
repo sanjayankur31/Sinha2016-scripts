@@ -126,7 +126,7 @@ fetch ()
     TMPDIR=$(mktemp -d)
     echo "TMPDIR is: $TMPDIR"
     echo "Fetching file list"
-    rsync --out-format="%l %n" -m --no-v --dry-run --recursive "$CLUSTER_PATH/$DIRNAME"/result/ "$DIRNAME" > "$TMPDIR"/"$DIRNAME".all
+    rsync --out-format="%l %n" -m --no-v --dry-run --recursive "$CLUSTER_PATH/$DIRNAME"/result/. "$DIRNAME" | sed '/\//d' | sort -n -r > "$TMPDIR"/"$DIRNAME".all
 
     echo "Calculating chunks"
     cat $TMPDIR/"$DIRNAME".all | cut -d\  -f2 | split -d -a1 -n r/10 - $TMPDIR/chunk.
