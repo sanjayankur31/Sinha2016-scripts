@@ -133,7 +133,7 @@ fetch ()
     # find "$TMPDIR" -type f -name "chunk.*" -printf "\n*** %p ***\n" -exec cat {} \;
 
     echo "Starting transfers..."
-    find "$TMPDIR" -type f -name "chunk.*" | parallel -j $NUM_PARALLEL -t --verbose --progress rsync -z --ignore-existing --info=progress2 --files-from={} "$CLUSTER_PATH/$DIRNAME"/result/ "$DIRNAME"
+    find "$TMPDIR" -type f -name "chunk.*" | parallel -j $NUM_PARALLEL -t --verbose --progress rsync -z --ignore-existing --info=progress2 --human-readable --files-from={} "$CLUSTER_PATH/$DIRNAME"/result/ "$DIRNAME"
 
     # Don't need to use parallel for these two files
     echo "Fetching simulation logs"
