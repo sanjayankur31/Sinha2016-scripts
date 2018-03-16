@@ -117,6 +117,8 @@ combine ()
 # For parallel rsync, refer to:
 # https://gist.github.com/rcoup/5358786
 # https://gist.github.com/rcoup/5358786#gistcomment-1452246
+# Note that this works well if all files are in the same directory and may need
+# tweaks if there are multiple subdirectories.
 fetch ()
 {
     command -v parallel > /dev/null 2>&1 || { echo "GNU parallel is required but cannot be found. Exiting" >&2 ; exit 1; }
