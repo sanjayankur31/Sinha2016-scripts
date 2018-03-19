@@ -38,12 +38,12 @@ set output "growth-curves-E.png"
 set title "Growth curves for E neurons"
 set xlabel "Calcium concentration"
 set ylabel "dz/dt"
-set label "{/Symbol h}_{de}" at (eta_den_E_e + 0.01), nu_ax_E
-set label "{/Symbol h}_{di}" at (eta_den_E_i + 0.01), nu_ax_E
-set label "{/Symbol e}_{de}" at (eps_den_E_e + 0.01), nu_ax_E
-set label "{/Symbol e}_{di}" at (eps_den_E_i + 0.01), nu_ax_E
-set label "{/Symbol h}_a" at (eta_ax_E + 0.01), nu_ax_E
-set label "{/Symbol e}_a" at (eps_ax_E + 0.01), nu_ax_E
+set label "{/Symbol h}_{de}" at (eta_den_E_e + 0.2), nu_ax_E
+set label "{/Symbol h}_{di}" at (eta_den_E_i + 0.2), nu_ax_E
+set label "{/Symbol e}_{de}" at (eps_den_E_e - 1.5), nu_ax_E
+set label "{/Symbol e}_{di}" at (eps_den_E_i + 0.2), nu_ax_E
+set label "{/Symbol h}_a" at (eta_ax_E + 0.2), -nu_ax_E
+set label "{/Symbol e}_a" at (eps_ax_E + 0.2), -nu_ax_E
 set arrow from eta_den_E_e, (-1 * nu_ax_E) to eta_den_E_e, nu_ax_E nohead
 set arrow from eta_den_E_i, (-1 * nu_ax_E) to eta_den_E_i, nu_ax_E nohead
 set arrow from eta_ax_E, (-1 * nu_ax_E) to eta_ax_E, nu_ax_E nohead
@@ -67,12 +67,12 @@ set output "growth-curves-I.png"
 set title "Growth curves for I neurons"
 set xlabel "Calcium concentration"
 set ylabel "dz/dt"
-set label "{/Symbol h}_{de}" at (eta_den_I_e + 0.01), nu_ax_I
-set label "{/Symbol h}_{di}" at (eta_den_I_i + 0.01), nu_ax_I
-set label "{/Symbol e}_{de}" at (eps_den_I_e + 0.01), nu_ax_I
-set label "{/Symbol e}_{di}" at (eps_den_I_i + 0.01), nu_ax_I
-set label "{/Symbol h}_a" at (eta_ax_I + 0.01), nu_ax_I
-set label "{/Symbol e}_a" at (eps_ax_I + 0.01), nu_ax_I
+set label "{/Symbol h}_{de}" at (eta_den_I_e + 0.2), nu_ax_I
+set label "{/Symbol h}_{di}" at (eta_den_I_i + 0.2), nu_ax_I
+set label "{/Symbol e}_{de}" at (eps_den_I_e - 1.5), nu_ax_I
+set label "{/Symbol e}_{di}" at (eps_den_I_i + 0.2), nu_ax_I
+set label "{/Symbol h}_a" at (eta_ax_I + 0.2), -nu_ax_I
+set label "{/Symbol e}_a" at (eps_ax_I + 0.2), -nu_ax_I
 set arrow from eta_den_I_e, (-1 * nu_ax_I) to eta_den_I_e, nu_ax_I nohead
 set arrow from eta_den_I_i, (-1 * nu_ax_I) to eta_den_I_i, nu_ax_I nohead
 set arrow from eta_ax_I, (-1 * nu_ax_I) to eta_ax_I, nu_ax_I nohead
