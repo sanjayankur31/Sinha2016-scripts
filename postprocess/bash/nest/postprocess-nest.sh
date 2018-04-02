@@ -18,7 +18,7 @@ SORTTMPDIR="/simulation-drive/sort-tmpdir"
 # name of generated directory
 DIRNAME=""
 # Number of parallel calls
-NUM_PARALLEL=16
+NUM_PARALLEL=4
 
 function setup() {
     pushd "$DIRNAME"

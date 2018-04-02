@@ -30,6 +30,7 @@ import random
 from multiprocessing import Process
 import sys
 import math
+import logging
 
 # module imports
 from nestpp.utils import (get_config, get_numpats)
@@ -50,7 +51,8 @@ class Postprocess:
 
     def __init__(self):
         """Initialise."""
-        self.lgr = get_module_logger("Postprocessor")
+        self.lgr = get_module_logger("Postprocessor",
+                                     logging_level=logging.INFO)
         self.neurons = {}
         self.ready = True
 
