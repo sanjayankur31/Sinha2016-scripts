@@ -80,3 +80,22 @@ set arrow from eps_den_I_e, (-1 * nu_ax_I) to eps_den_I_e, nu_ax_I nohead
 set arrow from eps_den_I_i, (-1 * nu_ax_I) to eps_den_I_i, nu_ax_I nohead
 set arrow from eps_ax_I, (-1 * nu_ax_I) to eps_ax_I, nu_ax_I nohead
 plot [x=0:xmax_I] dzdt(x, nu_den_I_e, zeta_den_I_e, xi_den_I_e) w lines lw 2 title 'Dendritic E', [x=0:xmax_I] dzdt(x, nu_den_I_i, zeta_den_I_i, xi_den_I_i) w lines lw 2 title 'Dendritic I', [x=0:xmax_I] dzdt(x, nu_ax_I, zeta_ax_I, xi_ax_I) w lines lw 2 title 'Axonal', 0 title "";
+
+# Elements
+# All excitatory elements
+unset arrow
+unset label
+set xlabel "Calcium concentration"
+set ylabel "dz/dt"
+set output "growth-curves-elements-E.png"
+set title "Growth curves for excitatory synaptic elements"
+plot [x=0:xmax_I] dzdt(x, nu_den_E_e, zeta_den_E_e, xi_den_E_e) w lines lw 2 title 'den E neurons', [x=0:xmax_I] dzdt(x, nu_den_I_e, zeta_den_I_e, xi_den_I_e) w lines lw 2 title 'den I neurons', [x=0:xmax_I] dzdt(x, nu_ax_E, zeta_ax_E, xi_ax_E) w lines lw 2 title 'ax E neurons', 0 title "";
+
+# All inhibitory elements
+unset arrow
+unset label
+set xlabel "Calcium concentration"
+set ylabel "dz/dt"
+set output "growth-curves-elements-I.png"
+set title "Growth curves for inhibitory synaptic elements"
+plot [x=0:xmax_I] dzdt(x, nu_den_E_i, zeta_den_E_i, xi_den_E_i) w lines lw 2 title 'den E neurons', [x=0:xmax_I] dzdt(x, nu_den_I_i, zeta_den_I_i, xi_den_I_i) w lines lw 2 title 'den I neurons', [x=0:xmax_I] dzdt(x, nu_ax_I, zeta_ax_I, xi_ax_I) w lines lw 2 title 'ax I neurons', 0 title "";
