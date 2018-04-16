@@ -96,8 +96,6 @@ set title "Growth curves for excitatory synaptic elements"
 plot [x=0:xmax_I] dzdt(x, nu_den_E_e, zeta_den_E_e, xi_den_E_e) w lines lw 2 title 'den E neurons', [x=0:xmax_I] dzdt(x, nu_den_I_e, zeta_den_I_e, xi_den_I_e) w lines lw 2 title 'den I neurons', [x=0:xmax_I] dzdt(x, nu_ax_E, zeta_ax_E, xi_ax_E) w lines lw 2 title 'ax E neurons', 0 title "";
 
 # All inhibitory elements
-unset arrow
-unset label
 set xlabel "Calcium concentration"
 set ylabel "dz/dt"
 set output "growth-curves-elements-I.png"
