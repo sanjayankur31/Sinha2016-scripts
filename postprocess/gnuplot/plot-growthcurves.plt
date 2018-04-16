@@ -85,6 +85,10 @@ plot [x=0:xmax_I] dzdt(x, nu_den_I_e, zeta_den_I_e, xi_den_I_e) w lines lw 2 tit
 # All excitatory elements
 unset arrow
 unset label
+set label "{/Symbol e}_{E}" at (eps_den_E_e - 1.5), nu_ax_E
+set label "{/Symbol e}_{I}" at (eps_den_I_e - 1.5), nu_ax_I
+set arrow from eps_den_E_e, (-1 * nu_ax_E) to eps_den_E_e, nu_ax_E nohead
+set arrow from eps_den_I_e, (-1 * nu_ax_I) to eps_den_I_e, nu_ax_I nohead
 set xlabel "Calcium concentration"
 set ylabel "dz/dt"
 set output "growth-curves-elements-E.png"
