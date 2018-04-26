@@ -51,8 +51,8 @@ def get_config(taskfile="config.ini"):
     sp_enabled_at = float(p['default']['sp_enabled_at'])
 
     snapshots = {}
-    snapshots['histograms'] = [
-        float(s) for s in p['snapshots']['histograms'].split()]
+    snapshots['firing_rate_histograms'] = [
+        float(s) for s in p['snapshots']['firing_rate_histograms'].split()]
     snapshots['firing_rates'] = [
         float(s) for s in p['snapshots']['firing_rates'].split()]
     snapshots['rasters'] = [

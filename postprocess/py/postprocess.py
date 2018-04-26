@@ -388,7 +388,7 @@ class Postprocess:
         plot_using_gnuplot_binary(
             os.path.join(self.cfg['plots_dir'], 'plot-std.plt'))
 
-    def generate_histograms(self):
+    def generate_firing_rate_histograms(self):
         """Generate histograms."""
         # firing rate histograms for E and I neurons
         if len(self.cfg['snapshots']['histograms']) > 0:
@@ -1055,7 +1055,7 @@ class Postprocess:
         self.lgr.info("Running a separate process each for different bits.")
         processes = []
         processes.append(Process(target=self.generate_firing_rate_graphs))
-        processes.append(Process(target=self.generate_histograms))
+        processes.append(Process(target=self.generate_firing_rate_histograms))
         processes.append(Process(target=self.generate_raster_graphs))
         processes.append(
             Process(target=self.generate_firing_rate_grid_snapshots))

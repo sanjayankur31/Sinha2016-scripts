@@ -48,7 +48,8 @@ class TestUtils:
 
         wrong_graph_list = ['something_random', 'hark_more_random',
                             'syn_elms', 'syn_turnover',
-                            'calcium_concentration', 'histograms', 'snr']
+                            'calcium_concentration', 'firing_rate_histograms',
+                            'snr']
 
         assert (sorted(set(config['time_graphs'])) !=
                 sorted(set(wrong_graph_list)))
