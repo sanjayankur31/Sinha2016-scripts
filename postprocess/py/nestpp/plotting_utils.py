@@ -121,7 +121,7 @@ def plot_using_gnuplot_binary(plt_file, arglist=[]):
     return retcode
 
 
-def plot_histograms(neuron_sets, snapshot_time):
+def plot_firing_rate_histograms(neuron_sets, snapshot_time):
     """Plot histograms of neuron sets
 
     This only plots the histograms. The firing rate snapshot files must be

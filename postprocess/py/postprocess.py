@@ -34,7 +34,8 @@ import logging
 
 # module imports
 from nestpp.utils import (get_config, get_numpats)
-from nestpp.plotting_utils import (plot_using_gnuplot_binary, plot_histograms,
+from nestpp.plotting_utils import (plot_using_gnuplot_binary,
+                                   plot_firing_rate_histograms,
                                    plot_location_grid, plot_rasters)
 from nestpp.loggerpp import get_module_logger
 from nestpp.spike_utils import (get_firing_rate_metrics,
@@ -391,17 +392,17 @@ class Postprocess:
     def generate_firing_rate_histograms(self):
         """Generate histograms."""
         # firing rate histograms for E and I neurons
-        if len(self.cfg['snapshots']['histograms']) > 0:
+        if len(self.cfg['snapshots']['firing_rate_histograms']) > 0:
             histlist = ['E', 'I']
             self.lgr.info("Generating histograms for {}".format(histlist))
             for neuron_set in histlist:
                 get_individual_firing_rate_snapshots(
                     neuron_set, "spikes-{}.gdf".format(neuron_set),
                     self.neurons[neuron_set],
-                    self.cfg['snapshots']['histograms'])
+                    self.cfg['snapshots']['firing_rate_histograms'])
 
-            for time in self.cfg['snapshots']['histograms']:
-                plot_histograms(histlist, time)
+            for time in self.cfg['snapshots']['firing_rate_histograms']:
+                plot_firing_rate_histograms(histlist, time)
 
     def generate_firing_rate_grid_snapshots(self):
         """Generate top view firing rate snapshots."""
