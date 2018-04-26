@@ -664,17 +664,18 @@ class Postprocess:
 
         for synapse_set in ["EE", "EI", "II", "IE"]:
             self.lgr.debug("Processing {} connections".format(synapse_set))
-            src_set = synapse_set[0]
-            dest_set = synapse_set[1]
+            src_nrn_type = synapse_set[0]
+            dest_nrn_type = synapse_set[1]
             # get ids of subsets for the top view graphs
             # plotting all synapse connections makes the plot useless since it
             # ends up too dense to be able to see anything
-            src_sample = sample[src_set]
-            dest_sample = sample[dest_set]
+            src_sample = sample[src_nrn_type]
+            dest_sample = sample[dest_nrn_type]
             connection_sample = frozenset(itertools.product(src_sample,
                                                             dest_sample))
             self.lgr.debug("Sample: {} {} and {} {}".format(
-                len(src_sample), src_set, len(dest_sample), dest_set))
+                len(src_sample), src_nrn_type, len(dest_sample),
+                dest_nrn_type))
 
             # set up a dictionary that contains information on various regions
             # for this synapse set
@@ -683,7 +684,7 @@ class Postprocess:
                 # only relevant regions are selected. For example, for an
                 # EE synapse, all I regions are useless. There won't be any
                 # EE synapses between neurons in those regions.
-                if src_set in src and dest_set in dest:
+                if src_nrn_type in src and dest_nrn_type in dest:
                     synapses_name = "{}-to-{}".format(src, dest)
                     newdict = {}
                     newdict['src'] = src
@@ -729,10 +730,10 @@ class Postprocess:
                         # only print the ones that are in our sample for the
                         # top view plot
                         if (row[0], row[1]) in connection_sample:
-                            src_info = self.neurons[src_set][int(
-                                row[0] - self.neurons[src_set][0][0])]
-                            dest_info = self.neurons[dest_set][int(
-                                row[1] - self.neurons[dest_set][0][0])]
+                            src_info = self.neurons[src_nrn_type][int(
+                                row[0] - self.neurons[src_nrn_type][0][0])]
+                            dest_info = self.neurons[dest_nrn_type][int(
+                                row[1] - self.neurons[dest_nrn_type][0][0])]
 
                             print("{}\t{}\t{}\t{}".format(
                                     src_info[3], src_info[4],
@@ -842,8 +843,8 @@ class Postprocess:
             o_fn_o = "75-initial-connections-top-{}-outgoing.txt".format(
                 synapse_set)
             o_fh_o = open(o_fn_o, 'w')
-            src_set = synapse_set[0]
-            dest_set = synapse_set[1]
+            src_nrn_type = synapse_set[0]
+            dest_nrn_type = synapse_set[1]
             syn_conns = pandas.DataFrame()
             syn_conns = combine_files_row_wise(
                 "..", "08-syn_conns-{}-*-0.0.txt".format(
@@ -851,11 +852,11 @@ class Postprocess:
 
             for row in syn_conns.itertuples(index=True, name=None):
                 # it's a source
-                if row[0] in sample[src_set]:
-                    src_info = self.neurons[src_set][int(
-                        row[0] - self.neurons[src_set][0][0])]
-                    dest_info = self.neurons[dest_set][int(
-                        row[1] - self.neurons[dest_set][0][0])]
+                if row[0] in sample[src_nrn_type]:
+                    src_info = self.neurons[src_nrn_type][int(
+                        row[0] - self.neurons[src_nrn_type][0][0])]
+                    dest_info = self.neurons[dest_nrn_type][int(
+                        row[1] - self.neurons[dest_nrn_type][0][0])]
 
                     print("{}\t{}\t{}\t{}".format(
                             src_info[3], src_info[4],
@@ -863,11 +864,11 @@ class Postprocess:
                           file=o_fh_o)
 
                 # it's a destination
-                if row[1] in sample[dest_set]:
-                    src_info = self.neurons[src_set][int(
-                        row[0] - self.neurons[src_set][0][0])]
-                    dest_info = self.neurons[dest_set][int(
-                        row[1] - self.neurons[dest_set][0][0])]
+                if row[1] in sample[dest_nrn_type]:
+                    src_info = self.neurons[src_nrn_type][int(
+                        row[0] - self.neurons[src_nrn_type][0][0])]
+                    dest_info = self.neurons[dest_nrn_type][int(
+                        row[1] - self.neurons[dest_nrn_type][0][0])]
 
                     print("{}\t{}\t{}\t{}".format(
                             src_info[3], src_info[4],
@@ -961,8 +962,8 @@ class Postprocess:
             o_fn_l_o = "75-initial-connections-lengths-{}-outgoing.txt".format(
                 synapse_set)
             o_fh_l_o = open(o_fn_l_o, 'w')
-            src_set = synapse_set[0]
-            dest_set = synapse_set[1]
+            src_nrn_type = synapse_set[0]
+            dest_nrn_type = synapse_set[1]
             syn_conns = pandas.DataFrame()
             syn_conns = combine_files_row_wise(
                 "..", "08-syn_conns-{}-*-0.0.txt".format(
@@ -970,11 +971,11 @@ class Postprocess:
 
             for row in syn_conns.itertuples(index=True, name=None):
                 # it's a source
-                if row[0] in sample[src_set]:
-                    src_info = self.neurons[src_set][int(
-                        row[0] - self.neurons[src_set][0][0])]
-                    dest_info = self.neurons[dest_set][int(
-                        row[1] - self.neurons[dest_set][0][0])]
+                if row[0] in sample[src_nrn_type]:
+                    src_info = self.neurons[src_nrn_type][int(
+                        row[0] - self.neurons[src_nrn_type][0][0])]
+                    dest_info = self.neurons[dest_nrn_type][int(
+                        row[1] - self.neurons[dest_nrn_type][0][0])]
 
                     delta_x = abs(src_info[3] - dest_info[3])
                     # o_x is width/2
@@ -990,11 +991,11 @@ class Postprocess:
                           file=o_fh_l_o)
 
                 # it's a destination
-                if row[1] in sample[dest_set]:
-                    src_info = self.neurons[src_set][int(
-                        row[0] - self.neurons[src_set][0][0])]
-                    dest_info = self.neurons[dest_set][int(
-                        row[1] - self.neurons[dest_set][0][0])]
+                if row[1] in sample[dest_nrn_type]:
+                    src_info = self.neurons[src_nrn_type][int(
+                        row[0] - self.neurons[src_nrn_type][0][0])]
+                    dest_info = self.neurons[dest_nrn_type][int(
+                        row[1] - self.neurons[dest_nrn_type][0][0])]
 
                     delta_x = abs(src_info[3] - dest_info[3])
                     # o_x is width/2
