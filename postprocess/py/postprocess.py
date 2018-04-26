@@ -31,6 +31,7 @@ from multiprocessing import Process
 import sys
 import math
 import logging
+from collections import OrderedDict
 
 # module imports
 from nestpp.utils import (get_config, get_numpats)
@@ -679,7 +680,9 @@ class Postprocess:
 
             # set up a dictionary that contains information on various regions
             # for this synapse set
-            synapse_set_regions = {}
+            # We want the order to be maintained so that we always get the same
+            # order of sources when printing the data for histograms later
+            synapse_set_regions = OrderedDict()
             for src, dest in src_dest_pairs:
                 # only relevant regions are selected. For example, for an
                 # EE synapse, all I regions are useless. There won't be any
