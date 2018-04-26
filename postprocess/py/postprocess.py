@@ -708,6 +708,36 @@ class Postprocess:
                     self.lgr.debug("Synapse set up: {}".format(
                         synapses_name))
 
+            # open files for each region that is being projected on
+            # and set a header
+            # note that I'm using an ordereddict, so the order of the data
+            # printed later will be the same when I iterate over the dict
+            # again
+            hist_data_fhs = {}
+            if len(self.cfg['snapshots']['synapse_histograms']):
+                # I'm not iterating over the synapse_set dict here because
+                # there the destinations would be repeated
+                for aregion in regions:
+                    # only deal with destination regions of this type of neuron
+                    if dest_nrn_type in aregion:
+                        fn = ("081-syn_conns-incoming-hist-{}.txt".format(
+                            aregion))
+                        fh = open(fn, 'w')
+                        hist_data_fhs[aregion] = fh
+                        # here onwards, we can iterate over the keys of this
+                        # dict to get the destination regions
+
+                        # print the header, remember to ignore this in GNUplot,
+                        # or maybe I can use this to generate the xtic labels?
+                        # first column is the time
+                        sources = ['time']
+                        # get all possible source regions for this destination
+                        # set, which make up the other columns
+                        for key, value in synapse_set_regions.items():
+                            if value['dest'] == aregion:
+                                sources.append(value['src'])
+                        print(*sources, sep='\t', file=fh)
+
             # start
             for atime in time_list:
                 self.lgr.debug(
@@ -784,11 +814,38 @@ class Postprocess:
                                           value['num']),
                           file=value['o_fh'])
 
+                if ((float(atime)/1000.) in
+                        self.cfg['snapshots']['synapse_histograms']):
+                    # get the four destinations for this synapse type
+                    # now for each destination, prepare a row to be
+                    # printed first column in the time
+                    totals = [(float(atime)/1000.), ]
+                    # go over all possible for this type
+                    # of synapse
+                    for dest, fh in hist_data_fhs.items():
+                        # go over all the possible sources and append the
+                        # number of incoming connections like we did before,
+                        # and because we've used an ordereddict, the order of
+                        # the data will correspond to the header we printed
+                        # before
+                        for key, value in synapse_set_regions.items():
+                            if value['dest'] == dest:
+                                totals.append(value['num'])
+
+                        # print it to the file corresponding to the dest
+                        print(*totals, sep='\t', file=fh)
+
             # close file handlers for each region file for this synapse type:
             for key, value in synapse_set_regions.items():
                 f = value['o_fh']
                 f.close()
                 self.lgr.info("Closed {}".format(value['o_fn']))
+
+            # close the hist data file handles
+            # no need to check if there's anything in here, it just won't have
+            # anything to iterate over if the dict is empty
+            for dest, fh in hist_data_fhs.items():
+                fh.close()
 
             self.lgr.info(
                 "Processed syn conns for {} neurons..".format(

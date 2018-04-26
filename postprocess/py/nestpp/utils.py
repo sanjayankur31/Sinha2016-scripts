@@ -53,6 +53,8 @@ def get_config(taskfile="config.ini"):
     snapshots = {}
     snapshots['firing_rate_histograms'] = [
         float(s) for s in p['snapshots']['firing_rate_histograms'].split()]
+    snapshots['synapse_histograms'] = [
+        float(s) for s in p['snapshots']['synapse_histograms'].split()]
     snapshots['firing_rates'] = [
         float(s) for s in p['snapshots']['firing_rates'].split()]
     snapshots['rasters'] = [
