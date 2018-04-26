@@ -816,13 +816,11 @@ class Postprocess:
 
                 if ((float(atime)/1000.) in
                         self.cfg['snapshots']['synapse_histograms']):
-                    # get the four destinations for this synapse type
-                    # now for each destination, prepare a row to be
-                    # printed first column in the time
-                    totals = [(float(atime)/1000.), ]
-                    # go over all possible for this type
-                    # of synapse
                     for dest, fh in hist_data_fhs.items():
+                        # get the four destinations for this synapse type
+                        # now for each destination, prepare a row to be
+                        # printed first column in the time
+                        totals = [(float(atime)/1000.), ]
                         # go over all the possible sources and append the
                         # number of incoming connections like we did before,
                         # and because we've used an ordereddict, the order of
