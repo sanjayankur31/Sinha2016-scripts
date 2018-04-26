@@ -720,8 +720,8 @@ class Postprocess:
                 for aregion in regions:
                     # only deal with destination regions of this type of neuron
                     if dest_nrn_type in aregion:
-                        fn = ("081-syn_conns-incoming-hist-{}.txt".format(
-                            aregion))
+                        fn = ("081-syn_conns-incoming-hist-{}-{}.txt".format(
+                            aregion, synapse_set))
                         fh = open(fn, 'w')
                         hist_data_fhs[aregion] = fh
                         # here onwards, we can iterate over the keys of this
