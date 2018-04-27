@@ -21,7 +21,7 @@ set style fill solid 0.75 noborder
 set boxwidth 0.6 relative
 # bmargin center horizontal is for placement of the key in the graph
 # Left reverse is for the placement of the text for each entry
-set key bmargin center horizontal Left reverse noenhanced autotitle columnhead nobox invert height 1.25 maxcols 3
+set key bmargin center horizontal Left reverse noenhanced autotitle columnhead nobox height 1.25 maxcols 3
 
 ## LPZ C
 set output "081-connection-rowstacked-histograms-lpz_c_I.png"
@@ -114,7 +114,7 @@ set style fill solid 0.75 noborder
 set boxwidth 0.6 relative
 # bmargin center horizontal is for placement of the key in the graph
 # Left reverse is for the placement of the text for each entry
-set key bmargin center horizontal Left reverse noenhanced autotitle columnhead nobox invert height 1.25 maxcols 3
+set key bmargin center horizontal Left reverse noenhanced autotitle columnhead nobox height 1.25 maxcols 3
 
 ## LPZ C
 set output "081-connection-clustered-histograms-lpz_c_I.png"
