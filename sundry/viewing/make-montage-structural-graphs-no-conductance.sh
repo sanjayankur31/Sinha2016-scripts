@@ -27,6 +27,10 @@ main ()
         "$PREFIX"05-se-lpz_b_E-all.png \
         "$PREFIX"05-se-p_lpz_E-all.png \
         "$PREFIX"05-se-o_E-all.png \
+        "$PREFIX"081-connection-histograms-lpz_c.png \
+        "$PREFIX"081-connection-histograms-lpz_b.png \
+        "$PREFIX"081-connection-histograms-p_lpz.png \
+        "$PREFIX"081-connection-histograms-o.png \
         "$PREFIX"08-syn_conns-E-to-lpz_c_E.png \
         "$PREFIX"08-syn_conns-E-to-lpz_b_E.png \
         "$PREFIX"08-syn_conns-E-to-p_lpz_E.png \
@@ -35,7 +39,7 @@ main ()
         "$PREFIX"08-syn_conns-I-to-lpz_b_E.png \
         "$PREFIX"08-syn_conns-I-to-p_lpz_E.png \
         "$PREFIX"08-syn_conns-I-to-o_E.png \
-        -tile 4x5 -geometry +2+2  "$PREFIX"structural-plasticity-montage-E.png
+        -tile 4x6 -geometry +2+2  "$PREFIX"structural-plasticity-montage-E.png
 
     montage \
         "$PREFIX"growth-curves-E.png \
@@ -50,6 +54,10 @@ main ()
         "$PREFIX"05-se-lpz_b_I-all.png \
         "$PREFIX"05-se-p_lpz_I-all.png \
         "$PREFIX"05-se-o_I-all.png \
+        "$PREFIX"081-connection-histograms-lpz_c.png \
+        "$PREFIX"081-connection-histograms-lpz_b.png \
+        "$PREFIX"081-connection-histograms-p_lpz.png \
+        "$PREFIX"081-connection-histograms-o.png \
         "$PREFIX"08-syn_conns-E-to-lpz_c_I.png \
         "$PREFIX"08-syn_conns-E-to-lpz_b_I.png \
         "$PREFIX"08-syn_conns-E-to-p_lpz_I.png \
@@ -58,7 +66,7 @@ main ()
         "$PREFIX"08-syn_conns-I-to-lpz_b_I.png \
         "$PREFIX"08-syn_conns-I-to-p_lpz_I.png \
         "$PREFIX"08-syn_conns-I-to-o_I.png \
-        -tile 4x5 -geometry +2+2  "$PREFIX"structural-plasticity-montage-I.png
+        -tile 4x6 -geometry +2+2  "$PREFIX"structural-plasticity-montage-I.png
 }
 
 
