@@ -12,7 +12,7 @@ set xtics border nomirror
 set border 3
 set auto x
 set yrange[0:]
-set xtics rotate out
+set xtics rotate out font "OpenSans, 16"
 set style histogram rowstacked
 set style data histograms
 set style fill solid 0.75 noborder
