@@ -1,27 +1,90 @@
 # Stacked histograms showing incoming connections
 # https://stackoverflow.com/questions/10881747/how-to-plot-specific-rows-in-gnuplot
 # http://psy.swansea.ac.uk/staff/carter/gnuplot/gnuplot_histograms.htm
+# http://gnuplot.sourceforge.net/demo/histograms.8.gnu (8th example)
 load '/home/asinha/Documents/02_Code/00_repos/00_mine/gnuplot-palettes/paired.pal'
 set term pngcairo font "OpenSans, 28" size 1920, 1080
-set lmargin at screen 0.15
 set xlabel "Time (seconds)"
+# set xlabel offset character 0, -1 "Time (seconds)"
 set ylabel "Number of incoming synapses"
 set ytics border nomirror
 set xtics border nomirror
+set border 3
 set auto x
 set yrange[0:]
-set style data histogram
+set xtics rotate out
 set style histogram rowstacked
-set style fill solid border -1
-set boxwidth 0.75
-set xtic rotate by -90 scale 0
+set style data histograms
+set style fill solid 0.75 noborder
+set boxwidth 0.75 relative
+# bmargin center horizontal is for placement of the key in the graph
+# Left reverse is for the placement of the text for each entry
+set key bmargin center horizontal Left reverse noenhanced autotitle columnhead nobox invert height 1.25 maxcols 3
 
-set macro
-line_number='int($0)'
+## LPZ C
+set output "081-connection-histograms-lpz_c.png"
+set multiplot layout 1, 3 title "Incoming connections to neurons in LPZ C at different times"
 
-set output "081-connection-histograms.png"
+set title "II"
+plot for [COL=2:5] '081-syn_conns-incoming-hist-lpz_c_I-II.txt' using COL:xtic(1) title columnheader
 
-plot "08-syn_conns-lpz_b_E-to-lpz_b_E-EE.txt" u 2: ( (@line_number == 1500) ? $1:1/0), \
-"08-syn_conns-lpz_c_E-to-lpz_b_E-EE.txt"  u 2: ( (@line_number == 1500) ? $1:1/0), \
-"08-syn_conns-o_E-to-lpz_b_E-EE.txt"  u 2: ( (@line_number == 1500) ? $1:1/0), \
-"08-syn_conns-p_lpz_E-to-lpz_b_E-EE.txt"  u 2: ( (@line_number == 1500) ? $1:1/0);
+set title "IE"
+plot for [COL=2:5] '081-syn_conns-incoming-hist-lpz_c_E-IE.txt' using COL:xtic(1) title columnheader
+
+set title "EI"
+plot for [COL=2:5] '081-syn_conns-incoming-hist-lpz_c_I-EI.txt' using COL:xtic(1) title columnheader
+
+set title "EE"
+plot for [COL=2:5] '081-syn_conns-incoming-hist-lpz_c_E-EE.txt' using COL:xtic(1) title columnheader
+unset multiplot
+
+## LPZ B
+set output "081-connection-histograms-lpz_b.png"
+set multiplot layout 1, 3 title "Incoming connections to neurons in LPZ B at different times"
+
+set title "II"
+plot for [COL=2:5] '081-syn_conns-incoming-hist-lpz_b_I-II.txt' using COL:xtic(1) title columnheader
+
+set title "IE"
+plot for [COL=2:5] '081-syn_conns-incoming-hist-lpz_b_E-IE.txt' using COL:xtic(1) title columnheader
+
+set title "EI"
+plot for [COL=2:5] '081-syn_conns-incoming-hist-lpz_b_I-EI.txt' using COL:xtic(1) title columnheader
+
+set title "EE"
+plot for [COL=2:5] '081-syn_conns-incoming-hist-lpz_b_E-EE.txt' using COL:xtic(1) title columnheader
+unset multiplot
+
+## P LPZ
+set output "081-connection-histograms-p_lpz.png"
+set multiplot layout 1, 3 title "Incoming connections to neurons in P LPZ at different times"
+
+set title "II"
+plot for [COL=2:5] '081-syn_conns-incoming-hist-p_lpz_I-II.txt' using COL:xtic(1) title columnheader
+
+set title "IE"
+plot for [COL=2:5] '081-syn_conns-incoming-hist-p_lpz_E-IE.txt' using COL:xtic(1) title columnheader
+
+set title "EI"
+plot for [COL=2:5] '081-syn_conns-incoming-hist-p_lpz_I-EI.txt' using COL:xtic(1) title columnheader
+
+set title "EE"
+plot for [COL=2:5] '081-syn_conns-incoming-hist-p_lpz_E-EE.txt' using COL:xtic(1) title columnheader
+unset multiplot
+
+## O LPZ
+set output "081-connection-histograms-o.png"
+set multiplot layout 1, 3 title "Incoming connections to neurons in O LPZ at different times"
+
+set title "II"
+plot for [COL=2:5] '081-syn_conns-incoming-hist-o_I-II.txt' using COL:xtic(1) title columnheader
+
+set title "IE"
+plot for [COL=2:5] '081-syn_conns-incoming-hist-o_E-IE.txt' using COL:xtic(1) title columnheader
+
+set title "EI"
+plot for [COL=2:5] '081-syn_conns-incoming-hist-o_I-EI.txt' using COL:xtic(1) title columnheader
+
+set title "EE"
+plot for [COL=2:5] '081-syn_conns-incoming-hist-o_E-EE.txt' using COL:xtic(1) title columnheader
+unset multiplot
