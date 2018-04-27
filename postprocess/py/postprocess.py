@@ -717,7 +717,7 @@ class Postprocess:
             # printed later will be the same when I iterate over the dict
             # again
             hist_data_fhs = {}
-            if len(self.cfg['snapshots']['synapse_histograms']):
+            if len(self.cfg['snapshots']['synapses']):
                 # I'm not iterating over the synapse_set dict here because
                 # there the destinations would be repeated
                 for aregion in regions:
@@ -818,7 +818,7 @@ class Postprocess:
                           file=value['o_fh'])
 
                 if ((float(atime)/1000.) in
-                        self.cfg['snapshots']['synapse_histograms']):
+                        self.cfg['snapshots']['synapses']):
                     for dest, fh in hist_data_fhs.items():
                         # get the four destinations for this synapse type
                         # now for each destination, prepare a row to be
