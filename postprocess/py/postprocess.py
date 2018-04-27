@@ -595,10 +595,13 @@ class Postprocess:
             os.path.join(self.cfg['plots_dir'],
                          'plot-total-synapse-changes.plt'))
 
-    def generate_synapse_graphs(self, sample_percent=-1.02):
+    def generate_synapse_graphs(self, sample_percent=0.02):
         """Generate synapse geometry graphs.
 
-        :sample_percent: percentage of neurons to take in sample per region
+        Generates the time graphs, the histograms, and the top level snapshots
+
+        :sample_percent: percentage of neurons to take in sample per region for
+                            the top level snapshots
         """
         if "synapses" not in self.cfg['time_graphs']:
             return True
