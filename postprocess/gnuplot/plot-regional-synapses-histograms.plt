@@ -32,6 +32,7 @@ plot for [COL=2:5] '081-syn_conns-incoming-hist-lpz_c_I-II.txt' using COL:xtic(1
 
 set title "EI"
 plot for [COL=2:5] '081-syn_conns-incoming-hist-lpz_c_I-EI.txt' using COL:xtic(1) title columnheader
+unset multiplot
 
 set output "081-connection-rowstacked-histograms-lpz_c_E.png"
 set multiplot layout 1, 2 title "Incoming connections to E neurons in LPZ C at different times"
@@ -52,6 +53,7 @@ plot for [COL=2:5] '081-syn_conns-incoming-hist-lpz_b_I-II.txt' using COL:xtic(1
 
 set title "EI"
 plot for [COL=2:5] '081-syn_conns-incoming-hist-lpz_b_I-EI.txt' using COL:xtic(1) title columnheader
+unset multiplot
 
 set output "081-connection-rowstacked-histograms-lpz_b_E.png"
 set multiplot layout 1, 2 title "Incoming connections to E neurons in LPZ B at different times"
@@ -72,6 +74,7 @@ plot for [COL=2:5] '081-syn_conns-incoming-hist-p_lpz_I-II.txt' using COL:xtic(1
 
 set title "EI"
 plot for [COL=2:5] '081-syn_conns-incoming-hist-p_lpz_I-EI.txt' using COL:xtic(1) title columnheader
+unset multiplot
 
 set output "081-connection-rowstacked-histograms-p_lpz_E.png"
 set multiplot layout 1, 2 title "Incoming connections to E neurons in P LPZ at different times"
@@ -92,6 +95,7 @@ plot for [COL=2:5] '081-syn_conns-incoming-hist-o_I-II.txt' using COL:xtic(1) ti
 
 set title "EI"
 plot for [COL=2:5] '081-syn_conns-incoming-hist-o_I-EI.txt' using COL:xtic(1) title columnheader
+unset multiplot
 
 set output "081-connection-rowstacked-histograms-o_E.png"
 set multiplot layout 1, 2 title "Incoming connections to E neurons in O LPZ at different times"
@@ -121,6 +125,7 @@ plot for [COL=2:5] '081-syn_conns-incoming-hist-lpz_c_I-II.txt' using COL:xtic(1
 
 set title "EI"
 plot for [COL=2:5] '081-syn_conns-incoming-hist-lpz_c_I-EI.txt' using COL:xtic(1) title columnheader
+unset multiplot
 
 set output "081-connection-clustered-histograms-lpz_c_E.png"
 set multiplot layout 1, 2 title "Incoming connections to E neurons in LPZ C at different times"
@@ -141,6 +146,7 @@ plot for [COL=2:5] '081-syn_conns-incoming-hist-lpz_b_I-II.txt' using COL:xtic(1
 
 set title "EI"
 plot for [COL=2:5] '081-syn_conns-incoming-hist-lpz_b_I-EI.txt' using COL:xtic(1) title columnheader
+unset multiplot
 
 set output "081-connection-clustered-histograms-lpz_b_E.png"
 set multiplot layout 1, 2 title "Incoming connections to E neurons in LPZ B at different times"
@@ -161,6 +167,7 @@ plot for [COL=2:5] '081-syn_conns-incoming-hist-p_lpz_I-II.txt' using COL:xtic(1
 
 set title "EI"
 plot for [COL=2:5] '081-syn_conns-incoming-hist-p_lpz_I-EI.txt' using COL:xtic(1) title columnheader
+unset multiplot
 
 set output "081-connection-clustered-histograms-p_lpz_E.png"
 set multiplot layout 1, 2 title "Incoming connections to E neurons in P LPZ at different times"
@@ -181,6 +188,7 @@ plot for [COL=2:5] '081-syn_conns-incoming-hist-o_I-II.txt' using COL:xtic(1) ti
 
 set title "EI"
 plot for [COL=2:5] '081-syn_conns-incoming-hist-o_I-EI.txt' using COL:xtic(1) title columnheader
+unset multiplot
 
 set output "081-connection-clustered-histograms-o_E.png"
 set multiplot layout 1, 2 title "Incoming connections to E neurons in O LPZ at different times"
