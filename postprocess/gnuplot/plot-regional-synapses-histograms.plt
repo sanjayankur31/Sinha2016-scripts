@@ -3,7 +3,7 @@
 # http://psy.swansea.ac.uk/staff/carter/gnuplot/gnuplot_histograms.htm
 # http://gnuplot.sourceforge.net/demo/histograms.8.gnu (8th example)
 load '/home/asinha/Documents/02_Code/00_repos/00_mine/gnuplot-palettes/paired.pal'
-set term pngcairo font "OpenSans, 28" size 1920, 1080
+set term pngcairo font "OpenSans, 16" size 1920, 1080
 set xlabel "Time (seconds)"
 # set xlabel offset character 0, -1 "Time (seconds)"
 set ylabel "Number of incoming synapses"
@@ -25,7 +25,7 @@ set key bmargin center horizontal Left reverse noenhanced autotitle columnhead n
 
 ## LPZ C
 set output "081-connection-rowstacked-histograms-lpz_c.png"
-set multiplot layout 1, 4 title "Incoming connections to neurons in LPZ C at different times"
+set multiplot layout 2, 2 title "Incoming connections to neurons in LPZ C at different times"
 
 set title "II"
 plot for [COL=2:5] '081-syn_conns-incoming-hist-lpz_c_I-II.txt' using COL:xtic(1) title columnheader
@@ -42,7 +42,7 @@ unset multiplot
 
 ## LPZ B
 set output "081-connection-rowstacked-histograms-lpz_b.png"
-set multiplot layout 1, 4 title "Incoming connections to neurons in LPZ B at different times"
+set multiplot layout 2, 2 title "Incoming connections to neurons in LPZ B at different times"
 
 set title "II"
 plot for [COL=2:5] '081-syn_conns-incoming-hist-lpz_b_I-II.txt' using COL:xtic(1) title columnheader
@@ -59,7 +59,7 @@ unset multiplot
 
 ## P LPZ
 set output "081-connection-rowstacked-histograms-p_lpz.png"
-set multiplot layout 1, 4 title "Incoming connections to neurons in P LPZ at different times"
+set multiplot layout 2, 2 title "Incoming connections to neurons in P LPZ at different times"
 
 set title "II"
 plot for [COL=2:5] '081-syn_conns-incoming-hist-p_lpz_I-II.txt' using COL:xtic(1) title columnheader
@@ -76,7 +76,7 @@ unset multiplot
 
 ## O LPZ
 set output "081-connection-rowstacked-histograms-o.png"
-set multiplot layout 1, 4 title "Incoming connections to neurons in O LPZ at different times"
+set multiplot layout 2, 2 title "Incoming connections to neurons in O LPZ at different times"
 
 set title "II"
 plot for [COL=2:5] '081-syn_conns-incoming-hist-o_I-II.txt' using COL:xtic(1) title columnheader
@@ -102,7 +102,7 @@ set key bmargin center horizontal Left reverse noenhanced autotitle columnhead n
 
 ## LPZ C
 set output "081-connection-clustered-histograms-lpz_c.png"
-set multiplot layout 1, 4 title "Incoming connections to neurons in LPZ C at different times"
+set multiplot layout 2, 2 title "Incoming connections to neurons in LPZ C at different times"
 
 set title "II"
 plot for [COL=2:5] '081-syn_conns-incoming-hist-lpz_c_I-II.txt' using COL:xtic(1) title columnheader
@@ -119,7 +119,7 @@ unset multiplot
 
 ## LPZ B
 set output "081-connection-clustered-histograms-lpz_b.png"
-set multiplot layout 1, 4 title "Incoming connections to neurons in LPZ B at different times"
+set multiplot layout 2, 2 title "Incoming connections to neurons in LPZ B at different times"
 
 set title "II"
 plot for [COL=2:5] '081-syn_conns-incoming-hist-lpz_b_I-II.txt' using COL:xtic(1) title columnheader
@@ -136,7 +136,7 @@ unset multiplot
 
 ## P LPZ
 set output "081-connection-clustered-histograms-p_lpz.png"
-set multiplot layout 1, 4 title "Incoming connections to neurons in P LPZ at different times"
+set multiplot layout 2, 2 title "Incoming connections to neurons in P LPZ at different times"
 
 set title "II"
 plot for [COL=2:5] '081-syn_conns-incoming-hist-p_lpz_I-II.txt' using COL:xtic(1) title columnheader
@@ -153,7 +153,7 @@ unset multiplot
 
 ## O LPZ
 set output "081-connection-clustered-histograms-o.png"
-set multiplot layout 1, 4 title "Incoming connections to neurons in O LPZ at different times"
+set multiplot layout 2, 2 title "Incoming connections to neurons in O LPZ at different times"
 
 set title "II"
 plot for [COL=2:5] '081-syn_conns-incoming-hist-o_I-II.txt' using COL:xtic(1) title columnheader
