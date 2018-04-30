@@ -643,9 +643,7 @@ class Postprocess:
             random.sample(list(self.neurons['lpz_b_E'][:, 0]),
                           k=int(len(self.neurons['lpz_b_E'])*sample_percent)) +
             random.sample(list(self.neurons['p_lpz_E'][:, 0]),
-                          k=int(len(self.neurons['p_lpz_E'])*sample_percent)) +
-            random.sample(list(self.neurons['o_E'][:, 0]),
-                          k=int(len(self.neurons['o_E'])*sample_percent))
+                          k=int(len(self.neurons['p_lpz_E'])*sample_percent))
         )
         conn_len_hist_sample['I'] = (
             random.sample(list(self.neurons['lpz_c_I'][:, 0]),
@@ -653,9 +651,7 @@ class Postprocess:
             random.sample(list(self.neurons['lpz_b_I'][:, 0]),
                           k=int(len(self.neurons['lpz_b_I'])*sample_percent)) +
             random.sample(list(self.neurons['p_lpz_I'][:, 0]),
-                          k=int(len(self.neurons['p_lpz_I'])*sample_percent)) +
-            random.sample(list(self.neurons['o_I'][:, 0]),
-                          k=int(len(self.neurons['o_I'])*sample_percent))
+                          k=int(len(self.neurons['p_lpz_I'])*sample_percent))
         )
         # get origin and radii to draw circles to show different regions
         o_x = (max(self.neurons['o_E'][:, 1]) -
