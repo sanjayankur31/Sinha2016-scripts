@@ -915,7 +915,7 @@ class Postprocess:
                     p_h_fn = (
                         "75-connections-hist-{}-{}-incoming.png".format(
                             synapse_set, float(atime)/1000.
-                    ))
+                        ))
                     args = [
                         "-e",
                         "o_fn='{}'".format(p_h_fn),
@@ -933,7 +933,7 @@ class Postprocess:
                     p_h_fn = (
                         "75-connections-hist-{}-{}-outgoing.png".format(
                             synapse_set, float(atime)/1000.
-                    ))
+                        ))
                     args = [
                         "-e",
                         "o_fn='{}'".format(p_h_fn),
