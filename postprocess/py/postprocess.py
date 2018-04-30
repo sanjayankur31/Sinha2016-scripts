@@ -647,11 +647,11 @@ class Postprocess:
         )
         conn_len_hist_sample['I'] = (
             random.sample(list(self.neurons['lpz_c_I'][:, 0]),
-                          k=int(sample_size/2)) +
+                          k=int(sample_size/4)) +
             random.sample(list(self.neurons['lpz_b_I'][:, 0]),
-                          k=int(sample_size/2)) +
+                          k=int(sample_size/4)) +
             random.sample(list(self.neurons['p_lpz_I'][:, 0]),
-                          k=int(sample_size/2))
+                          k=int(sample_size/4))
         )
         # get origin and radii to draw circles to show different regions
         o_x = (max(self.neurons['o_E'][:, 1]) -
