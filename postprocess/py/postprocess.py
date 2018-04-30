@@ -32,6 +32,7 @@ import sys
 import math
 import logging
 from collections import OrderedDict
+import time
 
 # module imports
 from nestpp.utils import (get_config, get_numpats)
@@ -1006,6 +1007,7 @@ class Postprocess:
 
     def main(self):
         """Do everything."""
+        start_time = time.clock()
 
         self.plot_neuron_locations()
         self.plot_growth_curves()
@@ -1034,6 +1036,11 @@ class Postprocess:
         self.lgr.info("Waiting for all processes to finish")
         for proc in processes:
             proc.join()
+
+        end_time = time.clock()
+        self.lgr.info("Post processing took {} minutes".format(
+            (end_time - start_time)/60
+        ))
 
 
 if __name__ == "__main__":
