@@ -595,15 +595,15 @@ class Postprocess:
             os.path.join(self.cfg['plots_dir'],
                          'plot-total-synapse-changes.plt'))
 
-    def generate_synapse_graphs(self, sample_percent=0.02):
+    def generate_synapse_graphs(self, sample_size=400):
         """Generate synapse geometry graphs.
 
         Generates the time graphs, the histograms, and the top level snapshots
 
         THIS METHOD HAS GOTTEN OUT OF HAND AND NEEDS REFACTORING!
 
-        :sample_percent: percentage of neurons to take in sample per region for
-                            the top level snapshots
+        :sample_size: number of neurons to pick from each region: LPZ C, LPZ
+                    B, peri LPZ
         """
         if "synapses" not in self.cfg['time_graphs']:
             return True
@@ -639,19 +639,19 @@ class Postprocess:
         conn_len_hist_sample = {}
         conn_len_hist_sample['E'] = (
             random.sample(list(self.neurons['lpz_c_E'][:, 0]),
-                          k=int(len(self.neurons['lpz_c_E'])*sample_percent)) +
+                          k=int(sample_size)) +
             random.sample(list(self.neurons['lpz_b_E'][:, 0]),
-                          k=int(len(self.neurons['lpz_b_E'])*sample_percent)) +
+                          k=int(sample_size)) +
             random.sample(list(self.neurons['p_lpz_E'][:, 0]),
-                          k=int(len(self.neurons['p_lpz_E'])*sample_percent))
+                          k=int(sample_size))
         )
         conn_len_hist_sample['I'] = (
             random.sample(list(self.neurons['lpz_c_I'][:, 0]),
-                          k=int(len(self.neurons['lpz_c_I'])*sample_percent)) +
+                          k=int(sample_size/2)) +
             random.sample(list(self.neurons['lpz_b_I'][:, 0]),
-                          k=int(len(self.neurons['lpz_b_I'])*sample_percent)) +
+                          k=int(sample_size/2)) +
             random.sample(list(self.neurons['p_lpz_I'][:, 0]),
-                          k=int(len(self.neurons['p_lpz_I'])*sample_percent))
+                          k=int(sample_size/2))
         )
         # get origin and radii to draw circles to show different regions
         o_x = (max(self.neurons['o_E'][:, 1]) -
@@ -1024,7 +1024,7 @@ class Postprocess:
         processes.append(
             Process(target=self.generate_synaptic_element_graphs))
         processes.append(Process(target=self.generate_synapse_graphs,
-                                 args=(0.02,)))
+                                 args=(400,)))
 
         self.lgr.info("Starting all processes")
         for proc in processes:
