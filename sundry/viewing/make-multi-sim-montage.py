@@ -38,16 +38,24 @@ def montagise(simlist):
     :simlist: list of simulations to montagise
     :returns: nothing
     """
-    print("Combining {} simulations: {}".format(len(simlist), simlist))
     # Check that all simulation directories exist
+    cleaned_list = []
     for sim in simlist:
         if not os.path.isdir(sim):
             print(
                 "{}: directory not found. Exiting.".format(sim),
                 file=sys.stderr)
             sys.exit(-1)
+        # Remove trailing slash
+        if sim[-1] == "/":
+            cleaned_list.append(sim[:-1])
+        else:
+            cleaned_list.append(sim)
 
-    connections(simlist)
+    if len(simlist):
+        print("Combining {} simulations: {}".format(len(cleaned_list),
+                                                    cleaned_list))
+        connections(cleaned_list)
 
 
 def connections(simlist):
@@ -61,7 +69,7 @@ def connections(simlist):
     # Each simulation gets a column
     num_cols = len(simlist)
     timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M")
-    rows = [
+    graphs = [
         "02-calcium",
         "08-syn_conns-E-to",
         "081-connection-clustered-histograms-E-to",
@@ -83,7 +91,8 @@ def connections(simlist):
         print("Generating {}...".format(output_file))
         args = []
         # Add growth curves on top
-        for gc in ['growth-curves-E', 'growth-curves-I']:
+        gcs = ['growth-curves-E', 'growth-curves-I']
+        for gc in gcs:
             for sim in simlist:
                 fname = (
                     os.path.join(sim, "{}-{}.png".format(
@@ -101,7 +110,7 @@ def connections(simlist):
                     )
                     sys.exit(-2)
 
-        for graph in rows:
+        for graph in graphs:
             for sim in simlist:
                 fname = (
                     os.path.join(sim, "{}-{}-{}.png".format(
@@ -124,7 +133,7 @@ def connections(simlist):
             "-title", "'{}'".format(
                 ", ".join(str(sim) for sim in simlist)
             ),
-            "-tile", "{}x{}".format(num_cols, len(rows) + len(gc)),
+            "-tile", "{}x{}".format(num_cols, len(graphs) + len(gcs)),
             "-pointsize", "28",
             "-font", "OpenSans",
             "-geometry", "+2+2",
