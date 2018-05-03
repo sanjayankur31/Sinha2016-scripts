@@ -12,9 +12,6 @@ usage()
 
 main ()
 {
-    # Get the number of columns we have. One column for each time.
-    COLS=$(ls -- *75-connections-hist-EE*incoming.png | wc -l)
-
     montage \
         "$PREFIX"02-calcium-lpz_c_E.png \
         "$PREFIX"02-calcium-lpz_b_E.png \
@@ -28,15 +25,23 @@ main ()
         "$PREFIX"08-syn_conns-I-to-lpz_b_E.png \
         "$PREFIX"08-syn_conns-I-to-p_lpz_E.png \
         "$PREFIX"08-syn_conns-I-to-o_E.png \
-        "$PREFIX"081-connection-clustered-histograms-lpz_c_E.png \
-        "$PREFIX"081-connection-clustered-histograms-lpz_b_E.png \
-        "$PREFIX"081-connection-clustered-histograms-p_lpz_E.png \
-        "$PREFIX"081-connection-clustered-histograms-o_E.png \
-        "$PREFIX"081-connection-rowstacked-histograms-lpz_c_E.png \
-        "$PREFIX"081-connection-rowstacked-histograms-lpz_b_E.png \
-        "$PREFIX"081-connection-rowstacked-histograms-p_lpz_E.png \
-        "$PREFIX"081-connection-rowstacked-histograms-o_E.png \
-        -tile 4x5 -geometry +2+2  "$PREFIX"75-connections-E-montage.png
+        "$PREFIX"081-connection-clustered-histograms-E-to-lpz_c_E.png \
+        "$PREFIX"081-connection-clustered-histograms-E-to-lpz_b_E.png \
+        "$PREFIX"081-connection-clustered-histograms-E-to-p_lpz_E.png \
+        "$PREFIX"081-connection-clustered-histograms-E-to-o_E.png \
+        "$PREFIX"081-connection-clustered-histograms-I-to-lpz_c_E.png \
+        "$PREFIX"081-connection-clustered-histograms-I-to-lpz_b_E.png \
+        "$PREFIX"081-connection-clustered-histograms-I-to-p_lpz_E.png \
+        "$PREFIX"081-connection-clustered-histograms-I-to-o_E.png \
+        "$PREFIX"081-connection-rowstacked-histograms-E-to-lpz_c_E.png \
+        "$PREFIX"081-connection-rowstacked-histograms-E-to-lpz_b_E.png \
+        "$PREFIX"081-connection-rowstacked-histograms-E-to-p_lpz_E.png \
+        "$PREFIX"081-connection-rowstacked-histograms-E-to-o_E.png \
+        "$PREFIX"081-connection-rowstacked-histograms-I-to-lpz_c_E.png \
+        "$PREFIX"081-connection-rowstacked-histograms-I-to-lpz_b_E.png \
+        "$PREFIX"081-connection-rowstacked-histograms-I-to-p_lpz_E.png \
+        "$PREFIX"081-connection-rowstacked-histograms-I-to-o_E.png \
+        -tile 4x7 -geometry +2+2  "$PREFIX"75-connections-E-montage.png
 
     montage \
         "$PREFIX"02-calcium-lpz_c_I.png \
@@ -51,15 +56,26 @@ main ()
         "$PREFIX"08-syn_conns-I-to-lpz_b_I.png \
         "$PREFIX"08-syn_conns-I-to-p_lpz_I.png \
         "$PREFIX"08-syn_conns-I-to-o_I.png \
-        "$PREFIX"081-connection-clustered-histograms-lpz_c_I.png \
-        "$PREFIX"081-connection-clustered-histograms-lpz_b_I.png \
-        "$PREFIX"081-connection-clustered-histograms-p_lpz_I.png \
-        "$PREFIX"081-connection-clustered-histograms-o_I.png \
-        "$PREFIX"081-connection-rowstacked-histograms-lpz_c_I.png \
-        "$PREFIX"081-connection-rowstacked-histograms-lpz_b_I.png \
-        "$PREFIX"081-connection-rowstacked-histograms-p_lpz_I.png \
-        "$PREFIX"081-connection-rowstacked-histograms-o_I.png \
-        -tile 4x5 -geometry +2+2  "$PREFIX"75-connections-I-montage.png
+        "$PREFIX"081-connection-clustered-histograms-E-to-lpz_c_I.png \
+        "$PREFIX"081-connection-clustered-histograms-E-to-lpz_b_I.png \
+        "$PREFIX"081-connection-clustered-histograms-E-to-p_lpz_I.png \
+        "$PREFIX"081-connection-clustered-histograms-E-to-o_I.png \
+        "$PREFIX"081-connection-clustered-histograms-I-to-lpz_c_I.png \
+        "$PREFIX"081-connection-clustered-histograms-I-to-lpz_b_I.png \
+        "$PREFIX"081-connection-clustered-histograms-I-to-p_lpz_I.png \
+        "$PREFIX"081-connection-clustered-histograms-I-to-o_I.png \
+        "$PREFIX"081-connection-rowstacked-histograms-E-to-lpz_c_I.png \
+        "$PREFIX"081-connection-rowstacked-histograms-E-to-lpz_b_I.png \
+        "$PREFIX"081-connection-rowstacked-histograms-E-to-p_lpz_I.png \
+        "$PREFIX"081-connection-rowstacked-histograms-E-to-o_I.png \
+        "$PREFIX"081-connection-rowstacked-histograms-I-to-lpz_c_I.png \
+        "$PREFIX"081-connection-rowstacked-histograms-I-to-lpz_b_I.png \
+        "$PREFIX"081-connection-rowstacked-histograms-I-to-p_lpz_I.png \
+        "$PREFIX"081-connection-rowstacked-histograms-I-to-o_I.png \
+        -tile 4x7 -geometry +2+2  "$PREFIX"75-connections-I-montage.png
+
+    # Get the number of columns we have. One column for each time.
+    COLS=$(ls -- *75-connections-hist-EE*incoming.png | wc -l)
 
     montage \
         "$PREFIX"75-connections-hist-EE-*-incoming.png \
