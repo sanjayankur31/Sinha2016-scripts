@@ -6,6 +6,8 @@ set ytics border nomirror
 set xtics border nomirror
 set lmargin at screen 0.15
 set xrange [0:9000]
+set format y "%.1tx10^{%T}"
+set format x "%.1tx10^{%T}"
 
 bin_width = 100.
 bin_number(x) = floor(x/bin_width)

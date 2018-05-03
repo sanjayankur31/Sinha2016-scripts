@@ -6,6 +6,7 @@ set ytics border nomirror
 set xtics border nomirror
 set xrange[0:]
 set yrange[0:]
+set format y "%.1tx10^{%T}"
 set lmargin at screen 0.15
 
 set output "08-syn_conns-E-to-lpz_c_E.png"

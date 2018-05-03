@@ -6,6 +6,8 @@ set xtics out border nomirror 0,2000
 set ytics out border nomirror 0,2000
 set yrange[0:15000]
 set xrange[0:12000]
+set format y "%.1tx10^{%T}"
+set format x "%.1tx10^{%T}"
 set size ratio -1
 set key inside horizontal top
 set offset 400, 400, 400, 400

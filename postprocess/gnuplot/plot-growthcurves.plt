@@ -1,5 +1,6 @@
 load '/home/asinha/Documents/02_Code/00_repos/00_mine/gnuplot-palettes/paired.pal'
 set term pngcairo enhanced font "OpenSans, 28" size 1920, 1080
+set format y "%.1tx10^{%T}"
 
 # define the function
 dzdt(x, nu, zeta, xi)= (nu * ((2.0 * exp(-(((x - xi)/zeta)**2.0))) - 1.0))
