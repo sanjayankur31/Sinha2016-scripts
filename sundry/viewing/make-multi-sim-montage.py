@@ -1,0 +1,156 @@
+#!/usr/bin/env python3
+"""
+Make a montage from different simulations.
+
+File: make-multi-sim-montage.py
+
+Copyright 2018 Ankur Sinha
+Author: Ankur Sinha <sanjay DOT ankur AT gmail DOT com>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
+
+import argparse
+import subprocess
+from subprocess import CalledProcessError
+import datetime
+import os
+import sys
+
+
+def montagise(simlist):
+    """Main worker method.
+
+    Uses the montage command. This function just sets up the command line
+    argument and then calls it.
+
+    :simlist: list of simulations to montagise
+    :returns: nothing
+    """
+    print("Combining {} simulations: {}".format(len(simlist), simlist))
+    # Check that all simulation directories exist
+    for sim in simlist:
+        if not os.path.isdir(sim):
+            print(
+                "{}: directory not found. Exiting.".format(sim),
+                file=sys.stderr)
+            sys.exit(-1)
+
+    connections(simlist)
+
+
+def connections(simlist):
+    """Make the connections montage
+
+    :simlist: list of simulations
+    :returns: nothing
+
+    """
+    print("Generating connection montage")
+    # Each simulation gets a column
+    num_cols = len(simlist)
+    timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M")
+    rows = [
+        "02-calcium",
+        "08-syn_conns-E-to",
+        "081-connection-clustered-histograms-E-to",
+        "081-connection-rowstacked-histograms-E-to",
+        "08-syn_conns-I-to",
+        "081-connection-clustered-histograms-I-to",
+        "081-connection-rowstacked-histograms-I-to"
+    ]
+
+    regions = ["lpz_c_E", "lpz_b_E", "p_lpz_E", "o_E"]
+    regions += ["lpz_c_I", "lpz_b_I", "p_lpz_I", "o_I"]
+
+    for region in regions:
+        output_file = (
+            "{}-multi-sim-connections-{}-montage.png".format(
+                timestamp, region
+            )
+        )
+        print("Generating {}...".format(output_file))
+        args = []
+        # Add growth curves on top
+        for gc in ['growth-curves-E', 'growth-curves-I']:
+            for sim in simlist:
+                fname = (
+                    os.path.join(sim, "{}-{}.png".format(
+                        sim, gc
+                    ))
+                )
+                if os.path.isfile(fname):
+                    args.append(fname)
+                else:
+                    print(
+                        "{}: file not found. Exiting.".format(
+                            fname
+                        ),
+                        file=sys.stderr
+                    )
+                    sys.exit(-2)
+
+        for graph in rows:
+            for sim in simlist:
+                fname = (
+                    os.path.join(sim, "{}-{}-{}.png".format(
+                        sim, graph, region
+                    ))
+                )
+                if os.path.isfile(fname):
+                    args.append(fname)
+                else:
+                    print(
+                        "{}: file not found. Exiting.".format(
+                            fname
+                        ),
+                        file=sys.stderr
+                    )
+                    sys.exit(-2)
+
+        # Final bits
+        args += [
+            "-title", "'{}'".format(
+                ", ".join(str(sim) for sim in simlist)
+            ),
+            "-tile", "{}x{}".format(num_cols, len(rows) + len(gc)),
+            "-pointsize", "28",
+            "-font", "OpenSans",
+            "-geometry", "+2+2",
+            output_file
+        ]
+
+        try:
+            print("Running montage with args: {}".format(args))
+            status = subprocess.run(args=['montage'] + args,
+                                    stdout=subprocess.PIPE,
+                                    stderr=subprocess.PIPE)
+            status.check_returncode()
+        except CalledProcessError as cpe:
+            print(
+                "{} errored with return code {}".format(
+                    cpe.cmd, cpe.returncode))
+            print("\n" + cpe.stderr.decode())
+        else:
+            print("{} Montage created".format(output_file))
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Make montages of many simulations"
+    )
+    parser.add_argument("simulations", action="store", type=str,
+                        nargs="+", help="simulations to combine")
+    args = parser.parse_args()
+    montagise(vars(args)['simulations'])
