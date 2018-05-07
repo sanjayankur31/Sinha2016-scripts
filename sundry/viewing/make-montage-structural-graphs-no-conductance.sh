@@ -24,10 +24,10 @@ main ()
         "$PREFIX"02-calcium-lpz_b_E.png \
         "$PREFIX"02-calcium-p_lpz_E.png \
         "$PREFIX"02-calcium-o_E.png \
-        "$PREFIX"05-se-lpz_c_E-all.png \
-        "$PREFIX"05-se-lpz_b_E-all.png \
-        "$PREFIX"05-se-p_lpz_E-all.png \
-        "$PREFIX"05-se-o_E-all.png \
+        "$PREFIX"05-se-all-lpz_c_E.png \
+        "$PREFIX"05-se-all-lpz_b_E.png \
+        "$PREFIX"05-se-all-p_lpz_E.png \
+        "$PREFIX"05-se-all-o_E.png \
         -tile 4x3 -geometry +2+2  "$PREFIX"structural-plasticity-montage-E.png
 
     montage \
@@ -39,10 +39,10 @@ main ()
         "$PREFIX"02-calcium-lpz_b_I.png \
         "$PREFIX"02-calcium-p_lpz_I.png \
         "$PREFIX"02-calcium-o_I.png \
-        "$PREFIX"05-se-lpz_c_I-all.png \
-        "$PREFIX"05-se-lpz_b_I-all.png \
-        "$PREFIX"05-se-p_lpz_I-all.png \
-        "$PREFIX"05-se-o_I-all.png \
+        "$PREFIX"05-se-all-lpz_c_I.png \
+        "$PREFIX"05-se-all-lpz_b_I.png \
+        "$PREFIX"05-se-all-p_lpz_I.png \
+        "$PREFIX"05-se-all-o_I.png \
         -tile 4x3 -geometry +2+2  "$PREFIX"structural-plasticity-montage-I.png
 }
 
