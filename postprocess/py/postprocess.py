@@ -403,8 +403,8 @@ class Postprocess:
                     self.neurons[neuron_set],
                     self.cfg['snapshots']['firing_rate_histograms'])
 
-            for time in self.cfg['snapshots']['firing_rate_histograms']:
-                plot_firing_rate_histograms(histlist, time)
+            for atime in self.cfg['snapshots']['firing_rate_histograms']:
+                plot_firing_rate_histograms(histlist, atime)
 
     def generate_firing_rate_grid_snapshots(self):
         """Generate top view firing rate snapshots."""
@@ -426,13 +426,13 @@ class Postprocess:
                     self.neurons[neuron_set],
                     self.cfg['snapshots']['firing_rates'])
 
-                for time in self.cfg['snapshots']['firing_rates']:
-                    i_fn = "firing-rates-{}-{}.gdf".format(neuron_set, time)
+                for atime in self.cfg['snapshots']['firing_rates']:
+                    i_fn = "firing-rates-{}-{}.gdf".format(neuron_set, atime)
                     o_fn = "firing-rates-grid-plot-{}-{}.png".format(
-                        neuron_set, time)
+                        neuron_set, atime)
                     args = ['-e', "o_fn='{}'".format(o_fn),
                             '-e', "neuron_set='{}'".format(neuron_set),
-                            '-e', "plot_time='{}'".format(time),
+                            '-e', "plot_time='{}'".format(atime),
                             '-e', "i_fn='{}'".format(i_fn),
                             '-e', "xmax='{}'".format(xmax),
                             '-e', "ymax='{}'".format(ymax),
