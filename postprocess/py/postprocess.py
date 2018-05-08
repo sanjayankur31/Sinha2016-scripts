@@ -153,7 +153,7 @@ class Postprocess:
             return True
 
         self.lgr.info("Processing synaptic elements..")
-        time_list = get_info_from_file_series("..", "05-se-all-lpz_b_E-0-",
+        time_list = get_info_from_file_series("..", "05-se-lpz_b_E-0-",
                                               ".txt")
         for neuron_set in ["lpz_c_E", "lpz_b_E", "p_lpz_E", "o_E", "lpz_c_I",
                            "lpz_b_I", "p_lpz_I", "o_I"]:
