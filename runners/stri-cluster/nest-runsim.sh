@@ -20,7 +20,7 @@
 #
 
 #PBS -l walltime=48:00:00
-#PBS -l nodes=50
+#PBS -l nodes=4:ppn=32
 #PBS -m abe
 #PBS -N nest_v_s
 
@@ -31,7 +31,7 @@ SIM_PATH="/beegfs/general/asinha/simulations-nest/"
 SIM_TIME=""
 PROGRAM_PATH="$SIM_PATH""$SIM_TIME""/Sinha2016/src/Sinha2016.py"
 RESULT_PATH="$SIM_PATH""$SIM_TIME""/result/"
-NUM_NODES=50
+NUM_MPI_NODES=128
 
 echo ------------------------------------------------------
 echo 'Job is running on nodes'; cat $PBS_NODEFILE
@@ -53,7 +53,7 @@ echo "ANKUR>> Script: ${0}"
 
 cd $RESULT_PATH
 
-/usr/local/bin/mpiexec -n $NUM_NODES python3 $PROGRAM_PATH
+/usr/local/bin/mpiexec -n $NUM_MPI_NODES python3 $PROGRAM_PATH
 
 END_TIME=$(date +%Y%m%d%H%M)
 echo "ANKUR>> Ended at $END_TIME"

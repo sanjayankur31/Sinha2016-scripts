@@ -28,7 +28,9 @@ SIM_TIME=$(date +%Y%m%d%H%M)
 RUN_SCRIPT="stri-cluster/nest-runsim.sh"
 RUN_NEW=""
 ERROR="no"
-NUM_NODES=50
+NUM_NODES=4
+NUM_PROCS=0
+NUM_MPI_NODES=128
 WALLTIME="48:00:00"
 CUR_SIM_PATH=""
 
@@ -69,8 +71,13 @@ function setup_env
         echo "Setting up $RUN_NEW..."
         cp "$SCRIPT_PATH""$RUN_SCRIPT" "$RUN_NEW" -v
         sed -i "s|nest_v_s|nest_$GIT_COMMIT|" "$RUN_NEW"
-        sed -i "s|nodes=.*|nodes=$NUM_NODES|" "$RUN_NEW"
-        sed -i "s|NUM_NODES=.*|NUM_NODES=$NUM_NODES|" "$RUN_NEW"
+        if [[ 0 -eq "$NUM_PROCS" ]]
+        then
+            sed -i "s|nodes=.*|nodes=$NUM_NODES|" "$RUN_NEW"
+        else
+            sed -i "s|nodes=.*|nodes=$NUM_NODES:ppn=$NUM_PROCS|" "$RUN_NEW"
+        fi
+        sed -i "s|NUM_MPI_NODES=.*|NUM_MPI_NODES=$NUM_MPI_NODES|" "$RUN_NEW"
         sed -i "s|walltime=.*|walltime=$WALLTIME|" "$RUN_NEW"
         sed -i "s|SIM_TIME=.*|SIM_TIME=$SIM_TIME|" "$RUN_NEW"
 
@@ -87,20 +94,55 @@ function usage
 {
     echo "Usage: $0"
     echo "Queue up a job to run a particular git commit"
-    echo "$0 <git_commit> <number_nodes> <walltime>"
+    echo "$0 OPTIONS"
+    echo ""
+    echo "OPTIONS:"
+    echo "-g <git commit>"
+    echo "-n <number of nodes>"
+    echo "-p <number of processors per node>"
+    echo "   use zero to not use ppn"
+    echo "-w <requested walltime>"
+
 }
 
-if [ "$#" -ne 3 ];
-then
-    echo "Error occurred. Exiting..."
-    echo "Received $# arguments. Expected: 4"
+if [ "$#" -eq 0 ]; then
     usage
-    exit -1
+    exit 0
 fi
 
-GIT_COMMIT="$1"
-NUM_NODES="$2"
-WALLTIME="$3"
+while getopts "g:n:p:w:h" OPTION
+do
+    case $OPTION in
+        g)
+            GIT_COMMIT="$OPTARG"
+            ;;
+        n)
+            NUM_NODES="$OPTARG"
+            ;;
+        p)
+            NUM_PROCS="$OPTARG"
+            ;;
+        w)
+            WALLTIME="$OPTARG"
+            ;;
+        h)
+            usage
+            exit 0
+            ;;
+        ?)
+            usage
+            exit 0
+            ;;
+    esac
+done
+
+if [[ 0 -eq "$NUM_PROCS" ]]
+then
+    NUM_MPI_NODES="$NUM_NODES"
+else
+    NUM_MPI_NODES=$((NUM_NODES*NUM_PROCS))
+fi
+
 setup_env
 queue_task
 
