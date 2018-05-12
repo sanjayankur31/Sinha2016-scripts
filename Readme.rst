@@ -4,7 +4,7 @@ They have not been properly designed or documented. In fact, they're highly cust
 
 Tread lightly ;)
 
-Everything here is under the GPLv3 license.
+Everything here is under the BSD 3-clause license.
 
 Master:
 
