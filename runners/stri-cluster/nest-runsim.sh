@@ -53,7 +53,7 @@ echo "ANKUR>> Script: ${0}"
 
 cd $RESULT_PATH
 
-mpiexec -n $NUM_MPI_NODES python3 $PROGRAM_PATH
+/usr/local/bin/mpiexec -n $NUM_MPI_NODES python3 $PROGRAM_PATH
 
 END_TIME=$(date +%Y%m%d%H%M)
 echo "ANKUR>> Ended at $END_TIME"
