@@ -35,9 +35,10 @@ import subprocess
 from natsort import natsorted
 from nestpp.loggerpp import get_module_logger
 from nestpp.utils import input_with_timeout
+import logging
 
 
-lgr = get_module_logger(__name__)
+lgr = get_module_logger(__name__, logging.INFO)
 
 
 def check_csv_file(path):
