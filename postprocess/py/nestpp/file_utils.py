@@ -35,9 +35,10 @@ import subprocess
 from natsort import natsorted
 from nestpp.loggerpp import get_module_logger
 from nestpp.utils import input_with_timeout
+import logging
 
 
-lgr = get_module_logger(__name__)
+lgr = get_module_logger(__name__, logging.INFO)
 
 
 def check_csv_file(path):
@@ -257,7 +258,9 @@ def reprocess_raw_files(directory, shell_globs):
     """
     files_found = []
     for shell_glob in shell_globs:
-        files_found += natsorted(glob.glob(os.path.join(directory, shell_glob)))
+        files_found += natsorted(
+            glob.glob(os.path.join(directory, shell_glob))
+        )
 
     if len(files_found) == 0:
         return True
