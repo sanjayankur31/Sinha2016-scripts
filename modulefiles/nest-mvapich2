@@ -1,0 +1,31 @@
+#%Module 1.0
+#
+#  NEST module for use with mvapich2 'environment-modules' package:
+
+# load the right mvapich2
+module load mvapich2
+
+# NEST is installed here. When you relocate NEST, change this variable.
+setenv NEST_INSTALL_DIR /home/asinha/installed-software/nest-mvapich2
+#
+# NEST finds standard *.sli files $NEST_DATA_DIR/sli
+setenv NEST_DATA_DIR /home/asinha/installed-software/nest-mvapich2/share/nest
+
+# NEST finds help files $NEST_DOC_DIR/help
+setenv NEST_DOC_DIR /home/asinha/installed-software/nest-mvapich2/share/doc/nest
+
+# The path where NEST looks for user modules.
+setenv NEST_MODULE_PATH /home/asinha/installed-software/nest-mvapich2/lib64/nest
+
+# The path where the PyNEST bindings are installed.
+append-path PYTHONPATH /home/asinha/installed-software/nest-mvapich2/lib64/python3.5/site-packages
+
+# Make nest-mvapich2 / sli /... executables visible.
+prepend-path PATH /home/asinha/installed-software/nest-mvapich2/bin
+#
+# Needed to get mvapich2 to work properly with Python
+setenv        LD_PRELOAD       /usr/mpi/gcc/mvapich2-2.1a/lib/libmpi.so
+
+# For simulations
+setenv MV2_ENABLE_AFFINITY 0
+setenv MV2_SHOW_CPU_BINDING 1
