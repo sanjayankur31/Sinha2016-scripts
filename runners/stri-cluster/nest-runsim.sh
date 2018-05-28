@@ -32,6 +32,7 @@ SIM_TIME=""
 PROGRAM_PATH="$SIM_PATH""$SIM_TIME""/Sinha2016/src/Sinha2016.py"
 RESULT_PATH="$SIM_PATH""$SIM_TIME""/result/"
 NUM_MPI_NODES=128
+MODULE_TO_USE=
 
 echo ------------------------------------------------------
 echo 'Job is running on nodes'; cat $PBS_NODEFILE
@@ -50,10 +51,12 @@ echo ------------------------------------------------------
 
 echo "ANKUR>> Begun at $SIM_TIME"
 echo "ANKUR>> Script: ${0}"
+module load "$MODULE_TO_USE"
 
 cd $RESULT_PATH
 
 /usr/local/bin/mpiexec -n $NUM_MPI_NODES python3 $PROGRAM_PATH
 
+module unload "$MODULE_TO_USE"
 END_TIME=$(date +%Y%m%d%H%M)
 echo "ANKUR>> Ended at $END_TIME"

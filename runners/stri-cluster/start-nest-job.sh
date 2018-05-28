@@ -33,6 +33,7 @@ NUM_PROCS=0
 NUM_MPI_NODES=128
 WALLTIME="48:00:00"
 CUR_SIM_PATH=""
+MODULE_TO_USE=""
 
 function queue_task
 {
@@ -80,6 +81,7 @@ function setup_env
         sed -i "s|NUM_MPI_NODES=.*|NUM_MPI_NODES=$NUM_MPI_NODES|" "$RUN_NEW"
         sed -i "s|walltime=.*|walltime=$WALLTIME|" "$RUN_NEW"
         sed -i "s|SIM_TIME=.*|SIM_TIME=$SIM_TIME|" "$RUN_NEW"
+        sed -i "s|MODULE_TO_USE=.*|MODULE_TO_USE=$MODULE_TO_USE|" "$RUN_NEW"
 
         mkdir -v result
         pushd "Sinha2016"
@@ -102,6 +104,7 @@ function usage
     echo "-p <number of processors per node>"
     echo "   use zero to not use ppn"
     echo "-w <requested walltime>"
+    echo "-m <module to use>"
 
 }
 
@@ -110,7 +113,7 @@ if [ "$#" -eq 0 ]; then
     exit 0
 fi
 
-while getopts "g:n:p:w:h" OPTION
+while getopts "g:n:p:w:m:h" OPTION
 do
     case $OPTION in
         g)
@@ -125,6 +128,9 @@ do
         w)
             WALLTIME="$OPTARG"
             ;;
+        m)
+            MODULE_TO_USE="$OPTARG"
+            ;;
         h)
             usage
             exit 0
@@ -136,8 +142,25 @@ do
     esac
 done
 
+if [[ "x" == x"$MODULE_TO_USE" ]]
+then
+    echo "You must choose an environment module."
+    echo
+    usage
+    exit -1
+fi
+
+if [[ "x" == x"$GIT_COMMIT" ]]
+then
+    echo "You must choose a git commit to run."
+    echo
+    usage
+    exit -1
+fi
+
 if [[ 0 -eq "$NUM_PROCS" ]]
 then
+    echo "Num procs not specified, using nodes as total number."
     NUM_MPI_NODES="$NUM_NODES"
 else
     NUM_MPI_NODES=$((NUM_NODES*NUM_PROCS))
