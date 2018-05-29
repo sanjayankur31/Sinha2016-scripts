@@ -140,7 +140,8 @@ fetch ()
 
     # Don't need to use parallel for these two files
     echo "Fetching simulation logs"
-    rsync -azmhR --ignore-existing --info=progress2 "$CLUSTER_PATH/$DIRNAME"/nest*.e* "$CLUSTER_PATH/$DIRNAME"/nest*.o* "$DIRNAME"
+    rsync -azh --ignore-existing --info=progress2 "$CLUSTER_PATH/$DIRNAME"/nest*.e* "$DIRNAME"/
+    rsync -azh --ignore-existing --info=progress2 "$CLUSTER_PATH/$DIRNAME"/nest*.o* "$DIRNAME"/
 
     echo "Remove file list"
     rm -rvf "$TMPDIR"
