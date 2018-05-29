@@ -21,7 +21,7 @@ DIRNAME=""
 NUM_PARALLEL=4
 
 function setup() {
-    pushd "$DIRNAME"
+    pushd "$DIRNAME" || exit -1
         echo "Creating consolidated dir and copying info files"
         mkdir "$CONSOLIDATED_DIR"
 
@@ -34,13 +34,13 @@ function setup() {
 
         echo "Moving simulation output files"
         cp -v -- nest*.* "$CONSOLIDATED_DIR"/
-    popd
+    popd || exit -1
 }
 
 # combine spike files and the sort and move them to the $CONSOLIDATED_DIR
 combine ()
 {
-    pushd "$DIRNAME"
+    pushd "$DIRNAME" || exit -1
         echo "Created $SORTTMPDIR"
         mkdir -p "$SORTTMPDIR"
         # Get number of patterns in this simulation
@@ -109,7 +109,7 @@ combine ()
         mv spikes-p_lpz_I.gdf "$CONSOLIDATED_DIR"
         mv spikes-o_I.gdf "$CONSOLIDATED_DIR"
         mv spikes-I.gdf "$CONSOLIDATED_DIR"
-    popd
+    popd || exit -1
 }
 
 # Fetches the files from the generated location to the local machine for
@@ -149,17 +149,17 @@ fetch ()
 # generation
 pypostprocess ()
 {
-    pushd "$DIRNAME/$CONSOLIDATED_DIR"
+    pushd "$DIRNAME/$CONSOLIDATED_DIR" || exit -1
         cp -v "$SCRIPTS_HOME/config.ini" .
         python3 "$SCRIPTS_HOME/postprocess/py/postprocess.py"
-    popd
+    popd || exit -1
 }
 
 # renames files by appending the simulation timestamp (which is the directory
 # name in my setup) to all generated graph files
 rename_files ()
 {
-    pushd "$DIRNAME/$CONSOLIDATED_DIR"
+    pushd "$DIRNAME/$CONSOLIDATED_DIR" || exit -1
         for i in *.png;
         do
             # only rename a file if it isn't already renamed
@@ -167,7 +167,7 @@ rename_files ()
                 mv "$i" "$DIRNAME-$i" -v
             fi
         done
-    popd
+    popd || exit -1
 }
 
 # Describes how this script should be used
