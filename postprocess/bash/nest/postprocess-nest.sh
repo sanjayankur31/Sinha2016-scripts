@@ -129,7 +129,7 @@ fetch ()
     rsync --out-format="%l %n" -m --no-v --dry-run --recursive "$CLUSTER_PATH/$DIRNAME"/result/. "$DIRNAME" | sed '/\//d' | sort -n -r > "$TMPDIR"/"$DIRNAME".all
 
     echo "Calculating chunks"
-    cat $TMPDIR/"$DIRNAME".all | cut -d\  -f2 | split -d -n r/"$NUM_PARALLEL" - $TMPDIR/chunk.
+    cut -d\  -f2 "$TMPDIR/$DIRNAME".all | split -d -n r/"$NUM_PARALLEL" - "$TMPDIR"/chunk.
 
     # echo "Chunks are:"
     # find "$TMPDIR" -type f -name "chunk.*" -printf "\n*** %p ***\n" -exec cat {} \;
