@@ -161,13 +161,30 @@ def var_combine_files_column_wise(directory, shell_glob, separator):
         # than previous lines by using NA, but it cannot handle lines
         # longer and crashes
 
+        # In a fully connected network, we can have these many EE connections
+        # per rank
+        max_columns = (8000*8000)/128
+        # However, we should have a sparsity of only 2% usually, so I'll
+        # conservatively set the default value to 10 times that.
+        # This is only used if for some reason, like early termination of a
+        # simulation, the files are malformed and the last line does not
+        # contain the max number of columns
+        max_columns = int(max_columns/5)
+
         # first, get the info from the file
         output = (subprocess.check_output(['tail', '-1', fn]))
         # decode byte string to utf8, then if it's tsv, replace it with a
         # comma to make it a set, then let ast.literal_eval convert it into
         # a set, the last value of which is the maxcols
-        max_columns = ast.literal_eval(
-            (output.decode("utf-8")).replace('\t', ', ')[:-1])[-1]
+        last_line = ast.literal_eval(
+            (output.decode("utf-8")).replace('\t', ', ')[:-1])
+        # Not a perfect check, but it is highly improbable that a malformed
+        # file will have two conductances in the last line, the first of which
+        # is exactly -1
+        if len(last_line) != 2 and last_line[0] != -1:
+            lgr.warning("Malformed last line. Not reading column length.")
+        else:
+            max_columns = last_line[1]
         lgr.debug("Max cols is: {}".format(max_columns))
 
         try:
