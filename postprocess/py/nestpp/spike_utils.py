@@ -317,11 +317,12 @@ def get_individual_firing_rate_snapshots(neuronset, spikes_fn,
 
                 # Fill up missing neurons
                 rates = {}
-                for i in range(1, num_neurons + 1):
-                    if i not in spike_counts:
-                        rates[i] = 0
+                for neuron in neuron_locations:
+                    n_id = int(neuron[0])
+                    if n_id not in spike_counts:
+                        rates[n_id] = 0
                     else:
-                        rates[i] = spike_counts[i]/(window/1000)
+                        rates[n_id] = spike_counts[n_id]/(window/1000)
                 lgr.debug("Neurons after appending zeros: {}".format(
                     len(rates)))
 
