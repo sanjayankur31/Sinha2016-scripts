@@ -332,10 +332,11 @@ def get_individual_firing_rate_snapshots(neuronset, spikes_fn,
 
                 with open(o_fn, 'w') as fh:
                     for neuron in neuron_locations:
-                        print("{}\t{}\t{}\t{}".format(neuron[0], neuron[1],
-                                                      neuron[2],
-                                                      rates[neuron[0]]),
-                              file=fh)
+                        print("{}\t{}\t{}\t{}".format(
+                            neuron[0], neuron[1], neuron[2],
+                            rates[int(neuron[0])]
+                        ), file=fh
+                              )
 
                 current += 1
                 if current >= len(sorted_timelist):
