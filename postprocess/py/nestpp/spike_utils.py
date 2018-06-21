@@ -37,13 +37,17 @@ lgr = get_module_logger(__name__)
 
 
 def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
-                            rows=50000000.):
+                            rows=50000000., dt=1., window=1000.,
+                            snapshot_dt=200000.):
     """Get various metrics from raster spike files.
 
     :neuronset: name of neuron set being looked at
     :spikes_fn: file name of spikes file
     :num_neurons: number of neurons in neuron set
     :rows: rows to be read in each pandas chunk
+    :dt: increment value (ms)
+    :window: window to count spikes in (ms)
+    :snapshot_dt: interval between snapshots for ISI and STD metrics (ms)
     :returns: True if everything went OK, else False
 
     """
@@ -106,7 +110,7 @@ def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
 
             while (current_time < math.floor(times[-1])):
                 left += numpy.searchsorted(times[left:],
-                                           (current_time - 1000.),
+                                           (current_time - window),
                                            side='left')
                 right = left + numpy.searchsorted(
                     times[left:], current_time,
@@ -132,16 +136,17 @@ def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
 
                 # mean firing rate
                 spikesnum = float(len(thiswindow_neuronIDs))
+                mean_firing_rate = (spikesnum/num_neurons)/(window/1000)
                 # total neuronIDs by number of neurons
                 print(
                     "{}\t{}".format(current_time/1000.,
-                                    (spikesnum/num_neurons)),
+                                    mean_firing_rate),
                     file=fh1, flush=True)
 
                 # STD of firing rates and ISI cv - it
                 # just takes way too much time - my post processing wont
                 # finish.
-                if (current_time % 200000 == 0):
+                if (current_time % snapshot_dt == 0):
                     # STD of firing rates
                     # take 5 milli second bins of this 1 second bin
                     # find firing rates for each bin
