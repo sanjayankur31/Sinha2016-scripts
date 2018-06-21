@@ -424,7 +424,9 @@ class Postprocess:
                 get_individual_firing_rate_snapshots(
                     neuron_set, "spikes-{}.gdf".format(neuron_set),
                     self.neurons[neuron_set],
-                    self.cfg['snapshots']['firing_rates'])
+                    self.cfg['snapshots']['firing_rates'],
+                    window=10000.
+                )
 
                 for atime in self.cfg['snapshots']['firing_rates']:
                     i_fn = "firing-rates-{}-{}.gdf".format(neuron_set, atime)

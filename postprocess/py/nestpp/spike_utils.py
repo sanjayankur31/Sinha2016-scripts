@@ -232,7 +232,7 @@ def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
 
 def get_individual_firing_rate_snapshots(neuronset, spikes_fn,
                                          neuron_locations, timelist,
-                                         rows=50000000):
+                                         rows=50000000, window=10000.):
     """Get firing rates for individual neurons at a particular point in time.
 
     The output format is:
@@ -298,7 +298,7 @@ def get_individual_firing_rate_snapshots(neuronset, spikes_fn,
 
             # Find our values
             start = numpy.searchsorted(times,
-                                       time - 1000.,
+                                       time - window,
                                        side='left')
             end = numpy.searchsorted(times,
                                      time,
@@ -312,15 +312,18 @@ def get_individual_firing_rate_snapshots(neuronset, spikes_fn,
                 break
             else:
                 neurons = spikes[start:end]
-                rate = collections.Counter(neurons)
-                lgr.debug("Neurons found: {}".format(len(rate)))
+                spike_counts = collections.Counter(neurons)
+                lgr.debug("Neurons found: {}".format(len(spike_counts)))
 
                 # Fill up missing neurons
+                rates = {}
                 for i in range(1, num_neurons + 1):
-                    if i not in rate:
-                        rate[i] = 0
+                    if i not in spike_counts:
+                        rates[i] = 0
+                    else:
+                        rates[i] = spike_counts[i]/(window/1000)
                 lgr.debug("Neurons after appending zeros: {}".format(
-                    len(rate)))
+                    len(rates)))
 
                 o_fn = "firing-rates-{}-{}.gdf".format(
                     neuronset, time/1000.)
@@ -331,7 +334,7 @@ def get_individual_firing_rate_snapshots(neuronset, spikes_fn,
                     for neuron in neuron_locations:
                         print("{}\t{}\t{}\t{}".format(neuron[0], neuron[1],
                                                       neuron[2],
-                                                      rate[neuron[0]]),
+                                                      rates[neuron[0]]),
                               file=fh)
 
                 current += 1
