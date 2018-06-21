@@ -368,7 +368,7 @@ class Postprocess:
         for neuron_set in self.neurons.keys():
             get_firing_rate_metrics(
                 neuron_set, "spikes-{}.gdf".format(neuron_set),
-                len(self.neurons[neuron_set]), dt=100, window=10000)
+                len(self.neurons[neuron_set]), dt=100, window=2500)
 
         self.lgr.info("Generating firing rate graphs")
         plot_using_gnuplot_binary(
@@ -425,7 +425,7 @@ class Postprocess:
                     neuron_set, "spikes-{}.gdf".format(neuron_set),
                     self.neurons[neuron_set],
                     self.cfg['snapshots']['firing_rates'],
-                    window=10000.
+                    window=2500.
                 )
 
                 for atime in self.cfg['snapshots']['firing_rates']:
