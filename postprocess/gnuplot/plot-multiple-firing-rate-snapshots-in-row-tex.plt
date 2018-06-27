@@ -23,7 +23,7 @@ set yrange [0:100]
 eval(init_margins(0.01, 0.99, 0.002, 3))
 set multiplot layout 1, 3
 
-set cbrange [0:20]
+set cbrange [0:10]
 unset colorbox
 unset border
 unset key
@@ -47,7 +47,7 @@ if (file_exists(inputfile)) {
     eval(set_margins(3))
     set colorbox
     unset cbtics
-    set cbtics 0, 20
+    set cbtics 0, 10
     set cblabel "Firing rate (Hz)"
     plot inputfile3 using 2:3:4 with image title ""
 
