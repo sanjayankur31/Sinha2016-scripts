@@ -11,7 +11,7 @@ get_lmargin(col) = (left_margin + (col - 1) * (gap_size + ((right_margin - left_
 get_rmargin(col) = (left_margin + (col - 1) * gap_size + col * ((right_margin - left_margin)-(col_count - 1) * gap_size)/col_count)
 
 file_exists(file) = system("[ -f '".file."' ] && echo '1' || echo '0'") + 0
-set term epslatex color size 15cm, 10cm
+set term epslatex color size 24cm, 10cm
 set output "test.tex"
 
 # set xlabel "extent ({/Symbol m} m)"
@@ -37,12 +37,13 @@ unset key
 # set object 12 circle at o_x,o_y size r_lpz_c fc rgb "yellow" fs transparent solid 0.3 behind
 
 
-eval(init_margins(0.01, 1.00, 0.002, 2))
-set multiplot layout 1, 2
+eval(init_margins(0.01, 1.00, 0.002, 3))
+set multiplot layout 1, 3
 
 
 inputfile = inputtime
 inputfile2 = inputtime2
+inputfile3 = inputtime3
 
 if (file_exists(inputfile)) {
 
@@ -53,5 +54,9 @@ if (file_exists(inputfile)) {
     eval(set_margins(2))
     set title ""
     plot inputfile2 using 1:2:($3-$1):($4-$2) with vectors lw 1 nohead title "", inputfile2 using 1:2 with points pt 7 ps 1 lw 1 title "", inputfile2 using 3:4 with points pt 6 ps 2 lw 1 title ""
+
+    eval(set_margins(3))
+    set title ""
+    plot inputfile3 using 1:2:($3-$1):($4-$2) with vectors lw 1 nohead title "", inputfile3 using 1:2 with points pt 7 ps 1 lw 1 title "", inputfile3 using 3:4 with points pt 6 ps 2 lw 1 title ""
 
 }
