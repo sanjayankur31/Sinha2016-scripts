@@ -11,7 +11,7 @@ get_lmargin(col) = (left_margin + (col - 1) * (gap_size + ((right_margin - left_
 get_rmargin(col) = (left_margin + (col - 1) * gap_size + col * ((right_margin - left_margin)-(col_count - 1) * gap_size)/col_count)
 
 file_exists(file) = system("[ -f '".file."' ] && echo '1' || echo '0'") + 0
-set term epslatex color size 27cm, 12cm
+set term epslatex color size 27cm, 14cm
 set output "test.tex"
 
 unset xtics
@@ -19,6 +19,7 @@ unset ytics
 set size ratio -1
 set xrange [0:80]
 set yrange [0:100]
+set bmargin at screen 0.25
 
 eval(init_margins(0.01, 0.99, 0.002, 3))
 set multiplot layout 1, 3
