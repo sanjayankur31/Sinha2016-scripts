@@ -11,7 +11,7 @@ get_lmargin(col) = (left_margin + (col - 1) * (gap_size + ((right_margin - left_
 get_rmargin(col) = (left_margin + (col - 1) * gap_size + col * ((right_margin - left_margin)-(col_count - 1) * gap_size)/col_count)
 
 file_exists(file) = system("[ -f '".file."' ] && echo '1' || echo '0'") + 0
-set term epslatex color size 24cm, 10cm
+set term epslatex color size 27cm, 12cm
 set output "test.tex"
 
 unset xtics
@@ -35,16 +35,17 @@ inputfile3 = inputtime3.".gdf"
 if (file_exists(inputfile)) {
 
     eval(set_margins(1))
-    set title ""
+    set title "A"
     set view map
     plot inputfile using 2:3:4 with image title ""
 
     eval(set_margins(2))
-    set title ""
+    set title "B"
     set view map
     plot inputfile2 using 2:3:4 with image title ""
 
     eval(set_margins(3))
+    set title "C"
     set colorbox
     unset cbtics
     set cbtics 0, 10
