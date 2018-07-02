@@ -24,4 +24,4 @@ set label "C" at first 7300, 165
 set key inside samplen 1
 set ylabel "(nS)"
 set title ""
-plot "05-se-all-lpz_c_E.txt" using ($1/1000):($5*0.5) with lines lw 7 lc 6 title "E", "05-se-all-lpz_c_E.txt" using ($1/1000):($7*3) with lines lw 7 lc 7 title "I", "05-se-all-lpz_c_E.txt" using ($1/1000):(($5*0.5)-($7*3)) with lines lw 7 lc 2 title "Net";
+plot "05-se-all-lpz_c_E.txt" using ($1/1000):($5*0.5) with lines lw 10 lc 6 title "E", "05-se-all-lpz_c_E.txt" using ($1/1000):($7*3) with lines lw 10 lc 7 title "I", "05-se-all-lpz_c_E.txt" using ($1/1000):(($5*0.5)-($7*3)) with lines lw 10 lc 2 title "Net";
