@@ -30,8 +30,7 @@ from nestpp.loggerpp import get_module_logger
 from nestpp.spike_utils import (get_firing_rate_metrics,
                                 get_individual_firing_rate_snapshots,
                                 extract_spikes)
-from nestpp.file_utils import (var_combine_files_column_wise,
-                               get_info_from_file_series,
+from nestpp.file_utils import (get_info_from_file_series,
                                combine_files_row_wise)
 
 
@@ -213,137 +212,6 @@ class Postprocess:
 
         plot_using_gnuplot_binary(os.path.join(self.cfg['plots_dir'],
                                                'plot-cal-metrics.plt'))
-
-    def generate_conductance_graphs(self):
-        """Post process conductances and generate all graphs.
-
-        The conductance sets do not change, so this doesn't require so much
-        configuration.
-
-        :returns: True if all went well, else False
-
-        """
-        if "conductances" not in self.cfg['time_graphs']:
-            return True
-
-        self.lgr.info("Generating conductance graphs vs time")
-        # EE
-        conductances_EE = pandas.DataFrame()
-        conductances_EE = var_combine_files_column_wise(
-            "../", "01-synaptic-weights-EE-*.txt", '\t')
-        if not conductances_EE.empty:
-            conductances_mean_EE = pandas.concat(
-                [conductances_EE.mean(axis=1),
-                 conductances_EE.std(axis=1)],
-                axis=1)
-            conductances_mean_fn_EE = (
-                "01-synaptic-weights-EE-mean-all.txt"
-                )
-            conductances_mean_EE.to_csv(
-                conductances_mean_fn_EE, sep='\t',
-                header=None, line_terminator='\n')
-
-            conductances_totals_EE = conductances_EE.sum(axis=1)
-            conductances_total_fn_EE = (
-                "01-synaptic-weights-EE-total-all.txt"
-            )
-            conductances_totals_EE.to_csv(
-                conductances_total_fn_EE, sep='\t',
-                header=None)
-            self.lgr.info("Processed EE conductances..")
-        else:
-            self.lgr.warning("No dataframe for EE conductances. Skipping.")
-        # EI
-        conductances_EI = pandas.DataFrame()
-        conductances_EI = var_combine_files_column_wise(
-            "../", "01-synaptic-weights-EI-*.txt", '\t')
-        if not conductances_EI.empty:
-            conductances_mean_EI = pandas.concat(
-                [conductances_EI.mean(axis=1),
-                 conductances_EI.std(axis=1)],
-                axis=1)
-            conductances_mean_fn_EI = (
-                "01-synaptic-weights-EI-mean-all.txt"
-                )
-            conductances_mean_EI.to_csv(
-                conductances_mean_fn_EI, sep='\t',
-                header=None, line_terminator='\n')
-
-            conductances_totals_EI = conductances_EI.sum(axis=1)
-            conductances_total_fn_EI = (
-                "01-synaptic-weights-EI-total-all.txt"
-            )
-            conductances_totals_EI.to_csv(
-                conductances_total_fn_EI, sep='\t',
-                header=None)
-            self.lgr.info("Processed EI conductances..")
-        else:
-            self.lgr.warning("No dataframe for EI conductances. Skipping.")
-        # II
-        conductances_II = pandas.DataFrame()
-        conductances_II = var_combine_files_column_wise(
-            "../", "01-synaptic-weights-II-*.txt", '\t')
-        if not conductances_II.empty:
-            conductances_mean_II = pandas.concat(
-                [conductances_II.mean(axis=1),
-                 conductances_II.std(axis=1)],
-                axis=1)
-            conductances_mean_fn_II = (
-                "01-synaptic-weights-II-mean-all.txt"
-                )
-            conductances_mean_II.to_csv(
-                conductances_mean_fn_II, sep='\t',
-                header=None, line_terminator='\n')
-
-            conductances_totals_II = conductances_II.sum(axis=1)
-            conductances_total_fn_II = (
-                "01-synaptic-weights-II-total-all.txt"
-            )
-            conductances_totals_II.to_csv(
-                conductances_total_fn_II, sep='\t',
-                header=None)
-            self.lgr.info("Processed II conductances..")
-        else:
-            self.lgr.warning("No dataframe for II conductances. Skipping.")
-        # IE
-        conductances_IE = pandas.DataFrame()
-        conductances_IE = var_combine_files_column_wise(
-            "../", "01-synaptic-weights-IE-*.txt", '\t')
-        if not conductances_IE.empty:
-            conductances_mean_IE = pandas.concat(
-                [conductances_IE.mean(axis=1),
-                 conductances_IE.std(axis=1)],
-                axis=1)
-            conductances_mean_fn_IE = (
-                "01-synaptic-weights-IE-mean-all.txt"
-                )
-            conductances_mean_IE.to_csv(
-                conductances_mean_fn_IE, sep='\t',
-                header=None, line_terminator='\n')
-
-            conductances_totals_IE = conductances_IE.sum(axis=1)
-            conductances_total_fn_IE = (
-                "01-synaptic-weights-IE-total-all.txt"
-            )
-            conductances_totals_IE.to_csv(
-                conductances_total_fn_IE, sep='\t',
-                header=None)
-            self.lgr.info("Processed IE conductances..")
-        else:
-            self.lgr.warning("No dataframe for IE conductances. Skipping.")
-
-        if (
-                (not conductances_EE.empty) and
-                (not conductances_EI.empty) and
-                (not conductances_IE.empty) and
-                (not conductances_II.empty)
-        ):
-            plot_using_gnuplot_binary(
-                os.path.join(self.cfg['plots_dir'],
-                             'plot-conductance-metrics.plt'))
-            self.lgr.info("Conductance graphs plotted..")
-        else:
-            self.lgr.warning("Conductance graphs not generated.")
 
     def generate_firing_rate_graphs(self):
         """Generate firing rate graphs."""
