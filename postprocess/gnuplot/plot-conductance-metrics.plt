@@ -1,58 +1,120 @@
 load '/home/asinha/Documents/02_Code/00_repos/00_mine/gnuplot-palettes/paired.pal'
 set term pngcairo font "OpenSans, 28" size 1920, 1080
 set xlabel "Time in seconds"
-set ylabel "Synaptic weight (nS)"
+set ylabel "Conductance (nS)"
 set yrange[0.:]
 set lmargin at screen 0.15
 
-set output "EE-mean-conductances.png"
-set title "Mean synaptic weights EE"
-plot "01-synaptic-weights-EE-mean-all.txt" using ($1/1000):2:($2-$3):($2+$3) with errorbars lw 5 title "SD", "01-synaptic-weights-EE-mean-all.txt" using ($1/1000):2 with linespoints lw 5 title "Mean"
+set output "08-total-conductances-E-to-p_lpz_E.png"
+set title "Incoming E total conductances to P LPZ E"
+plot  "08-syn_conns-lpz_c_E-to-p_lpz_E-EE.txt" using 1:3 with linespoints lw 5 lc 1 title "from lpz c", "08-syn_conns-lpz_b_E-to-p_lpz_E-EE.txt" using 1:3 with linespoints lw 5 lc 2 title "from lpz b",  "08-syn_conns-p_lpz_E-to-p_lpz_E-EE.txt" using 1:3 with linespoints lw 5 lc 3 title "from peri lpz", "08-syn_conns-o_E-to-p_lpz_E-EE.txt" using 1:3 with linespoints lw 5 lc 4 title "from non lpz";
 
-set output "EI-mean-conductances.png"
-set title "Mean synaptic weights EI"
-plot "01-synaptic-weights-EI-mean-all.txt" using ($1/1000):2:($2-$3):($2+$3) with errorbars lw 5 title "SD", "01-synaptic-weights-EI-mean-all.txt" using ($1/1000):2 with linespoints lw 5 title "Mean"
+set output "08-total-conductances-E-to-o_E.png"
+set title "Incoming E total conductances to non LPZ E"
+plot  "08-syn_conns-lpz_c_E-to-o_E-EE.txt" using 1:3 with linespoints lw 5 lc 1 title "from lpz c", "08-syn_conns-lpz_b_E-to-o_E-EE.txt" using 1:3 with linespoints lw 5 lc 2 title "from lpz b",  "08-syn_conns-p_lpz_E-to-o_E-EE.txt" using 1:3 with linespoints lw 5 lc 3 title "from peri lpz", "08-syn_conns-o_E-to-o_E-EE.txt" using 1:3 with linespoints lw 5 lc 4 title "from non lpz";
 
-# show threshold value
-I_threshold=system("grep 'I_threshold' 99-simulation_params.txt | sed 's/^.*: //'")
-xmax=system("tail -1 02-calcium-lpz_c_E-all.txt | awk '{print $1}'")
-set arrow from 0,I_threshold to xmax/1000,I_threshold nohead lw 1
+set output "08-total-conductances-I-to-lpz_c_E.png"
+set title "Incoming I total conductances to LPZ C E"
+plot  "08-syn_conns-lpz_c_I-to-lpz_c_E-IE.txt" using 1:3 with linespoints lw 5 lc 1 title "from lpz c", "08-syn_conns-lpz_b_I-to-lpz_c_E-IE.txt" using 1:3 with linespoints lw 5 lc 2 title "from lpz b",  "08-syn_conns-p_lpz_I-to-lpz_c_E-IE.txt" using 1:3 with linespoints lw 5 lc 3 title "from peri lpz", "08-syn_conns-o_I-to-lpz_c_E-IE.txt" using 1:3 with linespoints lw 5 lc 4 title "from non lpz";
 
-set output "II-mean-conductances.png"
-set title "Mean synaptic weights II"
-plot "01-synaptic-weights-II-mean-all.txt" using ($1/1000):(-1*$2):(-1*($2-$3)):(-1*($2+$3)) with errorbars lw 5 title "SD", "01-synaptic-weights-II-mean-all.txt" using ($1/1000):(-1*$2) with linespoints lw 5 title "Mean"
+set output "08-total-conductances-I-to-lpz_b_E.png"
+set title "Incoming I total conductances to LPZ B E"
+plot  "08-syn_conns-lpz_c_I-to-lpz_b_E-IE.txt" using 1:3 with linespoints lw 5 lc 1 title "from lpz c", "08-syn_conns-lpz_b_I-to-lpz_b_E-IE.txt" using 1:3 with linespoints lw 5 lc 2 title "from lpz b",  "08-syn_conns-p_lpz_I-to-lpz_b_E-IE.txt" using 1:3 with linespoints lw 5 lc 3 title "from peri lpz", "08-syn_conns-o_I-to-lpz_b_E-IE.txt" using 1:3 with linespoints lw 5 lc 4 title "from non lpz";
 
-set output "IE-mean-conductances.png"
-set title "Mean synaptic weights IE"
-plot "01-synaptic-weights-IE-mean-all.txt" using ($1/1000):(-1*$2):(-1*($2-$3)):(-1*($2+$3)) with errorbars lw 5 title "SD", "01-synaptic-weights-IE-mean-all.txt" using ($1/1000):(-1*$2) with linespoints lw 5 title "Mean"
+set output "08-total-conductances-I-to-p_lpz_E.png"
+set title "Incoming I total conductances to P LPZ E"
+plot  "08-syn_conns-lpz_c_I-to-p_lpz_E-IE.txt" using 1:3 with linespoints lw 5 lc 1 title "from lpz c", "08-syn_conns-lpz_b_I-to-p_lpz_E-IE.txt" using 1:3 with linespoints lw 5 lc 2 title "from lpz b",  "08-syn_conns-p_lpz_I-to-p_lpz_E-IE.txt" using 1:3 with linespoints lw 5 lc 3 title "from peri lpz", "08-syn_conns-o_I-to-p_lpz_E-IE.txt" using 1:3 with linespoints lw 5 lc 4 title "from non lpz";
 
-set output "all-mean-conductances.png"
-set title "All mean conductances"
-plot "01-synaptic-weights-EE-mean-all.txt" using ($1/1000):2 with linespoints lw 5 title "EE", "01-synaptic-weights-EI-mean-all.txt" using ($1/1000):2 with linespoints lw 5 title "EI", "01-synaptic-weights-II-mean-all.txt" using ($1/1000):(-1*$2) with linespoints lw 5 title "II", "01-synaptic-weights-IE-mean-all.txt" using ($1/1000):(-1*$2) with linespoints lw 5 title "IE";
+set output "08-total-conductances-I-to-o_E.png"
+set title "Incoming I total conductances to non LPZ E"
+plot  "08-syn_conns-lpz_c_I-to-o_E-IE.txt" using 1:3 with linespoints lw 5 lc 1 title "from lpz c", "08-syn_conns-lpz_b_I-to-o_E-IE.txt" using 1:3 with linespoints lw 5 lc 2 title "from lpz b",  "08-syn_conns-p_lpz_I-to-o_E-IE.txt" using 1:3 with linespoints lw 5 lc 3 title "from peri lpz", "08-syn_conns-o_I-to-o_E-IE.txt" using 1:3 with linespoints lw 5 lc 4 title "from non lpz";
 
-set output "all-mean-std-conductances.png"
-set title "All mean conductances with STD"
-plot "01-synaptic-weights-EE-mean-all.txt" using ($1/1000):2 with linespoints lw 5 title "EE", "01-synaptic-weights-EI-mean-all.txt" using ($1/1000):2 with linespoints lw 5 title "EI", "01-synaptic-weights-II-mean-all.txt" using ($1/1000):(-1*$2) with linespoints lw 5 title "II", "01-synaptic-weights-IE-mean-all.txt" using ($1/1000):(-1*$2) with linespoints lw 5 title "IE", "01-synaptic-weights-EE-mean-all.txt" using ($1/1000):2:($2-$3):($2+$3) with errorbars lw 5 title "", "01-synaptic-weights-EI-mean-all.txt" using ($1/1000):2:($2-$3):($2+$3) with errorbars lw 5 title "","01-synaptic-weights-II-mean-all.txt" using ($1/1000):(-1*$2):(-1*($2-$3)):(-1*($2+$3)) with errorbars lw 5 title "",  "01-synaptic-weights-IE-mean-all.txt" using ($1/1000):(-1*$2):(-1*($2-$3)):(-1*($2+$3)) with errorbars lw 5 title ""
+# incoming to I neurons
+set output "08-total-conductances-E-to-lpz_c_I.png"
+set title "Incoming E total conductances to LPZ C I"
+plot  "08-syn_conns-lpz_c_E-to-lpz_c_I-EI.txt" using 1:3 with linespoints lw 5 lc 1 title "from lpz c", "08-syn_conns-lpz_b_E-to-lpz_c_I-EI.txt" using 1:3 with linespoints lw 5 lc 2 title "from lpz b",  "08-syn_conns-p_lpz_E-to-lpz_c_I-EI.txt" using 1:3 with linespoints lw 5 lc 3 title "from peri lpz", "08-syn_conns-o_E-to-lpz_c_I-EI.txt" using 1:3 with linespoints lw 5 lc 4 title "from non lpz";
 
-unset arrow
+set output "08-total-conductances-E-to-lpz_b_I.png"
+set title "Incoming E total conductances to LPZ B I"
+plot  "08-syn_conns-lpz_c_E-to-lpz_b_I-EI.txt" using 1:3 with linespoints lw 5 lc 1 title "from lpz c", "08-syn_conns-lpz_b_E-to-lpz_b_I-EI.txt" using 1:3 with linespoints lw 5 lc 2 title "from lpz b",  "08-syn_conns-p_lpz_E-to-lpz_b_I-EI.txt" using 1:3 with linespoints lw 5 lc 3 title "from peri lpz", "08-syn_conns-o_E-to-lpz_b_I-EI.txt" using 1:3 with linespoints lw 5 lc 4 title "from non lpz";
 
-set ylabel "Synaptic weight (1e3 nS)"
-set output "EE-total-conductances.png"
-set title "Total synaptic weights EE"
-plot "01-synaptic-weights-EE-total-all.txt" using ($1/1000):($2/1000) with linespoints lw 5 title "Total"
+set output "08-total-conductances-E-to-p_lpz_I.png"
+set title "Incoming E total conductances to P LPZ I"
+plot  "08-syn_conns-lpz_c_E-to-p_lpz_I-EI.txt" using 1:3 with linespoints lw 5 lc 1 title "from lpz c", "08-syn_conns-lpz_b_E-to-p_lpz_I-EI.txt" using 1:3 with linespoints lw 5 lc 2 title "from lpz b",  "08-syn_conns-p_lpz_E-to-p_lpz_I-EI.txt" using 1:3 with linespoints lw 5 lc 3 title "from peri lpz", "08-syn_conns-o_E-to-p_lpz_I-EI.txt" using 1:3 with linespoints lw 5 lc 4 title "from non lpz";
 
-set output "EI-total-conductances.png"
-set title "Total synaptic weights EI"
-plot "01-synaptic-weights-EI-total-all.txt" using ($1/1000):($2/1000) with linespoints lw 5 title "Total"
+set output "08-total-conductances-E-to-o_I.png"
+set title "Incoming E total conductances to non LPZ I"
+plot  "08-syn_conns-lpz_c_E-to-o_I-EI.txt" using 1:3 with linespoints lw 5 lc 1 title "from lpz c", "08-syn_conns-lpz_b_E-to-o_I-EI.txt" using 1:3 with linespoints lw 5 lc 2 title "from lpz b",  "08-syn_conns-p_lpz_E-to-o_I-EI.txt" using 1:3 with linespoints lw 5 lc 3 title "from peri lpz", "08-syn_conns-o_E-to-o_I-EI.txt" using 1:3 with linespoints lw 5 lc 4 title "from non lpz";
 
-set output "II-total-conductances.png"
-set title "Total synaptic weights II"
-plot "01-synaptic-weights-II-total-all.txt" using ($1/1000):(-1*$2/1000) with linespoints lw 5 title "Total"
+set output "08-total-conductances-I-to-lpz_c_I.png"
+set title "Incoming I total conductances to LPZ C I"
+plot  "08-syn_conns-lpz_c_I-to-lpz_c_I-II.txt" using 1:3 with linespoints lw 5 lc 1 title "from lpz c", "08-syn_conns-lpz_b_I-to-lpz_c_I-II.txt" using 1:3 with linespoints lw 5 lc 2 title "from lpz b",  "08-syn_conns-p_lpz_I-to-lpz_c_I-II.txt" using 1:3 with linespoints lw 5 lc 3 title "from peri lpz", "08-syn_conns-o_I-to-lpz_c_I-II.txt" using 1:3 with linespoints lw 5 lc 4 title "from non lpz";
 
-set output "IE-total-conductances.png"
-set title "Total synaptic weights IE"
-plot "01-synaptic-weights-IE-total-all.txt" using ($1/1000):(-1*$2/1000) with linespoints lw 5 title "Total"
+set output "08-total-conductances-I-to-lpz_b_I.png"
+set title "Incoming I total conductances to LPZ B I"
+plot  "08-syn_conns-lpz_c_I-to-lpz_b_I-II.txt" using 1:3 with linespoints lw 5 lc 1 title "from lpz c", "08-syn_conns-lpz_b_I-to-lpz_b_I-II.txt" using 1:3 with linespoints lw 5 lc 2 title "from lpz b",  "08-syn_conns-p_lpz_I-to-lpz_b_I-II.txt" using 1:3 with linespoints lw 5 lc 3 title "from peri lpz", "08-syn_conns-o_I-to-lpz_b_I-II.txt" using 1:3 with linespoints lw 5 lc 4 title "from non lpz";
 
-set output "all-total-conductances.png"
-set title "All total conductances"
-plot "01-synaptic-weights-EE-total-all.txt" using ($1/1000):($2/1000) with linespoints lw 5 title "EE", "01-synaptic-weights-EI-total-all.txt" using ($1/1000):($2/1000) with linespoints lw 5 title "EI", "01-synaptic-weights-II-total-all.txt" using ($1/1000):(-1*$2/1000) with linespoints lw 5 title "II", "01-synaptic-weights-IE-total-all.txt" using ($1/1000):(-1*$2/1000) with linespoints lw 5 title "IE"
+set output "08-total-conductances-I-to-p_lpz_I.png"
+set title "Incoming I total conductances to P LPZ I"
+plot  "08-syn_conns-lpz_c_I-to-p_lpz_I-II.txt" using 1:3 with linespoints lw 5 lc 1 title "from lpz c", "08-syn_conns-lpz_b_I-to-p_lpz_I-II.txt" using 1:3 with linespoints lw 5 lc 2 title "from lpz b",  "08-syn_conns-p_lpz_I-to-p_lpz_I-II.txt" using 1:3 with linespoints lw 5 lc 3 title "from peri lpz", "08-syn_conns-o_I-to-p_lpz_I-II.txt" using 1:3 with linespoints lw 5 lc 4 title "from non lpz";
+
+set output "08-total-conductances-I-to-o_I.png"
+set title "Incoming I total conductances to non LPZ I"
+plot  "08-syn_conns-lpz_c_I-to-o_I-II.txt" using 1:3 with linespoints lw 5 lc 1 title "from lpz c", "08-syn_conns-lpz_b_I-to-o_I-II.txt" using 1:3 with linespoints lw 5 lc 2 title "from lpz b",  "08-syn_conns-p_lpz_I-to-o_I-II.txt" using 1:3 with linespoints lw 5 lc 3 title "from peri lpz", "08-syn_conns-o_I-to-o_I-II.txt" using 1:3 with linespoints lw 5 lc 4 title "from non lpz";
+
+set output "08-mean-conductances-E-to-p_lpz_E.png"
+set title "Incoming E mean conductances to P LPZ E"
+plot  "08-syn_conns-lpz_c_E-to-p_lpz_E-EE.txt" using 1:4 with linespoints lw 5 lc 1 title "from lpz c", "08-syn_conns-lpz_b_E-to-p_lpz_E-EE.txt" using 1:4 with linespoints lw 5 lc 2 title "from lpz b",  "08-syn_conns-p_lpz_E-to-p_lpz_E-EE.txt" using 1:4 with linespoints lw 5 lc 3 title "from peri lpz", "08-syn_conns-o_E-to-p_lpz_E-EE.txt" using 1:4 with linespoints lw 5 lc 4 title "from non lpz";
+
+set output "08-mean-conductances-E-to-o_E.png"
+set title "Incoming E mean conductances to non LPZ E"
+plot  "08-syn_conns-lpz_c_E-to-o_E-EE.txt" using 1:4 with linespoints lw 5 lc 1 title "from lpz c", "08-syn_conns-lpz_b_E-to-o_E-EE.txt" using 1:4 with linespoints lw 5 lc 2 title "from lpz b",  "08-syn_conns-p_lpz_E-to-o_E-EE.txt" using 1:4 with linespoints lw 5 lc 3 title "from peri lpz", "08-syn_conns-o_E-to-o_E-EE.txt" using 1:4 with linespoints lw 5 lc 4 title "from non lpz";
+
+set output "08-mean-conductances-I-to-lpz_c_E.png"
+set title "Incoming I mean conductances to LPZ C E"
+plot  "08-syn_conns-lpz_c_I-to-lpz_c_E-IE.txt" using 1:4 with linespoints lw 5 lc 1 title "from lpz c", "08-syn_conns-lpz_b_I-to-lpz_c_E-IE.txt" using 1:4 with linespoints lw 5 lc 2 title "from lpz b",  "08-syn_conns-p_lpz_I-to-lpz_c_E-IE.txt" using 1:4 with linespoints lw 5 lc 3 title "from peri lpz", "08-syn_conns-o_I-to-lpz_c_E-IE.txt" using 1:4 with linespoints lw 5 lc 4 title "from non lpz";
+
+set output "08-mean-conductances-I-to-lpz_b_E.png"
+set title "Incoming I mean conductances to LPZ B E"
+plot  "08-syn_conns-lpz_c_I-to-lpz_b_E-IE.txt" using 1:4 with linespoints lw 5 lc 1 title "from lpz c", "08-syn_conns-lpz_b_I-to-lpz_b_E-IE.txt" using 1:4 with linespoints lw 5 lc 2 title "from lpz b",  "08-syn_conns-p_lpz_I-to-lpz_b_E-IE.txt" using 1:4 with linespoints lw 5 lc 3 title "from peri lpz", "08-syn_conns-o_I-to-lpz_b_E-IE.txt" using 1:4 with linespoints lw 5 lc 4 title "from non lpz";
+
+set output "08-mean-conductances-I-to-p_lpz_E.png"
+set title "Incoming I mean conductances to P LPZ E"
+plot  "08-syn_conns-lpz_c_I-to-p_lpz_E-IE.txt" using 1:4 with linespoints lw 5 lc 1 title "from lpz c", "08-syn_conns-lpz_b_I-to-p_lpz_E-IE.txt" using 1:4 with linespoints lw 5 lc 2 title "from lpz b",  "08-syn_conns-p_lpz_I-to-p_lpz_E-IE.txt" using 1:4 with linespoints lw 5 lc 3 title "from peri lpz", "08-syn_conns-o_I-to-p_lpz_E-IE.txt" using 1:4 with linespoints lw 5 lc 4 title "from non lpz";
+
+set output "08-mean-conductances-I-to-o_E.png"
+set title "Incoming I mean conductances to non LPZ E"
+plot  "08-syn_conns-lpz_c_I-to-o_E-IE.txt" using 1:4 with linespoints lw 5 lc 1 title "from lpz c", "08-syn_conns-lpz_b_I-to-o_E-IE.txt" using 1:4 with linespoints lw 5 lc 2 title "from lpz b",  "08-syn_conns-p_lpz_I-to-o_E-IE.txt" using 1:4 with linespoints lw 5 lc 3 title "from peri lpz", "08-syn_conns-o_I-to-o_E-IE.txt" using 1:4 with linespoints lw 5 lc 4 title "from non lpz";
+
+# incoming to I neurons
+set output "08-mean-conductances-E-to-lpz_c_I.png"
+set title "Incoming E mean conductances to LPZ C I"
+plot  "08-syn_conns-lpz_c_E-to-lpz_c_I-EI.txt" using 1:4 with linespoints lw 5 lc 1 title "from lpz c", "08-syn_conns-lpz_b_E-to-lpz_c_I-EI.txt" using 1:4 with linespoints lw 5 lc 2 title "from lpz b",  "08-syn_conns-p_lpz_E-to-lpz_c_I-EI.txt" using 1:4 with linespoints lw 5 lc 3 title "from peri lpz", "08-syn_conns-o_E-to-lpz_c_I-EI.txt" using 1:4 with linespoints lw 5 lc 4 title "from non lpz";
+
+set output "08-mean-conductances-E-to-lpz_b_I.png"
+set title "Incoming E mean conductances to LPZ B I"
+plot  "08-syn_conns-lpz_c_E-to-lpz_b_I-EI.txt" using 1:4 with linespoints lw 5 lc 1 title "from lpz c", "08-syn_conns-lpz_b_E-to-lpz_b_I-EI.txt" using 1:4 with linespoints lw 5 lc 2 title "from lpz b",  "08-syn_conns-p_lpz_E-to-lpz_b_I-EI.txt" using 1:4 with linespoints lw 5 lc 3 title "from peri lpz", "08-syn_conns-o_E-to-lpz_b_I-EI.txt" using 1:4 with linespoints lw 5 lc 4 title "from non lpz";
+
+set output "08-mean-conductances-E-to-p_lpz_I.png"
+set title "Incoming E mean conductances to P LPZ I"
+plot  "08-syn_conns-lpz_c_E-to-p_lpz_I-EI.txt" using 1:4 with linespoints lw 5 lc 1 title "from lpz c", "08-syn_conns-lpz_b_E-to-p_lpz_I-EI.txt" using 1:4 with linespoints lw 5 lc 2 title "from lpz b",  "08-syn_conns-p_lpz_E-to-p_lpz_I-EI.txt" using 1:4 with linespoints lw 5 lc 3 title "from peri lpz", "08-syn_conns-o_E-to-p_lpz_I-EI.txt" using 1:4 with linespoints lw 5 lc 4 title "from non lpz";
+
+set output "08-mean-conductances-E-to-o_I.png"
+set title "Incoming E mean conductances to non LPZ I"
+plot  "08-syn_conns-lpz_c_E-to-o_I-EI.txt" using 1:4 with linespoints lw 5 lc 1 title "from lpz c", "08-syn_conns-lpz_b_E-to-o_I-EI.txt" using 1:4 with linespoints lw 5 lc 2 title "from lpz b",  "08-syn_conns-p_lpz_E-to-o_I-EI.txt" using 1:4 with linespoints lw 5 lc 3 title "from peri lpz", "08-syn_conns-o_E-to-o_I-EI.txt" using 1:4 with linespoints lw 5 lc 4 title "from non lpz";
+
+set output "08-mean-conductances-I-to-lpz_c_I.png"
+set title "Incoming I mean conductances to LPZ C I"
+plot  "08-syn_conns-lpz_c_I-to-lpz_c_I-II.txt" using 1:4 with linespoints lw 5 lc 1 title "from lpz c", "08-syn_conns-lpz_b_I-to-lpz_c_I-II.txt" using 1:4 with linespoints lw 5 lc 2 title "from lpz b",  "08-syn_conns-p_lpz_I-to-lpz_c_I-II.txt" using 1:4 with linespoints lw 5 lc 3 title "from peri lpz", "08-syn_conns-o_I-to-lpz_c_I-II.txt" using 1:4 with linespoints lw 5 lc 4 title "from non lpz";
+
+set output "08-mean-conductances-I-to-lpz_b_I.png"
+set title "Incoming I mean conductances to LPZ B I"
+plot  "08-syn_conns-lpz_c_I-to-lpz_b_I-II.txt" using 1:4 with linespoints lw 5 lc 1 title "from lpz c", "08-syn_conns-lpz_b_I-to-lpz_b_I-II.txt" using 1:4 with linespoints lw 5 lc 2 title "from lpz b",  "08-syn_conns-p_lpz_I-to-lpz_b_I-II.txt" using 1:4 with linespoints lw 5 lc 3 title "from peri lpz", "08-syn_conns-o_I-to-lpz_b_I-II.txt" using 1:4 with linespoints lw 5 lc 4 title "from non lpz";
+
+set output "08-mean-conductances-I-to-p_lpz_I.png"
+set title "Incoming I mean conductances to P LPZ I"
+plot  "08-syn_conns-lpz_c_I-to-p_lpz_I-II.txt" using 1:4 with linespoints lw 5 lc 1 title "from lpz c", "08-syn_conns-lpz_b_I-to-p_lpz_I-II.txt" using 1:4 with linespoints lw 5 lc 2 title "from lpz b",  "08-syn_conns-p_lpz_I-to-p_lpz_I-II.txt" using 1:4 with linespoints lw 5 lc 3 title "from peri lpz", "08-syn_conns-o_I-to-p_lpz_I-II.txt" using 1:4 with linespoints lw 5 lc 4 title "from non lpz";
+
+set output "08-mean-conductances-I-to-o_I.png"
+set title "Incoming I mean conductances to non LPZ I"
+plot  "08-syn_conns-lpz_c_I-to-o_I-II.txt" using 1:4 with linespoints lw 5 lc 1 title "from lpz c", "08-syn_conns-lpz_b_I-to-o_I-II.txt" using 1:4 with linespoints lw 5 lc 2 title "from lpz b",  "08-syn_conns-p_lpz_I-to-o_I-II.txt" using 1:4 with linespoints lw 5 lc 3 title "from peri lpz", "08-syn_conns-o_I-to-o_I-II.txt" using 1:4 with linespoints lw 5 lc 4 title "from non lpz";
