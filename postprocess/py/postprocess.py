@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Postprocess the spike raster files to generate plots.
+Postprocess output files from the simulation.
 
 File: postprocess.py
 
