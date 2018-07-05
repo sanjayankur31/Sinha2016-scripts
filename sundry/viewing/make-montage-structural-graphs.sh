@@ -1,12 +1,14 @@
 #!/bin/bash
 # Generate a montage of images so that they can be all seen at once
 # This file includes graphs to do with structural plasticity
+# This version skips the conductance graphs that may not be generated when the
+# simulation did not complete.
 
 PREFIX=""
 
 usage()
 {
-    echo "make-montage-structural-graphs.sh -y <year prefix>"
+    echo "make-montage-structural-graphs-no-conductance.sh -y <year prefix>"
     echo "Note, prefix has a trailing dash in it so that it can be left empty if required."
 }
 
@@ -18,10 +20,6 @@ main ()
         "$PREFIX"growth-curves-I.png \
         "$PREFIX"growth-curves-elements-E.png \
         "$PREFIX"growth-curves-elements-I.png \
-        "$PREFIX"all-total-conductances.png \
-        "$PREFIX"all-mean-conductances.png \
-        "$PREFIX"all-total-conductances.png \
-        "$PREFIX"all-mean-conductances.png \
         "$PREFIX"02-calcium-lpz_c_E.png \
         "$PREFIX"02-calcium-lpz_b_E.png \
         "$PREFIX"02-calcium-p_lpz_E.png \
@@ -30,17 +28,13 @@ main ()
         "$PREFIX"05-se-all-lpz_b_E.png \
         "$PREFIX"05-se-all-p_lpz_E.png \
         "$PREFIX"05-se-all-o_E.png \
-        -tile 4x4 -geometry +2+2  "$PREFIX"structural-plasticity-montage-E.png
+        -tile 4x3 -geometry +2+2  "$PREFIX"structural-plasticity-montage-E.png
 
     montage \
         "$PREFIX"growth-curves-E.png \
         "$PREFIX"growth-curves-I.png \
         "$PREFIX"growth-curves-elements-E.png \
         "$PREFIX"growth-curves-elements-I.png \
-        "$PREFIX"all-total-conductances.png \
-        "$PREFIX"all-mean-conductances.png \
-        "$PREFIX"all-total-conductances.png \
-        "$PREFIX"all-mean-conductances.png \
         "$PREFIX"02-calcium-lpz_c_I.png \
         "$PREFIX"02-calcium-lpz_b_I.png \
         "$PREFIX"02-calcium-p_lpz_I.png \
@@ -49,7 +43,7 @@ main ()
         "$PREFIX"05-se-all-lpz_b_I.png \
         "$PREFIX"05-se-all-p_lpz_I.png \
         "$PREFIX"05-se-all-o_I.png \
-        -tile 4x4 -geometry +2+2  "$PREFIX"structural-plasticity-montage-I.png
+        -tile 4x3 -geometry +2+2  "$PREFIX"structural-plasticity-montage-I.png
 }
 
 
