@@ -684,7 +684,7 @@ class Postprocess:
                     newdict = {}
                     newdict['src'] = src
                     newdict['dest'] = dest
-                    newdict['num'] = 0
+                    newdict['weights'] = []
                     newdict['o_fn'] = ("08-syn_conns-{}-{}.txt".format(
                             synapses_name, synapse_set))
                     newdict['o_fh'] = open(newdict['o_fn'], 'w')
@@ -742,7 +742,7 @@ class Postprocess:
 
                 # reset counts
                 for key, value in synapse_set_regions.items():
-                    value['num'] = 0
+                    value['weights'] = []
 
                 # for top views and other snapshots, we check if this is on our
                 # list of times
@@ -767,7 +767,7 @@ class Postprocess:
                     # see what regions the connection is between
                     for key, value in synapse_set_regions.items():
                         if (row[0], row[1]) in value['conns']:
-                            value['num'] += 1
+                            value['weights'].append(row[2])
 
                     # for the top view snapshots, check if the neuron we've
                     # picked to plot is a source or a destination
@@ -957,9 +957,14 @@ class Postprocess:
 
                 # print synapse counts for different regions
                 for key, value in synapse_set_regions.items():
-                    print("{}\t{}".format(float(atime)/1000.,
-                                          value['num']),
-                          file=value['o_fh'])
+                    print(
+                        "{}\t{}\t{}\t{}\t{}".format
+                        (
+                            float(atime)/1000., len(value['weights']),
+                            numpy.sum(value['weights']),
+                            numpy.mean(value['weights']),
+                            numpy.std(value['weights'])),
+                        file=value['o_fh'])
 
             # close file handlers for each region file for this synapse type:
             for key, value in synapse_set_regions.items():
