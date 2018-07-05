@@ -881,7 +881,6 @@ class Postprocess:
         processes.append(Process(target=self.generate_raster_graphs))
         processes.append(
             Process(target=self.generate_firing_rate_grid_snapshots))
-        processes.append(Process(target=self.generate_conductance_graphs))
         processes.append(Process(target=self.generate_calcium_graphs))
         processes.append(
             Process(target=self.generate_total_synapse_change_graphs))
