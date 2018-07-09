@@ -865,10 +865,16 @@ class Postprocess:
             for dest, fh in syn_con_hist_data_fhs.items():
                 fh.close()
 
+            for dest, fh in conductance_hist_data_fhs.items():
+                fh.close()
+
             self.lgr.info(
                 "Processed syn conns for {} neurons..".format(
                     synapse_set))
 
+        # Files must be closed before calling the plotters, because closing the
+        # files flushes the streams. Otherwise, the files may be empty and
+        # gnuplot will fail.
         plot_using_gnuplot_binary(
             os.path.join(self.cfg['plots_dir'], 'plot-regional-synapses.plt'))
 
