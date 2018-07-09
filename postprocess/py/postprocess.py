@@ -591,7 +591,7 @@ class Postprocess:
                                 aregion, synapse_set)
                         )
                         fh1 = open(fn1, 'w')
-                        conductance_hist_data_fhs[aregion] = fh
+                        conductance_hist_data_fhs[aregion] = fh1
                         # here onwards, we can iterate over the keys of this
                         # dict to get the destination regions
 
