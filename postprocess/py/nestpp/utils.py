@@ -35,8 +35,6 @@ def get_config(taskfile="config.ini"):
     # because its easier to consolidate raster files using sort
     data_dir = p['default']['data_dir']
 
-    sp_enabled_at = float(p['default']['sp_enabled_at'])
-
     snapshots = {}
     snapshots['firing_rate_histograms'] = [
         float(s) for s in p['snapshots']['firing_rate_histograms'].split()]
@@ -66,7 +64,6 @@ def get_config(taskfile="config.ini"):
     config['home'] = postprocess_home
     config['plots_dir'] = os.path.join(postprocess_home, plots_dir)
     config['datadir'] = data_dir
-    config['sp_enabled_at'] = sp_enabled_at
     config['snapshots'] = snapshots
     config['prefixes'] = prefixes
 
