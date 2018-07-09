@@ -26,7 +26,7 @@ class TestUtils:
         assert (bool(config) is not False)
 
         correct_graph_list = ['firing_rates',
-                              'conductances', 'syn_elms',
+                              'syn_elms',
                               'syn_turnover',
                               'calciums', 'synapses']
 

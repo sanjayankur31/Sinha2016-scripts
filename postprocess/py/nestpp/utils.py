@@ -56,7 +56,6 @@ def get_config(taskfile="config.ini"):
     # prefixes
     prefixes = {}
     prefixes['spikes'] = p['prefixes']['spikes']
-    prefixes['conductances'] = p['prefixes']['conductances']
     prefixes['calcium'] = p['prefixes']['calcium']
     prefixes['syndel'] = p['prefixes']['syndel']
     prefixes['synnew'] = p['prefixes']['synnew']
