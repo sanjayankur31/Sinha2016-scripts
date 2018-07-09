@@ -32,6 +32,7 @@ set boxwidth 0.6 relative
 # Left reverse is for the placement of the text for each entry
 set key bmargin center horizontal Left reverse noenhanced autotitle columnhead nobox height 1.25 maxcols 3
 
+## Note that the conductances must be absolute values in the files already. We cannot convert them here.
 ## LPZ C
 set output "081-conductance-rowstacked-histograms-I-to-lpz_c_I.png"
 set title "II"

@@ -644,7 +644,7 @@ class Postprocess:
                     # see what regions the connection is between
                     for key, value in synapse_set_regions.items():
                         if (row[0], row[1]) in value['conns']:
-                            value['weights'].append(row[2])
+                            value['weights'].append(abs(row[2]))
 
                     # for the top view snapshots, check if the neuron we've
                     # picked to plot is a source or a destination
