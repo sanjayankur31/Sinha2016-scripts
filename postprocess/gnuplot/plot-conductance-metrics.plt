@@ -3,6 +3,7 @@ set term pngcairo font "OpenSans, 28" size 1920, 1080
 set xlabel "Time in seconds"
 set ylabel "Conductance (nS)"
 set lmargin at screen 0.15
+set yrange [0:]
 
 # Total E to E
 set output "08-total-conductances-E-to-lpz_c_E.png"
