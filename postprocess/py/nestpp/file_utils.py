@@ -206,7 +206,8 @@ def var_combine_files_column_wise(directory, shell_glob, separator):
     return combined_dataframe
 
 
-def sum_columns_in_multiple_files(directory, shell_glob, separator):
+def sum_columns_in_multiple_files(directory, shell_glob, separator,
+                                  header=None):
     """Sums up the columns in different rank files.
 
     If the input files are each of the form:
@@ -235,7 +236,7 @@ def sum_columns_in_multiple_files(directory, shell_glob, separator):
                                         skipinitialspace=True,
                                         skip_blank_lines=True, dtype=float,
                                         warn_bad_lines=True,
-                                        lineterminator='\n', header=None,
+                                        lineterminator='\n', header=header,
                                         index_col=0, error_bad_lines=False)
         except pandas.errors.EmptyDataError as e:
             lgr.error("File empty: {}. Moving on".format(fn))
