@@ -250,6 +250,50 @@ def sum_columns_in_multiple_files(directory, shell_glob, separator,
     return summed_df
 
 
+def subtract_columns_in_multiple_files(directory, shell_glob, separator,
+                                       header=None):
+    """Subtracts up the columns in different rank files.
+
+    If the input files are each of the form:
+    time    info1   info2   info3   info4..
+
+    This will return a dataframe:
+    time    differenceoffiles(info1)   differenceoffiles(info2)...
+
+
+    :directory: the directory to act in
+    :shell_glob: the shell_glob of the various files
+    :separator: field separator - usually ',' or '\t'
+    :returns: subtracted dataframe or empty dataframe if files weren't found
+
+    """
+    subtracted_df = pandas.DataFrame()
+    file_list = natsorted(glob.glob(os.path.join(directory, shell_glob)))
+    if not file_list:
+        return subtracted_df
+
+    dataframes = []
+
+    for fn in file_list:
+        try:
+            dataframe = pandas.read_csv(fn, skiprows=1, sep=separator,
+                                        skipinitialspace=True,
+                                        skip_blank_lines=True, dtype=float,
+                                        warn_bad_lines=True,
+                                        lineterminator='\n', header=header,
+                                        index_col=0, error_bad_lines=False)
+        except pandas.errors.EmptyDataError as e:
+            lgr.error("File empty: {}. Moving on".format(fn))
+        else:
+            dataframes.append(dataframe)
+
+    subtracted_df = dataframes.pop(0)
+    for dataframe in dataframes:
+        subtracted_df = subtracted_df.sub(dataframe)
+
+    return subtracted_df
+
+
 def reprocess_raw_files(directory, shell_globs):
     """Ask if files should be reprocessed when generated files have been found.
 
