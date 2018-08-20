@@ -573,25 +573,25 @@ class Postprocess:
             # note that I'm using an ordereddict, so the order of the data
             # printed later will be the same when I iterate over the dict
             # again
-            syn_con_hist_data_fhs = {}
-            conductance_hist_data_fhs = {}
+            syn_con_total_data_fhs = {}
+            conductance_total_data_fhs = {}
             if len(self.cfg['snapshots']['synapses']):
                 # I'm not iterating over the synapse_set dict here because
                 # there the destinations would be repeated
                 for aregion in regions:
                     # only deal with destination regions of this type of neuron
                     if dest_nrn_type in aregion:
-                        fn = ("081-syn_conns-incoming-hist-{}-{}.txt".format(
+                        fn = ("081-syn_conns-incoming-totals-{}-{}.txt".format(
                             aregion, synapse_set))
                         fh = open(fn, 'w')
-                        syn_con_hist_data_fhs[aregion] = fh
+                        syn_con_total_data_fhs[aregion] = fh
 
                         fn1 = (
-                            "081-conductance-incoming-hist-{}-{}.txt".format(
+                            "081-conductance-incoming-totals-{}-{}.txt".format(
                                 aregion, synapse_set)
                         )
                         fh1 = open(fn1, 'w')
-                        conductance_hist_data_fhs[aregion] = fh1
+                        conductance_total_data_fhs[aregion] = fh1
                         # here onwards, we can iterate over the keys of this
                         # dict to get the destination regions
 
@@ -815,32 +815,32 @@ class Postprocess:
                                      'plot-connection-length-hist.plt'),
                         args)
 
-                    for dest, fh in syn_con_hist_data_fhs.items():
-                        # get the four destinations for this synapse type
-                        # now for each destination, prepare a row to be
-                        # printed first column in the time
-                        totals = [(float(atime)/1000.), ]
-                        # go over all the possible sources and append the
-                        # number of incoming connections like we did before,
-                        # and because we've used an ordereddict, the order of
-                        # the data will correspond to the header we printed
-                        # before
-                        for key, value in synapse_set_regions.items():
-                            if value['dest'] == dest:
-                                totals.append(len(value['weights']))
+                for dest, fh in syn_con_total_data_fhs.items():
+                    # get the four destinations for this synapse type
+                    # now for each destination, prepare a row to be
+                    # printed first column in the time
+                    totals = [(float(atime)/1000.), ]
+                    # go over all the possible sources and append the
+                    # number of incoming connections like we did before,
+                    # and because we've used an ordereddict, the order of
+                    # the data will correspond to the header we printed
+                    # before
+                    for key, value in synapse_set_regions.items():
+                        if value['dest'] == dest:
+                            totals.append(len(value['weights']))
 
-                        # print it to the file corresponding to the dest
-                        print(*totals, sep='\t', file=fh)
+                    # print it to the file corresponding to the dest
+                    print(*totals, sep='\t', file=fh)
 
-                    # same for conductance histogram files
-                    for dest, fh in conductance_hist_data_fhs.items():
-                        totals = [(float(atime)/1000.), ]
-                        for key, value in synapse_set_regions.items():
-                            if value['dest'] == dest:
-                                totals.append(numpy.sum(value['weights']))
+                # same for conductance histogram files
+                for dest, fh in conductance_total_data_fhs.items():
+                    totals = [(float(atime)/1000.), ]
+                    for key, value in synapse_set_regions.items():
+                        if value['dest'] == dest:
+                            totals.append(numpy.sum(value['weights']))
 
-                        # print it to the file corresponding to the dest
-                        print(*totals, sep='\t', file=fh)
+                    # print it to the file corresponding to the dest
+                    print(*totals, sep='\t', file=fh)
 
                 # print synapse counts for different regions
                 for key, value in synapse_set_regions.items():
@@ -862,10 +862,10 @@ class Postprocess:
             # close the hist data file handles
             # no need to check if there's anything in here, it just won't have
             # anything to iterate over if the dict is empty
-            for dest, fh in syn_con_hist_data_fhs.items():
+            for dest, fh in syn_con_total_data_fhs.items():
                 fh.close()
 
-            for dest, fh in conductance_hist_data_fhs.items():
+            for dest, fh in conductance_total_data_fhs.items():
                 fh.close()
 
             self.lgr.info(

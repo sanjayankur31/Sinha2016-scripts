@@ -35,70 +35,70 @@ set key bmargin center horizontal Left reverse noenhanced autotitle columnhead n
 ## LPZ C
 set output "081-connection-rowstacked-histograms-I-to-lpz_c_I.png"
 set title "II"
-plot for [COL=5:2:-1] '081-syn_conns-incoming-hist-lpz_c_I-II.txt' using COL:xtic(1) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '081-syn_conns-incoming-totals-lpz_c_I-II.txt' every 4 using COL:xtic(1) lc COL-1 title columnheader
 
 set output "081-connection-rowstacked-histograms-E-to-lpz_c_I.png"
 set title "EI"
-plot for [COL=5:2:-1] '081-syn_conns-incoming-hist-lpz_c_I-EI.txt' using COL:xtic(1) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '081-syn_conns-incoming-totals-lpz_c_I-EI.txt' every 4 using COL:xtic(1) lc COL-1 title columnheader
 
 set output "081-connection-rowstacked-histograms-I-to-lpz_c_E.png"
 set title "IE"
-plot for [COL=5:2:-1] '081-syn_conns-incoming-hist-lpz_c_E-IE.txt' using COL:xtic(1) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '081-syn_conns-incoming-totals-lpz_c_E-IE.txt' every 4 using COL:xtic(1) lc COL-1 title columnheader
 
 set output "081-connection-rowstacked-histograms-E-to-lpz_c_E.png"
 set title "EE"
-plot for [COL=5:2:-1] '081-syn_conns-incoming-hist-lpz_c_E-EE.txt' using COL:xtic(1) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '081-syn_conns-incoming-totals-lpz_c_E-EE.txt' every 4 using COL:xtic(1) lc COL-1 title columnheader
 
 ## LPZ B
 set output "081-connection-rowstacked-histograms-I-to-lpz_b_I.png"
 set title "II"
-plot for [COL=5:2:-1] '081-syn_conns-incoming-hist-lpz_b_I-II.txt' using COL:xtic(1) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '081-syn_conns-incoming-totals-lpz_b_I-II.txt' every 4 using COL:xtic(1) lc COL-1 title columnheader
 
 set output "081-connection-rowstacked-histograms-E-to-lpz_b_I.png"
 set title "EI"
-plot for [COL=5:2:-1] '081-syn_conns-incoming-hist-lpz_b_I-EI.txt' using COL:xtic(1) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '081-syn_conns-incoming-totals-lpz_b_I-EI.txt' every 4 using COL:xtic(1) lc COL-1 title columnheader
 
 set output "081-connection-rowstacked-histograms-I-to-lpz_b_E.png"
 set title "IE"
-plot for [COL=5:2:-1] '081-syn_conns-incoming-hist-lpz_b_E-IE.txt' using COL:xtic(1) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '081-syn_conns-incoming-totals-lpz_b_E-IE.txt' every 4 using COL:xtic(1) lc COL-1 title columnheader
 
 set output "081-connection-rowstacked-histograms-E-to-lpz_b_E.png"
 set title "EE"
-plot for [COL=5:2:-1] '081-syn_conns-incoming-hist-lpz_b_E-EE.txt' using COL:xtic(1) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '081-syn_conns-incoming-totals-lpz_b_E-EE.txt' every 4 using COL:xtic(1) lc COL-1 title columnheader
 
 ## P LPZ
 set output "081-connection-rowstacked-histograms-I-to-p_lpz_I.png"
 set title "II"
-plot for [COL=5:2:-1] '081-syn_conns-incoming-hist-p_lpz_I-II.txt' using COL:xtic(1) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '081-syn_conns-incoming-totals-p_lpz_I-II.txt' every 4 using COL:xtic(1) lc COL-1 title columnheader
 
 set output "081-connection-rowstacked-histograms-E-to-p_lpz_I.png"
 set title "EI"
-plot for [COL=5:2:-1] '081-syn_conns-incoming-hist-p_lpz_I-EI.txt' using COL:xtic(1) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '081-syn_conns-incoming-totals-p_lpz_I-EI.txt' every 4 using COL:xtic(1) lc COL-1 title columnheader
 
 set output "081-connection-rowstacked-histograms-I-to-p_lpz_E.png"
 set title "IE"
-plot for [COL=5:2:-1] '081-syn_conns-incoming-hist-p_lpz_E-IE.txt' using COL:xtic(1) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '081-syn_conns-incoming-totals-p_lpz_E-IE.txt' every 4 using COL:xtic(1) lc COL-1 title columnheader
 
 set output "081-connection-rowstacked-histograms-E-to-p_lpz_E.png"
 set title "EE"
-plot for [COL=5:2:-1] '081-syn_conns-incoming-hist-p_lpz_E-EE.txt' using COL:xtic(1) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '081-syn_conns-incoming-totals-p_lpz_E-EE.txt' every 4 using COL:xtic(1) lc COL-1 title columnheader
 
 ## O LPZ
 set output "081-connection-rowstacked-histograms-I-to-o_I.png"
 set title "II"
-plot for [COL=5:2:-1] '081-syn_conns-incoming-hist-o_I-II.txt' using COL:xtic(1) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '081-syn_conns-incoming-totals-o_I-II.txt' every 4 using COL:xtic(1) lc COL-1 title columnheader
 
 set output "081-connection-rowstacked-histograms-E-to-o_I.png"
 set title "EI"
-plot for [COL=5:2:-1] '081-syn_conns-incoming-hist-o_I-EI.txt' using COL:xtic(1) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '081-syn_conns-incoming-totals-o_I-EI.txt' every 4 using COL:xtic(1) lc COL-1 title columnheader
 
 set output "081-connection-rowstacked-histograms-I-to-o_E.png"
 set title "IE"
-plot for [COL=5:2:-1] '081-syn_conns-incoming-hist-o_E-IE.txt' using COL:xtic(1) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '081-syn_conns-incoming-totals-o_E-IE.txt' every 4 using COL:xtic(1) lc COL-1 title columnheader
 
 set output "081-connection-rowstacked-histograms-E-to-o_E.png"
 set title "EE"
-plot for [COL=5:2:-1] '081-syn_conns-incoming-hist-o_E-EE.txt' using COL:xtic(1) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '081-syn_conns-incoming-totals-o_E-EE.txt' every 4 using COL:xtic(1) lc COL-1 title columnheader
 
 # clustered histograms
 set style histogram clustered
@@ -112,67 +112,67 @@ set key bmargin center horizontal Left reverse noenhanced autotitle columnhead n
 ## LPZ C
 set output "081-connection-clustered-histograms-I-to-lpz_c_I.png"
 set title "II"
-plot for [COL=5:2:-1] '081-syn_conns-incoming-hist-lpz_c_I-II.txt' using COL:xtic(1) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '081-syn_conns-incoming-totals-lpz_c_I-II.txt' every 4 using COL:xtic(1) lc COL-1 title columnheader
 
 set output "081-connection-clustered-histograms-E-to-lpz_c_I.png"
 set title "EI"
-plot for [COL=5:2:-1] '081-syn_conns-incoming-hist-lpz_c_I-EI.txt' using COL:xtic(1) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '081-syn_conns-incoming-totals-lpz_c_I-EI.txt' every 4 using COL:xtic(1) lc COL-1 title columnheader
 
 set output "081-connection-clustered-histograms-I-to-lpz_c_E.png"
 set title "IE"
-plot for [COL=5:2:-1] '081-syn_conns-incoming-hist-lpz_c_E-IE.txt' using COL:xtic(1) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '081-syn_conns-incoming-totals-lpz_c_E-IE.txt' every 4 using COL:xtic(1) lc COL-1 title columnheader
 
 set output "081-connection-clustered-histograms-E-to-lpz_c_E.png"
 set title "EE"
-plot for [COL=5:2:-1] '081-syn_conns-incoming-hist-lpz_c_E-EE.txt' using COL:xtic(1) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '081-syn_conns-incoming-totals-lpz_c_E-EE.txt' every 4 using COL:xtic(1) lc COL-1 title columnheader
 
 ## LPZ B
 set output "081-connection-clustered-histograms-I-to-lpz_b_I.png"
 set title "II"
-plot for [COL=5:2:-1] '081-syn_conns-incoming-hist-lpz_b_I-II.txt' using COL:xtic(1) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '081-syn_conns-incoming-totals-lpz_b_I-II.txt' every 4 using COL:xtic(1) lc COL-1 title columnheader
 
 set output "081-connection-clustered-histograms-E-to-lpz_b_I.png"
 set title "EI"
-plot for [COL=5:2:-1] '081-syn_conns-incoming-hist-lpz_b_I-EI.txt' using COL:xtic(1) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '081-syn_conns-incoming-totals-lpz_b_I-EI.txt' every 4 using COL:xtic(1) lc COL-1 title columnheader
 
 set output "081-connection-clustered-histograms-I-to-lpz_b_E.png"
 set title "IE"
-plot for [COL=5:2:-1] '081-syn_conns-incoming-hist-lpz_b_E-IE.txt' using COL:xtic(1) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '081-syn_conns-incoming-totals-lpz_b_E-IE.txt' every 4 using COL:xtic(1) lc COL-1 title columnheader
 
 set output "081-connection-clustered-histograms-E-to-lpz_b_E.png"
 set title "EE"
-plot for [COL=5:2:-1] '081-syn_conns-incoming-hist-lpz_b_E-EE.txt' using COL:xtic(1) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '081-syn_conns-incoming-totals-lpz_b_E-EE.txt' every 4 using COL:xtic(1) lc COL-1 title columnheader
 
 ## P LPZ
 set output "081-connection-clustered-histograms-I-to-p_lpz_I.png"
 set title "II"
-plot for [COL=5:2:-1] '081-syn_conns-incoming-hist-p_lpz_I-II.txt' using COL:xtic(1) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '081-syn_conns-incoming-totals-p_lpz_I-II.txt' every 4 using COL:xtic(1) lc COL-1 title columnheader
 
 set output "081-connection-clustered-histograms-E-to-p_lpz_I.png"
 set title "EI"
-plot for [COL=5:2:-1] '081-syn_conns-incoming-hist-p_lpz_I-EI.txt' using COL:xtic(1) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '081-syn_conns-incoming-totals-p_lpz_I-EI.txt' every 4 using COL:xtic(1) lc COL-1 title columnheader
 
 set output "081-connection-clustered-histograms-I-to-p_lpz_E.png"
 set title "IE"
-plot for [COL=5:2:-1] '081-syn_conns-incoming-hist-p_lpz_E-IE.txt' using COL:xtic(1) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '081-syn_conns-incoming-totals-p_lpz_E-IE.txt' every 4 using COL:xtic(1) lc COL-1 title columnheader
 
 set output "081-connection-clustered-histograms-E-to-p_lpz_E.png"
 set title "EE"
-plot for [COL=5:2:-1] '081-syn_conns-incoming-hist-p_lpz_E-EE.txt' using COL:xtic(1) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '081-syn_conns-incoming-totals-p_lpz_E-EE.txt' every 4 using COL:xtic(1) lc COL-1 title columnheader
 
 ## O LPZ
 set output "081-connection-clustered-histograms-I-to-o_I.png"
 set title "II"
-plot for [COL=5:2:-1] '081-syn_conns-incoming-hist-o_I-II.txt' using COL:xtic(1) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '081-syn_conns-incoming-totals-o_I-II.txt' every 4 using COL:xtic(1) lc COL-1 title columnheader
 
 set output "081-connection-clustered-histograms-E-to-o_I.png"
 set title "EI"
-plot for [COL=5:2:-1] '081-syn_conns-incoming-hist-o_I-EI.txt' using COL:xtic(1) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '081-syn_conns-incoming-totals-o_I-EI.txt' every 4 using COL:xtic(1) lc COL-1 title columnheader
 
 set output "081-connection-clustered-histograms-I-to-o_E.png"
 set title "IE"
-plot for [COL=5:2:-1] '081-syn_conns-incoming-hist-o_E-IE.txt' using COL:xtic(1) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '081-syn_conns-incoming-totals-o_E-IE.txt' every 4 using COL:xtic(1) lc COL-1 title columnheader
 
 set output "081-connection-clustered-histograms-E-to-o_E.png"
 set title "EE"
-plot for [COL=5:2:-1] '081-syn_conns-incoming-hist-o_E-EE.txt' using COL:xtic(1) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '081-syn_conns-incoming-totals-o_E-EE.txt' every 4 using COL:xtic(1) lc COL-1 title columnheader
