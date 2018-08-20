@@ -31,7 +31,8 @@ from nestpp.spike_utils import (get_firing_rate_metrics,
                                 get_individual_firing_rate_snapshots,
                                 extract_spikes)
 from nestpp.file_utils import (get_info_from_file_series,
-                               combine_files_row_wise)
+                               combine_files_row_wise,
+                               subtract_columns_in_multiple_files)
 
 
 class Postprocess:
@@ -868,6 +869,22 @@ class Postprocess:
             for dest, fh in conductance_total_data_fhs.items():
                 fh.close()
 
+            # Each region only has two files, one incoming I, one incoming E,
+            # so the helper function can be used.
+            # Now, I have 4 columns---net (E-I) from each region, and I can
+            # plot whatever I wish---per region, or totals
+            for region in regions:
+                # these files have a header
+                # E - I
+                net_cond_df = subtract_columns_in_multiple_files(
+                    './',
+                    '081-conductance-incoming-totals-{}-*.txt'.format(region),
+                    '\t', header=0
+                )
+                net_cond_df.to_csv(
+                    '081-conductance-net-{}.txt'.format(region), sep='\t',
+                    header=True)
+
             self.lgr.info(
                 "Processed syn conns for {} neurons..".format(
                     synapse_set))
@@ -889,6 +906,10 @@ class Postprocess:
         plot_using_gnuplot_binary(
             os.path.join(self.cfg['plots_dir'],
                          'plot-regional-conductance-histograms.plt'))
+
+        plot_using_gnuplot_binary(
+            os.path.join(self.cfg['plots_dir'],
+                         'plot-net-conductance-metrics.plt'))
 
     def plot_growth_curves(self):
         """
