@@ -24,7 +24,7 @@ lgr = get_module_logger(__name__)
 
 
 def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
-                            rows=50000000., dt=1., window=1000.,
+                            rows=50000000., dt=100., window=1000.,
                             snapshot_dt=200000.):
     """Get various metrics from raster spike files.
 
