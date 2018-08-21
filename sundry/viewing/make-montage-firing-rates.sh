@@ -2,7 +2,7 @@
 # Generate a montage of images so that they can be all seen at once
 # This file includes graphs that show various firing rates
 
-PREFIX=""
+IDENTIFIER=""
 
 usage()
 {
@@ -13,13 +13,13 @@ usage()
 main ()
 {
     montage \
-        "$PREFIX"mean-firing-rates-all-E-zoomed.png \
-        "$PREFIX"mean-firing-rates-all-I-zoomed.png \
-        "$PREFIX"mean-firing-rates-lpz_c_I-E-zoomed.png \
-        "$PREFIX"mean-firing-rates-lpz_b_I-E-zoomed.png \
-        "$PREFIX"mean-firing-rates-p_lpz_I-E-zoomed.png \
-        "$PREFIX"mean-firing-rates-o_I-E-zoomed.png \
-        -tile 2x3 -geometry +2+2  "$PREFIX"firing-rate-montage.png
+        "$IDENTIFIER"mean-firing-rates-all-E-zoomed.png \
+        "$IDENTIFIER"mean-firing-rates-all-I-zoomed.png \
+        "$IDENTIFIER"mean-firing-rates-lpz_c_I-E-zoomed.png \
+        "$IDENTIFIER"mean-firing-rates-lpz_b_I-E-zoomed.png \
+        "$IDENTIFIER"mean-firing-rates-p_lpz_I-E-zoomed.png \
+        "$IDENTIFIER"mean-firing-rates-o_I-E-zoomed.png \
+        -tile 2x3 -geometry +2+2  "$IDENTIFIER"firing-rate-montage.png
 }
 
 
@@ -34,7 +34,7 @@ while getopts "y:h" OPTION
 do
     case $OPTION in
         y)
-            PREFIX=$OPTARG
+            IDENTIFIER=$OPTARG
             main
             ;;
         h)
