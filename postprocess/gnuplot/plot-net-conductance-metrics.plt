@@ -79,7 +79,8 @@ plot  "081-conductance-net-o_I.txt" using 1:($2+$3+$4+$5) with linespoints lw 5 
 # Slope of net conductance E
 set ylabel "Rate of change of conductance (delta g/t)"
 old_g = NaN
-set output "08-net-conductances-to-lpz_c_E.png"
+
+set output "08-net-conductances-slope-to-lpz_c_E.png"
 set title "Incoming net conductance to LPZ C E"
 plot  "081-conductance-net-lpz_c_E.txt" using 1:delta_g($2+$3+$4+$5) with linespoints lw 5 lc 1;
 
