@@ -575,37 +575,35 @@ class Postprocess:
             # again
             syn_con_total_data_fhs = {}
             conductance_total_data_fhs = {}
-            if len(self.cfg['snapshots']['synapses']):
-                # I'm not iterating over the synapse_set dict here because
-                # there the destinations would be repeated
-                for aregion in regions:
-                    # only deal with destination regions of this type of neuron
-                    if dest_nrn_type in aregion:
-                        fn = ("081-syn_conns-incoming-totals-{}-{}.txt".format(
-                            aregion, synapse_set))
-                        fh = open(fn, 'w')
-                        syn_con_total_data_fhs[aregion] = fh
+            # iterate over the various dest regions
+            for aregion in regions:
+                # only deal with destination regions of this type of neuron
+                if dest_nrn_type in aregion:
+                    fn = ("081-syn_conns-incoming-totals-{}-{}.txt".format(
+                        aregion, synapse_set))
+                    fh = open(fn, 'w')
+                    syn_con_total_data_fhs[aregion] = fh
 
-                        fn1 = (
-                            "081-conductance-incoming-totals-{}-{}.txt".format(
-                                aregion, synapse_set)
-                        )
-                        fh1 = open(fn1, 'w')
-                        conductance_total_data_fhs[aregion] = fh1
-                        # here onwards, we can iterate over the keys of this
-                        # dict to get the destination regions
+                    fn1 = (
+                        "081-conductance-incoming-totals-{}-{}.txt".format(
+                            aregion, synapse_set)
+                    )
+                    fh1 = open(fn1, 'w')
+                    conductance_total_data_fhs[aregion] = fh1
+                    # here onwards, we can iterate over the keys of this
+                    # dict to get the destination regions
 
-                        # print the header, remember to ignore this in GNUplot,
-                        # or maybe I can use this to generate the xtic labels?
-                        # first column is the time
-                        sources = ['time']
-                        # get all possible source regions for this destination
-                        # set, which make up the other columns
-                        for key, value in synapse_set_regions.items():
-                            if value['dest'] == aregion:
-                                sources.append(value['src'])
-                        print(*sources, sep='\t', file=fh)
-                        print(*sources, sep='\t', file=fh1)
+                    # print the header, remember to ignore this in GNUplot,
+                    # or maybe I can use this to generate the xtic labels?
+                    # first column is the time
+                    sources = ['time']
+                    # get all possible source regions for this destination
+                    # set, which make up the other columns
+                    for key, value in synapse_set_regions.items():
+                        if value['dest'] == aregion:
+                            sources.append(value['src'])
+                    print(*sources, sep='\t', file=fh)
+                    print(*sources, sep='\t', file=fh1)
 
             # start
             for atime in time_list:
@@ -868,48 +866,50 @@ class Postprocess:
             for dest, fh in conductance_total_data_fhs.items():
                 fh.close()
 
-            # Each region only has two files, one incoming I, one incoming E,
-            # so the helper function can be used.
-            # Now, I have 4 columns---net (E-I) from each region, and I can
-            # plot whatever I wish---per region, or totals
-            for region in regions:
-                # these files have a header
-                # E - I
-                if 'E' in region:
-                    df_E = pandas.read_csv(
-                        '081-conductance-incoming-totals-{}-EE.txt'.format(
-                            region), sep='\t', header=None, skiprows=1,
-                        index_col=0, dtype=float
-                    )
-                    df_I = pandas.read_csv(
-                        '081-conductance-incoming-totals-{}-IE.txt'.format(
-                            region), sep='\t', header=None, skiprows=1,
-                        index_col=0, dtype=float
-                    )
-                else:
-                    df_E = pandas.read_csv(
-                        '081-conductance-incoming-totals-{}-EI.txt'.format(
-                            region), sep='\t', header=None, skiprows=1,
-                        index_col=0, dtype=float
-                    )
-                    df_I = pandas.read_csv(
-                        '081-conductance-incoming-totals-{}-II.txt'.format(
-                            region), sep='\t', header=None, skiprows=1,
-                        index_col=0, dtype=float
-                    )
-
-                net_cond_df = df_E.subtract(df_I)
-                slope_df = net_cond_df.sum(axis=1).diff()
-
-                final_df = pandas.concat([net_cond_df, slope_df], axis=1)
-
-                final_df.to_csv(
-                    '081-conductance-net-{}.txt'.format(region), sep='\t',
-                    header=None, na_rep='NaN')
-
             self.lgr.info(
                 "Processed syn conns for {} neurons..".format(
                     synapse_set))
+
+        # Now that all the regions have been processed, we can do the overall
+        # net processing.
+        # Each region only has two files, one incoming I, one incoming E,
+        # so the helper function can be used.
+        # Now, I have 4 columns---net (E-I) from each region, and I can
+        # plot whatever I wish---per region, or totals
+        for region in regions:
+            # these files have a header
+            # E - I
+            if 'E' in region:
+                df_E = pandas.read_csv(
+                    '081-conductance-incoming-totals-{}-EE.txt'.format(
+                        region), sep='\t', header=None, skiprows=1,
+                    index_col=0, dtype=float
+                )
+                df_I = pandas.read_csv(
+                    '081-conductance-incoming-totals-{}-IE.txt'.format(
+                        region), sep='\t', header=None, skiprows=1,
+                    index_col=0, dtype=float
+                )
+            else:
+                df_E = pandas.read_csv(
+                    '081-conductance-incoming-totals-{}-EI.txt'.format(
+                        region), sep='\t', header=None, skiprows=1,
+                    index_col=0, dtype=float
+                )
+                df_I = pandas.read_csv(
+                    '081-conductance-incoming-totals-{}-II.txt'.format(
+                        region), sep='\t', header=None, skiprows=1,
+                    index_col=0, dtype=float
+                )
+
+            net_cond_df = df_E.subtract(df_I)
+            slope_df = net_cond_df.sum(axis=1).diff()
+
+            final_df = pandas.concat([net_cond_df, slope_df], axis=1)
+
+            final_df.to_csv(
+                '081-conductance-net-{}.txt'.format(region), sep='\t',
+                header=None, na_rep='NaN')
 
         # Files must be closed before calling the plotters, because closing the
         # files flushes the streams. Otherwise, the files may be empty and
@@ -932,6 +932,8 @@ class Postprocess:
         plot_using_gnuplot_binary(
             os.path.join(self.cfg['plots_dir'],
                          'plot-net-conductance-metrics.plt'))
+
+        self.lgr.info("Processed all synaptic connections..")
 
     def plot_growth_curves(self):
         """
