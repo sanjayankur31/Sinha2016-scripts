@@ -31,8 +31,7 @@ from nestpp.spike_utils import (get_firing_rate_metrics,
                                 get_individual_firing_rate_snapshots,
                                 extract_spikes)
 from nestpp.file_utils import (get_info_from_file_series,
-                               combine_files_row_wise,
-                               subtract_columns_in_multiple_files)
+                               combine_files_row_wise)
 
 
 class Postprocess:
@@ -876,14 +875,33 @@ class Postprocess:
             for region in regions:
                 # these files have a header
                 # E - I
-                net_cond_df = subtract_columns_in_multiple_files(
-                    './',
-                    '081-conductance-incoming-totals-{}-*.txt'.format(region),
-                    '\t', header=0
-                )
+                if 'E' in region:
+                    df_E = pandas.read_csv(
+                        '081-conductance-incoming-totals-{}-EE.txt'.format(
+                            region), sep='\t', header=None, skiprows=1,
+                        index_col=0, dtype=float
+                    )
+                    df_I = pandas.read_csv(
+                        '081-conductance-incoming-totals-{}-IE.txt'.format(
+                            region), sep='\t', header=None, skiprows=1,
+                        index_col=0, dtype=float
+                    )
+                else:
+                    df_E = pandas.read_csv(
+                        '081-conductance-incoming-totals-{}-EI.txt'.format(
+                            region), sep='\t', header=None, skiprows=1,
+                        index_col=0, dtype=float
+                    )
+                    df_I = pandas.read_csv(
+                        '081-conductance-incoming-totals-{}-II.txt'.format(
+                            region), sep='\t', header=None, skiprows=1,
+                        index_col=0, dtype=float
+                    )
+
+                net_cond_df = df_E.subtract(df_I)
                 net_cond_df.to_csv(
                     '081-conductance-net-{}.txt'.format(region), sep='\t',
-                    header=True)
+                    header=None)
 
             self.lgr.info(
                 "Processed syn conns for {} neurons..".format(
