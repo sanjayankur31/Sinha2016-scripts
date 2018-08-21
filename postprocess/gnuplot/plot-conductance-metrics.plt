@@ -73,6 +73,7 @@ set output "08-total-conductances-I-to-o_I.png"
 set title "Incoming I total conductances to non LPZ I"
 plot  "08-syn_conns-lpz_c_I-to-o_I-II.txt" using 1:3 with linespoints lw 5 lc 1 title "from lpz c", "08-syn_conns-lpz_b_I-to-o_I-II.txt" using 1:3 with linespoints lw 5 lc 2 title "from lpz b",  "08-syn_conns-p_lpz_I-to-o_I-II.txt" using 1:3 with linespoints lw 5 lc 3 title "from peri lpz", "08-syn_conns-o_I-to-o_I-II.txt" using 1:3 with linespoints lw 5 lc 4 title "from non lpz";
 
+unset yrange
 # Mean E to E
 set output "08-mean-conductances-E-to-lpz_c_E.png"
 set title "Incoming E mean conductances to LPZ C E"
