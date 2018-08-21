@@ -103,6 +103,44 @@ main ()
         "$IDENTIFIER"081-conductance-rowstacked-histograms-I-to-p_lpz_I.png \
         "$IDENTIFIER"081-conductance-rowstacked-histograms-I-to-o_I.png \
         -tile 4x5 -geometry +2+2  "$IDENTIFIER"75-conductances-histograms-I-montage.png
+
+    montage \
+        "$IDENTIFIER"02-calcium-lpz_c_E.png \
+        "$IDENTIFIER"02-calcium-lpz_b_E.png \
+        "$IDENTIFIER"02-calcium-p_lpz_E.png \
+        "$IDENTIFIER"02-calcium-o_E.png \
+        "$IDENTIFIER"08-net-regional-conductances-to-lpz_c_E.png \
+        "$IDENTIFIER"08-net-regional-conductances-to-lpz_b_E.png \
+        "$IDENTIFIER"08-net-regional-conductances-to-p_lpz_E.png \
+        "$IDENTIFIER"08-net-regional-conductances-to-o_E.png \
+        "$IDENTIFIER"08-net-conductances-to-lpz_c_E.png \
+        "$IDENTIFIER"08-net-conductances-to-lpz_b_E.png \
+        "$IDENTIFIER"08-net-conductances-to-p_lpz_E.png \
+        "$IDENTIFIER"08-net-conductances-to-o_E.png \
+        "$IDENTIFIER"08-net-conductances-slope-to-lpz_c_E.png \
+        "$IDENTIFIER"08-net-conductances-slope-to-lpz_b_E.png \
+        "$IDENTIFIER"08-net-conductances-slope-to-p_lpz_E.png \
+        "$IDENTIFIER"08-net-conductances-slope-to-o_E.png \
+        -tile 4x4 -geometry +2+2  "$IDENTIFIER"75-net-conductances-E-montage.png
+
+    montage \
+        "$IDENTIFIER"02-calcium-lpz_c_I.png \
+        "$IDENTIFIER"02-calcium-lpz_b_I.png \
+        "$IDENTIFIER"02-calcium-p_lpz_I.png \
+        "$IDENTIFIER"02-calcium-o_I.png \
+        "$IDENTIFIER"08-net-regional-conductances-to-lpz_c_I.png \
+        "$IDENTIFIER"08-net-regional-conductances-to-lpz_b_I.png \
+        "$IDENTIFIER"08-net-regional-conductances-to-p_lpz_I.png \
+        "$IDENTIFIER"08-net-regional-conductances-to-o_I.png \
+        "$IDENTIFIER"08-net-conductances-to-lpz_c_I.png \
+        "$IDENTIFIER"08-net-conductances-to-lpz_b_I.png \
+        "$IDENTIFIER"08-net-conductances-to-p_lpz_I.png \
+        "$IDENTIFIER"08-net-conductances-to-o_I.png \
+        "$IDENTIFIER"08-net-conductances-slope-to-lpz_c_I.png \
+        "$IDENTIFIER"08-net-conductances-slope-to-lpz_b_I.png \
+        "$IDENTIFIER"08-net-conductances-slope-to-p_lpz_I.png \
+        "$IDENTIFIER"08-net-conductances-slope-to-o_I.png \
+        -tile 4x4 -geometry +2+2  "$IDENTIFIER"75-net-conductances-I-montage.png
 }
 
 
