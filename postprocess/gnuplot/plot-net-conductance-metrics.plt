@@ -3,7 +3,6 @@ set term pngcairo font "OpenSans, 28" size 1920, 1080
 set xlabel "Time in seconds"
 set ylabel "Conductance (nS)"
 set lmargin at screen 0.15
-set yrange [0:]
 
 # for slope from https://stackoverflow.com/questions/7249961/can-gnuplot-compute-and-plot-the-delta-between-consecutive-data-points
 delta_g(x) = (gD = x - old_g, old_g = x, gD)
