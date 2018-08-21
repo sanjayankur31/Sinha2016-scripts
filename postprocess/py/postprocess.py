@@ -899,9 +899,13 @@ class Postprocess:
                     )
 
                 net_cond_df = df_E.subtract(df_I)
-                net_cond_df.to_csv(
+                slope_df = net_cond_df.sum(axis=1).diff()
+
+                final_df = pandas.concat([net_cond_df, slope_df], axis=1)
+
+                final_df.to_csv(
                     '081-conductance-net-{}.txt'.format(region), sep='\t',
-                    header=None)
+                    header=None, na_rep='NaN')
 
             self.lgr.info(
                 "Processed syn conns for {} neurons..".format(
