@@ -59,10 +59,10 @@ main ()
         -tile 4x5 -geometry +2+2  "$IDENTIFIER"75-conductances-I-montage.png
 
     montage \
-        "$PREFEX"02-calcium-lpz_c_E.png \
-        "$PREFEX"02-calcium-lpz_b_E.png \
-        "$PREFEX"02-calcium-p_lpz_E.png \
-        "$PREFEX"02-calcium-o_E.png \
+        "$IDENTIFIER"02-calcium-lpz_c_E.png \
+        "$IDENTIFIER"02-calcium-lpz_b_E.png \
+        "$IDENTIFIER"02-calcium-p_lpz_E.png \
+        "$IDENTIFIER"02-calcium-o_E.png \
         "$IDENTIFIER"081-conductance-clustered-histograms-E-to-lpz_c_E.png \
         "$IDENTIFIER"081-conductance-clustered-histograms-E-to-lpz_b_E.png \
         "$IDENTIFIER"081-conductance-clustered-histograms-E-to-p_lpz_E.png \
