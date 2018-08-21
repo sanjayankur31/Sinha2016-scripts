@@ -235,7 +235,7 @@ def sum_columns_in_multiple_files(directory, shell_glob, separator):
                                         skipinitialspace=True,
                                         skip_blank_lines=True, dtype=float,
                                         warn_bad_lines=True,
-                                        lineterminator='\n',
+                                        lineterminator='\n', header=None,
                                         index_col=0, error_bad_lines=False)
         except pandas.errors.EmptyDataError as e:
             lgr.error("File empty: {}. Moving on".format(fn))
@@ -278,7 +278,7 @@ def subtract_columns_in_multiple_files(directory, shell_glob, separator):
                                         skipinitialspace=True,
                                         skip_blank_lines=True, dtype=float,
                                         warn_bad_lines=True,
-                                        lineterminator='\n',
+                                        lineterminator='\n', header=None,
                                         index_col=0, error_bad_lines=False)
         except pandas.errors.EmptyDataError as e:
             lgr.error("File empty: {}. Moving on".format(fn))
