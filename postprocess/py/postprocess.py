@@ -915,7 +915,7 @@ class Postprocess:
         # files flushes the streams. Otherwise, the files may be empty and
         # gnuplot will fail.
         plot_using_gnuplot_binary(
-            os.path.join(self.cfg['plots_dir'], 'plot-regional-synapses.plt'))
+            os.path.join(self.cfg['plots_dir'], 'plot-synapse-metrics.plt'))
 
         plot_using_gnuplot_binary(
             os.path.join(self.cfg['plots_dir'],
