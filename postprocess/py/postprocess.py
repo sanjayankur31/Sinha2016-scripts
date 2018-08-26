@@ -842,14 +842,21 @@ class Postprocess:
 
                 # print synapse counts for different regions
                 for key, value in synapse_set_regions.items():
-                    print(
-                        "{}\t{}\t{}\t{}\t{}".format
-                        (
-                            float(atime)/1000., len(value['weights']),
-                            numpy.sum(value['weights']),
-                            numpy.mean(value['weights']),
-                            numpy.std(value['weights'])),
-                        file=value['o_fh'])
+                    # handle the case where there are no connections at all
+                    if len(value['weights']):
+                        print(
+                            "{}\t{}\t{}\t{}\t{}".format
+                            (
+                                float(atime)/1000., len(value['weights']),
+                                numpy.sum(value['weights']),
+                                numpy.mean(value['weights']),
+                                numpy.std(value['weights'])),
+                            file=value['o_fh'])
+                    else:
+                        print(
+                            "{}\t{}\t{}\t{}\t{}".format
+                            (float(atime)/1000., 0, 0, "NaN", "NaN"),
+                            file=value['o_fh'])
 
             # close file handlers for each region file for this synapse type:
             for key, value in synapse_set_regions.items():
