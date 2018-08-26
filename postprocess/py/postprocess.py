@@ -25,7 +25,7 @@ import time
 from nestpp.utils import (get_config, get_numpats)
 from nestpp.plotting_utils import (plot_using_gnuplot_binary,
                                    plot_firing_rate_histograms,
-                                   plot_location_grid, plot_rasters)
+                                   plot_rasters)
 from nestpp.loggerpp import get_module_logger
 from nestpp.spike_utils import (get_firing_rate_metrics,
                                 get_individual_firing_rate_snapshots,
@@ -316,33 +316,10 @@ class Postprocess:
 
     def plot_neuron_locations(self):
         """Plot graphs showing locations of neurons."""
-        self.lgr.info("Generating locations of various neuron sets.")
-        graph_dict = {}
-        for key, value in self.neurons.items():
-            if "E" in key:
-                # skip, we're already doing the centre and border. This
-                # overwrites it.
-                if key == "lpz_E" or key == "E":
-                    continue
-                graph_dict[key] = value
-        plot_location_grid(graph_dict)
-
-        graph_dict = {}
-        for key, value in self.neurons.items():
-            if "I" in key:
-                # skip, we're already doing the centre and border. This
-                # overwrites it.
-                if key == "lpz_I" or key == "I":
-                    continue
-                graph_dict[key] = value
-        plot_location_grid(graph_dict)
-
-        # add patterns to that image
-        # Patterns are also [nid, xcor, ycor]
-        for key, value in self.neurons.items():
-            if "pattern-" in key:
-                graph_dict[key] = value
-        plot_location_grid(graph_dict)
+        self.lgr.info("Plotting locations of E and I neuron sets.")
+        plot_using_gnuplot_binary(
+            os.path.join(self.cfg['plots_dir'],
+                         'plot-neuron-locations.plt'))
 
     def plot_snrs(self):
         """Postprocess combined spike files.
