@@ -252,8 +252,8 @@ def conductances(simlist, timestamp):
         "02-calcium",
         "08-total-conductances-E-to",
         "08-total-conductances-I-to",
-        "08-mean-conductances-E-to",
-        "08-mean-conductances-I-to",
+        "08-net-conductances-to",
+        "08-net-regional-conductances-to",
     ]
 
     regions = ["lpz_c_E", "lpz_b_E", "p_lpz_E", "o_E"]
