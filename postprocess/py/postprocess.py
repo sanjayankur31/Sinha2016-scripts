@@ -156,11 +156,12 @@ class Postprocess:
 
                     # mean of more than one column, so this needs to be
                     # done.
+                    totals = [str(x) for x in ses.sum(axis=0).values]
                     means = [str(x) for x in ses.mean(axis=0).values]
                     stds = [str(x) for x in ses.std(axis=0).values]
-                    print("{}\t{}\t{}".format(
-                        atime, '\t'.join(means), '\t'.join(stds)),
-                          file=f)
+                    print("{}\t{}\t{}\t{}".format(
+                        atime, '\t'.join(means), '\t'.join(stds),
+                        '\t'.join(totals)), file=f)
 
             self.lgr.info(
                 "Processed syn elms metrics for {} neurons..".format(
