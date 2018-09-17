@@ -146,6 +146,7 @@ class Postprocess:
             neuron_set_o_fn = "05-se-all-{}.txt".format(neuron_set)
             with open(neuron_set_o_fn, 'w') as f:
                 for atime in time_list:
+                    ind_o_fn = "05-se-{}-{}.txt".format(neuron_set, atime)
                     self.lgr.debug(
                         "Processing syn elms for {} at {}".format(
                             neuron_set, atime))
@@ -154,7 +155,18 @@ class Postprocess:
                         "..", "05-se-{}-*-{}.txt".format(
                             neuron_set, atime), '\t')
 
-                    # mean of more than one column, so this needs to be
+                    # Print individuals
+                    # gid, xcor, y cor
+                    locations = self.neurons[neuron_set]
+                    locations_df = pandas.DataFrame(locations, index=[0])
+                    locations_df.join(ses)
+                    locations_df.to_csv(ind_o_fn, sep='\t', header=True,
+                                        index=True)
+                    plot_using_gnuplot_binary(
+                        os.path.join(self.cfg['plots_dir'],
+                                     'plot-synaptic-elements-top-view.plt'))
+
+                    # metrics of more than one column, so this needs to be
                     # done.
                     totals = [str(x) for x in ses.sum(axis=0).values]
                     means = [str(x) for x in ses.mean(axis=0).values]
