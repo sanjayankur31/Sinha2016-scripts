@@ -179,18 +179,16 @@ class Postprocess:
                         locations_df = None
                         if 'E' in neuron_set:
                             locations_df = (
-                                df.from_records(self.neurons['E'], index=0,
-                                                columns=['gid', 'gx', 'gy',
-                                                         'x', 'y']))
+                                df.from_records(self.neurons['E'], index=0))
                         else:
                             locations_df = (
-                                df.from_records(self.neurons['I'], index=0,
-                                                columns=['gid', 'gx', 'gy',
-                                                         'x', 'y']))
+                                df.from_records(self.neurons['I'], index=0))
 
                         # gid, gridx, gridy, xcor, y cor, ax_con, ax_free ...
                         # and 6 more columns but only of indexes present in
                         # both
+                        # rename columns so that we have unique names
+                        locations_df.columns = ['gid', 'gx', 'gy', 'x', 'y']
                         locations_df.join(ses, how='inner')
                         locations_df.to_csv(ind_o_fn, sep='\t', header=True,
                                             index=True)
