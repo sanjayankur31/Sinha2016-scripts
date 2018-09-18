@@ -12,6 +12,7 @@ set ylabel "Neurons"
 # connected
 if (file_exists(i_fn)) {
     set cblabel "Connected axons"
+    set cbrange [ax_min: ax_max]
     set output "05-se-ax-con-".neuron_set."-".plot_time.".png"
     set title "Connected axons for ".neuron_set." at t=".plot_time
     # row is y, not x
@@ -21,6 +22,7 @@ if (file_exists(i_fn)) {
 
 if (file_exists(i_fn)) {
     set cblabel "Connected denE"
+    set cbrange [denE_min: denE_max]
     set output "05-se-denE-con-".neuron_set."-".plot_time.".png"
     set title "Connected denE for ".neuron_set." at t=".plot_time
     # row is y, not x
@@ -30,6 +32,7 @@ if (file_exists(i_fn)) {
 
 if (file_exists(i_fn)) {
     set cblabel "Connected denI"
+    set cbrange [denI_min: denI_max]
     set output "05-se-denI-con-".neuron_set."-".plot_time.".png"
     set title "Connected denI for ".neuron_set." at t=".plot_time
     # row is y, not x
@@ -40,6 +43,7 @@ if (file_exists(i_fn)) {
 # totals
 if (file_exists(i_fn)) {
     set cblabel "Total axons"
+    set cbrange [ax_min: ax_max]
     set output "05-se-ax-total-".neuron_set."-".plot_time.".png"
     set title "Total axons for ".neuron_set." at t=".plot_time
     # row is y, not x
@@ -49,6 +53,7 @@ if (file_exists(i_fn)) {
 
 if (file_exists(i_fn)) {
     set cblabel "Total denE"
+    set cbrange [denE_min: denE_max]
     set output "05-se-denE-total-".neuron_set."-".plot_time.".png"
     set title "Total denE for ".neuron_set." at t=".plot_time
     # row is y, not x
@@ -58,6 +63,7 @@ if (file_exists(i_fn)) {
 
 if (file_exists(i_fn)) {
     set cblabel "Total denI"
+    set cbrange [denI_min: denI_max]
     set output "05-se-denI-total-".neuron_set."-".plot_time.".png"
     set title "Total denI for ".neuron_set." at t=".plot_time
     # row is y, not x

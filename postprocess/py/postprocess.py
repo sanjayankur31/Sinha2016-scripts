@@ -144,6 +144,23 @@ class Postprocess:
         df_list['E'] = {}
         df_list['I'] = {}
 
+        # store max/min values of all so that all graphs have the same ranges
+        # and we can compare them. If each top view graph has its own range, it
+        # becomes extremely hard to see what's going on
+        ext = {}
+        ext['E']['ax_max'] = 0
+        ext['E']['denE_max'] = 0
+        ext['E']['denI_max'] = 0
+        ext['E']['ax_min'] = 0
+        ext['E']['denE_min'] = 0
+        ext['E']['denI_min'] = 0
+        ext['I']['ax_max'] = 0
+        ext['I']['denE_max'] = 0
+        ext['I']['denI_max'] = 0
+        ext['I']['ax_min'] = 0
+        ext['I']['denE_min'] = 0
+        ext['I']['denI_min'] = 0
+
         locations_df_E = (pandas.DataFrame.from_records(self.neurons['E']))
         locations_df_E.columns = ['gid', 'gx', 'gy', 'x', 'y']
         locations_df_I = (pandas.DataFrame.from_records(self.neurons['I']))
@@ -190,6 +207,26 @@ class Postprocess:
                             if atime not in df_list['E']:
                                 df_list['E'][atime] = []
                             df_list['E'][atime].append(new_df)
+
+                            max_df = ses.max()
+                            min_df = ses.min()
+
+                            # only need to check total, which must be higher or
+                            # equal to connected
+                            if ext['E']['ax_max'] < max_df['ax']:
+                                ext['E']['ax_max'] = max_df['ax']
+                            if ext['E']['denE_max'] < max_df['denE']:
+                                ext['E']['denE_max'] = max_df['denE']
+                            if ext['E']['denI_max'] < max_df['denI']:
+                                ext['E']['denI_max'] = max_df['denI']
+
+                            if ext['E']['ax_min'] > min_df['ax']:
+                                ext['E']['ax_min'] = min_df['ax']
+                            if ext['E']['denE_min'] > min_df['denE']:
+                                ext['E']['denE_min'] = min_df['denE']
+                            if ext['E']['denI_min'] > min_df['denI']:
+                                ext['E']['denI_min'] = min_df['denI']
+
                         else:
                             new_df = locations_df_I.merge(ses, on='gid',
                                                           how='inner')
@@ -197,21 +234,35 @@ class Postprocess:
                                 df_list['I'][atime] = []
                             df_list['I'][atime].append(new_df)
 
+                            if ext['I']['ax_max'] < max_df['ax']:
+                                ext['I']['ax_max'] = max_df['ax']
+                            if ext['I']['denE_max'] < max_df['denE']:
+                                ext['I']['denE_max'] = max_df['denE']
+                            if ext['I']['denI_max'] < max_df['denI']:
+                                ext['I']['denI_max'] = max_df['denI']
+
+                            if ext['I']['ax_min'] > min_df['ax']:
+                                ext['I']['ax_min'] = min_df['ax']
+                            if ext['I']['denE_min'] > min_df['denE']:
+                                ext['I']['denE_min'] = min_df['denE']
+                            if ext['I']['denI_min'] > min_df['denI']:
+                                ext['I']['denI_min'] = min_df['denI']
+
             self.lgr.info(
                 "Processed syn elms metrics for {} neurons..".format(
                     neuron_set))
 
         # Plotting of top view graphs for complete E and I populations
-        for neuron_set in ['E', 'I']:
-            if neuron_set == 'E':
+        for n_set in ['E', 'I']:
+            if n_set == 'E':
                 xmax = 80
                 ymax = 100
             else:
                 xmax = 40
                 ymax = 50
 
-            for atime, dflist in df_list[neuron_set].items():
-                fn = "05-se-{}-{}.txt".format(neuron_set, atime)
+            for atime, dflist in df_list[n_set].items():
+                fn = "05-se-{}-{}.txt".format(n_set, atime)
 
                 all_neurons_df = pandas.concat(dflist, axis=0)
                 all_neurons_df.sort_values('gid', axis=0, inplace=True)
@@ -220,11 +271,17 @@ class Postprocess:
                     all_neurons_df.to_csv(fh, sep='\t', header=True,
                                           index=False)
 
-                args = ['-e', "neuron_set='{}'".format(neuron_set),
+                args = ['-e', "neuron_set='{}'".format(n_set),
                         '-e', "plot_time='{}'".format(atime),
                         '-e', "i_fn='{}'".format(fn),
                         '-e', "xmax='{}'".format(xmax),
                         '-e', "ymax='{}'".format(ymax),
+                        '-e', "ax_min='{}'".format(ext[n_set]['ax_min']),
+                        '-e', "denE_min='{}'".format(ext[n_set]['denE_min']),
+                        '-e', "denI_min='{}'".format(ext[n_set]['denI_min']),
+                        '-e', "ax_max='{}'".format(ext[n_set]['ax_max']),
+                        '-e', "denE_max='{}'".format(ext[n_set]['denE_max']),
+                        '-e', "denI_max='{}'".format(ext[n_set]['denI_max']),
                         ]
                 plot_using_gnuplot_binary(
                     os.path.join(self.cfg['plots_dir'],
@@ -232,7 +289,7 @@ class Postprocess:
 
             self.lgr.info(
                 "Processed syn elms time graphs for {} neurons..".format(
-                    neuron_set))
+                    n_set))
 
         plot_using_gnuplot_binary(
             os.path.join(self.cfg['plots_dir'],
