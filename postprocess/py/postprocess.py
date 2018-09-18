@@ -163,39 +163,6 @@ class Postprocess:
                         "..", "05-se-{}-*-{}.txt".format(
                             neuron_set, atime), '\t')
 
-                    # Print individuals
-                    locations_df = None
-                    if 'E' in neuron_set:
-                        locations_df = pandas.DataFrame(self.neurons['E'],
-                                                        index=[0])
-                    else:
-                        locations_df = pandas.DataFrame(self.neurons['I'],
-                                                        index=[0])
-
-                    # gid, gridx, gridy, xcor, y cor, ax_con, ax_free ... and 6
-                    # more columns but only of indexes present in both
-                    locations_df.join(ses, how='inner')
-                    locations_df.to_csv(ind_o_fn, sep='\t', header=True,
-                                        index=True)
-                    # only plotting connected elements at the moment
-                    g_fn_ax = "05-se-ax-{}-{}.png".format(neuron_set, atime)
-                    g_fn_de = "05-se-denE-{}-{}.png".format(neuron_set, atime)
-                    g_fn_di = "05-se-denI-{}-{}.png".format(neuron_set, atime)
-
-                    args = ['-e', "g_fn_ax='{}'".format(g_fn_ax),
-                            '-e', "g_fn_de='{}'".format(g_fn_de),
-                            '-e', "g_fn_di='{}'".format(g_fn_di),
-                            '-e', "neuron_set='{}'".format(neuron_set),
-                            '-e', "plot_time='{}'".format(atime),
-                            '-e', "i_fn='{}'".format(ind_o_fn),
-                            '-e', "xmax='{}'".format(xmax),
-                            '-e', "ymax='{}'".format(ymax),
-                            ]
-                    plot_using_gnuplot_binary(
-                        os.path.join(self.cfg['plots_dir'],
-                                     'plot-synaptic-elements-top-view.plt'),
-                        args)
-
                     # metrics of more than one column, so this needs to be
                     # done.
                     totals = [str(x) for x in ses.sum(axis=0).values]
@@ -204,6 +171,44 @@ class Postprocess:
                     print("{}\t{}\t{}\t{}".format(
                         atime, '\t'.join(means), '\t'.join(stds),
                         '\t'.join(totals)), file=f)
+
+                    if ((float(atime)/1000.) in
+                            self.cfg['snapshots']['syn_elms']):
+                        # Print individuals
+                        locations_df = None
+                        if 'E' in neuron_set:
+                            locations_df = pandas.DataFrame(self.neurons['E'],
+                                                            index=[0])
+                        else:
+                            locations_df = pandas.DataFrame(self.neurons['I'],
+                                                            index=[0])
+
+                        # gid, gridx, gridy, xcor, y cor, ax_con, ax_free ...
+                        # and 6 more columns but only of indexes present in
+                        # both
+                        locations_df.join(ses, how='inner')
+                        locations_df.to_csv(ind_o_fn, sep='\t', header=True,
+                                            index=True)
+                        # only plotting connected elements at the moment
+                        fn_ax = "05-se-ax-{}-{}.png".format(neuron_set, atime)
+                        fn_de = "05-se-denE-{}-{}.png".format(neuron_set,
+                                                              atime)
+                        fn_di = "05-se-denI-{}-{}.png".format(neuron_set,
+                                                              atime)
+
+                        args = ['-e', "fn_ax='{}'".format(fn_ax),
+                                '-e', "fn_de='{}'".format(fn_de),
+                                '-e', "fn_di='{}'".format(fn_di),
+                                '-e', "neuron_set='{}'".format(neuron_set),
+                                '-e', "plot_time='{}'".format(atime),
+                                '-e', "i_fn='{}'".format(ind_o_fn),
+                                '-e', "xmax='{}'".format(xmax),
+                                '-e', "ymax='{}'".format(ymax),
+                                ]
+                        plot_using_gnuplot_binary(
+                            os.path.join(
+                                self.cfg['plots_dir'],
+                                'plot-synaptic-elements-top-view.plt'), args)
 
             self.lgr.info(
                 "Processed syn elms metrics for {} neurons..".format(

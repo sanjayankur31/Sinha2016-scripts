@@ -51,21 +51,12 @@ def get_config(taskfile="config.ini"):
     snapshots['calciums'] = [
         float(s) for s in p['snapshots']['calciums'].split()]
 
-    # prefixes
-    prefixes = {}
-    prefixes['spikes'] = p['prefixes']['spikes']
-    prefixes['calcium'] = p['prefixes']['calcium']
-    prefixes['syndel'] = p['prefixes']['syndel']
-    prefixes['synnew'] = p['prefixes']['synnew']
-    prefixes['synelm'] = p['prefixes']['synelm']
-
     config = {}
     config['time_graphs'] = graph_list
     config['home'] = postprocess_home
     config['plots_dir'] = os.path.join(postprocess_home, plots_dir)
     config['datadir'] = data_dir
     config['snapshots'] = snapshots
-    config['prefixes'] = prefixes
 
     return config
 
