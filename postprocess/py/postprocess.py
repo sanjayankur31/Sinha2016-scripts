@@ -220,15 +220,7 @@ class Postprocess:
                     all_neurons_df.to_csv(fh, sep='\t', header=True,
                                           index=False)
 
-                # only plotting connected elements at the moment
-                fn_ax = "05-se-ax-{}-{}.png".format(neuron_set, atime)
-                fn_de = "05-se-denE-{}-{}.png".format(neuron_set, atime)
-                fn_di = "05-se-denI-{}-{}.png".format(neuron_set, atime)
-
-                args = ['-e', "fn_ax='{}'".format(fn_ax),
-                        '-e', "fn_de='{}'".format(fn_de),
-                        '-e', "fn_di='{}'".format(fn_di),
-                        '-e', "neuron_set='{}'".format(neuron_set),
+                args = ['-e', "neuron_set='{}'".format(neuron_set),
                         '-e', "plot_time='{}'".format(atime),
                         '-e', "i_fn='{}'".format(fn),
                         '-e', "xmax='{}'".format(xmax),

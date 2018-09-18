@@ -9,28 +9,57 @@ set ytics border nomirror
 set xlabel "Neurons"
 set ylabel "Neurons"
 
+# connected
 if (file_exists(i_fn)) {
     set cblabel "Connected axons"
-    set output fn_ax
+    set output "05-se-ax-con-".neuron_set."-".plot_time.".png"
     set title "Connected axons for ".neuron_set." at t=".plot_time
+    # row is y, not x
+    set view map
+    plot i_fn using 2:3:7 with image
+}
+
+if (file_exists(i_fn)) {
+    set cblabel "Connected denE"
+    set output "05-se-denE-con-".neuron_set."-".plot_time.".png"
+    set title "Connected denE for ".neuron_set." at t=".plot_time
+    # row is y, not x
+    set view map
+    plot i_fn using 2:3:9 with image
+}
+
+if (file_exists(i_fn)) {
+    set cblabel "Connected denI"
+    set output "05-se-denI-con-".neuron_set."-".plot_time.".png"
+    set title "Connected denI for ".neuron_set." at t=".plot_time
+    # row is y, not x
+    set view map
+    plot i_fn using 2:3:11 with image
+}
+
+# totals
+if (file_exists(i_fn)) {
+    set cblabel "Total axons"
+    set output "05-se-ax-total-".neuron_set."-".plot_time.".png"
+    set title "Total axons for ".neuron_set." at t=".plot_time
     # row is y, not x
     set view map
     plot i_fn using 2:3:6 with image
 }
 
 if (file_exists(i_fn)) {
-    set cblabel "Connected denE"
-    set output fn_de
-    set title "Connected denE for ".neuron_set." at t=".plot_time
+    set cblabel "Total denE"
+    set output "05-se-denE-total-".neuron_set."-".plot_time.".png"
+    set title "Total denE for ".neuron_set." at t=".plot_time
     # row is y, not x
     set view map
     plot i_fn using 2:3:8 with image
 }
 
 if (file_exists(i_fn)) {
-    set cblabel "Connected denI"
-    set output fn_di
-    set title "Connected denI for ".neuron_set." at t=".plot_time
+    set cblabel "Total denI"
+    set output "05-se-denI-total-".neuron_set."-".plot_time.".png"
+    set title "Total denI for ".neuron_set." at t=".plot_time
     # row is y, not x
     set view map
     plot i_fn using 2:3:10 with image
