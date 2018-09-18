@@ -207,7 +207,7 @@ class Postprocess:
                     xmax = 40
                     ymax = 50
 
-                for atime, dflist in df_list[neuron_set]:
+                for atime, dflist in df_list[neuron_set].iteritems():
                     fn = "05-se-{}-{}.txt".format(neuron_set, atime)
 
                     all_neurons_df = pandas.concat(dflist, axis=0)
