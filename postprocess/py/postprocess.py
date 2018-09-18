@@ -179,10 +179,14 @@ class Postprocess:
                         locations_df = None
                         if 'E' in neuron_set:
                             locations_df = (
-                                df.from_records(self.neurons['E'], index=0))
+                                df.from_records(self.neurons['E'], index=0,
+                                                columns=['gid', 'gx', 'gy',
+                                                         'x', 'y']))
                         else:
                             locations_df = (
-                                df.from_records(self.neurons['I'], index=0))
+                                df.from_records(self.neurons['I'], index=0,
+                                                columns=['gid', 'gx', 'gy',
+                                                         'x', 'y']))
 
                         # gid, gridx, gridy, xcor, y cor, ax_con, ax_free ...
                         # and 6 more columns but only of indexes present in
