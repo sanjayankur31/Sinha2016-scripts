@@ -162,6 +162,8 @@ class Postprocess:
                     ses = combine_files_row_wise(
                         "..", "05-se-{}-*-{}.txt".format(
                             neuron_set, atime), '\t')
+                    ses.columns = ['gid', 'ax', 'ax_con', 'denE', 'denE_con',
+                                   'denI', 'denI_con']
 
                     # metrics of more than one column, so this needs to be
                     # done.
@@ -179,17 +181,17 @@ class Postprocess:
                         locations_df = None
                         if 'E' in neuron_set:
                             locations_df = (
-                                df.from_records(self.neurons['E'], index=0))
+                                df.from_records(self.neurons['E']))
                         else:
                             locations_df = (
-                                df.from_records(self.neurons['I'], index=0))
+                                df.from_records(self.neurons['I']))
 
                         # gid, gridx, gridy, xcor, y cor, ax_con, ax_free ...
                         # and 6 more columns but only of indexes present in
                         # both
                         # rename columns so that we have unique names
                         locations_df.columns = ['gid', 'gx', 'gy', 'x', 'y']
-                        locations_df.join(ses, how='inner')
+                        locations_df.join(ses, on='gid', how='right')
                         locations_df.to_csv(ind_o_fn, sep='\t', header=True,
                                             index=True)
                         # only plotting connected elements at the moment
