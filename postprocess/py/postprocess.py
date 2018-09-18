@@ -157,7 +157,6 @@ class Postprocess:
             neuron_set_o_fn = "05-se-all-{}.txt".format(neuron_set)
             with open(neuron_set_o_fn, 'w') as f:
                 for atime in time_list:
-                    ind_o_fn = "05-se-{}-{}.txt".format(neuron_set, atime)
                     self.lgr.debug(
                         "Processing syn elms for {} at {}".format(
                             neuron_set, atime))
@@ -228,7 +227,7 @@ class Postprocess:
                             '-e', "fn_di='{}'".format(fn_di),
                             '-e', "neuron_set='{}'".format(neuron_set),
                             '-e', "plot_time='{}'".format(atime),
-                            '-e', "i_fn='{}'".format(ind_o_fn),
+                            '-e', "i_fn='{}'".format(fn),
                             '-e', "xmax='{}'".format(xmax),
                             '-e', "ymax='{}'".format(ymax),
                             ]
