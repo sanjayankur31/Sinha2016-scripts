@@ -211,8 +211,10 @@ class Postprocess:
                     fn = "05-se-{}-{}.txt".format(neuron_set, atime)
 
                     all_neurons_df = pandas.concat(dflist, axis=0)
-                    all_neurons_df.to_csv(fn, sep='\t', header=True,
-                                          index=False)
+                    # force flush
+                    with open(fn, 'w') as fh:
+                        all_neurons_df.to_csv(fh, sep='\t', header=True,
+                                              index=False)
 
                     # only plotting connected elements at the moment
                     fn_ax = "05-se-ax-{}-{}.png".format(neuron_set, atime)
