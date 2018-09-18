@@ -175,13 +175,14 @@ class Postprocess:
                     if ((float(atime)/1000.) in
                             self.cfg['snapshots']['syn_elms']):
                         # Print individuals
+                        df = pandas.DataFrame()
                         locations_df = None
                         if 'E' in neuron_set:
-                            locations_df = pandas.DataFrame(self.neurons['E'],
-                                                            index=[0])
+                            locations_df = (
+                                df.from_records(self.neurons['E'], index=0))
                         else:
-                            locations_df = pandas.DataFrame(self.neurons['I'],
-                                                            index=[0])
+                            locations_df = (
+                                df.from_records(self.neurons['I'], index=0))
 
                         # gid, gridx, gridy, xcor, y cor, ax_con, ax_free ...
                         # and 6 more columns but only of indexes present in
