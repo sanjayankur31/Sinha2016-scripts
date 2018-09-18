@@ -94,7 +94,7 @@ def combine_files_column_wise(directory, shell_glob, separator):
                                         lineterminator='\n', header=None,
                                         index_col=0, error_bad_lines=False)
         except pandas.errors.EmptyDataError as e:
-            lgr.error("File empty: {}. Moving on".format(fn))
+            lgr.warning("File empty: {}. Moving on".format(fn))
         else:
             dataframes.append(dataframe)
 
