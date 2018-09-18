@@ -86,6 +86,7 @@ class Postprocess:
         read files again and again.
         """
         # Excitatory neurons
+        # nid gridx gridy posx posy
         self.neurons['E'] = self.__load_neurons("00-locations-E.txt",
                                                 cols=[0, 1, 2, 3, 4])
         # nid   posx    posy
@@ -144,6 +145,13 @@ class Postprocess:
         for neuron_set in ["lpz_c_E", "lpz_b_E", "p_lpz_E", "o_E", "lpz_c_I",
                            "lpz_b_I", "p_lpz_I", "o_I"]:
             neuron_set_o_fn = "05-se-all-{}.txt".format(neuron_set)
+            # set max x and y max for top view graph
+            if 'E' in neuron_set:
+                xmax = 80
+                ymax = 100
+            else:
+                xmax = 40
+                ymax = 50
             with open(neuron_set_o_fn, 'w') as f:
                 for atime in time_list:
                     ind_o_fn = "05-se-{}-{}.txt".format(neuron_set, atime)
@@ -156,15 +164,37 @@ class Postprocess:
                             neuron_set, atime), '\t')
 
                     # Print individuals
-                    # gid, xcor, y cor
-                    locations = self.neurons[neuron_set]
-                    locations_df = pandas.DataFrame(locations, index=[0])
-                    locations_df.join(ses)
+                    locations_df = None
+                    if 'E' in neuron_set:
+                        locations_df = pandas.DataFrame(self.neurons['E'],
+                                                        index=[0])
+                    else:
+                        locations_df = pandas.DataFrame(self.neurons['I'],
+                                                        index=[0])
+
+                    # gid, gridx, gridy, xcor, y cor, ax_con, ax_free ... and 6
+                    # more columns but only of indexes present in both
+                    locations_df.join(ses, how='inner')
                     locations_df.to_csv(ind_o_fn, sep='\t', header=True,
                                         index=True)
+                    # only plotting connected elements at the moment
+                    g_fn_ax = "05-se-ax-{}-{}.png".format(neuron_set, atime)
+                    g_fn_de = "05-se-denE-{}-{}.png".format(neuron_set, atime)
+                    g_fn_di = "05-se-denI-{}-{}.png".format(neuron_set, atime)
+
+                    args = ['-e', "g_fn_ax='{}'".format(g_fn_ax),
+                            '-e', "g_fn_de='{}'".format(g_fn_de),
+                            '-e', "g_fn_di='{}'".format(g_fn_di),
+                            '-e', "neuron_set='{}'".format(neuron_set),
+                            '-e', "plot_time='{}'".format(atime),
+                            '-e', "i_fn='{}'".format(ind_o_fn),
+                            '-e', "xmax='{}'".format(xmax),
+                            '-e', "ymax='{}'".format(ymax),
+                            ]
                     plot_using_gnuplot_binary(
                         os.path.join(self.cfg['plots_dir'],
-                                     'plot-synaptic-elements-top-view.plt'))
+                                     'plot-synaptic-elements-top-view.plt'),
+                        args)
 
                     # metrics of more than one column, so this needs to be
                     # done.

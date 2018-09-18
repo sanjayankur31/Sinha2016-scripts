@@ -11,19 +11,27 @@ set ylabel "Neurons"
 
 if (file_exists(i_fn)) {
     set cblabel "Connected axons"
-    set output o_fn
+    set output g_fn_ax
     set title "Connected axons for ".neuron_set." at t=".plot_time
     # row is y, not x
     set view map
-    plot i_fn using 2:3:4 with image
+    plot i_fn using 2:3:6 with image
 }
 
 if (file_exists(i_fn)) {
-    set cblabel "Free axons"
-    set output o_fn
-    set title "Connected axons for ".neuron_set." at t=".plot_time
+    set cblabel "Connected denE"
+    set output g_fn_de
+    set title "Connected denE for ".neuron_set." at t=".plot_time
     # row is y, not x
     set view map
-    plot i_fn using 2:3:5 with image
+    plot i_fn using 2:3:8 with image
 }
 
+if (file_exists(i_fn)) {
+    set cblabel "Connected denI"
+    set output g_fn_di
+    set title "Connected denI for ".neuron_set." at t=".plot_time
+    # row is y, not x
+    set view map
+    plot i_fn using 2:3:10 with image
+}
