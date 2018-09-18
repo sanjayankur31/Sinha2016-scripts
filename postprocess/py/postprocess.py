@@ -162,9 +162,6 @@ class Postprocess:
                     ses = combine_files_row_wise(
                         "..", "05-se-{}-*-{}.txt".format(
                             neuron_set, atime), '\t')
-                    ses.columns = ['gid', 'ax', 'ax_con', 'denE', 'denE_con',
-                                   'denI', 'denI_con']
-
                     # metrics of more than one column, so this needs to be
                     # done.
                     totals = [str(x) for x in ses.sum(axis=0).values]
@@ -173,6 +170,14 @@ class Postprocess:
                     print("{}\t{}\t{}\t{}".format(
                         atime, '\t'.join(means), '\t'.join(stds),
                         '\t'.join(totals)), file=f)
+
+                    # set columns, create the first column with gids
+                    # we don't do this before, because we do not want the
+                    # sum/mean/std of the gids to be printed to our file.
+                    # Before this, the gids are only in the index
+                    ses.columns = ['ax', 'ax_con', 'denE', 'denE_con', 'denI',
+                                   'denI_con']
+                    ses['gid'] = ses.index
 
                     if ((float(atime)/1000.) in
                             self.cfg['snapshots']['syn_elms']):
