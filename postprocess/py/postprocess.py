@@ -196,7 +196,7 @@ class Postprocess:
                         # both
                         # rename columns so that we have unique names
                         locations_df.columns = ['gid', 'gx', 'gy', 'x', 'y']
-                        locations_df.join(ses, on='gid', how='right')
+                        locations_df.merge(ses, on='gid', how='inner')
                         locations_df.to_csv(ind_o_fn, sep='\t', header=True,
                                             index=True)
                         # only plotting connected elements at the moment
