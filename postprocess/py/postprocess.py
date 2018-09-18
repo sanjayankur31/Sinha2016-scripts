@@ -200,7 +200,7 @@ class Postprocess:
                         # clearer to me---label columns and join based on them
                         new_df = locations_df.merge(ses, on='gid', how='inner')
                         new_df.to_csv(ind_o_fn, sep='\t', header=True,
-                                      index=True)
+                                      index=False)
                         # only plotting connected elements at the moment
                         fn_ax = "05-se-ax-{}-{}.png".format(neuron_set, atime)
                         fn_de = "05-se-denE-{}-{}.png".format(neuron_set,
