@@ -193,12 +193,14 @@ class Postprocess:
 
                         # gid, gridx, gridy, xcor, y cor, ax_con, ax_free ...
                         # and 6 more columns but only of indexes present in
-                        # both
+                        # both.
                         # rename columns so that we have unique names
                         locations_df.columns = ['gid', 'gx', 'gy', 'x', 'y']
-                        locations_df.merge(ses, on='gid', how='inner')
-                        locations_df.to_csv(ind_o_fn, sep='\t', header=True,
-                                            index=True)
+                        # could've used .join using indexes, but this seems
+                        # clearer to me---label columns and join based on them
+                        new_df = locations_df.merge(ses, on='gid', how='inner')
+                        new_df.to_csv(ind_o_fn, sep='\t', header=True,
+                                      index=True)
                         # only plotting connected elements at the moment
                         fn_ax = "05-se-ax-{}-{}.png".format(neuron_set, atime)
                         fn_de = "05-se-denE-{}-{}.png".format(neuron_set,
