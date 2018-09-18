@@ -278,9 +278,12 @@ class Postprocess:
                         '-e', "i_fn='{}'".format(fn),
                         '-e', "xmax='{}'".format(xmax),
                         '-e', "ymax='{}'".format(ymax),
-                        '-e', "ax_min='{}'".format(ext[n_set]['ax_min']),
-                        '-e', "denE_min='{}'".format(ext[n_set]['denE_min']),
-                        '-e', "denI_min='{}'".format(ext[n_set]['denI_min']),
+                        '-e', "ax_min='{}'".format(
+                            0.75 * ext[n_set]['ax_max']),
+                        '-e', "denE_min='{}'".format(
+                            0.75 * ext[n_set]['denE_max']),
+                        '-e', "denI_min='{}'".format(
+                            0.75 * ext[n_set]['denI_max']),
                         '-e', "ax_max='{}'".format(ext[n_set]['ax_max']),
                         '-e', "denE_max='{}'".format(ext[n_set]['denE_max']),
                         '-e', "denI_max='{}'".format(ext[n_set]['denI_max']),
