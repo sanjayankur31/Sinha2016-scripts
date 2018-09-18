@@ -148,12 +148,14 @@ class Postprocess:
         # and we can compare them. If each top view graph has its own range, it
         # becomes extremely hard to see what's going on
         ext = {}
+        ext['E'] = {}
         ext['E']['ax_max'] = 0
         ext['E']['denE_max'] = 0
         ext['E']['denI_max'] = 0
         ext['E']['ax_min'] = 0
         ext['E']['denE_min'] = 0
         ext['E']['denI_min'] = 0
+        ext['I'] = {}
         ext['I']['ax_max'] = 0
         ext['I']['denE_max'] = 0
         ext['I']['denI_max'] = 0
