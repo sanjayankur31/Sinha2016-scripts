@@ -52,6 +52,32 @@ main ()
         "$IDENTIFIER"05-se-all-means-p_lpz_I.png \
         "$IDENTIFIER"05-se-all-means-o_I.png \
         -tile 4x4 -geometry +2+2  "$IDENTIFIER"structural-plasticity-montage-I.png
+
+    # Get the number of columns we have. One column for each time.
+    COLS=$(ls -- *05-se-ax-total-I*.png | wc -l)
+    montage \
+        "$IDENTIFIER"05-se-ax-total-E*.png \
+        "$IDENTIFIER"05-se-denE-total-E*.png \
+        "$IDENTIFIER"05-se-denI-total-E*.png \
+        -tile "$COLS"x3 -geometry +2+2 "$IDENTIFIER"05-se-total-montage-E.png
+
+    montage \
+        "$IDENTIFIER"05-se-ax-con-E*.png \
+        "$IDENTIFIER"05-se-denE-con-E*.png \
+        "$IDENTIFIER"05-se-denI-con-E*.png \
+        -tile "$COLS"x3 -geometry +2+2 "$IDENTIFIER"05-se-con-montage-E.png
+
+    montage \
+        "$IDENTIFIER"05-se-ax-total-I*.png \
+        "$IDENTIFIER"05-se-denE-total-I*.png \
+        "$IDENTIFIER"05-se-denI-total-I*.png \
+        -tile "$COLS"x3 -geometry +2+2 "$IDENTIFIER"05-se-total-montage-I.png
+
+    montage \
+        "$IDENTIFIER"05-se-ax-con-I*.png \
+        "$IDENTIFIER"05-se-denE-con-I*.png \
+        "$IDENTIFIER"05-se-denI-con-I*.png \
+        -tile "$COLS"x3 -geometry +2+2 "$IDENTIFIER"05-se-con-montage-I.png
 }
 
 
