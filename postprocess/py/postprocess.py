@@ -214,6 +214,7 @@ class Postprocess:
                 fn = "05-se-{}-{}.txt".format(neuron_set, atime)
 
                 all_neurons_df = pandas.concat(dflist, axis=0)
+                all_neurons_df.sort_values('gid', axis=0, inplace=True)
                 # force flush
                 with open(fn, 'w') as fh:
                     all_neurons_df.to_csv(fh, sep='\t', header=True,
