@@ -197,47 +197,48 @@ class Postprocess:
                                 df_list['I'][atime] = []
                             df_list['I'][atime].append(new_df)
 
-            # Plotting of top view graphs for complete E and I populations
-            for neuron_set in ['E', 'I']:
-                if neuron_set == 'E':
-                    xmax = 80
-                    ymax = 100
-                else:
-                    xmax = 40
-                    ymax = 50
-
-                for atime, dflist in df_list[neuron_set].items():
-                    fn = "05-se-{}-{}.txt".format(neuron_set, atime)
-
-                    all_neurons_df = pandas.concat(dflist, axis=0)
-                    # force flush
-                    with open(fn, 'w') as fh:
-                        all_neurons_df.to_csv(fh, sep='\t', header=True,
-                                              index=False)
-
-                    # only plotting connected elements at the moment
-                    fn_ax = "05-se-ax-{}-{}.png".format(neuron_set, atime)
-                    fn_de = "05-se-denE-{}-{}.png".format(neuron_set,
-                                                          atime)
-                    fn_di = "05-se-denI-{}-{}.png".format(neuron_set,
-                                                          atime)
-
-                    args = ['-e', "fn_ax='{}'".format(fn_ax),
-                            '-e', "fn_de='{}'".format(fn_de),
-                            '-e', "fn_di='{}'".format(fn_di),
-                            '-e', "neuron_set='{}'".format(neuron_set),
-                            '-e', "plot_time='{}'".format(atime),
-                            '-e', "i_fn='{}'".format(fn),
-                            '-e', "xmax='{}'".format(xmax),
-                            '-e', "ymax='{}'".format(ymax),
-                            ]
-                    plot_using_gnuplot_binary(
-                        os.path.join(
-                            self.cfg['plots_dir'],
-                            'plot-synaptic-elements-top-view.plt'), args)
-
             self.lgr.info(
                 "Processed syn elms metrics for {} neurons..".format(
+                    neuron_set))
+
+        # Plotting of top view graphs for complete E and I populations
+        for neuron_set in ['E', 'I']:
+            if neuron_set == 'E':
+                xmax = 80
+                ymax = 100
+            else:
+                xmax = 40
+                ymax = 50
+
+            for atime, dflist in df_list[neuron_set].items():
+                fn = "05-se-{}-{}.txt".format(neuron_set, atime)
+
+                all_neurons_df = pandas.concat(dflist, axis=0)
+                # force flush
+                with open(fn, 'w') as fh:
+                    all_neurons_df.to_csv(fh, sep='\t', header=True,
+                                          index=False)
+
+                # only plotting connected elements at the moment
+                fn_ax = "05-se-ax-{}-{}.png".format(neuron_set, atime)
+                fn_de = "05-se-denE-{}-{}.png".format(neuron_set, atime)
+                fn_di = "05-se-denI-{}-{}.png".format(neuron_set, atime)
+
+                args = ['-e', "fn_ax='{}'".format(fn_ax),
+                        '-e', "fn_de='{}'".format(fn_de),
+                        '-e', "fn_di='{}'".format(fn_di),
+                        '-e', "neuron_set='{}'".format(neuron_set),
+                        '-e', "plot_time='{}'".format(atime),
+                        '-e', "i_fn='{}'".format(fn),
+                        '-e', "xmax='{}'".format(xmax),
+                        '-e', "ymax='{}'".format(ymax),
+                        ]
+                plot_using_gnuplot_binary(
+                    os.path.join(self.cfg['plots_dir'],
+                                 'plot-synaptic-elements-top-view.plt'), args)
+
+            self.lgr.info(
+                "Processed syn elms time graphs for {} neurons..".format(
                     neuron_set))
 
         plot_using_gnuplot_binary(
