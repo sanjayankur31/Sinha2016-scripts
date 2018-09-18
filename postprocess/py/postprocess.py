@@ -139,19 +139,22 @@ class Postprocess:
         if "syn_elms" not in self.cfg['time_graphs']:
             return True
 
+        # diabolical top level list
+        df_list = {}
+        df_list['E'] = {}
+        df_list['I'] = {}
+
+        locations_df_E = (pandas.DataFrame.from_records(self.neurons['E']))
+        locations_df_E.columns = ['gid', 'gx', 'gy', 'x', 'y']
+        locations_df_I = (pandas.DataFrame.from_records(self.neurons['I']))
+        locations_df_I.columns = ['gid', 'gx', 'gy', 'x', 'y']
+
         self.lgr.info("Processing synaptic elements..")
         time_list = get_info_from_file_series("..", "05-se-lpz_b_E-0-",
                                               ".txt")
         for neuron_set in ["lpz_c_E", "lpz_b_E", "p_lpz_E", "o_E", "lpz_c_I",
                            "lpz_b_I", "p_lpz_I", "o_I"]:
             neuron_set_o_fn = "05-se-all-{}.txt".format(neuron_set)
-            # set max x and y max for top view graph
-            if 'E' in neuron_set:
-                xmax = 80
-                ymax = 100
-            else:
-                xmax = 40
-                ymax = 50
             with open(neuron_set_o_fn, 'w') as f:
                 for atime in time_list:
                     ind_o_fn = "05-se-{}-{}.txt".format(neuron_set, atime)
@@ -182,45 +185,55 @@ class Postprocess:
                     if ((float(atime)/1000.) in
                             self.cfg['snapshots']['syn_elms']):
                         # Print individuals
-                        df = pandas.DataFrame()
-                        locations_df = None
                         if 'E' in neuron_set:
-                            locations_df = (
-                                df.from_records(self.neurons['E']))
+                            new_df = locations_df_E.merge(ses, on='gid',
+                                                          how='inner')
+                            if atime not in df_list['E']:
+                                df_list['E'][atime] = []
+                            df_list['E'][atime].append(new_df)
                         else:
-                            locations_df = (
-                                df.from_records(self.neurons['I']))
+                            new_df = locations_df_I.merge(ses, on='gid',
+                                                          how='inner')
+                            if atime not in df_list['I']:
+                                df_list['I'][atime] = []
+                            df_list['I'][atime].append(new_df)
 
-                        # gid, gridx, gridy, xcor, y cor, ax_con, ax_free ...
-                        # and 6 more columns but only of indexes present in
-                        # both.
-                        # rename columns so that we have unique names
-                        locations_df.columns = ['gid', 'gx', 'gy', 'x', 'y']
-                        # could've used .join using indexes, but this seems
-                        # clearer to me---label columns and join based on them
-                        new_df = locations_df.merge(ses, on='gid', how='inner')
-                        new_df.to_csv(ind_o_fn, sep='\t', header=True,
-                                      index=False)
-                        # only plotting connected elements at the moment
-                        fn_ax = "05-se-ax-{}-{}.png".format(neuron_set, atime)
-                        fn_de = "05-se-denE-{}-{}.png".format(neuron_set,
-                                                              atime)
-                        fn_di = "05-se-denI-{}-{}.png".format(neuron_set,
-                                                              atime)
+            # Plotting of top view graphs for complete E and I populations
+            for neuron_set in ['E', 'I']:
+                if neuron_set == 'E':
+                    xmax = 80
+                    ymax = 100
+                else:
+                    xmax = 40
+                    ymax = 50
 
-                        args = ['-e', "fn_ax='{}'".format(fn_ax),
-                                '-e', "fn_de='{}'".format(fn_de),
-                                '-e', "fn_di='{}'".format(fn_di),
-                                '-e', "neuron_set='{}'".format(neuron_set),
-                                '-e', "plot_time='{}'".format(atime),
-                                '-e', "i_fn='{}'".format(ind_o_fn),
-                                '-e', "xmax='{}'".format(xmax),
-                                '-e', "ymax='{}'".format(ymax),
-                                ]
-                        plot_using_gnuplot_binary(
-                            os.path.join(
-                                self.cfg['plots_dir'],
-                                'plot-synaptic-elements-top-view.plt'), args)
+                for atime, dflist in df_list[neuron_set]:
+                    fn = "05-se-{}-{}.txt".format(neuron_set, atime)
+
+                    all_neurons_df = pandas.concat(dflist, axis=0)
+                    all_neurons_df.to_csv(fn, sep='\t', header=True,
+                                          index=False)
+
+                    # only plotting connected elements at the moment
+                    fn_ax = "05-se-ax-{}-{}.png".format(neuron_set, atime)
+                    fn_de = "05-se-denE-{}-{}.png".format(neuron_set,
+                                                          atime)
+                    fn_di = "05-se-denI-{}-{}.png".format(neuron_set,
+                                                          atime)
+
+                    args = ['-e', "fn_ax='{}'".format(fn_ax),
+                            '-e', "fn_de='{}'".format(fn_de),
+                            '-e', "fn_di='{}'".format(fn_di),
+                            '-e', "neuron_set='{}'".format(neuron_set),
+                            '-e', "plot_time='{}'".format(atime),
+                            '-e', "i_fn='{}'".format(ind_o_fn),
+                            '-e', "xmax='{}'".format(xmax),
+                            '-e', "ymax='{}'".format(ymax),
+                            ]
+                    plot_using_gnuplot_binary(
+                        os.path.join(
+                            self.cfg['plots_dir'],
+                            'plot-synaptic-elements-top-view.plt'), args)
 
             self.lgr.info(
                 "Processed syn elms metrics for {} neurons..".format(
