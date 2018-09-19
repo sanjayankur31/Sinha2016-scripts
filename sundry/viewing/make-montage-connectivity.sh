@@ -75,35 +75,41 @@ main ()
         -tile 4x7 -geometry +2+2  "$IDENTIFIER"75-connections-I-montage.png
 
     # Get the number of columns we have. One column for each time.
-    COLS=$(ls -- *75-connections-hist-EE*incoming.png | wc -l)
+    COLS=$(ls -- *75-connections-hist-EE*in.png | wc -l)
 
     montage \
-        "$IDENTIFIER"75-connections-hist-EE-*-incoming.png \
-        "$IDENTIFIER"75-connections-hist-IE-*-incoming.png \
-        "$IDENTIFIER"75-connections-hist-EI-*-incoming.png \
-        "$IDENTIFIER"75-connections-hist-II-*-incoming.png \
-        -tile "$COLS"x4 -geometry +2+2 "$IDENTIFIER"75-connections-incoming-time-lapse-hist-montage.png
+        "$IDENTIFIER"75-connections-hist-EE-*-in.png \
+        "$IDENTIFIER"75-connections-hist-IE-*-in.png \
+        "$IDENTIFIER"75-connections-hist-EI-*-in.png \
+        "$IDENTIFIER"75-connections-hist-II-*-in.png \
+        -tile "$COLS"x4 -geometry +2+2 "$IDENTIFIER"75-connections-in-time-lapse-hist-montage.png
 
     montage \
-        "$IDENTIFIER"75-connections-top-EE-*-incoming.png \
-        "$IDENTIFIER"75-connections-top-IE-*-incoming.png \
-        "$IDENTIFIER"75-connections-top-EI-*-incoming.png \
-        "$IDENTIFIER"75-connections-top-II-*-incoming.png \
-        -tile "$COLS"x4 -geometry +2+2 "$IDENTIFIER"75-connections-incoming-time-lapse-top-montage.png
+        "$IDENTIFIER"75-connections-hist-EE-*-out.png \
+        "$IDENTIFIER"75-connections-hist-IE-*-out.png \
+        "$IDENTIFIER"75-connections-hist-EI-*-out.png \
+        "$IDENTIFIER"75-connections-hist-II-*-out.png \
+        -tile "$COLS"x4 -geometry +2+2 "$IDENTIFIER"75-connections-out-time-lapse-hist-montage.png
 
-    montage \
-        "$IDENTIFIER"75-connections-hist-EE-*-outgoing.png \
-        "$IDENTIFIER"75-connections-hist-IE-*-outgoing.png \
-        "$IDENTIFIER"75-connections-hist-EI-*-outgoing.png \
-        "$IDENTIFIER"75-connections-hist-II-*-outgoing.png \
-        -tile "$COLS"x4 -geometry +2+2 "$IDENTIFIER"75-connections-outgoing-time-lapse-hist-montage.png
+    for REGION in "lpz_c_E" "lpz_b_E" "p_lpz_E" "o_E";
+    do
+        montage \
+            "$IDENTIFIER"75-conns-top-EE-"$REGION"-*-in.png \
+            "$IDENTIFIER"75-conns-top-EE-"$REGION"-*-out.png \
+            "$IDENTIFIER"75-conns-top-IE-"$REGION"-*-in.png \
+            "$IDENTIFIER"75-conns-top-EI-"$REGION"-*-out.png \
+            -tile "$COLS"x4 -geometry +2+2 "$IDENTIFIER"75-connections-E-"$REGION"-time-top-montage.png
+    done
 
-    montage \
-        "$IDENTIFIER"75-connections-top-EE-*-outgoing.png \
-        "$IDENTIFIER"75-connections-top-IE-*-outgoing.png \
-        "$IDENTIFIER"75-connections-top-EI-*-outgoing.png \
-        "$IDENTIFIER"75-connections-top-II-*-outgoing.png \
-        -tile "$COLS"x4 -geometry +2+2 "$IDENTIFIER"75-connections-outgoing-time-lapse-top-montage.png
+    for REGION in "lpz_c_I" "lpz_b_I" "p_lpz_I" "o_I";
+    do
+        montage \
+            "$IDENTIFIER"75-conns-top-II-"$REGION"-*-out.png \
+            "$IDENTIFIER"75-conns-top-II-"$REGION"-*-out.png \
+            "$IDENTIFIER"75-conns-top-EI-"$REGION"-*-in.png \
+            "$IDENTIFIER"75-conns-top-IE-"$REGION"-*-out.png \
+            -tile "$COLS"x4 -geometry +2+2 "$IDENTIFIER"75-connections-I-"$REGION"-time-top-montage.png
+    done
 }
 
 
