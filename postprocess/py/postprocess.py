@@ -591,12 +591,22 @@ class Postprocess:
         # set up proper samples for neuron sets to improve visualisation
         # set a seed so that whenever we post process we get the same samples
         random.seed(21)
-        # sample for the top level graphs. I take an E and I neuron in the
-        # center of the grid and plot synapses coming in and out of it, instead
-        # of taking random sets of neurons.
+        # sample for the top level graphs.
         sample = {}
-        sample['E'] = (3960.,)
-        sample['I'] = (8980.,)
+        sample['lpz_c_E'] = (random.sample(list(self.neurons['lpz_c_E'][:, 0]),
+                                           k=1))
+        sample['lpz_b_E'] = (random.sample(list(self.neurons['lpz_b_E'][:, 0]),
+                                           k=1))
+        sample['p_lpz_E'] = (random.sample(list(self.neurons['p_lpz_E'][:, 0]),
+                                           k=1))
+        sample['o_E'] = (random.sample(list(self.neurons['o_E'][:, 0]), k=1))
+        sample['lpz_c_I'] = (random.sample(list(self.neurons['lpz_c_I'][:, 0]),
+                                           k=1))
+        sample['lpz_b_I'] = (random.sample(list(self.neurons['lpz_b_I'][:, 0]),
+                                           k=1))
+        sample['p_lpz_I'] = (random.sample(list(self.neurons['p_lpz_I'][:, 0]),
+                                           k=1))
+        sample['o_I'] = (random.sample(list(self.neurons['o_I'][:, 0]), k=1))
         # Samples for histograms of connection lengths
         conn_len_hist_sample = {}
         conn_len_hist_sample['E'] = (
@@ -637,10 +647,6 @@ class Postprocess:
             self.lgr.debug("Processing {} connections".format(synapse_set))
             src_nrn_type = synapse_set[0]
             dest_nrn_type = synapse_set[1]
-
-            self.lgr.debug("Top view sample: {} {} and {} {}".format(
-                len(sample[src_nrn_type]), src_nrn_type,
-                len(sample[dest_nrn_type]), dest_nrn_type))
 
             # set up a dictionary that contains information on various regions
             # for this synapse set
@@ -727,17 +733,27 @@ class Postprocess:
                 # list of times
                 if ((float(atime)/1000.) in
                         self.cfg['snapshots']['synapses']):
-                    o_fn_i = "75-connections-top-{}-{}-incoming.txt".format(
-                        synapse_set, float(atime)/1000.)
-                    o_fh_i = open(o_fn_i, 'w')
-                    o_fn_o = "75-connections-top-{}-{}-outgoing.txt".format(
-                        synapse_set, float(atime)/1000.)
-                    o_fh_o = open(o_fn_o, 'w')
+                    for n_set, nrns in sample.items():
+                        # top view file things
+                        # python does not do block scope, so these will still
+                        # be valid throughout the function
+                        o_fn_o = {}
+                        o_fn_i = {}
+                        o_fh_o = {}
+                        o_fh_i = {}
+                        o_fn_i[n_set] = "75-conns-top-{}-{}-{}-in.txt".format(
+                            synapse_set, n_set, float(atime)/1000.)
+                        o_fh_i[n_set] = open(o_fn_i, 'w')
 
-                    o_fn_l_i = "75-syn-lengths-{}-{}-incoming.txt".format(
+                        o_fn_o[n_set] = "75-conns-top-{}-{}-{}-out.txt".format(
+                            synapse_set, n_set, float(atime)/1000.)
+                        o_fh_o[n_set] = open(o_fn_o, 'w')
+
+                    # These are not classified per region
+                    o_fn_l_i = "75-syn-lengths-{}-{}-in.txt".format(
                         synapse_set, float(atime)/1000.)
                     o_fh_l_i = open(o_fn_l_i, 'w')
-                    o_fn_l_o = "75-syn-lengths-{}-{}-outgoing.txt".format(
+                    o_fn_l_o = "75-syn-lengths-{}-{}-out.txt".format(
                         synapse_set, float(atime)/1000.)
                     o_fh_l_o = open(o_fn_l_o, 'w')
 
@@ -753,32 +769,33 @@ class Postprocess:
                     # it's a source
                     if ((float(atime)/1000.) in
                             self.cfg['snapshots']['synapses']):
-                        if row[0] in sample[src_nrn_type]:
-                            src_info = self.neurons[src_nrn_type][int(
-                                row[0] - self.neurons[src_nrn_type][0][0])]
-                            dest_info = self.neurons[dest_nrn_type][int(
-                                row[1] - self.neurons[dest_nrn_type][0][0])]
+                        for n_set, nrns in sample.items():
+                            if row[0] in nrns:
+                                src_info = self.neurons[src_nrn_type][int(
+                                    row[0] - self.neurons[src_nrn_type][0][0])]
+                                dest_info = self.neurons[dest_nrn_type][int(
+                                    row[1] - self.neurons[dest_nrn_type][0][0])]
 
-                            print("{}\t{}\t{}\t{}".format(
-                                    src_info[3], src_info[4],
-                                    dest_info[3], dest_info[4]),
-                                  file=o_fh_o)
+                                print("{}\t{}\t{}\t{}".format(
+                                        src_info[3], src_info[4],
+                                        dest_info[3], dest_info[4]),
+                                      file=o_fh_o[n_set])
 
-                        # it's a destination
-                        if row[1] in sample[dest_nrn_type]:
-                            src_info = self.neurons[src_nrn_type][int(
-                                row[0] - self.neurons[src_nrn_type][0][0])]
-                            dest_info = self.neurons[dest_nrn_type][int(
-                                row[1] - self.neurons[dest_nrn_type][0][0])]
+                            # it's a destination
+                            if row[1] in nrns:
+                                src_info = self.neurons[src_nrn_type][int(
+                                    row[0] - self.neurons[src_nrn_type][0][0])]
+                                dest_info = self.neurons[dest_nrn_type][int(
+                                    row[1] - self.neurons[dest_nrn_type][0][0])]
 
-                            print("{}\t{}\t{}\t{}".format(
-                                    src_info[3], src_info[4],
-                                    dest_info[3], dest_info[4]),
-                                  file=o_fh_i)
+                                print("{}\t{}\t{}\t{}".format(
+                                        src_info[3], src_info[4],
+                                        dest_info[3], dest_info[4]),
+                                      file=o_fh_i[n_set])
 
                         # for length histograms we have a different, larger
-                        # sample, since only looking at one neuron would not be
-                        # sufficient it's a source
+                        # sample
+                        # it's a source
                         if row[0] in conn_len_hist_sample[src_nrn_type]:
                             src_info = self.neurons[src_nrn_type][int(
                                 row[0] - self.neurons[src_nrn_type][0][0])]
@@ -823,66 +840,67 @@ class Postprocess:
                 # specified time
                 if ((float(atime)/1000.) in
                         self.cfg['snapshots']['synapses']):
-                    o_fh_i.close()
-                    o_fh_o.close()
+                    for n_set, nrns in sample.items():
+                        o_fh_i[n_set].close()
+                        o_fh_o[n_set].close()
+
+                        # now on to plotting
+                        p_fn = "75-conns-top-{}-{}-{}-in.png".format(
+                            synapse_set, n_set, float(atime)/1000.)
+                        args = [
+                            "-e",
+                            "o_fn='{}'".format(p_fn),
+                            "-e",
+                            "i_fn='{}'".format(o_fn_i[n_set]),
+                            "-e",
+                            "o_x='{}'".format(o_x),
+                            "-e",
+                            "o_y='{}'".format(o_y),
+                            "-e",
+                            "r_p_lpz='{}'".format(rad_p_lpz),
+                            "-e",
+                            "r_lpz_b='{}'".format(rad_lpz_b),
+                            "-e",
+                            "r_lpz_c='{}'".format(rad_lpz_c),
+                            "-e",
+                            "plot_title='in synapses for {} at {}'".format(
+                                n_set, float(atime)/1000.)
+                        ]
+                        plot_using_gnuplot_binary(
+                            os.path.join(self.cfg['plots_dir'],
+                                         'plot-top-view-connections.plt'),
+                            args)
+
+                        p_fn = "75-conns-top-{}-{}-{}-out.png".format(
+                            synapse_set, n_set, float(atime)/1000.)
+                        args = [
+                            "-e",
+                            "o_fn='{}'".format(p_fn),
+                            "-e",
+                            "i_fn='{}'".format(o_fn_o[n_set]),
+                            "-e",
+                            "o_x='{}'".format(o_x),
+                            "-e",
+                            "o_y='{}'".format(o_y),
+                            "-e",
+                            "r_p_lpz='{}'".format(rad_p_lpz),
+                            "-e",
+                            "r_lpz_b='{}'".format(rad_lpz_b),
+                            "-e",
+                            "r_lpz_c='{}'".format(rad_lpz_c),
+                            "-e",
+                            "plot_title='out synapses for {} at {}'".format(
+                                n_set, float(atime)/1000.)
+                        ]
+                        plot_using_gnuplot_binary(
+                            os.path.join(self.cfg['plots_dir'],
+                                         'plot-top-view-connections.plt'),
+                            args)
+
                     o_fh_l_i.close()
                     o_fh_l_o.close()
-
-                    # now on to plotting
-                    p_fn = "75-connections-top-{}-{}-incoming.png".format(
-                        synapse_set, float(atime)/1000.)
-                    args = [
-                        "-e",
-                        "o_fn='{}'".format(p_fn),
-                        "-e",
-                        "i_fn='{}'".format(o_fn_i),
-                        "-e",
-                        "o_x='{}'".format(o_x),
-                        "-e",
-                        "o_y='{}'".format(o_y),
-                        "-e",
-                        "r_p_lpz='{}'".format(rad_p_lpz),
-                        "-e",
-                        "r_lpz_b='{}'".format(rad_lpz_b),
-                        "-e",
-                        "r_lpz_c='{}'".format(rad_lpz_c),
-                        "-e",
-                        "plot_title='incoming synapses for {} at {}'".format(
-                            synapse_set, float(atime)/1000.)
-                    ]
-                    plot_using_gnuplot_binary(
-                        os.path.join(self.cfg['plots_dir'],
-                                     'plot-top-view-connections.plt'),
-                        args)
-
-                    p_fn = "75-connections-top-{}-{}-outgoing.png".format(
-                        synapse_set, float(atime)/1000.)
-                    args = [
-                        "-e",
-                        "o_fn='{}'".format(p_fn),
-                        "-e",
-                        "i_fn='{}'".format(o_fn_o),
-                        "-e",
-                        "o_x='{}'".format(o_x),
-                        "-e",
-                        "o_y='{}'".format(o_y),
-                        "-e",
-                        "r_p_lpz='{}'".format(rad_p_lpz),
-                        "-e",
-                        "r_lpz_b='{}'".format(rad_lpz_b),
-                        "-e",
-                        "r_lpz_c='{}'".format(rad_lpz_c),
-                        "-e",
-                        "plot_title='outgoing synapses for {} at {}'".format(
-                            synapse_set, float(atime)/1000.)
-                    ]
-                    plot_using_gnuplot_binary(
-                        os.path.join(self.cfg['plots_dir'],
-                                     'plot-top-view-connections.plt'),
-                        args)
-
                     p_h_fn = (
-                        "75-connections-hist-{}-{}-incoming.png".format(
+                        "75-connections-hist-{}-{}-in.png".format(
                             synapse_set, float(atime)/1000.
                         ))
                     args = [
@@ -900,7 +918,7 @@ class Postprocess:
                         args)
 
                     p_h_fn = (
-                        "75-connections-hist-{}-{}-outgoing.png".format(
+                        "75-connections-hist-{}-{}-out.png".format(
                             synapse_set, float(atime)/1000.
                         ))
                     args = [
