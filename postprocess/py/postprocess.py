@@ -557,29 +557,16 @@ class Postprocess:
             os.path.join(self.cfg['plots_dir'],
                          'plot-total-synapse-changes.plt'))
 
-    def generate_synapse_graphs(self, sample_size=400):
-        """Generate synapse geometry graphs.
-
-        Generates the time graphs, the histograms, and the top level snapshots
-
-        THIS METHOD HAS GOTTEN OUT OF HAND AND NEEDS REFACTORING!
-
-        :sample_size: number of neurons to pick from each region: LPZ C, LPZ
-                    B, peri LPZ
+    def __process_synapses(self, synapse_set, regions, sample,
+                           conn_len_hist_sample):
         """
-        if "synapses" not in self.cfg['time_graphs']:
-            return True
+        Process synapses sets.
 
-        self.lgr.info("Processing synapse graphs..")
+        Written this separately so that I can do them in parallel
+        """
+        self.lgr.debug("Processing {} connections".format(synapse_set))
         time_list = get_info_from_file_series("..", "08-syn_conns-EE-0-",
                                               ".txt")
-        # Get our regions of interest
-        regions = []
-        for key, value in self.neurons.items():
-            if key != 'E' and key != 'I' and key != 'lpz_E' and key != 'lpz_I':
-                regions.append(key)
-        self.lgr.debug("{} regions identified: {}".format(
-            len(regions), regions))
 
         # make source destination pairs
         src_dest_pairs = list(
@@ -588,25 +575,415 @@ class Postprocess:
         self.lgr.debug("Total src dest pairs are {}".format(
             len(src_dest_pairs)))
 
+        # get origin and radii to draw circles to show different regions
+        o_x = (max(self.neurons['o_E'][:, 1]) -
+               min(self.neurons['o_E'][:, 1]))/2
+        o_y = (max(self.neurons['o_E'][:, 2]) -
+               min(self.neurons['o_E'][:, 2]))/2
+        self.lgr.debug("Centre is: {}, {}".format(o_x, o_y))
+        lpz_c_max_y = (max(self.neurons['lpz_c_E'][:, 2]))
+        rad_lpz_c = lpz_c_max_y - o_y
+        self.lgr.debug("Rad of lpz c is: {}".format(rad_lpz_c))
+
+        lpz_b_max_y = (max(self.neurons['lpz_b_E'][:, 2]))
+        rad_lpz_b = lpz_b_max_y - o_y
+        self.lgr.debug("Rad of lpz b is: {}".format(rad_lpz_b))
+
+        p_lpz_max_y = (max(self.neurons['p_lpz_E'][:, 2]))
+        rad_p_lpz = p_lpz_max_y - o_y
+        self.lgr.debug("Rad of p lpz is: {}".format(rad_p_lpz))
+        src_nrn_type = synapse_set[0]
+        dest_nrn_type = synapse_set[1]
+
+        # set up a dictionary that contains information on various regions
+        # for this synapse set
+        # We want the order to be maintained so that we always get the same
+        # order of sources when printing the data for histograms later
+        synapse_set_regions = OrderedDict()
+        for src, dest in src_dest_pairs:
+            # only relevant regions are selected. For example, for an
+            # EE synapse, all I regions are useless. There won't be any
+            # EE synapses between neurons in those regions.
+            if src_nrn_type in src and dest_nrn_type in dest:
+                synapses_name = "{}-to-{}".format(src, dest)
+                newdict = {}
+                newdict['src'] = src
+                newdict['dest'] = dest
+                newdict['weights'] = []
+                newdict['o_fn'] = ("08-syn_conns-{}-{}.txt".format(
+                        synapses_name, synapse_set))
+                newdict['o_fh'] = open(newdict['o_fn'], 'w')
+                # all possible connections between the src and dest
+                # hopefully precomputing these will speed up the
+                # postprocessing somewhat
+                # frozenset is immutable and faster than set
+                newdict['conns'] = frozenset(
+                    itertools.product(self.neurons[src][:, 0],
+                                      self.neurons[dest][:, 0])
+                )
+                synapse_set_regions[synapses_name] = newdict
+                self.lgr.debug("Synapse set up: {}".format(
+                    synapses_name))
+
+        # open files for each region that is being projected on
+        # and set a header
+        # note that I'm using an ordereddict, so the order of the data
+        # printed later will be the same when I iterate over the dict
+        # again
+        syn_con_total_data_fhs = {}
+        conductance_total_data_fhs = {}
+        # iterate over the various dest regions
+        for aregion in regions:
+            # only deal with destination regions of this type of neuron
+            if dest_nrn_type in aregion:
+                fn = ("081-syn_conns-incoming-totals-{}-{}.txt".format(
+                    aregion, synapse_set))
+                fh = open(fn, 'w')
+                syn_con_total_data_fhs[aregion] = fh
+
+                fn1 = (
+                    "081-conductance-incoming-totals-{}-{}.txt".format(
+                        aregion, synapse_set)
+                )
+                fh1 = open(fn1, 'w')
+                conductance_total_data_fhs[aregion] = fh1
+                # here onwards, we can iterate over the keys of this
+                # dict to get the destination regions
+
+                # print the header, remember to ignore this in GNUplot,
+                # or maybe I can use this to generate the xtic labels?
+                # first column is the time
+                sources = ['time']
+                # get all possible source regions for this destination
+                # set, which make up the other columns
+                for key, value in synapse_set_regions.items():
+                    if value['dest'] == aregion:
+                        sources.append(value['src'])
+                print(*sources, sep='\t', file=fh)
+                print(*sources, sep='\t', file=fh1)
+
+        # start
+        for atime in time_list:
+            self.lgr.debug(
+                "Processing syn conns for {} at {}".format(
+                    synapse_set, float(atime)/1000.))
+            syn_conns = pandas.DataFrame()
+            syn_conns = combine_files_row_wise(
+                "..", "08-syn_conns-{}-*-{}.txt".format(
+                    synapse_set, atime), '\t')
+
+            # reset counts
+            for key, value in synapse_set_regions.items():
+                value['weights'] = []
+
+            # for top views and other snapshots, we check if this is on our
+            # list of times
+            if ((float(atime)/1000.) in
+                    self.cfg['snapshots']['synapses']):
+                # top view file things
+                o_fn_o = {}
+                o_fn_i = {}
+                o_fh_o = {}
+                o_fh_i = {}
+                for n_set, nrns in sample.items():
+                    # only if its a region of the type we're looking at in
+                    # the synapse set do we process it, otherwise it'll be
+                    # empty: while processing EE synapses, I regions can
+                    # neither be sources nor destinations.
+                    if dest_nrn_type in n_set:
+                        o_fn_i[n_set] = "75-conns-top-{}-{}-{}-in.txt".format(
+                            synapse_set, n_set, float(atime)/1000.)
+                        o_fh_i[n_set] = open(o_fn_i[n_set], 'w')
+
+                    if src_nrn_type in n_set:
+                        o_fn_o[n_set] = "75-conns-top-{}-{}-{}-out.txt".format(
+                            synapse_set, n_set, float(atime)/1000.)
+                        o_fh_o[n_set] = open(o_fn_o[n_set], 'w')
+
+                # These are not classified per region
+                o_fn_l_i = "75-syn-lengths-{}-{}-in.txt".format(
+                    synapse_set, float(atime)/1000.)
+                o_fh_l_i = open(o_fn_l_i, 'w')
+                o_fn_l_o = "75-syn-lengths-{}-{}-out.txt".format(
+                    synapse_set, float(atime)/1000.)
+                o_fh_l_o = open(o_fn_l_o, 'w')
+
+            # iterate over synapses between different regions
+            for row in syn_conns.itertuples(index=True, name=None):
+                # see what regions the connection is between
+                for key, value in synapse_set_regions.items():
+                    if (row[0], row[1]) in value['conns']:
+                        value['weights'].append(abs(row[2]))
+
+                # for the top view snapshots, check if the neuron we've
+                # picked to plot is a source or a destination
+                if ((float(atime)/1000.) in
+                        self.cfg['snapshots']['synapses']):
+                    for n_set, nrns in sample.items():
+                        # it's a source
+                        if src_nrn_type in n_set and row[0] in nrns:
+                            src_info = self.neurons[src_nrn_type][int(
+                                row[0] - self.neurons[src_nrn_type][0][0])]
+                            dest_info = self.neurons[dest_nrn_type][int(
+                                row[1] - self.neurons[dest_nrn_type][0][0])]
+
+                            print("{}\t{}\t{}\t{}".format(
+                                    src_info[3], src_info[4],
+                                    dest_info[3], dest_info[4]),
+                                  file=o_fh_o[n_set])
+
+                        # it's a destination
+                        if dest_nrn_type in n_set and row[1] in nrns:
+                            src_info = self.neurons[src_nrn_type][int(
+                                row[0] - self.neurons[src_nrn_type][0][0])]
+                            dest_info = self.neurons[dest_nrn_type][int(
+                                row[1] - self.neurons[dest_nrn_type][0][0])]
+
+                            print("{}\t{}\t{}\t{}".format(
+                                    src_info[3], src_info[4],
+                                    dest_info[3], dest_info[4]),
+                                  file=o_fh_i[n_set])
+
+                    # for length histograms we have a different, larger
+                    # sample
+                    # it's a source
+                    if row[0] in conn_len_hist_sample[src_nrn_type]:
+                        src_info = self.neurons[src_nrn_type][int(
+                            row[0] - self.neurons[src_nrn_type][0][0])]
+                        dest_info = self.neurons[dest_nrn_type][int(
+                            row[1] - self.neurons[dest_nrn_type][0][0])]
+
+                        delta_x = abs(src_info[3] - dest_info[3])
+                        # o_x is width/2
+                        if delta_x > o_x:
+                            delta_x = delta_x - o_x
+
+                        delta_y = abs(src_info[4] - dest_info[4])
+                        # o_x is height/2
+                        if delta_y > o_y:
+                            delta_y = delta_y - o_y
+
+                        print("{}".format(math.hypot(delta_x, delta_y)),
+                              file=o_fh_l_o)
+
+                    # it's a destination
+                    if row[1] in conn_len_hist_sample[dest_nrn_type]:
+                        src_info = self.neurons[src_nrn_type][int(
+                            row[0] - self.neurons[src_nrn_type][0][0])]
+                        dest_info = self.neurons[dest_nrn_type][int(
+                            row[1] - self.neurons[dest_nrn_type][0][0])]
+
+                        delta_x = abs(src_info[3] - dest_info[3])
+                        # o_x is width/2
+                        if delta_x > o_x:
+                            delta_x = delta_x - o_x
+
+                        delta_y = abs(src_info[4] - dest_info[4])
+                        # o_x is height/2
+                        if delta_y > o_y:
+                            delta_y = delta_y - o_y
+
+                        print("{}".format(math.hypot(delta_x, delta_y)),
+                              file=o_fh_l_i)
+
+            # Now that we've collected all our metrics in a single pass
+            # over the data, we can close files and plot the graphs for the
+            # specified time
+            if ((float(atime)/1000.) in
+                    self.cfg['snapshots']['synapses']):
+                for n_set, nrns in sample.items():
+                    if dest_nrn_type in n_set:
+                        o_fh_i[n_set].close()
+
+                        # now on to plotting
+                        p_fn = "75-conns-top-{}-{}-{}-in.png".format(
+                            synapse_set, n_set, float(atime)/1000.)
+                        args = [
+                            "-e",
+                            "o_fn='{}'".format(p_fn),
+                            "-e",
+                            "i_fn='{}'".format(o_fn_i[n_set]),
+                            "-e",
+                            "o_x='{}'".format(o_x),
+                            "-e",
+                            "o_y='{}'".format(o_y),
+                            "-e",
+                            "r_p_lpz='{}'".format(rad_p_lpz),
+                            "-e",
+                            "r_lpz_b='{}'".format(rad_lpz_b),
+                            "-e",
+                            "r_lpz_c='{}'".format(rad_lpz_c),
+                            "-e",
+                            "plot_title='in synapses for {} at {}'".format(
+                                n_set, float(atime)/1000.)
+                        ]
+                        plot_using_gnuplot_binary(
+                            os.path.join(self.cfg['plots_dir'],
+                                         'plot-top-view-connections.plt'),
+                            args)
+
+                    if src_nrn_type in n_set:
+                        o_fh_o[n_set].close()
+
+                        # now on to plotting
+                        p_fn = "75-conns-top-{}-{}-{}-out.png".format(
+                            synapse_set, n_set, float(atime)/1000.)
+                        args = [
+                            "-e",
+                            "o_fn='{}'".format(p_fn),
+                            "-e",
+                            "i_fn='{}'".format(o_fn_o[n_set]),
+                            "-e",
+                            "o_x='{}'".format(o_x),
+                            "-e",
+                            "o_y='{}'".format(o_y),
+                            "-e",
+                            "r_p_lpz='{}'".format(rad_p_lpz),
+                            "-e",
+                            "r_lpz_b='{}'".format(rad_lpz_b),
+                            "-e",
+                            "r_lpz_c='{}'".format(rad_lpz_c),
+                            "-e",
+                            "plot_title='out synapses for {} at {}'".format(
+                                n_set, float(atime)/1000.)
+                        ]
+                        plot_using_gnuplot_binary(
+                            os.path.join(self.cfg['plots_dir'],
+                                         'plot-top-view-connections.plt'),
+                            args)
+
+                o_fh_l_i.close()
+                o_fh_l_o.close()
+                p_h_fn = (
+                    "75-connections-hist-{}-{}-in.png".format(
+                        synapse_set, float(atime)/1000.
+                    ))
+                args = [
+                    "-e",
+                    "o_fn='{}'".format(p_h_fn),
+                    "-e",
+                    "i_fn='{}'".format(o_fn_l_i),
+                    "-e",
+                    "plot_title='Incoming syn lens for {} at {}'".format(
+                        synapse_set, float(atime)/1000.)
+                ]
+                plot_using_gnuplot_binary(
+                    os.path.join(self.cfg['plots_dir'],
+                                 'plot-connection-length-hist.plt'),
+                    args)
+
+                p_h_fn = (
+                    "75-connections-hist-{}-{}-out.png".format(
+                        synapse_set, float(atime)/1000.
+                    ))
+                args = [
+                    "-e",
+                    "o_fn='{}'".format(p_h_fn),
+                    "-e",
+                    "i_fn='{}'".format(o_fn_l_o),
+                    "-e",
+                    "plot_title='Outgoing syn lens for {} at {}'".format(
+                        synapse_set, float(atime)/1000.)
+                ]
+                plot_using_gnuplot_binary(
+                    os.path.join(self.cfg['plots_dir'],
+                                 'plot-connection-length-hist.plt'),
+                    args)
+
+            for dest, fh in syn_con_total_data_fhs.items():
+                # get the four destinations for this synapse type
+                # now for each destination, prepare a row to be
+                # printed first column in the time
+                totals = [(float(atime)/1000.), ]
+                # go over all the possible sources and append the
+                # number of incoming connections like we did before,
+                # and because we've used an ordereddict, the order of
+                # the data will correspond to the header we printed
+                # before
+                for key, value in synapse_set_regions.items():
+                    if value['dest'] == dest:
+                        totals.append(len(value['weights']))
+
+                # print it to the file corresponding to the dest
+                print(*totals, sep='\t', file=fh)
+
+            # same for conductance histogram files
+            for dest, fh in conductance_total_data_fhs.items():
+                totals = [(float(atime)/1000.), ]
+                for key, value in synapse_set_regions.items():
+                    if value['dest'] == dest:
+                        totals.append(numpy.sum(value['weights']))
+
+                # print it to the file corresponding to the dest
+                print(*totals, sep='\t', file=fh)
+
+            # print synapse counts for different regions
+            for key, value in synapse_set_regions.items():
+                # handle the case where there are no connections at all
+                if len(value['weights']):
+                    print(
+                        "{}\t{}\t{}\t{}\t{}".format
+                        (
+                            float(atime)/1000., len(value['weights']),
+                            numpy.sum(value['weights']),
+                            numpy.mean(value['weights']),
+                            numpy.std(value['weights'])),
+                        file=value['o_fh'])
+                else:
+                    print(
+                        "{}\t{}\t{}\t{}\t{}".format
+                        (float(atime)/1000., 0, 0, "NaN", "NaN"),
+                        file=value['o_fh'])
+
+        # close file handlers for each region file for this synapse type:
+        for key, value in synapse_set_regions.items():
+            f = value['o_fh']
+            f.close()
+            self.lgr.info("Closed {}".format(value['o_fn']))
+
+        # close the hist data file handles
+        # no need to check if there's anything in here, it just won't have
+        # anything to iterate over if the dict is empty
+        for dest, fh in syn_con_total_data_fhs.items():
+            fh.close()
+
+        for dest, fh in conductance_total_data_fhs.items():
+            fh.close()
+
+        self.lgr.info(
+            "Processed {} syn conns..".format(
+                synapse_set))
+
+    def generate_synapse_graphs(self, sample_size=400):
+        """Generate synapse geometry graphs.
+
+        Generates the time graphs, the histograms, and the top level snapshots.
+        Wraps around the __process_synapses method which does most of the work.
+
+        :sample_size: number of neurons to pick from each region: LPZ C, LPZ
+                    B, peri LPZ for histograms and other things.
+        """
+        if "synapses" not in self.cfg['time_graphs']:
+            return True
+
+        self.lgr.info("Processing synapse graphs..")
+        # Get our regions of interest
+        regions = []
+        for key, value in self.neurons.items():
+            if key != 'E' and key != 'I' and key != 'lpz_E' and key != 'lpz_I':
+                regions.append(key)
+        self.lgr.debug("{} regions identified: {}".format(
+            len(regions), regions))
         # set up proper samples for neuron sets to improve visualisation
         # set a seed so that whenever we post process we get the same samples
         random.seed(21)
-        # sample for the top level graphs.
+
+        # one neuron for the top level graphs.
         sample = {}
-        sample['lpz_c_E'] = (random.sample(list(self.neurons['lpz_c_E'][:, 0]),
-                                           k=1))
-        sample['lpz_b_E'] = (random.sample(list(self.neurons['lpz_b_E'][:, 0]),
-                                           k=1))
-        sample['p_lpz_E'] = (random.sample(list(self.neurons['p_lpz_E'][:, 0]),
-                                           k=1))
-        sample['o_E'] = (random.sample(list(self.neurons['o_E'][:, 0]), k=1))
-        sample['lpz_c_I'] = (random.sample(list(self.neurons['lpz_c_I'][:, 0]),
-                                           k=1))
-        sample['lpz_b_I'] = (random.sample(list(self.neurons['lpz_b_I'][:, 0]),
-                                           k=1))
-        sample['p_lpz_I'] = (random.sample(list(self.neurons['p_lpz_I'][:, 0]),
-                                           k=1))
-        sample['o_I'] = (random.sample(list(self.neurons['o_I'][:, 0]), k=1))
+        for region in regions:
+            sample[region] = (random.sample(list(self.neurons[region][:, 0]),
+                                            k=1))
+
         # Samples for histograms of connection lengths
         conn_len_hist_sample = {}
         conn_len_hist_sample['E'] = (
@@ -625,387 +1002,21 @@ class Postprocess:
             random.sample(list(self.neurons['p_lpz_I'][:, 0]),
                           k=int(sample_size/4))
         )
-        # get origin and radii to draw circles to show different regions
-        o_x = (max(self.neurons['o_E'][:, 1]) -
-               min(self.neurons['o_E'][:, 1]))/2
-        o_y = (max(self.neurons['o_E'][:, 2]) -
-               min(self.neurons['o_E'][:, 2]))/2
-        self.lgr.debug("Centre is: {}, {}".format(o_x, o_y))
-        lpz_c_max_y = (max(self.neurons['lpz_c_E'][:, 2]))
-        rad_lpz_c = lpz_c_max_y - o_y
-        self.lgr.debug("Rad of lpz c is: {}".format(rad_lpz_c))
 
-        lpz_b_max_y = (max(self.neurons['lpz_b_E'][:, 2]))
-        rad_lpz_b = lpz_b_max_y - o_y
-        self.lgr.debug("Rad of lpz b is: {}".format(rad_lpz_b))
-
-        p_lpz_max_y = (max(self.neurons['p_lpz_E'][:, 2]))
-        rad_p_lpz = p_lpz_max_y - o_y
-        self.lgr.debug("Rad of p lpz is: {}".format(rad_p_lpz))
-
+        # Process the different synapse sets in parallel.
+        # All these arguments because I want them to be the same in all
+        # processes. They may not all be used in each process, but I'd rather
+        # pass them here in one place.
+        processes = []
         for synapse_set in ["EE", "EI", "II", "IE"]:
-            self.lgr.debug("Processing {} connections".format(synapse_set))
-            src_nrn_type = synapse_set[0]
-            dest_nrn_type = synapse_set[1]
+            processes.append(Process(target=self.__process_synapses,
+                                     args=(synapse_set, regions, sample,
+                                           conn_len_hist_sample,)))
+        for proc in processes:
+            proc.start()
 
-            # set up a dictionary that contains information on various regions
-            # for this synapse set
-            # We want the order to be maintained so that we always get the same
-            # order of sources when printing the data for histograms later
-            synapse_set_regions = OrderedDict()
-            for src, dest in src_dest_pairs:
-                # only relevant regions are selected. For example, for an
-                # EE synapse, all I regions are useless. There won't be any
-                # EE synapses between neurons in those regions.
-                if src_nrn_type in src and dest_nrn_type in dest:
-                    synapses_name = "{}-to-{}".format(src, dest)
-                    newdict = {}
-                    newdict['src'] = src
-                    newdict['dest'] = dest
-                    newdict['weights'] = []
-                    newdict['o_fn'] = ("08-syn_conns-{}-{}.txt".format(
-                            synapses_name, synapse_set))
-                    newdict['o_fh'] = open(newdict['o_fn'], 'w')
-                    # all possible connections between the src and dest
-                    # hopefully precomputing these will speed up the
-                    # postprocessing somewhat
-                    # frozenset is immutable and faster than set
-                    newdict['conns'] = frozenset(
-                        itertools.product(self.neurons[src][:, 0],
-                                          self.neurons[dest][:, 0])
-                    )
-                    synapse_set_regions[synapses_name] = newdict
-                    self.lgr.debug("Synapse set up: {}".format(
-                        synapses_name))
-
-            # open files for each region that is being projected on
-            # and set a header
-            # note that I'm using an ordereddict, so the order of the data
-            # printed later will be the same when I iterate over the dict
-            # again
-            syn_con_total_data_fhs = {}
-            conductance_total_data_fhs = {}
-            # iterate over the various dest regions
-            for aregion in regions:
-                # only deal with destination regions of this type of neuron
-                if dest_nrn_type in aregion:
-                    fn = ("081-syn_conns-incoming-totals-{}-{}.txt".format(
-                        aregion, synapse_set))
-                    fh = open(fn, 'w')
-                    syn_con_total_data_fhs[aregion] = fh
-
-                    fn1 = (
-                        "081-conductance-incoming-totals-{}-{}.txt".format(
-                            aregion, synapse_set)
-                    )
-                    fh1 = open(fn1, 'w')
-                    conductance_total_data_fhs[aregion] = fh1
-                    # here onwards, we can iterate over the keys of this
-                    # dict to get the destination regions
-
-                    # print the header, remember to ignore this in GNUplot,
-                    # or maybe I can use this to generate the xtic labels?
-                    # first column is the time
-                    sources = ['time']
-                    # get all possible source regions for this destination
-                    # set, which make up the other columns
-                    for key, value in synapse_set_regions.items():
-                        if value['dest'] == aregion:
-                            sources.append(value['src'])
-                    print(*sources, sep='\t', file=fh)
-                    print(*sources, sep='\t', file=fh1)
-
-            # start
-            for atime in time_list:
-                self.lgr.debug(
-                    "Processing syn conns for {} at {}".format(
-                        synapse_set, float(atime)/1000.))
-                syn_conns = pandas.DataFrame()
-                syn_conns = combine_files_row_wise(
-                    "..", "08-syn_conns-{}-*-{}.txt".format(
-                        synapse_set, atime), '\t')
-
-                # reset counts
-                for key, value in synapse_set_regions.items():
-                    value['weights'] = []
-
-                # for top views and other snapshots, we check if this is on our
-                # list of times
-                if ((float(atime)/1000.) in
-                        self.cfg['snapshots']['synapses']):
-                    # top view file things
-                    o_fn_o = {}
-                    o_fn_i = {}
-                    o_fh_o = {}
-                    o_fh_i = {}
-                    for n_set, nrns in sample.items():
-                        # only if its a region of the type we're looking at in
-                        # the synapse set do we process it, otherwise it'll be
-                        # empty: while processing EE synapses, I regions can
-                        # neither be sources nor destinations.
-                        if dest_nrn_type in n_set:
-                            o_fn_i[n_set] = "75-conns-top-{}-{}-{}-in.txt".format(
-                                synapse_set, n_set, float(atime)/1000.)
-                            o_fh_i[n_set] = open(o_fn_i[n_set], 'w')
-
-                        if src_nrn_type in n_set:
-                            o_fn_o[n_set] = "75-conns-top-{}-{}-{}-out.txt".format(
-                                synapse_set, n_set, float(atime)/1000.)
-                            o_fh_o[n_set] = open(o_fn_o[n_set], 'w')
-
-                    # These are not classified per region
-                    o_fn_l_i = "75-syn-lengths-{}-{}-in.txt".format(
-                        synapse_set, float(atime)/1000.)
-                    o_fh_l_i = open(o_fn_l_i, 'w')
-                    o_fn_l_o = "75-syn-lengths-{}-{}-out.txt".format(
-                        synapse_set, float(atime)/1000.)
-                    o_fh_l_o = open(o_fn_l_o, 'w')
-
-                # iterate over synapses between different regions
-                for row in syn_conns.itertuples(index=True, name=None):
-                    # see what regions the connection is between
-                    for key, value in synapse_set_regions.items():
-                        if (row[0], row[1]) in value['conns']:
-                            value['weights'].append(abs(row[2]))
-
-                    # for the top view snapshots, check if the neuron we've
-                    # picked to plot is a source or a destination
-                    if ((float(atime)/1000.) in
-                            self.cfg['snapshots']['synapses']):
-                        for n_set, nrns in sample.items():
-                            # it's a source
-                            if src_nrn_type in n_set and row[0] in nrns:
-                                src_info = self.neurons[src_nrn_type][int(
-                                    row[0] - self.neurons[src_nrn_type][0][0])]
-                                dest_info = self.neurons[dest_nrn_type][int(
-                                    row[1] - self.neurons[dest_nrn_type][0][0])]
-
-                                print("{}\t{}\t{}\t{}".format(
-                                        src_info[3], src_info[4],
-                                        dest_info[3], dest_info[4]),
-                                      file=o_fh_o[n_set])
-
-                            # it's a destination
-                            if dest_nrn_type in n_set and row[1] in nrns:
-                                src_info = self.neurons[src_nrn_type][int(
-                                    row[0] - self.neurons[src_nrn_type][0][0])]
-                                dest_info = self.neurons[dest_nrn_type][int(
-                                    row[1] - self.neurons[dest_nrn_type][0][0])]
-
-                                print("{}\t{}\t{}\t{}".format(
-                                        src_info[3], src_info[4],
-                                        dest_info[3], dest_info[4]),
-                                      file=o_fh_i[n_set])
-
-                        # for length histograms we have a different, larger
-                        # sample
-                        # it's a source
-                        if row[0] in conn_len_hist_sample[src_nrn_type]:
-                            src_info = self.neurons[src_nrn_type][int(
-                                row[0] - self.neurons[src_nrn_type][0][0])]
-                            dest_info = self.neurons[dest_nrn_type][int(
-                                row[1] - self.neurons[dest_nrn_type][0][0])]
-
-                            delta_x = abs(src_info[3] - dest_info[3])
-                            # o_x is width/2
-                            if delta_x > o_x:
-                                delta_x = delta_x - o_x
-
-                            delta_y = abs(src_info[4] - dest_info[4])
-                            # o_x is height/2
-                            if delta_y > o_y:
-                                delta_y = delta_y - o_y
-
-                            print("{}".format(math.hypot(delta_x, delta_y)),
-                                  file=o_fh_l_o)
-
-                        # it's a destination
-                        if row[1] in conn_len_hist_sample[dest_nrn_type]:
-                            src_info = self.neurons[src_nrn_type][int(
-                                row[0] - self.neurons[src_nrn_type][0][0])]
-                            dest_info = self.neurons[dest_nrn_type][int(
-                                row[1] - self.neurons[dest_nrn_type][0][0])]
-
-                            delta_x = abs(src_info[3] - dest_info[3])
-                            # o_x is width/2
-                            if delta_x > o_x:
-                                delta_x = delta_x - o_x
-
-                            delta_y = abs(src_info[4] - dest_info[4])
-                            # o_x is height/2
-                            if delta_y > o_y:
-                                delta_y = delta_y - o_y
-
-                            print("{}".format(math.hypot(delta_x, delta_y)),
-                                  file=o_fh_l_i)
-
-                # Now that we've collected all our metrics in a single pass
-                # over the data, we can close files and plot the graphs for the
-                # specified time
-                if ((float(atime)/1000.) in
-                        self.cfg['snapshots']['synapses']):
-                    for n_set, nrns in sample.items():
-                        if dest_nrn_type in n_set:
-                            o_fh_i[n_set].close()
-
-                            # now on to plotting
-                            p_fn = "75-conns-top-{}-{}-{}-in.png".format(
-                                synapse_set, n_set, float(atime)/1000.)
-                            args = [
-                                "-e",
-                                "o_fn='{}'".format(p_fn),
-                                "-e",
-                                "i_fn='{}'".format(o_fn_i[n_set]),
-                                "-e",
-                                "o_x='{}'".format(o_x),
-                                "-e",
-                                "o_y='{}'".format(o_y),
-                                "-e",
-                                "r_p_lpz='{}'".format(rad_p_lpz),
-                                "-e",
-                                "r_lpz_b='{}'".format(rad_lpz_b),
-                                "-e",
-                                "r_lpz_c='{}'".format(rad_lpz_c),
-                                "-e",
-                                "plot_title='in synapses for {} at {}'".format(
-                                    n_set, float(atime)/1000.)
-                            ]
-                            plot_using_gnuplot_binary(
-                                os.path.join(self.cfg['plots_dir'],
-                                             'plot-top-view-connections.plt'),
-                                args)
-
-                        if src_nrn_type in n_set:
-                            o_fh_o[n_set].close()
-
-                            # now on to plotting
-                            p_fn = "75-conns-top-{}-{}-{}-out.png".format(
-                                synapse_set, n_set, float(atime)/1000.)
-                            args = [
-                                "-e",
-                                "o_fn='{}'".format(p_fn),
-                                "-e",
-                                "i_fn='{}'".format(o_fn_o[n_set]),
-                                "-e",
-                                "o_x='{}'".format(o_x),
-                                "-e",
-                                "o_y='{}'".format(o_y),
-                                "-e",
-                                "r_p_lpz='{}'".format(rad_p_lpz),
-                                "-e",
-                                "r_lpz_b='{}'".format(rad_lpz_b),
-                                "-e",
-                                "r_lpz_c='{}'".format(rad_lpz_c),
-                                "-e",
-                                "plot_title='out synapses for {} at {}'".format(
-                                    n_set, float(atime)/1000.)
-                            ]
-                            plot_using_gnuplot_binary(
-                                os.path.join(self.cfg['plots_dir'],
-                                             'plot-top-view-connections.plt'),
-                                args)
-
-                    o_fh_l_i.close()
-                    o_fh_l_o.close()
-                    p_h_fn = (
-                        "75-connections-hist-{}-{}-in.png".format(
-                            synapse_set, float(atime)/1000.
-                        ))
-                    args = [
-                        "-e",
-                        "o_fn='{}'".format(p_h_fn),
-                        "-e",
-                        "i_fn='{}'".format(o_fn_l_i),
-                        "-e",
-                        "plot_title='Incoming syn lens for {} at {}'".format(
-                            synapse_set, float(atime)/1000.)
-                    ]
-                    plot_using_gnuplot_binary(
-                        os.path.join(self.cfg['plots_dir'],
-                                     'plot-connection-length-hist.plt'),
-                        args)
-
-                    p_h_fn = (
-                        "75-connections-hist-{}-{}-out.png".format(
-                            synapse_set, float(atime)/1000.
-                        ))
-                    args = [
-                        "-e",
-                        "o_fn='{}'".format(p_h_fn),
-                        "-e",
-                        "i_fn='{}'".format(o_fn_l_o),
-                        "-e",
-                        "plot_title='Outgoing syn lens for {} at {}'".format(
-                            synapse_set, float(atime)/1000.)
-                    ]
-                    plot_using_gnuplot_binary(
-                        os.path.join(self.cfg['plots_dir'],
-                                     'plot-connection-length-hist.plt'),
-                        args)
-
-                for dest, fh in syn_con_total_data_fhs.items():
-                    # get the four destinations for this synapse type
-                    # now for each destination, prepare a row to be
-                    # printed first column in the time
-                    totals = [(float(atime)/1000.), ]
-                    # go over all the possible sources and append the
-                    # number of incoming connections like we did before,
-                    # and because we've used an ordereddict, the order of
-                    # the data will correspond to the header we printed
-                    # before
-                    for key, value in synapse_set_regions.items():
-                        if value['dest'] == dest:
-                            totals.append(len(value['weights']))
-
-                    # print it to the file corresponding to the dest
-                    print(*totals, sep='\t', file=fh)
-
-                # same for conductance histogram files
-                for dest, fh in conductance_total_data_fhs.items():
-                    totals = [(float(atime)/1000.), ]
-                    for key, value in synapse_set_regions.items():
-                        if value['dest'] == dest:
-                            totals.append(numpy.sum(value['weights']))
-
-                    # print it to the file corresponding to the dest
-                    print(*totals, sep='\t', file=fh)
-
-                # print synapse counts for different regions
-                for key, value in synapse_set_regions.items():
-                    # handle the case where there are no connections at all
-                    if len(value['weights']):
-                        print(
-                            "{}\t{}\t{}\t{}\t{}".format
-                            (
-                                float(atime)/1000., len(value['weights']),
-                                numpy.sum(value['weights']),
-                                numpy.mean(value['weights']),
-                                numpy.std(value['weights'])),
-                            file=value['o_fh'])
-                    else:
-                        print(
-                            "{}\t{}\t{}\t{}\t{}".format
-                            (float(atime)/1000., 0, 0, "NaN", "NaN"),
-                            file=value['o_fh'])
-
-            # close file handlers for each region file for this synapse type:
-            for key, value in synapse_set_regions.items():
-                f = value['o_fh']
-                f.close()
-                self.lgr.info("Closed {}".format(value['o_fn']))
-
-            # close the hist data file handles
-            # no need to check if there's anything in here, it just won't have
-            # anything to iterate over if the dict is empty
-            for dest, fh in syn_con_total_data_fhs.items():
-                fh.close()
-
-            for dest, fh in conductance_total_data_fhs.items():
-                fh.close()
-
-            self.lgr.info(
-                "Processed {} syn conns..".format(
-                    synapse_set))
+        for proc in processes:
+            proc.join()
 
         # Now that all the regions have been processed, we can do the overall
         # net processing.
