@@ -845,8 +845,10 @@ class Postprocess:
                 if ((float(atime)/1000.) in
                         self.cfg['snapshots']['synapses']):
                     for n_set, nrns in sample.items():
-                        o_fh_i[n_set].close()
-                        o_fh_o[n_set].close()
+                        if dest_nrn_type in n_set:
+                            o_fh_i[n_set].close()
+                        if src_nrn_type in n_set:
+                            o_fh_o[n_set].close()
 
                         # now on to plotting
                         p_fn = "75-conns-top-{}-{}-{}-in.png".format(
