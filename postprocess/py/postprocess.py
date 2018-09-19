@@ -743,11 +743,11 @@ class Postprocess:
                         o_fh_i = {}
                         o_fn_i[n_set] = "75-conns-top-{}-{}-{}-in.txt".format(
                             synapse_set, n_set, float(atime)/1000.)
-                        o_fh_i[n_set] = open(o_fn_i, 'w')
+                        o_fh_i[n_set] = open(o_fn_i[n_set], 'w')
 
                         o_fn_o[n_set] = "75-conns-top-{}-{}-{}-out.txt".format(
                             synapse_set, n_set, float(atime)/1000.)
-                        o_fh_o[n_set] = open(o_fn_o, 'w')
+                        o_fh_o[n_set] = open(o_fn_o[n_set], 'w')
 
                     # These are not classified per region
                     o_fn_l_i = "75-syn-lengths-{}-{}-in.txt".format(
