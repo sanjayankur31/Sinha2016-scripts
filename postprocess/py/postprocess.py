@@ -739,13 +739,19 @@ class Postprocess:
                     o_fh_o = {}
                     o_fh_i = {}
                     for n_set, nrns in sample.items():
-                        o_fn_i[n_set] = "75-conns-top-{}-{}-{}-in.txt".format(
-                            synapse_set, n_set, float(atime)/1000.)
-                        o_fh_i[n_set] = open(o_fn_i[n_set], 'w')
+                        # only if its a region of the type we're looking at in
+                        # the synapse set do we process it, otherwise it'll be
+                        # empty: while processing EE synapses, I regions can
+                        # neither be sources nor destinations.
+                        if dest_nrn_type in n_set:
+                            o_fn_i[n_set] = "75-conns-top-{}-{}-{}-in.txt".format(
+                                synapse_set, n_set, float(atime)/1000.)
+                            o_fh_i[n_set] = open(o_fn_i[n_set], 'w')
 
-                        o_fn_o[n_set] = "75-conns-top-{}-{}-{}-out.txt".format(
-                            synapse_set, n_set, float(atime)/1000.)
-                        o_fh_o[n_set] = open(o_fn_o[n_set], 'w')
+                        if src_nrn_type in n_set:
+                            o_fn_o[n_set] = "75-conns-top-{}-{}-{}-out.txt".format(
+                                synapse_set, n_set, float(atime)/1000.)
+                            o_fh_o[n_set] = open(o_fn_o[n_set], 'w')
 
                     # These are not classified per region
                     o_fn_l_i = "75-syn-lengths-{}-{}-in.txt".format(
@@ -764,11 +770,11 @@ class Postprocess:
 
                     # for the top view snapshots, check if the neuron we've
                     # picked to plot is a source or a destination
-                    # it's a source
                     if ((float(atime)/1000.) in
                             self.cfg['snapshots']['synapses']):
                         for n_set, nrns in sample.items():
-                            if row[0] in nrns:
+                            # it's a source
+                            if src_nrn_type in n_set and row[0] in nrns:
                                 src_info = self.neurons[src_nrn_type][int(
                                     row[0] - self.neurons[src_nrn_type][0][0])]
                                 dest_info = self.neurons[dest_nrn_type][int(
@@ -780,7 +786,7 @@ class Postprocess:
                                       file=o_fh_o[n_set])
 
                             # it's a destination
-                            if row[1] in nrns:
+                            if dest_nrn_type in n_set and row[1] in nrns:
                                 src_info = self.neurons[src_nrn_type][int(
                                     row[0] - self.neurons[src_nrn_type][0][0])]
                                 dest_info = self.neurons[dest_nrn_type][int(
@@ -994,7 +1000,7 @@ class Postprocess:
                 fh.close()
 
             self.lgr.info(
-                "Processed syn conns for {} neurons..".format(
+                "Processed {} syn conns..".format(
                     synapse_set))
 
         # Now that all the regions have been processed, we can do the overall
