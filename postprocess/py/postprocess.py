@@ -733,14 +733,12 @@ class Postprocess:
                 # list of times
                 if ((float(atime)/1000.) in
                         self.cfg['snapshots']['synapses']):
+                    # top view file things
+                    o_fn_o = {}
+                    o_fn_i = {}
+                    o_fh_o = {}
+                    o_fh_i = {}
                     for n_set, nrns in sample.items():
-                        # top view file things
-                        # python does not do block scope, so these will still
-                        # be valid throughout the function
-                        o_fn_o = {}
-                        o_fn_i = {}
-                        o_fh_o = {}
-                        o_fh_i = {}
                         o_fn_i[n_set] = "75-conns-top-{}-{}-{}-in.txt".format(
                             synapse_set, n_set, float(atime)/1000.)
                         o_fh_i[n_set] = open(o_fn_i[n_set], 'w')
