@@ -847,61 +847,63 @@ class Postprocess:
                     for n_set, nrns in sample.items():
                         if dest_nrn_type in n_set:
                             o_fh_i[n_set].close()
+
+                            # now on to plotting
+                            p_fn = "75-conns-top-{}-{}-{}-in.png".format(
+                                synapse_set, n_set, float(atime)/1000.)
+                            args = [
+                                "-e",
+                                "o_fn='{}'".format(p_fn),
+                                "-e",
+                                "i_fn='{}'".format(o_fn_i[n_set]),
+                                "-e",
+                                "o_x='{}'".format(o_x),
+                                "-e",
+                                "o_y='{}'".format(o_y),
+                                "-e",
+                                "r_p_lpz='{}'".format(rad_p_lpz),
+                                "-e",
+                                "r_lpz_b='{}'".format(rad_lpz_b),
+                                "-e",
+                                "r_lpz_c='{}'".format(rad_lpz_c),
+                                "-e",
+                                "plot_title='in synapses for {} at {}'".format(
+                                    n_set, float(atime)/1000.)
+                            ]
+                            plot_using_gnuplot_binary(
+                                os.path.join(self.cfg['plots_dir'],
+                                             'plot-top-view-connections.plt'),
+                                args)
+
                         if src_nrn_type in n_set:
                             o_fh_o[n_set].close()
 
-                        # now on to plotting
-                        p_fn = "75-conns-top-{}-{}-{}-in.png".format(
-                            synapse_set, n_set, float(atime)/1000.)
-                        args = [
-                            "-e",
-                            "o_fn='{}'".format(p_fn),
-                            "-e",
-                            "i_fn='{}'".format(o_fn_i[n_set]),
-                            "-e",
-                            "o_x='{}'".format(o_x),
-                            "-e",
-                            "o_y='{}'".format(o_y),
-                            "-e",
-                            "r_p_lpz='{}'".format(rad_p_lpz),
-                            "-e",
-                            "r_lpz_b='{}'".format(rad_lpz_b),
-                            "-e",
-                            "r_lpz_c='{}'".format(rad_lpz_c),
-                            "-e",
-                            "plot_title='in synapses for {} at {}'".format(
-                                n_set, float(atime)/1000.)
-                        ]
-                        plot_using_gnuplot_binary(
-                            os.path.join(self.cfg['plots_dir'],
-                                         'plot-top-view-connections.plt'),
-                            args)
-
-                        p_fn = "75-conns-top-{}-{}-{}-out.png".format(
-                            synapse_set, n_set, float(atime)/1000.)
-                        args = [
-                            "-e",
-                            "o_fn='{}'".format(p_fn),
-                            "-e",
-                            "i_fn='{}'".format(o_fn_o[n_set]),
-                            "-e",
-                            "o_x='{}'".format(o_x),
-                            "-e",
-                            "o_y='{}'".format(o_y),
-                            "-e",
-                            "r_p_lpz='{}'".format(rad_p_lpz),
-                            "-e",
-                            "r_lpz_b='{}'".format(rad_lpz_b),
-                            "-e",
-                            "r_lpz_c='{}'".format(rad_lpz_c),
-                            "-e",
-                            "plot_title='out synapses for {} at {}'".format(
-                                n_set, float(atime)/1000.)
-                        ]
-                        plot_using_gnuplot_binary(
-                            os.path.join(self.cfg['plots_dir'],
-                                         'plot-top-view-connections.plt'),
-                            args)
+                            # now on to plotting
+                            p_fn = "75-conns-top-{}-{}-{}-out.png".format(
+                                synapse_set, n_set, float(atime)/1000.)
+                            args = [
+                                "-e",
+                                "o_fn='{}'".format(p_fn),
+                                "-e",
+                                "i_fn='{}'".format(o_fn_o[n_set]),
+                                "-e",
+                                "o_x='{}'".format(o_x),
+                                "-e",
+                                "o_y='{}'".format(o_y),
+                                "-e",
+                                "r_p_lpz='{}'".format(rad_p_lpz),
+                                "-e",
+                                "r_lpz_b='{}'".format(rad_lpz_b),
+                                "-e",
+                                "r_lpz_c='{}'".format(rad_lpz_c),
+                                "-e",
+                                "plot_title='out synapses for {} at {}'".format(
+                                    n_set, float(atime)/1000.)
+                            ]
+                            plot_using_gnuplot_binary(
+                                os.path.join(self.cfg['plots_dir'],
+                                             'plot-top-view-connections.plt'),
+                                args)
 
                     o_fh_l_i.close()
                     o_fh_l_o.close()
