@@ -564,7 +564,7 @@ class Postprocess:
 
         Written this separately so that I can do them in parallel
         """
-        self.lgr.debug("Processing {} connections".format(synapse_set))
+        self.lgr.info("Processing {} connections".format(synapse_set))
         time_list = get_info_from_file_series("..", "08-syn_conns-EE-0-",
                                               ".txt")
 
