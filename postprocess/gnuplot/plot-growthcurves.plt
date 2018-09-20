@@ -52,11 +52,12 @@ set object 3 rectangle from eta_den_E_i, graph 0 to eps_ax_E, graph 1 fc rgb "ye
 set object 4 rectangle from eps_ax_E, graph 0 to eps_den_E_i, graph 1 fc rgb "blue" fs transparent solid 0.1 behind
 set object 5 rectangle from eps_den_E_i, graph 0 to graph 1, graph 1 fc rgb "red" fs transparent solid 0.1 behind
 
-plot [x=0:xmax_E] dzdt(x, nu_den_E_e, zeta_den_E_e, xi_den_E_e) w lines lw 2 lc 3 title 'Dendritic E', [x=0:xmax_E] dzdt(x, nu_den_E_i, zeta_den_E_i, xi_den_E_i) w lines lw 2 lc 7 title 'Dendritic I', [x=0:xmax_E] dzdt(x, nu_ax_E, zeta_ax_E, xi_ax_E) w lines lw 2 lc 1 title 'Axonal', 0 title "";
+plot [x=0:xmax_E] dzdt(x, nu_den_E_e, zeta_den_E_e, xi_den_E_e) w lines lw 3 lc 3 dt 2 title 'Dendritic E', [x=0:xmax_E] dzdt(x, nu_den_E_i, zeta_den_E_i, xi_den_E_i) w lines lw 3 lc 7 dt 4 title 'Dendritic I', [x=0:xmax_E] dzdt(x, nu_ax_E, zeta_ax_E, xi_ax_E) w lines lw 3 lc 1 dt 1 title 'Axonal', 0 title "";
 
 # Inhibitory
 unset arrow
 unset label
+unset object
 xi_den_I_e=(eta_den_I_e+eps_den_I_e)/2.0
 xi_den_I_i=(eta_den_I_i+eps_den_I_i)/2.0
 xi_ax_I=(eta_ax_I+eps_ax_I)/2.0
@@ -82,7 +83,7 @@ set object 3 rectangle from eta_den_I_e, graph 0 to eta_den_I_i, graph 1 fc rgb 
 set object 4 rectangle from eta_den_I_i, graph 0 to eps_den_I_i, graph 1 fc rgb "yellow" fs transparent solid 0.1 behind
 set object 5 rectangle from eps_den_I_i, graph 0 to graph 1, graph 1 fc rgb "red" fs transparent solid 0.1 behind
 
-plot [x=0:xmax_I] dzdt(x, nu_den_I_e, zeta_den_I_e, xi_den_I_e) w lines lw 2 lc 3 title 'Dendritic E', [x=0:xmax_I] dzdt(x, nu_den_I_i, zeta_den_I_i, xi_den_I_i) w lines lw 2 lc 7 title 'Dendritic I', [x=0:xmax_I] dzdt(x, nu_ax_I, zeta_ax_I, xi_ax_I) w lines lw 2 lc 1 title 'Axonal', 0 title "";
+plot [x=0:xmax_I] dzdt(x, nu_den_I_e, zeta_den_I_e, xi_den_I_e) w lines lw 3 lc 3 dt 2 title 'Dendritic E', [x=0:xmax_I] dzdt(x, nu_den_I_i, zeta_den_I_i, xi_den_I_i) w lines lw 3 lc 7 dt 4 title 'Dendritic I', [x=0:xmax_I] dzdt(x, nu_ax_I, zeta_ax_I, xi_ax_I) w lines lw 3 lc 1 dt 1 title 'Axonal', 0 title "";
 
 # Elements
 # All excitatory elements
