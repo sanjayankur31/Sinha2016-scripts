@@ -680,6 +680,15 @@ class Postprocess:
             # list of times
             if ((float(atime)/1000.) in
                     self.cfg['snapshots']['synapses']):
+                # print combined file so that we can do more analysis on these
+                # connections if needed
+                comb_fh = "08-syn_conns-{}-{}.txt".format(synapse_set, atime)
+                with open(comb_fh, 'w') as f:
+                    syn_conns.to_csv(f, sep='\t', header=None, index=True)
+                # Let's also generate histograms of the distribution of the
+                # weights
+
+                # other aggregated things
                 # top view file things
                 o_fn_o = {}
                 o_fn_i = {}
