@@ -682,11 +682,28 @@ class Postprocess:
                     self.cfg['snapshots']['synapses']):
                 # print combined file so that we can do more analysis on these
                 # connections if needed
-                comb_fh = "08-syn_conns-{}-{}.txt".format(synapse_set, atime)
-                with open(comb_fh, 'w') as f:
+                comb_fn = "08-syn_conns-{}-{}.txt".format(synapse_set, atime)
+                comb_g_n = "08-conductance-hist-{}-{}.png".format(synapse_set,
+                                                                  atime)
+                with open(comb_fn, 'w') as f:
                     syn_conns.to_csv(f, sep='\t', header=None, index=True)
                 # Let's also generate histograms of the distribution of the
                 # weights
+                args = [
+                    "-e",
+                    "o_fn='{}'".format(comb_g_n),
+                    "-e",
+                    "i_fn='{}'".format(comb_fn),
+                    "-e",
+                    "plot_title='Conductances: {} at {}'".format(
+                        synapse_set, float(atime)/1000.)
+                ]
+                plot_using_gnuplot_binary(
+                    os.path.join(self.cfg['plots_dir'],
+                                 'plot-weight-histogram-snapshots.plt'),
+                    args)
+                self.lgr.debug("Generated cond hist for {} at {}".format(
+                    synapse_set, atime))
 
                 # other aggregated things
                 # top view file things

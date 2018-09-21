@@ -6,8 +6,8 @@ set ytics border nomirror
 set xtics border nomirror
 set lmargin at screen 0.15
 set xrange [0:]
-set format y "%.1tx10^{%T}"
-set format x "%.1tx10^{%T}"
+# set format y "%.1tx10^{%T}"
+# set format x "%.1tx10^{%T}"
 
 bin_width = 100.
 bin_number(x) = floor(x/bin_width)
@@ -17,5 +17,5 @@ rounded(x) = bin_width * ( bin_number(x) + 0.5)
 set style fill solid 1.0 noborder
 set title plot_title
 set output o_fn
-plot i_fn using (rounded($1)):(1) smooth frequency with boxes title ""
+plot i_fn using (rounded($3)):(3) smooth frequency with boxes title ""
 
