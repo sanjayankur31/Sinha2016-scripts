@@ -14,6 +14,4 @@ rounded(x) = bin_width * (bin_number(x) + 0.005)
 
 set title plot_title
 set output o_fn
-plot in_fn using (rounded(abs($3))):(abs($3)) smooth frequency with boxes lc black fill solid 0.1 noborder title "Initial", i_fn using (rounded(abs($3))):(abs($3)) smooth frequency with boxes fill solid 0.3 transparent noborder title "",
-
-
+plot in_fn using (rounded(abs($3))):(abs($3)) smooth frequency with boxes lc black fill pattern 4 border title "Initial", i_fn using (rounded(abs($3))):(abs($3)) smooth frequency with boxes lc 6 fill transparent pattern 5 border title "Now",
