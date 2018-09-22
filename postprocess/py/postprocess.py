@@ -736,7 +736,7 @@ class Postprocess:
                 # initial files for dual histograms
                 o_fn_l_i_in = "75-syn-lengths-{}-{}-in.txt".format(
                     synapse_set, float(time_list[0])/1000.)
-                o_fn_l_o_in = "75-syn-lengths-{}-{}-in.txt".format(
+                o_fn_l_o_in = "75-syn-lengths-{}-{}-out.txt".format(
                     synapse_set, float(time_list[0])/1000.)
 
                 o_fn_l_i = "75-syn-lengths-{}-{}-in.txt".format(
