@@ -685,6 +685,9 @@ class Postprocess:
                 comb_fn = "08-syn_conns-{}-{}.txt".format(synapse_set, atime)
                 comb_g_n = "08-conductance-hist-{}-{}.png".format(synapse_set,
                                                                   atime)
+                # for the initial value
+                in_fn = "08-syn_conns-{}-{}.txt".format(synapse_set,
+                                                        time_list[0])
                 with open(comb_fn, 'w') as f:
                     syn_conns.to_csv(f, sep='\t', header=None, index=True)
                 # Let's also generate histograms of the distribution of the
@@ -692,6 +695,8 @@ class Postprocess:
                 args = [
                     "-e",
                     "o_fn='{}'".format(comb_g_n),
+                    "-e",
+                    "in_fn='{}'".format(in_fn),
                     "-e",
                     "i_fn='{}'".format(comb_fn),
                     "-e",
@@ -1034,7 +1039,8 @@ class Postprocess:
         # processes. They may not all be used in each process, but I'd rather
         # pass them here in one place.
         processes = []
-        for synapse_set in ["EE", "EI", "II", "IE"]:
+        #  for synapse_set in ["EE", "EI", "II", "IE"]:
+        for synapse_set in ["IE"]:
             processes.append(Process(target=self.__process_synapses,
                                      args=(synapse_set, regions, sample,
                                            conn_len_hist_sample,)))
