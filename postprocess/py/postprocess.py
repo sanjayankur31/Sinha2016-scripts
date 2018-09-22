@@ -1051,8 +1051,7 @@ class Postprocess:
         # processes. They may not all be used in each process, but I'd rather
         # pass them here in one place.
         processes = []
-        #  for synapse_set in ["EE", "EI", "II", "IE"]:
-        for synapse_set in ["IE"]:
+        for synapse_set in ["EE", "EI", "II", "IE"]:
             processes.append(Process(target=self.__process_synapses,
                                      args=(synapse_set, regions, sample,
                                            conn_len_hist_sample,)))
