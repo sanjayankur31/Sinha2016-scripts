@@ -141,6 +141,16 @@ main ()
         "$IDENTIFIER"08-net-conductances-slope-to-p_lpz_I.png \
         "$IDENTIFIER"08-net-conductances-slope-to-o_I.png \
         -tile 4x4 -geometry +2+2  "$IDENTIFIER"75-net-conductances-I-montage.png
+
+    # Get the number of columns we have. One column for each time.
+    COLS=$(ls -- *08-conductance-hist-EE*.png | wc -l)
+
+    montage \
+        "$IDENTIFIER"08-conductance-hist-EE-*.png \
+        "$IDENTIFIER"08-conductance-hist-IE-*.png \
+        "$IDENTIFIER"08-conductance-hist-EI-*.png \
+        "$IDENTIFIER"08-conductance-hist-II-*.png \
+        -tile "$COLS"x4 -geometry +2+2 "$IDENTIFIER"08-conductance-hist-time-lapse-montage.png
 }
 
 
