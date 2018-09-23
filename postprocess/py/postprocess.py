@@ -200,7 +200,7 @@ class Postprocess:
                                    'denI_con']
                     ses['gid'] = ses.index
 
-                    if atime == time_list[0] or (
+                    if atime == self.cfg['deaff_at'] or (
                             (float(atime)/1000.) in
                             self.cfg['snapshots']['syn_elms']):
                         # Print individuals
@@ -679,8 +679,8 @@ class Postprocess:
 
             # for top views and other snapshots, we check if this is on our
             # list of times
-            if atime == time_list[0] or ((float(atime)/1000.) in
-                                         self.cfg['snapshots']['synapses']):
+            if atime == self.cfg['deaff_at'] or (
+                    (float(atime)/1000.) in self.cfg['snapshots']['synapses']):
                 # print combined file so that we can do more analysis on these
                 # connections if needed
                 comb_fn = "08-syn_conns-{}-{}.txt".format(synapse_set, atime)
@@ -688,7 +688,7 @@ class Postprocess:
                                                                   atime)
                 # for the initial value
                 in_fn = "08-syn_conns-{}-{}.txt".format(synapse_set,
-                                                        time_list[0])
+                                                        self.cfg['deaff_at'])
                 with open(comb_fn, 'w') as f:
                     syn_conns.to_csv(f, sep='\t', header=None, index=True)
                 # Let's also generate histograms of the distribution of the
@@ -735,9 +735,9 @@ class Postprocess:
                 # These are not classified per region
                 # initial files for dual histograms
                 o_fn_l_i_in = "75-syn-lengths-{}-{}-in.txt".format(
-                    synapse_set, float(time_list[0])/1000.)
+                    synapse_set, float(self.cfg['deaff_at'])/1000.)
                 o_fn_l_o_in = "75-syn-lengths-{}-{}-out.txt".format(
-                    synapse_set, float(time_list[0])/1000.)
+                    synapse_set, float(self.cfg['deaff_at'])/1000.)
 
                 o_fn_l_i = "75-syn-lengths-{}-{}-in.txt".format(
                     synapse_set, float(atime)/1000.)
@@ -755,7 +755,7 @@ class Postprocess:
 
                 # for the top view snapshots, check if the neuron we've
                 # picked to plot is a source or a destination
-                if atime == time_list[0] or (
+                if atime == self.cfg['deaff_at'] or (
                         (float(atime)/1000.) in
                         self.cfg['snapshots']['synapses']):
                     for n_set, nrns in sample.items():
@@ -828,8 +828,8 @@ class Postprocess:
             # Now that we've collected all our metrics in a single pass
             # over the data, we can close files and plot the graphs for the
             # specified time
-            if atime == time_list[0] or ((float(atime)/1000.) in
-                                         self.cfg['snapshots']['synapses']):
+            if atime == self.cfg['deaff_at'] or (
+                    (float(atime)/1000.) in self.cfg['snapshots']['synapses']):
                 for n_set, nrns in sample.items():
                     if dest_nrn_type in n_set:
                         o_fh_i[n_set].close()

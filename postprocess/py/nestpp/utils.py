@@ -30,6 +30,7 @@ def get_config(taskfile="config.ini"):
     graph_list = p['default']['time_graphs'].split()
     postprocess_home = p['default']['postprocess_home']
     plots_dir = p['default']['plots_dir']
+    deaff_at = p['default']['deaff_at']
 
     # where the unconsolidated files are
     # because its easier to consolidate raster files using sort
@@ -55,6 +56,7 @@ def get_config(taskfile="config.ini"):
     config['time_graphs'] = graph_list
     config['home'] = postprocess_home
     config['plots_dir'] = os.path.join(postprocess_home, plots_dir)
+    config['deaff_at'] = deaff_at
     config['datadir'] = data_dir
     config['snapshots'] = snapshots
 
