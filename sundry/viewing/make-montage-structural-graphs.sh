@@ -78,6 +78,31 @@ main ()
         "$IDENTIFIER"05-se-denE-con-I*.png \
         "$IDENTIFIER"05-se-denI-con-I*.png \
         -tile "$COLS"x3 -geometry +2+2 "$IDENTIFIER"05-se-con-montage-I.png
+
+    COLS=$(ls -- *05-se-ax-hist-all-I*.png | wc -l)
+    montage \
+        "$IDENTIFIER"05-se-ax-hist-all-E*.png \
+        "$IDENTIFIER"05-se-denE-hist-all-E*.png \
+        "$IDENTIFIER"05-se-denI-hist-all-E*.png \
+        -tile "$COLS"x3 -geometry +2+2 "$IDENTIFIER"05-se-hist-all-montage-E.png
+
+    montage \
+        "$IDENTIFIER"05-se-ax-hist-con-E*.png \
+        "$IDENTIFIER"05-se-denE-hist-con-E*.png \
+        "$IDENTIFIER"05-se-denI-hist-con-E*.png \
+        -tile "$COLS"x3 -geometry +2+2 "$IDENTIFIER"05-se-hist-con-montage-E.png
+
+    montage \
+        "$IDENTIFIER"05-se-ax-hist-all-I*.png \
+        "$IDENTIFIER"05-se-denE-hist-all-I*.png \
+        "$IDENTIFIER"05-se-denI-hist-all-I*.png \
+        -tile "$COLS"x3 -geometry +2+2 "$IDENTIFIER"05-se-hist-all-montage-I.png
+
+    montage \
+        "$IDENTIFIER"05-se-ax-hist-con-I*.png \
+        "$IDENTIFIER"05-se-denE-hist-con-I*.png \
+        "$IDENTIFIER"05-se-denI-hist-con-I*.png \
+        -tile "$COLS"x3 -geometry +2+2 "$IDENTIFIER"05-se-hist-con-montage-I.png
 }
 
 
