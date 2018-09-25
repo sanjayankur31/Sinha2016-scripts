@@ -287,8 +287,9 @@ class Postprocess:
                         '-e', "denI_max='{}'".format(ext[n_set]['denI_max']),
                         ]
                 plot_using_gnuplot_binary(
-                    os.path.join(self.cfg['plots_dir'],
-                                 'plot-synaptic-elements-top-view.plt'), args)
+                    os.path.join(
+                        self.cfg['plots_dir'],
+                        'plot-synaptic-elements-top-view-snapshots.plt'), args)
 
             self.lgr.info(
                 "Processed syn elms time graphs for {} neurons..".format(
@@ -706,7 +707,7 @@ class Postprocess:
                 ]
                 plot_using_gnuplot_binary(
                     os.path.join(self.cfg['plots_dir'],
-                                 'plot-weight-histogram-snapshots.plt'),
+                                 'plot-conductance-histogram-snapshots.plt'),
                     args)
                 self.lgr.debug("Generated cond hist for {} at {}".format(
                     synapse_set, atime))
@@ -857,8 +858,9 @@ class Postprocess:
                                 n_set, float(atime)/1000.)
                         ]
                         plot_using_gnuplot_binary(
-                            os.path.join(self.cfg['plots_dir'],
-                                         'plot-top-view-connections.plt'),
+                            os.path.join(
+                                self.cfg['plots_dir'],
+                                'plot-synapses-top-view-snapshots.plt'),
                             args)
 
                     if src_nrn_type in n_set:
@@ -1109,16 +1111,18 @@ class Postprocess:
             os.path.join(self.cfg['plots_dir'], 'plot-synapse-metrics.plt'))
 
         plot_using_gnuplot_binary(
-            os.path.join(self.cfg['plots_dir'],
-                         'plot-regional-synapses-histograms.plt'))
+            os.path.join(
+                self.cfg['plots_dir'],
+                'plot-regional-total-incoming-synapses-histograms.plt'))
 
         plot_using_gnuplot_binary(
             os.path.join(self.cfg['plots_dir'],
                          'plot-conductance-metrics.plt'))
 
         plot_using_gnuplot_binary(
-            os.path.join(self.cfg['plots_dir'],
-                         'plot-regional-conductance-histograms.plt'))
+            os.path.join(
+                self.cfg['plots_dir'],
+                'plot-regional-total-incoming-conductance-histograms.plt'))
 
         plot_using_gnuplot_binary(
             os.path.join(self.cfg['plots_dir'],
