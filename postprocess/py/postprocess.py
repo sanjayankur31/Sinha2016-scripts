@@ -902,8 +902,9 @@ class Postprocess:
                                 n_set, float(atime)/1000.)
                         ]
                         plot_using_gnuplot_binary(
-                            os.path.join(self.cfg['plots_dir'],
-                                         'plot-top-view-connections.plt'),
+                            os.path.join(
+                                self.cfg['plots_dir'],
+                                'plot-synapses-top-view-snapshots.plt'),
                             args)
 
                 o_fh_l_i.close()
