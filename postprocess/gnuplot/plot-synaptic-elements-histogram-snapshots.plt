@@ -8,9 +8,9 @@ set lmargin at screen 0.15
 # set format y "%.1tx10^{%T}"
 # set format x "%.1tx10^{%T}"
 
-bin_width = 1.
+bin_width = 5.
 bin_number(x) = floor(x/bin_width)
-rounded(x) = bin_width * (bin_number(x) + 0.5)
+rounded(x) = bin_width * (bin_number(x) + (bin_width/2))
 
 set title "connected ax for ".neuron_set." at time ".plot_time
 set output "05-se-ax-hist-con-".neuron_set."-".plot_time.".png"
