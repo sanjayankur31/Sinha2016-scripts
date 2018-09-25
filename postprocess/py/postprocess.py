@@ -264,6 +264,8 @@ class Postprocess:
                 xmax = 40
                 ymax = 50
 
+            deaff_time = self.cfg['deaff_at']
+            in_fn = "05-se-{}-{}.txt".format(n_set, deaff_time)
             for atime, dflist in df_list[n_set].items():
                 fn = "05-se-{}-{}.txt".format(n_set, atime)
 
@@ -290,6 +292,17 @@ class Postprocess:
                     os.path.join(
                         self.cfg['plots_dir'],
                         'plot-synaptic-elements-top-view-snapshots.plt'), args)
+
+                args = ['-e', "neuron_set='{}'".format(n_set),
+                        '-e', "plot_time='{}'".format(atime),
+                        '-e', "i_fn='{}'".format(fn),
+                        '-e', "in_fn='{}'".format(in_fn),
+                        ]
+                plot_using_gnuplot_binary(
+                    os.path.join(
+                        self.cfg['plots_dir'],
+                        'plot-synaptic-elements-histogram-snapshots.plt'),
+                    args)
 
             self.lgr.info(
                 "Processed syn elms time graphs for {} neurons..".format(
