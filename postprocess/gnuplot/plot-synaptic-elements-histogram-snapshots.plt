@@ -1,7 +1,7 @@
 load '/home/asinha/Documents/02_Code/00_repos/00_mine/gnuplot-palettes/paired.pal'
 set term pngcairo font "OpenSans, 28" size 1920, 1080
-set xlabel "Neurons"
-set ylabel "Number of synaptic elements"
+set ylabel "Neurons"
+set xlabel "Number of synaptic elements"
 set ytics border nomirror
 set xtics border nomirror
 set lmargin at screen 0.15
