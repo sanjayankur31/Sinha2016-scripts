@@ -30,7 +30,7 @@ def get_config(taskfile="config.ini"):
     graph_list = p['default']['time_graphs'].split()
     postprocess_home = p['default']['postprocess_home']
     plots_dir = p['default']['plots_dir']
-    deaff_at = p['default']['deaff_at']
+    deaff_at = float(p['default']['deaff_at'])
 
     # where the unconsolidated files are
     # because its easier to consolidate raster files using sort
