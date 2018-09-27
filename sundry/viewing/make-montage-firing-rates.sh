@@ -20,6 +20,14 @@ main ()
         "$IDENTIFIER"mean-firing-rates-p_lpz_I-E-zoomed.png \
         "$IDENTIFIER"mean-firing-rates-o_I-E-zoomed.png \
         -tile 2x3 -geometry +2+2  "$IDENTIFIER"firing-rate-montage.png
+
+    # Get the number of columns we have. One column for each time.
+    COLS=$(ls -- *firing-rates-grid-plot-E*.png | wc -l)
+
+    montage \
+        "$IDENTIFIER"*firing-rates-grid-plot-E*.png \
+        "$IDENTIFIER"*firing-rates-grid-plot-I*.png \
+        -tile "$COLS"x2 -geometry +2+2 "$IDENTIFIER"firing-rate-grid-plots.png
 }
 
 
