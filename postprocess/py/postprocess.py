@@ -867,8 +867,8 @@ class Postprocess:
                             "-e",
                             "r_lpz_c='{}'".format(rad_lpz_c),
                             "-e",
-                            "plot_title='in synapses for {} at {}'".format(
-                                n_set, float(atime)/1000.)
+                            "plot_title='in {} synapses for {} at {}'".format(
+                                synapse_set, n_set, float(atime)/1000.)
                         ]
                         plot_using_gnuplot_binary(
                             os.path.join(
@@ -898,8 +898,8 @@ class Postprocess:
                             "-e",
                             "r_lpz_c='{}'".format(rad_lpz_c),
                             "-e",
-                            "plot_title='out synapses for {} at {}'".format(
-                                n_set, float(atime)/1000.)
+                            "plot_title='out {} synapses for {} at {}'".format(
+                                synapse_set, n_set, float(atime)/1000.)
                         ]
                         plot_using_gnuplot_binary(
                             os.path.join(
