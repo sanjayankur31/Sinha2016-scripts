@@ -27,7 +27,7 @@ main ()
     montage \
         "$IDENTIFIER"*firing-rates-grid-plot-E*.png \
         "$IDENTIFIER"*firing-rates-grid-plot-I*.png \
-        -tile "$COLS"x2 -geometry +2+2 "$IDENTIFIER"firing-rate-grid-plots.png
+        -tile "$COLS"x2 -geometry +2+2 "$IDENTIFIER"firing-rate-grid-plots-montage.png
 }
 
 
