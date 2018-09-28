@@ -9,11 +9,10 @@ Author: Ankur Sinha <sanjay DOT ankur AT gmail DOT com>
 """
 
 import argparse
-import subprocess
-from subprocess import CalledProcessError
 import datetime
 import os
 import sys
+from montage_util import make_montage
 
 
 def montagise(simlist):
@@ -124,20 +123,7 @@ def neuron_metrics(simlist, timestamp):
             "-geometry", "+2+2",
             output_file
         ]
-
-        try:
-            print("Running montage with args: {}".format(args))
-            status = subprocess.run(args=['montage'] + args,
-                                    stdout=subprocess.PIPE,
-                                    stderr=subprocess.PIPE)
-            status.check_returncode()
-        except CalledProcessError as cpe:
-            print(
-                "{} errored with return code {}".format(
-                    cpe.cmd, cpe.returncode))
-            print("\n" + cpe.stderr.decode())
-        else:
-            print("{} Montage created".format(output_file))
+        make_montage(args, output_file)
 
 
 def connections(simlist, timestamp):
@@ -221,20 +207,7 @@ def connections(simlist, timestamp):
             "-geometry", "+2+2",
             output_file
         ]
-
-        try:
-            print("Running montage with args: {}".format(args))
-            status = subprocess.run(args=['montage'] + args,
-                                    stdout=subprocess.PIPE,
-                                    stderr=subprocess.PIPE)
-            status.check_returncode()
-        except CalledProcessError as cpe:
-            print(
-                "{} errored with return code {}".format(
-                    cpe.cmd, cpe.returncode))
-            print("\n" + cpe.stderr.decode())
-        else:
-            print("{} Montage created".format(output_file))
+        make_montage(args, output_file)
 
 
 def conductances(simlist, timestamp):
@@ -316,20 +289,7 @@ def conductances(simlist, timestamp):
             "-geometry", "+2+2",
             output_file
         ]
-
-        try:
-            print("Running montage with args: {}".format(args))
-            status = subprocess.run(args=['montage'] + args,
-                                    stdout=subprocess.PIPE,
-                                    stderr=subprocess.PIPE)
-            status.check_returncode()
-        except CalledProcessError as cpe:
-            print(
-                "{} errored with return code {}".format(
-                    cpe.cmd, cpe.returncode))
-            print("\n" + cpe.stderr.decode())
-        else:
-            print("{} Montage created".format(output_file))
+        make_montage(args, output_file)
 
 
 if __name__ == "__main__":
