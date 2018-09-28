@@ -94,7 +94,7 @@ def make_montage_total_conductances(sim):
 
 
 def make_montage_conductance_hists(sim):
-    """Make montage of firing rate grid plots.
+    """Make montage of conductance time lapse histogram plots.
 
     :sim: sim to make montage for
     :returns: nothing
