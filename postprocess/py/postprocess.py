@@ -651,7 +651,7 @@ class Postprocess:
         for aregion in regions:
             # only deal with destination regions of this type of neuron
             if dest_nrn_type in aregion:
-                fn = ("081-syn_conns-incoming-totals-{}-{}.txt".format(
+                fn = ("75-syn_conns-incoming-totals-{}-{}.txt".format(
                     aregion, synapse_set))
                 fh = open(fn, 'w')
                 syn_con_total_data_fhs[aregion] = fh

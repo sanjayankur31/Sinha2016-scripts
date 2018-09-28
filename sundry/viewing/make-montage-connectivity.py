@@ -22,17 +22,21 @@ def make_montage_connectivity_len_hists(sim):
     :returns: nothing
 
     """
-    print("Generating connectivity montage for {}".format(sim))
-    args = []
+    print("Generating connectivity len histograms montage for {}".format(sim))
     for ty in ["in", "out"]:
+        args = []
         output_file = (
-            "{}-08-connections-{}-hist-time-lapse-montage.png".format(sim, ty)
+            "{}-75-connections-{}-hist-time-lapse-montage.png".format(sim, ty)
         )
         for syn in ["EE", "IE", "EI", "II"]:
             f_glob = (
-                "{}-08-connections-hist-{}-*-{}.png".format(sim, syn, ty)
+                "{}-75-connections-hist-{}-*-{}.png".format(sim, syn, ty)
             )
             file_list = natsorted(glob.glob(f_glob))
+
+            if not file_list:
+                print("Component files not found. Skipping")
+                return
 
             for afile in file_list:
                 if os.path.isfile(afile):
@@ -151,13 +155,12 @@ def make_montage_total_conductances(sim):
         args = []
         for gps in [
             "02-calcium",
-            "08-syn_conns-E-to",
-            "08-syn_conns-E-to",
-            "081-connection-clustered-histograms-E-to",
-            "081-connection-rowstacked-histograms-E-to",
-            "08-syn_conns-I-to",
-            "081-connection-clustered-histograms-I-to",
-            "081-connection-rowstacked-histograms-I-to",
+            "75-syn_conns-E-to",
+            "75-connection-clustered-histograms-E-to",
+            "75-connection-rowstacked-histograms-E-to",
+            "75-syn_conns-I-to",
+            "75-connection-clustered-histograms-I-to",
+            "75-connection-rowstacked-histograms-I-to",
         ]:
             for region in ["lpz_c", "lpz_b", "p_lpz", "o"]:
                 fname = "{}-{}-{}_{}.png".format(sim, gps, region, nrn)
