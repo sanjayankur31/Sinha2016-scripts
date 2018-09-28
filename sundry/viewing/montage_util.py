@@ -26,4 +26,4 @@ def make_montage(args, output_file):
                 cpe.cmd, cpe.returncode))
         print("\n" + cpe.stderr.decode())
     else:
-        print("{} Montage created".format(output_file))
+        print("{} montage created".format(output_file))
