@@ -60,7 +60,7 @@ def make_montage_connectivity_top_views(sim):
     """
     for region in ["lpz_c_E", "lpz_b_E", "p_lpz_E", "o_E"]:
         output_file = (
-            "{}-75-connections-E-{}-time-top-montage.png".format(sim, region)
+            "{}-75-connections-{}-time-top-montage.png".format(sim, region)
         )
         args = []
         f_glob = "{}-75-conns-top-EE-{}-*-in.png".format(sim, region)
@@ -101,7 +101,7 @@ def make_montage_connectivity_top_views(sim):
 
     for region in ["lpz_c_I", "lpz_b_I", "p_lpz_I", "o_I"]:
         output_file = (
-            "{}-75-connections-I-{}-time-top-montage.png".format(sim, region)
+            "{}-75-connections-{}-time-top-montage.png".format(sim, region)
         )
         args = []
         f_glob = "{}-75-conns-top-II-{}-*-in.png".format(sim, region)
