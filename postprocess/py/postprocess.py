@@ -707,6 +707,11 @@ class Postprocess:
                     syn_conns.to_csv(f, sep='\t', header=None, index=True)
                 # Let's also generate histograms of the distribution of the
                 # weights
+                bin_width = 0.01
+                # Make it slightly larger for IE and II which have higher
+                # conductances
+                if synapse_set in ["IE", "II"]:
+                    bin_width = 0.1
                 args = [
                     "-e",
                     "o_fn='{}'".format(comb_g_n),
@@ -714,6 +719,8 @@ class Postprocess:
                     "in_fn='{}'".format(in_fn),
                     "-e",
                     "i_fn='{}'".format(comb_fn),
+                    "-e",
+                    "bin_width={}".format(bin_width),
                     "-e",
                     "plot_title='Conductances: {} at {}'".format(
                         synapse_set, float(atime)/1000.)
