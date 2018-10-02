@@ -180,6 +180,7 @@ class Postprocess:
                         "Processing syn elms for {} at {}".format(
                             neuron_set, atime))
                     ses = pandas.DataFrame()
+                    # the simulation prints in ms
                     ses = combine_files_row_wise(
                         "..", "05-se-{}-*-{}.txt".format(
                             neuron_set, atime), '\t')
@@ -188,6 +189,7 @@ class Postprocess:
                     totals = [str(x) for x in ses.sum(axis=0).values]
                     means = [str(x) for x in ses.mean(axis=0).values]
                     stds = [str(x) for x in ses.std(axis=0).values]
+                    # printing time in ms
                     print("{}\t{}\t{}\t{}".format(
                         atime, '\t'.join(means), '\t'.join(stds),
                         '\t'.join(totals)), file=f)
@@ -200,16 +202,16 @@ class Postprocess:
                                    'denI_con']
                     ses['gid'] = ses.index
 
-                    if atime == self.cfg['deaff_at'] or (
+                    if (float(atime)/1000.) == self.cfg['deaff_at'] or (
                             (float(atime)/1000.) in
                             self.cfg['snapshots']['syn_elms']):
                         # Print individuals
                         if 'E' in neuron_set:
                             new_df = locations_df_E.merge(ses, on='gid',
                                                           how='inner')
-                            if atime not in df_list['E']:
-                                df_list['E'][atime] = []
-                            df_list['E'][atime].append(new_df)
+                            if (float(atime)/1000.) not in df_list['E']:
+                                df_list['E'][float(atime)/1000.] = []
+                            df_list['E'][float(atime)/1000.].append(new_df)
 
                             max_df = ses.max()
                             min_df = ses.min()
@@ -233,9 +235,9 @@ class Postprocess:
                         else:
                             new_df = locations_df_I.merge(ses, on='gid',
                                                           how='inner')
-                            if atime not in df_list['I']:
-                                df_list['I'][atime] = []
-                            df_list['I'][atime].append(new_df)
+                            if (float(atime)/1000.) not in df_list['I']:
+                                df_list['I'][float(atime)/1000.] = []
+                            df_list['I'][float(atime)/1000.].append(new_df)
 
                             if ext['I']['ax_max'] < max_df['ax']:
                                 ext['I']['ax_max'] = max_df['ax']
@@ -266,6 +268,7 @@ class Postprocess:
 
             deaff_time = self.cfg['deaff_at']
             in_fn = "05-se-{}-{}.txt".format(n_set, deaff_time)
+            # it is already in s here
             for atime, dflist in df_list[n_set].items():
                 fn = "05-se-{}-{}.txt".format(n_set, atime)
 
@@ -341,10 +344,11 @@ class Postprocess:
                     cals = pandas.DataFrame()
                     cals = combine_files_row_wise(
                         "..", "02-calcium-{}-*-{}.txt".format(
-                            neuron_set, atime), '\t')
+                            neuron_set, float(atime)/1000.), '\t')
 
                     means = [str(x) for x in cals.mean(axis=0).values]
                     stds = [str(x) for x in cals.std(axis=0).values]
+                    # printing in ms
                     print("{}\t{}\t{}".format(
                         atime, '\t'.join(means),
                         '\t'.join(stds)), file=f)
@@ -400,6 +404,7 @@ class Postprocess:
                     self.neurons[neuron_set],
                     self.cfg['snapshots']['firing_rate_histograms'])
 
+            # in seconds
             for atime in self.cfg['snapshots']['firing_rate_histograms']:
                 plot_firing_rate_histograms(histlist, atime)
 
@@ -425,6 +430,7 @@ class Postprocess:
                     window=2500.
                 )
 
+                # seconds
                 for atime in self.cfg['snapshots']['firing_rates']:
                     i_fn = "firing-rates-{}-{}.gdf".format(neuron_set, atime)
                     o_fn = "firing-rates-grid-plot-{}-{}.png".format(
@@ -678,11 +684,13 @@ class Postprocess:
                 print(*sources, sep='\t', file=fh1)
 
         # start
+        # atime is in ms here
         for atime in time_list:
             self.lgr.debug(
                 "Processing syn conns for {} at {}".format(
-                    synapse_set, float(atime)/1000.))
+                    synapse_set, (float(atime)/1000.)))
             syn_conns = pandas.DataFrame()
+            # simulation names files in ms
             syn_conns = combine_files_row_wise(
                 "..", "08-syn_conns-{}-*-{}.txt".format(
                     synapse_set, atime), '\t')
@@ -693,13 +701,14 @@ class Postprocess:
 
             # for top views and other snapshots, we check if this is on our
             # list of times
-            if atime == self.cfg['deaff_at'] or (
+            if (float(atime)/1000.) == self.cfg['deaff_at'] or (
                     (float(atime)/1000.) in self.cfg['snapshots']['synapses']):
                 # print combined file so that we can do more analysis on these
                 # connections if needed
-                comb_fn = "08-syn_conns-{}-{}.txt".format(synapse_set, atime)
-                comb_g_n = "08-conductance-hist-{}-{}.png".format(synapse_set,
-                                                                  atime)
+                comb_fn = "08-syn_conns-{}-{}.txt".format(
+                    synapse_set, (float(atime)/1000.))
+                comb_g_n = "08-conductance-hist-{}-{}.png".format(
+                    synapse_set, (float(atime)/1000.))
                 # for the initial value
                 in_fn = "08-syn_conns-{}-{}.txt".format(synapse_set,
                                                         self.cfg['deaff_at'])
@@ -723,14 +732,14 @@ class Postprocess:
                     "bin_width={}".format(bin_width),
                     "-e",
                     "plot_title='Conductances: {} at {}'".format(
-                        synapse_set, float(atime)/1000.)
+                        synapse_set, (float(atime)/1000.))
                 ]
                 plot_using_gnuplot_binary(
                     os.path.join(self.cfg['plots_dir'],
                                  'plot-conductance-histogram-snapshots.plt'),
                     args)
                 self.lgr.debug("Generated cond hist for {} at {}".format(
-                    synapse_set, atime))
+                    synapse_set, float(atime)/1000.))
 
                 # other aggregated things
                 # top view file things
@@ -745,26 +754,26 @@ class Postprocess:
                     # neither be sources nor destinations.
                     if dest_nrn_type in n_set:
                         o_fn_i[n_set] = "75-conns-top-{}-{}-{}-in.txt".format(
-                            synapse_set, n_set, float(atime)/1000.)
+                            synapse_set, n_set, (float(atime)/1000.))
                         o_fh_i[n_set] = open(o_fn_i[n_set], 'w')
 
                     if src_nrn_type in n_set:
                         o_fn_o[n_set] = "75-conns-top-{}-{}-{}-out.txt".format(
-                            synapse_set, n_set, float(atime)/1000.)
+                            synapse_set, n_set, (float(atime)/1000.))
                         o_fh_o[n_set] = open(o_fn_o[n_set], 'w')
 
                 # These are not classified per region
                 # initial files for dual histograms
                 o_fn_l_i_in = "75-syn-lengths-{}-{}-in.txt".format(
-                    synapse_set, float(self.cfg['deaff_at'])/1000.)
+                    synapse_set, float(self.cfg['deaff_at']))
                 o_fn_l_o_in = "75-syn-lengths-{}-{}-out.txt".format(
-                    synapse_set, float(self.cfg['deaff_at'])/1000.)
+                    synapse_set, float(self.cfg['deaff_at']))
 
                 o_fn_l_i = "75-syn-lengths-{}-{}-in.txt".format(
-                    synapse_set, float(atime)/1000.)
+                    synapse_set, (float(atime)/1000.))
                 o_fh_l_i = open(o_fn_l_i, 'w')
                 o_fn_l_o = "75-syn-lengths-{}-{}-out.txt".format(
-                    synapse_set, float(atime)/1000.)
+                    synapse_set, (float(atime)/1000.))
                 o_fh_l_o = open(o_fn_l_o, 'w')
 
             # iterate over synapses between different regions
@@ -776,7 +785,7 @@ class Postprocess:
 
                 # for the top view snapshots, check if the neuron we've
                 # picked to plot is a source or a destination
-                if atime == self.cfg['deaff_at'] or (
+                if (float(atime)/1000.) == self.cfg['deaff_at'] or (
                         (float(atime)/1000.) in
                         self.cfg['snapshots']['synapses']):
                     for n_set, nrns in sample.items():
@@ -849,7 +858,7 @@ class Postprocess:
             # Now that we've collected all our metrics in a single pass
             # over the data, we can close files and plot the graphs for the
             # specified time
-            if atime == self.cfg['deaff_at'] or (
+            if (float(atime)/1000.) == self.cfg['deaff_at'] or (
                     (float(atime)/1000.) in self.cfg['snapshots']['synapses']):
                 for n_set, nrns in sample.items():
                     if dest_nrn_type in n_set:
@@ -857,7 +866,7 @@ class Postprocess:
 
                         # now on to plotting
                         p_fn = "75-conns-top-{}-{}-{}-in.png".format(
-                            synapse_set, n_set, float(atime)/1000.)
+                            synapse_set, n_set, (float(atime)/1000.))
                         args = [
                             "-e",
                             "o_fn='{}'".format(p_fn),
@@ -875,7 +884,7 @@ class Postprocess:
                             "r_lpz_c='{}'".format(rad_lpz_c),
                             "-e",
                             "plot_title='in {} synapses for {} at {}'".format(
-                                synapse_set, n_set, float(atime)/1000.)
+                                synapse_set, n_set, (float(atime)/1000.))
                         ]
                         plot_using_gnuplot_binary(
                             os.path.join(
@@ -888,7 +897,7 @@ class Postprocess:
 
                         # now on to plotting
                         p_fn = "75-conns-top-{}-{}-{}-out.png".format(
-                            synapse_set, n_set, float(atime)/1000.)
+                            synapse_set, n_set, (float(atime)/1000.))
                         args = [
                             "-e",
                             "o_fn='{}'".format(p_fn),
@@ -906,7 +915,7 @@ class Postprocess:
                             "r_lpz_c='{}'".format(rad_lpz_c),
                             "-e",
                             "plot_title='out {} synapses for {} at {}'".format(
-                                synapse_set, n_set, float(atime)/1000.)
+                                synapse_set, n_set, (float(atime)/1000.))
                         ]
                         plot_using_gnuplot_binary(
                             os.path.join(
@@ -918,7 +927,7 @@ class Postprocess:
                 o_fh_l_o.close()
                 p_h_fn = (
                     "75-connections-hist-{}-{}-in.png".format(
-                        synapse_set, float(atime)/1000.
+                        synapse_set, (float(atime)/1000.)
                     ))
                 args = [
                     "-e",
@@ -929,7 +938,7 @@ class Postprocess:
                     "i_fn='{}'".format(o_fn_l_i),
                     "-e",
                     "plot_title='Incoming syn lens for {} at {}'".format(
-                        synapse_set, float(atime)/1000.)
+                        synapse_set, (float(atime)/1000.))
                 ]
                 plot_using_gnuplot_binary(
                     os.path.join(self.cfg['plots_dir'],
@@ -938,7 +947,7 @@ class Postprocess:
 
                 p_h_fn = (
                     "75-connections-hist-{}-{}-out.png".format(
-                        synapse_set, float(atime)/1000.
+                        synapse_set, (float(atime)/1000.)
                     ))
                 args = [
                     "-e",
@@ -949,7 +958,7 @@ class Postprocess:
                     "i_fn='{}'".format(o_fn_l_o),
                     "-e",
                     "plot_title='Outgoing syn lens for {} at {}'".format(
-                        synapse_set, float(atime)/1000.)
+                        synapse_set, (float(atime)/1000.))
                 ]
                 plot_using_gnuplot_binary(
                     os.path.join(self.cfg['plots_dir'],
@@ -990,7 +999,7 @@ class Postprocess:
                     print(
                         "{}\t{}\t{}\t{}\t{}".format
                         (
-                            float(atime)/1000., len(value['weights']),
+                            (float(atime)/1000.), len(value['weights']),
                             numpy.sum(value['weights']),
                             numpy.mean(value['weights']),
                             numpy.std(value['weights'])),
@@ -998,7 +1007,7 @@ class Postprocess:
                 else:
                     print(
                         "{}\t{}\t{}\t{}\t{}".format
-                        (float(atime)/1000., 0, 0, "NaN", "NaN"),
+                        ((float(atime)/1000.), 0, 0, "NaN", "NaN"),
                         file=value['o_fh'])
 
         # close file handlers for each region file for this synapse type:
