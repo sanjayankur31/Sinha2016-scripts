@@ -139,12 +139,12 @@ def connections(simlist, timestamp):
     num_cols = len(simlist)
     graphs = [
         "02-calcium",
-        "08-syn_conns-E-to",
-        "081-connection-clustered-histograms-E-to",
-        "081-connection-rowstacked-histograms-E-to",
-        "08-syn_conns-I-to",
-        "081-connection-clustered-histograms-I-to",
-        "081-connection-rowstacked-histograms-I-to"
+        "75-syn_conns-E-to",
+        "75-connection-clustered-histograms-E-to",
+        "75-connection-rowstacked-histograms-E-to",
+        "75-syn_conns-I-to",
+        "75-connection-clustered-histograms-I-to",
+        "75-connection-rowstacked-histograms-I-to"
     ]
 
     regions = ["lpz_c_E", "lpz_b_E", "p_lpz_E", "o_E"]
