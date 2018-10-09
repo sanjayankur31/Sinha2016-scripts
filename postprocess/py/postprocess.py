@@ -344,7 +344,7 @@ class Postprocess:
                     cals = pandas.DataFrame()
                     cals = combine_files_row_wise(
                         "..", "02-calcium-{}-*-{}.txt".format(
-                            neuron_set, float(atime)/1000.), '\t')
+                            neuron_set, atime), '\t')
 
                     means = [str(x) for x in cals.mean(axis=0).values]
                     stds = [str(x) for x in cals.std(axis=0).values]
