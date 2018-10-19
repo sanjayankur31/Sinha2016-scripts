@@ -315,7 +315,7 @@ class Postprocess:
             os.path.join(self.cfg['plots_dir'],
                          'plot-synaptic-elements-metrics.plt'))
 
-    def generate_calcium_graphs(self):
+    def generate_calcium_metrics(self):
         """Postprocess calcium files.
 
         Collates various files from ranks and the different times and generates
@@ -1184,7 +1184,7 @@ class Postprocess:
         processes.append(Process(target=self.generate_raster_graphs))
         processes.append(
             Process(target=self.generate_firing_rate_grid_snapshots))
-        processes.append(Process(target=self.generate_calcium_graphs))
+        processes.append(Process(target=self.generate_calcium_metrics))
         processes.append(
             Process(target=self.generate_total_synapse_change_graphs))
         processes.append(
