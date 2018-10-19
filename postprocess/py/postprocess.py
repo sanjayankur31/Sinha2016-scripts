@@ -330,6 +330,27 @@ class Postprocess:
         if "calciums" not in self.cfg['time_graphs']:
             return True
 
+        # diabolical top level list
+        df_list = {}
+        df_list['E'] = {}
+        df_list['I'] = {}
+
+        # store max/min values of all so that all graphs have the same ranges
+        # and we can compare them. If each top view graph has its own range, it
+        # becomes extremely hard to see what's going on
+        ext = {}
+        ext['E'] = {}
+        ext['E']['max'] = 0
+        ext['E']['min'] = 0
+        ext['I'] = {}
+        ext['I']['max'] = 0
+        ext['I']['min'] = 0
+
+        locations_df_E = (pandas.DataFrame.from_records(self.neurons['E']))
+        locations_df_E.columns = ['gid', 'gx', 'gy', 'x', 'y']
+        locations_df_I = (pandas.DataFrame.from_records(self.neurons['I']))
+        locations_df_I.columns = ['gid', 'gx', 'gy', 'x', 'y']
+
         self.lgr.info("Generating calcium graphs..")
         # get times where the info was logged since these need to be combined
         # first - from any file series for one rank
@@ -353,8 +374,96 @@ class Postprocess:
                         atime, '\t'.join(means),
                         '\t'.join(stds)), file=f)
 
+                    # set columns, create the first column with gids
+                    # we don't do this before, because we do not want the
+                    # sum/mean/std of the gids to be printed to our file.
+                    # Before this, the gids are only in the index
+                    cals.columns = ['cal']
+                    cals['gid'] = cals.index
+
+                    if (float(atime)/1000.) == self.cfg['deaff_at'] or (
+                            (float(atime)/1000.) in
+                            self.cfg['snapshots']['calciums']):
+                        # Print individuals
+                        if 'E' in neuron_set:
+                            new_df = locations_df_E.merge(cals, on='gid',
+                                                          how='inner')
+                            if (float(atime)/1000.) not in df_list['E']:
+                                df_list['E'][float(atime)/1000.] = []
+                            df_list['E'][float(atime)/1000.].append(new_df)
+
+                            max_df = cals.max()
+                            min_df = cals.min()
+
+                            if ext['E']['max'] < max_df['cal']:
+                                ext['E']['max'] = max_df['cal']
+                            if ext['E']['min'] > min_df['cal']:
+                                ext['E']['min'] = min_df['cal']
+
+                        else:
+                            new_df = locations_df_I.merge(cals, on='gid',
+                                                          how='inner')
+                            if (float(atime)/1000.) not in df_list['I']:
+                                df_list['I'][float(atime)/1000.] = []
+                            df_list['I'][float(atime)/1000.].append(new_df)
+
+                            if ext['I']['max'] < max_df['cal']:
+                                ext['I']['max'] = max_df['cal']
+                            if ext['I']['min'] > min_df['cal']:
+                                ext['I']['min'] = min_df['cal']
+
             self.lgr.info(
                 "Processed cal metrics for {} neurons..".format(neuron_set))
+
+        # Plotting of top view graphs for complete E and I populations
+        for n_set in ['E', 'I']:
+            if n_set == 'E':
+                xmax = 80
+                ymax = 100
+            else:
+                xmax = 40
+                ymax = 50
+
+            deaff_time = self.cfg['deaff_at']
+            in_fn = "02-calcium-{}-{}.txt".format(n_set, deaff_time)
+            # it is already in s here
+            for atime, dflist in df_list[n_set].items():
+                fn = "02-calcium-{}-{}.txt".format(n_set, atime)
+
+                all_neurons_df = pandas.concat(dflist, axis=0)
+                all_neurons_df.sort_values('gid', axis=0, inplace=True)
+                # force flush
+                with open(fn, 'w') as fh:
+                    all_neurons_df.to_csv(fh, sep='\t', header=True,
+                                          index=False)
+
+                args = ['-e', "neuron_set='{}'".format(n_set),
+                        '-e', "plot_time='{}'".format(atime),
+                        '-e', "i_fn='{}'".format(fn),
+                        '-e', "xmax='{}'".format(xmax),
+                        '-e', "ymax='{}'".format(ymax),
+                        '-e', "cal_min='{}'".format(ext[n_set]['min']),
+                        '-e', "cal_max='{}'".format(ext[n_set]['max']),
+                        ]
+                plot_using_gnuplot_binary(
+                    os.path.join(
+                        self.cfg['plots_dir'],
+                        'plot-calciums-top-view-snapshots.plt'), args)
+
+                args = ['-e', "neuron_set='{}'".format(n_set),
+                        '-e', "plot_time='{}'".format(atime),
+                        '-e', "i_fn='{}'".format(fn),
+                        '-e', "in_fn='{}'".format(in_fn),
+                        ]
+                plot_using_gnuplot_binary(
+                    os.path.join(
+                        self.cfg['plots_dir'],
+                        'plot-calciums-histogram-snapshots.plt'),
+                    args)
+
+            self.lgr.info(
+                "Processed calcium time graphs for {} neurons..".format(
+                    n_set))
 
         plot_using_gnuplot_binary(os.path.join(self.cfg['plots_dir'],
                                                'plot-cal-metrics.plt'))
