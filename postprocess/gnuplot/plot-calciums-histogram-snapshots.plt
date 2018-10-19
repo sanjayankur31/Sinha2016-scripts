@@ -13,6 +13,6 @@ bin_number(x) = floor(x/bin_width)
 rounded(x) = bin_width * (bin_number(x) + (bin_width/2))
 
 set title "Calciums for ".neuron_set." at time ".plot_time
-set output "02-calcium-".neuron_set."-".plot_time.".png"
+set output "02-calcium-hist-".neuron_set."-".plot_time.".png"
 plot in_fn using (rounded(abs($6))):(abs($6)) smooth frequency with boxes lc black fill pattern 4 border title "Reference", i_fn using (rounded(abs($6))):(abs($6)) smooth frequency with boxes lc 6 fill transparent pattern 5 border title "Now",
 
