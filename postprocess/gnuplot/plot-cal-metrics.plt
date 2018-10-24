@@ -31,18 +31,18 @@ plot "02-calcium-lpz_c_E-all.txt" using ($1/1000):2 with linespoints lw 6 title 
 set yrange[0:eps_den_E_i+5]
 set title "Mean and STD calcium concentration for various E neuron sets"
 set output "02-calcium-lpz_c_E.png"
-plot "02-calcium-lpz_c_E-all.txt" using ($1/1000):2:($2-$3):($2+$3) with errorbars lw 6 title "", '' using ($1/1000):2 with linespoints lw 6 title "Mean LPZ C", '' using ($1/1000):4:5 with filledcurves fs transparent solid 0.1 title "", '' using ($1/1000):4 notitle, '' using ($1/1000):5 notitle;
+plot "02-calcium-lpz_c_E-all.txt" using ($1/1000):2:($2-$3):($2+$3) with errorbars lw 6 title "", '' using ($1/1000):2 with linespoints lw 6 title "Mean LPZ C", '' using ($1/1000):4:5 with filledcurves fs transparent solid 0.2 title "", '' using ($1/1000):4 with lines lw 2 notitle, '' using ($1/1000):5 with lines lw 2 notitle;
 
 set output "02-calcium-lpz_b_E.png"
-plot "02-calcium-lpz_b_E-all.txt" using ($1/1000):2:($2-$3):($2+$3) with errorbars lw 6 title "", '' using ($1/1000):2 with linespoints lw 6 title "Mean LPZ B", '' using ($1/1000):4:5 with filledcurves fs transparent solid 0.1 title "", '' using ($1/1000):4 notitle, '' using ($1/1000):5 notitle;
+plot "02-calcium-lpz_b_E-all.txt" using ($1/1000):2:($2-$3):($2+$3) with errorbars lw 6 title "", '' using ($1/1000):2 with linespoints lw 6 title "Mean LPZ B", '' using ($1/1000):4:5 with filledcurves fs transparent solid 0.2 title "", '' using ($1/1000):4 with lines lw 2 notitle, '' using ($1/1000):5 with lines lw 2 notitle;
 
 
 set output "02-calcium-p_lpz_E.png"
-plot "02-calcium-p_lpz_E-all.txt" using ($1/1000):2:($2-$3):($2+$3) with errorbars lw 6 title "", '' using ($1/1000):2 with linespoints lw 6 title "Mean P LPZ", '' using ($1/1000):4:5 with filledcurves fs transparent solid 0.1 title "", '' using ($1/1000):4 notitle, '' using ($1/1000):5 notitle;
+plot "02-calcium-p_lpz_E-all.txt" using ($1/1000):2:($2-$3):($2+$3) with errorbars lw 6 title "", '' using ($1/1000):2 with linespoints lw 6 title "Mean P LPZ", '' using ($1/1000):4:5 with filledcurves fs transparent solid 0.2 title "", '' using ($1/1000):4 with lines lw 2 notitle, '' using ($1/1000):5 with lines lw 2 notitle;
 
 
 set output "02-calcium-o_E.png"
-plot "02-calcium-o_E-all.txt" using ($1/1000):2:($2-$3):($2+$3) with errorbars lw 6 title "", '' using ($1/1000):2 with linespoints lw 6 title "Mean O LPZ", '' using ($1/1000):4:5 with filledcurves fs transparent solid 0.1 title "", '' using ($1/1000):4 notitle, '' using ($1/1000):5 notitle;
+plot "02-calcium-o_E-all.txt" using ($1/1000):2:($2-$3):($2+$3) with errorbars lw 6 title "", '' using ($1/1000):2 with linespoints lw 6 title "Mean O LPZ", '' using ($1/1000):4:5 with filledcurves fs transparent solid 0.2 title "", '' using ($1/1000):4 with lines lw 2 notitle, '' using ($1/1000):5 with lines lw 2 notitle;
 
 
 set output "02-calcium-E-zoomed.png"
@@ -75,18 +75,18 @@ plot "02-calcium-lpz_c_I-all.txt" using ($1/1000):2 with linespoints lw 6 title 
 set yrange[0:eps_den_I_i+5]
 set title "Mean and STD calcium concentration for various I neuron sets"
 set output "02-calcium-lpz_c_I.png"
-plot "02-calcium-lpz_c_I-all.txt" using ($1/1000):2:($2-$3):($2+$3) with errorbars lw 6 title "", '' using ($1/1000):2 with linespoints lw 6 title "Mean LPZ C", '' using ($1/1000):4:5 with filledcurves fs transparent solid 0.1 title "", '' using ($1/1000):4 notitle, '' using ($1/1000):5 notitle;
+plot "02-calcium-lpz_c_I-all.txt" using ($1/1000):2:($2-$3):($2+$3) with errorbars lw 6 title "", '' using ($1/1000):2 with linespoints lw 6 title "Mean LPZ C", '' using ($1/1000):4:5 with filledcurves fs transparent solid 0.2 title "", '' using ($1/1000):4 with lines lw 2 notitle, '' using ($1/1000):5 with lines lw 2 notitle;
 
 set output "02-calcium-lpz_b_I.png"
-plot "02-calcium-lpz_b_I-all.txt" using ($1/1000):2:($2-$3):($2+$3) with errorbars lw 6 title "", '' using ($1/1000):2 with linespoints lw 6 title "Mean LPZ B", '' using ($1/1000):4:5 with filledcurves fs transparent solid 0.1 title "", '' using ($1/1000):4 notitle, '' using ($1/1000):5 notitle;
+plot "02-calcium-lpz_b_I-all.txt" using ($1/1000):2:($2-$3):($2+$3) with errorbars lw 6 title "", '' using ($1/1000):2 with linespoints lw 6 title "Mean LPZ B", '' using ($1/1000):4:5 with filledcurves fs transparent solid 0.2 title "", '' using ($1/1000):4 with lines lw 2 notitle, '' using ($1/1000):5 with lines lw 2 notitle;
 
 
 set output "02-calcium-p_lpz_I.png"
-plot "02-calcium-p_lpz_I-all.txt" using ($1/1000):2:($2-$3):($2+$3) with errorbars lw 6 title "", '' using ($1/1000):2 with linespoints lw 6 title "Mean P LPZ", '' using ($1/1000):4:5 with filledcurves fs transparent solid 0.1 title "", '' using ($1/1000):4 notitle, '' using ($1/1000):5 notitle;
+plot "02-calcium-p_lpz_I-all.txt" using ($1/1000):2:($2-$3):($2+$3) with errorbars lw 6 title "", '' using ($1/1000):2 with linespoints lw 6 title "Mean P LPZ", '' using ($1/1000):4:5 with filledcurves fs transparent solid 0.2 title "", '' using ($1/1000):4 with lines lw 2 notitle, '' using ($1/1000):5 with lines lw 2 notitle;
 
 
 set output "02-calcium-o_I.png"
-plot "02-calcium-o_I-all.txt" using ($1/1000):2:($2-$3):($2+$3) with errorbars lw 6 title "", '' using ($1/1000):2 with linespoints lw 6 title "Mean O LPZ", '' using ($1/1000):4:5 with filledcurves fs transparent solid 0.1 title "", '' using ($1/1000):4 notitle, '' using ($1/1000):5 notitle;
+plot "02-calcium-o_I-all.txt" using ($1/1000):2:($2-$3):($2+$3) with errorbars lw 6 title "", '' using ($1/1000):2 with linespoints lw 6 title "Mean O LPZ", '' using ($1/1000):4:5 with filledcurves fs transparent solid 0.2 title "", '' using ($1/1000):4 with lines lw 2 notitle, '' using ($1/1000):5 with lines lw 2 notitle;
 
 
 set output "02-calcium-I-zoomed.png"
