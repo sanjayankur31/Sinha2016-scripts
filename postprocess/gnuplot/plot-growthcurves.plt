@@ -3,7 +3,7 @@ set term pngcairo enhanced font "OpenSans, 28" size 1920, 1080
 set format y "%.1tx10^{%T}"
 
 # define the function
-dzdt(x, nu, zeta, xi)= (nu * ((2.0 * exp(-(((x - xi)/zeta)**2.0))) - 1.0))
+dzdt(x, nu, zeta, xi, omega)= (nu * ((2.0 * exp(-(((x - xi)/zeta)**2.0))) - omega))
 
 eps_ax_E=system("grep 'eps_ax_E' 99-simulation_params.txt | sed 's/^.*: //'")
 eps_den_E_e=system("grep 'eps_den_E_e' 99-simulation_params.txt | sed 's/^.*: //'")
@@ -15,6 +15,9 @@ nu_den_E_i=system("grep 'nu_den_E_i' 99-simulation_params.txt | sed 's/^.*: //'"
 eta_ax_E=system("grep 'eta_ax_E' 99-simulation_params.txt | sed 's/^.*: //'")
 eta_den_E_e=system("grep 'eta_den_E_e' 99-simulation_params.txt | sed 's/^.*: //'")
 eta_den_E_i=system("grep 'eta_den_E_i' 99-simulation_params.txt | sed 's/^.*: //'")
+omega_ax_E=system("grep 'omega_ax_E' 99-simulation_params.txt | sed 's/^.*: //'")
+omega_den_E_e=system("grep 'omega_den_E_e' 99-simulation_params.txt | sed 's/^.*: //'")
+omega_den_E_i=system("grep 'omega_den_E_i' 99-simulation_params.txt | sed 's/^.*: //'")
 
 eps_ax_I=system("grep 'eps_ax_I' 99-simulation_params.txt | sed 's/^.*: //'")
 eps_den_I_e=system("grep 'eps_den_I_e' 99-simulation_params.txt | sed 's/^.*: //'")
@@ -26,14 +29,17 @@ nu_den_I_i=system("grep 'nu_den_I_i' 99-simulation_params.txt | sed 's/^.*: //'"
 eta_ax_I=system("grep 'eta_ax_I' 99-simulation_params.txt | sed 's/^.*: //'")
 eta_den_I_e=system("grep 'eta_den_I_e' 99-simulation_params.txt | sed 's/^.*: //'")
 eta_den_I_i=system("grep 'eta_den_I_i' 99-simulation_params.txt | sed 's/^.*: //'")
+omega_ax_I=system("grep 'omega_ax_I' 99-simulation_params.txt | sed 's/^.*: //'")
+omega_den_I_e=system("grep 'omega_den_I_e' 99-simulation_params.txt | sed 's/^.*: //'")
+omega_den_I_i=system("grep 'omega_den_I_i' 99-simulation_params.txt | sed 's/^.*: //'")
 
 xi_den_E_e=(eta_den_E_e+eps_den_E_e)/2.0
 xi_den_E_i=(eta_den_E_i+eps_den_E_i)/2.0
 xi_ax_E=(eta_ax_E+eps_ax_E)/2.0
 
-zeta_den_E_e=(eta_den_E_e-eps_den_E_e)/1.6651092223153954
-zeta_den_E_i=(eta_den_E_i-eps_den_E_i)/1.6651092223153954
-zeta_ax_E=(eta_ax_E-eps_ax_E)/1.6651092223153954
+zeta_den_E_e=(eta_den_E_e-eps_den_E_e)/(2*sqrt(-log(omega_den_E_e/2)))
+zeta_den_E_i=(eta_den_E_i-eps_den_E_i)/(2*sqrt(-log(omega_den_E_i/2)))
+zeta_ax_E=(eta_ax_E-eps_ax_E)/(2*sqrt(-log(omega_ax_E/2)))
 
 set output "growth-curves-E.png"
 set title "Growth curves for E neurons"
@@ -52,7 +58,7 @@ set object 3 rectangle from eta_den_E_i, graph 0 to eps_ax_E, graph 1 fc rgb "ye
 set object 4 rectangle from eps_ax_E, graph 0 to eps_den_E_i, graph 1 fc rgb "blue" fs transparent solid 0.1 behind
 set object 5 rectangle from eps_den_E_i, graph 0 to graph 1, graph 1 fc rgb "red" fs transparent solid 0.1 behind
 
-plot [x=0:xmax_E] dzdt(x, nu_den_E_e, zeta_den_E_e, xi_den_E_e) w lines lw 6 lc 3 dt 2 title 'Dendritic E', [x=0:xmax_E] dzdt(x, nu_den_E_i, zeta_den_E_i, xi_den_E_i) w lines lw 6 lc 7 dt 4 title 'Dendritic I', [x=0:xmax_E] dzdt(x, nu_ax_E, zeta_ax_E, xi_ax_E) w lines lw 6 lc 1 dt 1 title 'Axonal', 0 title "";
+plot [x=0:xmax_E] dzdt(x, nu_den_E_e, zeta_den_E_e, xi_den_E_e, omega_den_E_e) w lines lw 6 lc 3 dt 2 title 'Dendritic E', [x=0:xmax_E] dzdt(x, nu_den_E_i, zeta_den_E_i, xi_den_E_i, omega_den_E_i) w lines lw 6 lc 7 dt 4 title 'Dendritic I', [x=0:xmax_E] dzdt(x, nu_ax_E, zeta_ax_E, xi_ax_E, omega_ax_E) w lines lw 6 lc 1 dt 1 title 'Axonal', 0 title "";
 
 # Inhibitory
 unset arrow
@@ -62,9 +68,9 @@ xi_den_I_e=(eta_den_I_e+eps_den_I_e)/2.0
 xi_den_I_i=(eta_den_I_i+eps_den_I_i)/2.0
 xi_ax_I=(eta_ax_I+eps_ax_I)/2.0
 
-zeta_den_I_e=(eta_den_I_e-eps_den_I_e)/1.6651092223153954
-zeta_den_I_i=(eta_den_I_i-eps_den_I_i)/1.6651092223153954
-zeta_ax_I=(eta_ax_I-eps_ax_I)/1.6651092223153954
+zeta_den_I_e=(eta_den_I_e-eps_den_I_e)/(2*sqrt(-log(omega_den_I_e/2)))
+zeta_den_I_i=(eta_den_I_i-eps_den_I_i)/(2*sqrt(-log(omega_den_I_i/2)))
+zeta_ax_I=(eta_ax_I-eps_ax_I)/(2*sqrt(-log(omega_ax_I/2)))
 
 set output "growth-curves-I.png"
 set title "Growth curves for I neurons"
@@ -83,7 +89,7 @@ set object 3 rectangle from eta_den_I_e, graph 0 to eta_den_I_i, graph 1 fc rgb 
 set object 4 rectangle from eta_den_I_i, graph 0 to eps_den_I_i, graph 1 fc rgb "yellow" fs transparent solid 0.1 behind
 set object 5 rectangle from eps_den_I_i, graph 0 to graph 1, graph 1 fc rgb "red" fs transparent solid 0.1 behind
 
-plot [x=0:xmax_I] dzdt(x, nu_den_I_e, zeta_den_I_e, xi_den_I_e) w lines lw 6 lc 3 dt 2 title 'Dendritic E', [x=0:xmax_I] dzdt(x, nu_den_I_i, zeta_den_I_i, xi_den_I_i) w lines lw 6 lc 7 dt 4 title 'Dendritic I', [x=0:xmax_I] dzdt(x, nu_ax_I, zeta_ax_I, xi_ax_I) w lines lw 6 lc 1 dt 1 title 'Axonal', 0 title "";
+plot [x=0:xmax_I] dzdt(x, nu_den_I_e, zeta_den_I_e, xi_den_I_e, omega_den_I_e) w lines lw 6 lc 3 dt 2 title 'Dendritic E', [x=0:xmax_I] dzdt(x, nu_den_I_i, zeta_den_I_i, xi_den_I_i, omega_den_I_i) w lines lw 6 lc 7 dt 4 title 'Dendritic I', [x=0:xmax_I] dzdt(x, nu_ax_I, zeta_ax_I, xi_ax_I, omega_ax_I) w lines lw 6 lc 1 dt 1 title 'Axonal', 0 title "";
 
 # Elements
 # All excitatory elements
@@ -98,11 +104,11 @@ set xlabel "Calcium concentration"
 set ylabel "dz/dt"
 set output "growth-curves-elements-E.png"
 set title "Growth curves for excitatory synaptic elements"
-plot [x=0:xmax_I] dzdt(x, nu_den_E_e, zeta_den_E_e, xi_den_E_e) w lines lw 2 title 'den E neurons', [x=0:xmax_I] dzdt(x, nu_den_I_e, zeta_den_I_e, xi_den_I_e) w lines lw 2 title 'den I neurons', [x=0:xmax_I] dzdt(x, nu_ax_E, zeta_ax_E, xi_ax_E) w lines lw 2 title 'ax E neurons', 0 title "";
+plot [x=0:xmax_I] dzdt(x, nu_den_E_e, zeta_den_E_e, xi_den_E_e, omega_den_E_e) w lines lw 2 title 'den E neurons', [x=0:xmax_I] dzdt(x, nu_den_I_e, zeta_den_I_e, xi_den_I_e, omega_den_I_e) w lines lw 2 title 'den I neurons', [x=0:xmax_I] dzdt(x, nu_ax_E, zeta_ax_E, xi_ax_E, omega_ax_E) w lines lw 2 title 'ax E neurons', 0 title "";
 
 # All inhibitory elements
 set xlabel "Calcium concentration"
 set ylabel "dz/dt"
 set output "growth-curves-elements-I.png"
 set title "Growth curves for inhibitory synaptic elements"
-plot [x=0:xmax_I] dzdt(x, nu_den_E_i, zeta_den_E_i, xi_den_E_i) w lines lw 2 title 'den E neurons', [x=0:xmax_I] dzdt(x, nu_den_I_i, zeta_den_I_i, xi_den_I_i) w lines lw 2 title 'den I neurons', [x=0:xmax_I] dzdt(x, nu_ax_I, zeta_ax_I, xi_ax_I) w lines lw 2 title 'ax I neurons', 0 title "";
+plot [x=0:xmax_I] dzdt(x, nu_den_E_i, zeta_den_E_i, xi_den_E_i, omega_den_E_i) w lines lw 2 title 'den E neurons', [x=0:xmax_I] dzdt(x, nu_den_I_i, zeta_den_I_i, xi_den_I_i, omega_den_I_i) w lines lw 2 title 'den I neurons', [x=0:xmax_I] dzdt(x, nu_ax_I, zeta_ax_I, xi_ax_I, omega_ax_I) w lines lw 2 title 'ax I neurons', 0 title "";
