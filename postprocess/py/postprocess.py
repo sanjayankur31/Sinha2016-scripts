@@ -367,12 +367,16 @@ class Postprocess:
                         "..", "02-calcium-{}-*-{}.txt".format(
                             neuron_set, atime), '\t')
 
-                    means = [str(x) for x in cals.mean(axis=0).values]
-                    stds = [str(x) for x in cals.std(axis=0).values]
+                    # Only one column, so only one value for these unlike the
+                    # synaptic elements data frames where there were multiple
+                    # columns
+                    mean_val = str(cals.mean(axis=0).values[0])
+                    std_val = str(cals.std(axis=0).values[0])
+                    min_val = str(cals.min(axis=0).values[0])
+                    max_val = str(cals.max(axis=0).values[0])
                     # printing in ms
-                    print("{}\t{}\t{}".format(
-                        atime, '\t'.join(means),
-                        '\t'.join(stds)), file=f)
+                    print("{}\t{}\t{}\t{}\t{}".format(
+                        atime, mean_val, std_val, min_val, max_val), file=f)
 
                     # set columns, create the first column with gids
                     # we don't do this before, because we do not want the
