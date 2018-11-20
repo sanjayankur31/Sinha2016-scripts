@@ -20,6 +20,7 @@ NUM_MPI_NODES=128
 WALLTIME="48:00:00"
 CUR_SIM_PATH=""
 MODULE_TO_USE=""
+BRANCH_TO_USE=""
 
 function queue_task
 {
@@ -37,7 +38,7 @@ function setup_env
 
     pushd "$CUR_SIM_PATH"
         echo "Cloning source repository..."
-        git clone --depth 5 --no-single-branch "file://$SOURCE_PATH" "Sinha2016"
+        git clone --depth 5 --branch "$BRANCH_TO_USE" "file://$SOURCE_PATH" "Sinha2016"
 
         pushd "Sinha2016"
             echo "Checking out commit $GIT_COMMIT..."
@@ -86,6 +87,7 @@ function usage
     echo ""
     echo "OPTIONS:"
     echo "-g <git commit>"
+    echo "-b <git branch>"
     echo "-n <number of nodes>"
     echo "-p <number of processors per node>"
     echo "   use zero to not use ppn"
@@ -99,7 +101,7 @@ if [ "$#" -eq 0 ]; then
     exit 0
 fi
 
-while getopts "g:n:p:w:m:h" OPTION
+while getopts "g:n:p:w:m:hb:" OPTION
 do
     case $OPTION in
         g)
@@ -116,6 +118,9 @@ do
             ;;
         m)
             MODULE_TO_USE="$OPTARG"
+            ;;
+        b)
+            BRANCH_TO_USE="$OPTARG"
             ;;
         h)
             usage
@@ -139,6 +144,14 @@ fi
 if [[ "x" == x"$GIT_COMMIT" ]]
 then
     echo "You must choose a git commit to run."
+    echo
+    usage
+    exit -1
+fi
+
+if [[ "x" == x"$BRANCH_TO_USE" ]]
+then
+    echo "You must choose a git branch."
     echo
     usage
     exit -1
