@@ -37,7 +37,7 @@ function setup_env
 
     pushd "$CUR_SIM_PATH"
         echo "Cloning source repository..."
-        git clone --depth 5 "file://$SOURCE_PATH" "Sinha2016"
+        git clone --depth 5 --no-single-branch "file://$SOURCE_PATH" "Sinha2016"
 
         pushd "Sinha2016"
             echo "Checking out commit $GIT_COMMIT..."
