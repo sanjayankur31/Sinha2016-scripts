@@ -1,28 +1,28 @@
 #%Module 1.0
 #
 #  NEST module for use with mvapich2 'environment-modules' package:
-#  My nest branch
+#  Upstream NEST version
 
 # load the right mvapich2
 module load mvapich2
 
 # NEST is installed here. When you relocate NEST, change this variable.
-setenv NEST_INSTALL_DIR $HOME/installed-software/nest-mvapich2
+setenv NEST_INSTALL_DIR $HOME/installed-software/nest-mvapich2-upstream
 #
 # NEST finds standard *.sli files $NEST_DATA_DIR/sli
-setenv NEST_DATA_DIR $HOME/installed-software/nest-mvapich2/share/nest
+setenv NEST_DATA_DIR $HOME/installed-software/nest-mvapich2-upstream/share/nest
 
 # NEST finds help files $NEST_DOC_DIR/help
-setenv NEST_DOC_DIR $HOME/installed-software/nest-mvapich2/share/doc/nest
+setenv NEST_DOC_DIR $HOME/installed-software/nest-mvapich2-upstream/share/doc/nest
 
 # The path where NEST looks for user modules.
-setenv NEST_MODULE_PATH $HOME/installed-software/nest-mvapich2/lib64/nest
+setenv NEST_MODULE_PATH $HOME/installed-software/nest-mvapich2-upstream/lib64/nest
 
 # The path where the PyNEST bindings are installed.
-append-path PYTHONPATH $HOME/installed-software/nest-mvapich2/lib64/python3.5/site-packages
+append-path PYTHONPATH $HOME/installed-software/nest-mvapich2-upstream/lib64/python3.5/site-packages
 
-# Make nest-mvapich2 / sli /... executables visible.
-prepend-path PATH $HOME/installed-software/nest-mvapich2/bin
+# Make nest-mvapich2-upstream / sli /... executables visible.
+prepend-path PATH $HOME/installed-software/nest-mvapich2-upstream/bin
 #
 # Needed to get mvapich2 to work properly with Python
 setenv        LD_PRELOAD       /usr/mpi/gcc/mvapich2-2.1a/lib/libmpi.so
