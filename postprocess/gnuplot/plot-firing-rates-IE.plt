@@ -12,7 +12,7 @@ set title "Mean firing rate for neurons"
 plot "mean-firing-rates-I.gdf" with lines ls 6 title "I", "mean-firing-rates-E.gdf" with lines  ls 1 title "E", 3 with lines ls 9 title "T";
 
 set ytics 5
-set yrange [0:40]
+set yrange [0:10]
 set output "mean-firing-rates-I-E-zoomed.png"
 set title "Mean firing rate for neurons"
 plot "mean-firing-rates-I.gdf" with lines ls 6 title "I", "mean-firing-rates-E.gdf" with lines ls 1  title "E", 3 with lines ls 9 title "T";
