@@ -26,6 +26,7 @@ SOURCE_PATH="$HOME/software/nest-simulator/"
 build_nest ()
 {
     if [[ "$HOSTNAME" = "uhhpc.herts.ac.uk" ]] || [[ $HOSTNAME =~ headnode* ]] || [[ $HOSTNAME =~ ^(node)[0-9]+ ]] ; then
+        rm -rf "$INSTALL_PATH"
         module load mvapich2
         pushd "$SOURCE_PATH" || exit -1
             git checkout "$BRANCH"
@@ -34,12 +35,13 @@ build_nest ()
             CXXFLAGS="$(rpm -E '%optflags')"
             export CXXFLAGS
             cmake -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PATH -Dwith-python:STRING=3 -Dwith-mpi:BOOL=ON  .
-            echo "Installed NEST to $INSTALL_PATH. Installing mpi4py:"
-            pip install --target="$INSTALL_PATH/lib64/python3.5/site-packages/" mpi4py
 
             echo "Running make:"
-            make "$(rpm -E '%_smp_flags')"
+            make "$(rpm -E '%_smp_mflags')"
             make install
+
+            echo "Installed NEST to $INSTALL_PATH. Installing mpi4py:"
+            pip install --target="$INSTALL_PATH/lib64/python3.5/site-packages/" mpi4py
         popd || exit -1
         echo "Now, do: source /$INSTALL_PATH/bin/nest_vars.sh etc."
         echo "Also remember what module you must load!"
