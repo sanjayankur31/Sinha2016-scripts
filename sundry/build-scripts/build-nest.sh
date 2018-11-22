@@ -29,6 +29,7 @@ build_nest ()
         rm -rf "$INSTALL_PATH"
         module load mvapich2
         pushd "$SOURCE_PATH" || exit -1
+            git clean -dfx
             git checkout "$BRANCH"
             CFLAGS="$(rpm -E '%optflags')"
             export CFLAGS
