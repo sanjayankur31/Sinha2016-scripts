@@ -16,6 +16,10 @@ get_machine_info ()
     gcc --version | head -n 1
     echo
 
+    echo "Compiler flags:"
+    rpm -E '%{optflags}'
+    echo
+
     echo "Python:"
     python3 -c 'import sys; print(sys.version);'
     echo
@@ -43,6 +47,8 @@ get_info_sim ()
     echo "MPI:"
     python3 -c 'import mpi4py; print(mpi4py.get_config());'
     echo
+
+    module unload nest-mvapich2-upstream
 }
 
 get_info_pp()
