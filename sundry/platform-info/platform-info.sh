@@ -8,6 +8,10 @@ get_machine_info ()
     head -n 6 /etc/os-release
     echo
 
+    echo "Kernel"
+    uname -mosv
+    echo
+
     echo "GCC:"
     gcc --version | head -n 1
     echo
