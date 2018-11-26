@@ -16,6 +16,6 @@ do for [pat=1:numpats+0] {
     if (file_exists(infile)) {
         set output outfile
         set title "Mean firing rate for pattern ".pat." neurons"
-        plot infile with lines ls 2 title "P", 3 with lines lw 2 title "T"
+        plot infile with lines ls 2 title "P"
     }
 }
