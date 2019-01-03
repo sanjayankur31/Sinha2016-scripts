@@ -4,7 +4,7 @@ Make a montage from different simulations.
 
 File: make-multi-sim-montage.py
 
-Copyright 2018 Ankur Sinha
+Copyright 2019 Ankur Sinha
 Author: Ankur Sinha <sanjay DOT ankur AT gmail DOT com>
 """
 

@@ -4,7 +4,7 @@ Test methods dealing with spike data
 
 File: test_spikes.py
 
-Copyright 2018 Ankur Sinha
+Copyright 2019 Ankur Sinha
 Author: Ankur Sinha <sanjay DOT ankur AT gmail DOT com>
 """
 

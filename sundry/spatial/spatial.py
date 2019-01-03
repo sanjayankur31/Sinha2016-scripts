@@ -4,7 +4,7 @@ Generate graph of spatial distributions of neurons.
 
 File: spatial.py
 
-Copyright 2018 Ankur Sinha
+Copyright 2019 Ankur Sinha
 Author: Ankur Sinha <sanjay DOT ankur AT gmail DOT com>
 """
 

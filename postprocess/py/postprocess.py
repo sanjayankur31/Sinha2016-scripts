@@ -4,7 +4,7 @@ Postprocess output files from the simulation.
 
 File: postprocess.py
 
-Copyright 2018 Ankur Sinha
+Copyright 2019 Ankur Sinha
 Author: Ankur Sinha <sanjay DOT ankur AT gmail DOT com>
 """
 

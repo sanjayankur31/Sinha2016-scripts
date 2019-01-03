@@ -7,7 +7,7 @@ Note that we always use the 0th column as the index column, and we never
 specify a header row while reading dataframes. This is a convention that must
 be followed while using these functions.
 
-Copyright 2018 Ankur Sinha
+Copyright 2019 Ankur Sinha
 Author: Ankur Sinha <sanjay DOT ankur AT gmail DOT com>
 """
 

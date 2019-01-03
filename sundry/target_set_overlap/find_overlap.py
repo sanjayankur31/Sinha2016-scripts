@@ -4,7 +4,7 @@ Find overlap in target sets being projected on by different source neuron sets.
 
 File: find_overlap.py
 
-Copyright 2018 Ankur Sinha
+Copyright 2019 Ankur Sinha
 Author: Ankur Sinha <sanjay DOT ankur AT gmail DOT com>
 """
 

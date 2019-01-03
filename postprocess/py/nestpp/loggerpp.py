@@ -4,7 +4,7 @@ Create a logger for the whole module.
 
 File: loggerpp.py
 
-Copyright 2018 Ankur Sinha
+Copyright 2019 Ankur Sinha
 Author: Ankur Sinha <sanjay DOT ankur AT gmail DOT com>
 """
 

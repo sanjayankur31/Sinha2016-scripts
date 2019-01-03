@@ -4,7 +4,7 @@ Find how many neurons are in a certain distance.
 
 File: neurons-in-range.py
 
-Copyright 2018 Ankur Sinha
+Copyright 2019 Ankur Sinha
 Author: Ankur Sinha <sanjay DOT ankur AT gmail DOT com>
 """
 

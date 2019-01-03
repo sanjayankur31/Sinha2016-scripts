@@ -7,7 +7,7 @@ File: conftest.py
 TODO: Could probably add more functions here, for example ones that generate
 temporary spike files and so on.
 
-Copyright 2018 Ankur Sinha
+Copyright 2019 Ankur Sinha
 Author: Ankur Sinha <sanjay DOT ankur AT gmail DOT com>
 """
 

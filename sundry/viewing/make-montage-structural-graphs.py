@@ -4,7 +4,7 @@ Make structural graph montages.
 
 File: make-montage-structural-graphs.py
 
-Copyright 2018 Ankur Sinha
+Copyright 2019 Ankur Sinha
 Author: Ankur Sinha <sanjay DOT ankur AT gmail DOT com>
 """
 
