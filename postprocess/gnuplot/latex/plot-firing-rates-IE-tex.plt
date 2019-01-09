@@ -7,7 +7,7 @@ set yrange [0:7]
 set border 3
 set ytics border nomirror
 set xtics border nomirror
-set lmargin at screen 0.15
+set lmargin at screen 0.01
 
 set output simulation."-mean-firing-rates-lpz_c_I-E-zoomed.tex"
 set title ""
