@@ -10,47 +10,65 @@ set_margins(col) = sprintf('set lmargin at screen %f;', get_lmargin(col)) . \
 get_lmargin(col) = (left_margin + (col - 1) * (gap_size + ((right_margin - left_margin)-(col_count - 1) * gap_size)/col_count))
 get_rmargin(col) = (left_margin + (col - 1) * gap_size + col * ((right_margin - left_margin)-(col_count - 1) * gap_size)/col_count)
 
-file_exists(file) = system("[ -f '".file."' ] && echo '1' || echo '0'") + 0
-set term epslatex color size 27cm, 14cm
-set output "test.tex"
+# Variables
+# Simulation
+simulation = "201811221433"
+neuron_set = "E"
+# Number of images to put in the row
+num_images = 4
+
+# Range of cb
+cbmax = 5
+cbmin = 1
+
+# Usage:
+# gnuplot -e "inputtime1=2000.0" -e "inputtime2=3000.0" ... plot-multiple-firing-rate-snapshots-in-row-tex.plt
+
+file_exists(fname) = system("[ -f '".fname."' ] && echo '1' || echo '0'") + 0
+set term epslatex color size 14cm, 4.5cm
+set output simulation."-firing-rate-snapshots-".neuron_set.".tex"
 
 unset xtics
 unset ytics
 set size ratio -1
 set xrange [0:80]
 set yrange [0:100]
-set bmargin at screen 0.25
+set bmargin at screen 0.02
 
-eval(init_margins(0.01, 0.99, 0.002, 3))
-set multiplot layout 1, 3
+eval(init_margins(0.01, 0.92, 0.001, num_images))
+set multiplot layout 1, num_images
 
-set cbrange [0:10]
+set cbrange [cbmin:cbmax]
 unset colorbox
 unset border
 unset key
 
-inputfile = inputtime.".gdf"
-inputfile2 = inputtime2.".gdf"
-inputfile3 = inputtime3.".gdf"
+do for [i=1:(num_images-1)] {
+    inputtime = value(sprintf('inputtime%d', i))
+    inputfile = "firing-rates-".neuron_set."-".inputtime.".gdf"
+    if (file_exists(inputfile)) {
+        eval(set_margins(i))
+        set view map
+        plot inputfile using 2:3:4 with image title ""
+    }
+    else {
+        print inputfile." not found. Exiting"
+        exit
+    }
+}
 
+# Last one
+inputtime = value(sprintf('inputtime%d', num_images))
+inputfile = "firing-rates-".neuron_set."-".inputtime.".gdf"
 if (file_exists(inputfile)) {
-
-    eval(set_margins(1))
-    set title "A"
-    set view map
-    plot inputfile using 2:3:4 with image title ""
-
-    eval(set_margins(2))
-    set title "B"
-    set view map
-    plot inputfile2 using 2:3:4 with image title ""
-
-    eval(set_margins(3))
-    set title "C"
+    eval(set_margins(num_images))
     set colorbox
     unset cbtics
-    set cbtics 0, 10
+    set cbtics cbmin, cbmax-1
     set cblabel "Firing rate (Hz)"
-    plot inputfile3 using 2:3:4 with image title ""
-
+    plot inputfile using 2:3:4 with image title ""
+}
+else {
+    print inputfile." not found. Exiting"
+    exit
 }
