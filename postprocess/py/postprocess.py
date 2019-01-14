@@ -577,6 +577,28 @@ class Postprocess:
 
     def plot_neuron_locations(self):
         """Plot graphs showing locations of neurons."""
+        # get origin and radii to draw circles to show different regions
+        with open("00-network-spatial-info.txt", 'w') as f:
+            self.lgr.debug("Printing spatial information")
+            o_x = (max(self.neurons['o_E'][:, 1]) -
+                   min(self.neurons['o_E'][:, 1]))/2
+            o_y = (max(self.neurons['o_E'][:, 2]) -
+                   min(self.neurons['o_E'][:, 2]))/2
+            print("o_x: {}", o_x, file=f)
+            print("o_y: {}", o_y, file=f)
+
+            lpz_c_max_y = (max(self.neurons['lpz_c_E'][:, 2]))
+            rad_lpz_c = lpz_c_max_y - o_y
+            print("r_lpz_c: {}", rad_lpz_c, file=f)
+
+            lpz_b_max_y = (max(self.neurons['lpz_b_E'][:, 2]))
+            rad_lpz_b = lpz_b_max_y - o_y
+            print("r_lpz_b: {}", rad_lpz_b, file=f)
+
+            p_lpz_max_y = (max(self.neurons['p_lpz_E'][:, 2]))
+            rad_p_lpz = p_lpz_max_y - o_y
+            print("r_p_lpz: {}", rad_p_lpz, file=f)
+
         self.lgr.info("Plotting locations of E and I neuron sets.")
         plot_using_gnuplot_binary(
             os.path.join(self.cfg['plots_dir'],
