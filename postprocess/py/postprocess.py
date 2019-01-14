@@ -587,16 +587,16 @@ class Postprocess:
             print("o_x: {}", o_x, file=f)
             print("o_y: {}", o_y, file=f)
 
-            lpz_c_max_y = (max(self.neurons['lpz_c_E'][:, 2]))
-            rad_lpz_c = lpz_c_max_y - o_y
+            rad_lpz_c = ((max(self.neurons['lpz_c_E'][:, 2])) -
+                         (min(self.neurons['lpz_c_E'][:, 2])))/2
             print("r_lpz_c: {}", rad_lpz_c, file=f)
 
-            lpz_b_max_y = (max(self.neurons['lpz_b_E'][:, 2]))
-            rad_lpz_b = lpz_b_max_y - o_y
+            rad_lpz_b = ((max(self.neurons['lpz_b_E'][:, 2])) -
+                         (min(self.neurons['lpz_b_E'][:, 2])))/2
             print("r_lpz_b: {}", rad_lpz_b, file=f)
 
-            p_lpz_max_y = (max(self.neurons['p_lpz_E'][:, 2]))
-            rad_p_lpz = p_lpz_max_y - o_y
+            rad_p_lpz = ((max(self.neurons['p_lpz_E'][:, 2])) -
+                         (min(self.neurons['p_lpz_E'][:, 2])))/2
             print("r_p_lpz: {}", rad_p_lpz, file=f)
 
         self.lgr.info("Plotting locations of E and I neuron sets.")
