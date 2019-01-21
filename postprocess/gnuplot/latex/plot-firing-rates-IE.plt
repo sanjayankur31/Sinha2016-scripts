@@ -9,6 +9,10 @@ set xtics border nomirror
 set lmargin at screen 0.01
 set yrange [0:6]
 
+set arrow nohead from first 2000, first -0.5 to first 2000, first 7 ls 0 lw 2 dt 2
+set arrow nohead from first 4000, first -0.5 to first 4000, first 7 ls 0 lw 2 dt 2
+set arrow nohead from first 6000, first -0.5 to first 6000, first 7 ls 0 lw 2 dt 2
+
 set output simulation."-mean-firing-rates-lpz_c_I-E-zoomed.tex"
 set title ""
 plot "mean-firing-rates-lpz_c_I.gdf" every 500 with lines ls 6 title "I", "mean-firing-rates-lpz_c_E.gdf" every 500 with lines ls 1  title "E";
