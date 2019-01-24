@@ -1,4 +1,4 @@
-# Usage: gnuplot -e 'simulation="...."' plot-firing-rates-IE-tex.plt
+# Usage: gnuplot plot-firing-rates-IE-tex.plt
 load '/home/asinha/Documents/02_Code/00_repos/00_mine/Sinha2016-scripts/postprocess/gnuplot/firing-rates-palette.pal'
 set term epslatex color size 5,1.5
 set xlabel "Time (\\(s\\))"
@@ -9,6 +9,9 @@ set xtics border nomirror
 set lmargin at screen 0.01
 set yrange [0:6]
 
+simulation="201811221433"
+
+set arrow nohead from first 1500, first -0.5 to first 1500, first 7 ls 0 lw 2 dt 2
 set arrow nohead from first 2000, first -0.5 to first 2000, first 7 ls 0 lw 2 dt 2
 set arrow nohead from first 4000, first -0.5 to first 4000, first 7 ls 0 lw 2 dt 2
 set arrow nohead from first 6000, first -0.5 to first 6000, first 7 ls 0 lw 2 dt 2
