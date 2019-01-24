@@ -47,16 +47,16 @@ simulation = "201811221433"
 # Number of images to put in the row
 num_images = 3
 # Incoming or outgoing
-conn_type = "in"
+conn_type = "out"
 
 
 ### E neurons
-# lpz_c_E
-neuron_set = "lpz_c_E"
+# neuron set
+neuron_set = "p_lpz_E"
 
 file_exists(fname) = system("[ -f '".fname."' ] && echo '1' || echo '0'") + 0
 
-# incoming EE to lpz_c_E
+# type of synapse 1
 synapse_set = "EE"
 set output simulation."-75-conns-top-".synapse_set."-".neuron_set."-".conn_type.".tex"
 eval(init_margins(0.01, 0.99, 0.001, num_images))
@@ -78,8 +78,8 @@ do for [i=1:(num_images)] {
 
 unset multiplot
 
-# incoming IE to lpz_c_E
-synapse_set = "IE"
+# type of synapse 2
+synapse_set = "EI"
 file_exists(fname) = system("[ -f '".fname."' ] && echo '1' || echo '0'") + 0
 
 set output simulation."-75-conns-top-".synapse_set."-".neuron_set."-".conn_type.".tex"
