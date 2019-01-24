@@ -46,6 +46,8 @@ set object 13 circle at o_x,o_y size r_lpz_c fc rgb "yellow" fs transparent soli
 simulation = "201811221433"
 # Number of images to put in the row
 num_images = 3
+# Incoming or outgoing
+conn_type = "in"
 
 
 ### E neurons
@@ -56,14 +58,14 @@ file_exists(fname) = system("[ -f '".fname."' ] && echo '1' || echo '0'") + 0
 
 # incoming EE to lpz_c_E
 synapse_set = "EE"
-set output simulation."-75-conns-top-".synapse_set."-".neuron_set."-in.tex"
+set output simulation."-75-conns-top-".synapse_set."-".neuron_set."-".conn_type.".tex"
 eval(init_margins(0.01, 0.99, 0.001, num_images))
 set multiplot layout 1, num_images
 
 # Incoming
 do for [i=1:(num_images)] {
     inputtime = value(sprintf('inputtime%d', i))
-    inputfile = "75-conns-top-".synapse_set."-".neuron_set."-".inputtime."-in.txt"
+    inputfile = "75-conns-top-".synapse_set."-".neuron_set."-".inputtime."-".conn_type.".txt"
     if (file_exists(inputfile)) {
         eval(set_margins(i))
         plot inputfile using 1:2:($3-$1):($4-$2) with vectors lw 0.25 nohead title "", inputfile using 1:2 with points pt 7 lc 6 ps 0.75 lw 0.25 title "", inputfile using 3:4 with points pt 6 lc 6 ps 0.75 lw 0.25 title ""
@@ -80,14 +82,14 @@ unset multiplot
 synapse_set = "IE"
 file_exists(fname) = system("[ -f '".fname."' ] && echo '1' || echo '0'") + 0
 
-set output simulation."-75-conns-top-".synapse_set."-".neuron_set."-in.tex"
+set output simulation."-75-conns-top-".synapse_set."-".neuron_set."-".conn_type.".tex"
 eval(init_margins(0.01, 0.99, 0.001, num_images))
 set multiplot layout 1, num_images
 
 # Incoming
 do for [i=1:(num_images)] {
     inputtime = value(sprintf('inputtime%d', i))
-    inputfile = "75-conns-top-".synapse_set."-".neuron_set."-".inputtime."-in.txt"
+    inputfile = "75-conns-top-".synapse_set."-".neuron_set."-".inputtime."-".conn_type.".txt"
     if (file_exists(inputfile)) {
         eval(set_margins(i))
         plot inputfile using 1:2:($3-$1):($4-$2) with vectors lw 0.25 nohead title "", inputfile using 1:2 with points pt 7 lc 6 ps 0.75 lw 0.25 title "", inputfile using 3:4 with points pt 6 lc 6 ps 0.75 lw 0.25 title ""
