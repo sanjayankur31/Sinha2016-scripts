@@ -2,7 +2,7 @@
 load '/home/asinha/Documents/02_Code/00_repos/00_mine/Sinha2016-scripts/postprocess/gnuplot/firing-rates-palette.pal'
 set term epslatex color size 5,1.5
 set xlabel "Time (\\(s\\))"
-set ylabel "Mean firing rate (Hz)"
+set ylabel "Firing rate (Hz)"
 set border 3
 set ytics border nomirror autofreq 2
 set xtics border nomirror
