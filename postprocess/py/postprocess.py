@@ -1189,10 +1189,32 @@ class Postprocess:
         random.seed(21)
 
         # one neuron for the top level graphs.
+        # Pick the neuron most in the middle, x wise.
         sample = {}
         for region in regions:
-            sample[region] = (random.sample(list(self.neurons[region][:, 0]),
-                                            k=1))
+            sample[region] = list()
+            # Must be a list: we iterate it later
+            max_x = max(self.neurons[region][:, 1])
+            min_x = min(self.neurons[region][:, 1])
+            centre_x = (max_x + min_x)/2
+
+            max_y = max(self.neurons[region][:, 2])
+            min_y = min(self.neurons[region][:, 2])
+            centre_y = (max_y + min_y)/2
+
+            central_neuron = None
+
+            # Arbitrarily large value to start with
+            d_x = 10000000000
+            d_y = 10000000000
+
+            for [neuron, x, y] in self.neurons[region]:
+                if d_x > abs(x - centre_x) and d_y > abs(y - centre_y):
+                    d_x = abs(x - centre_x)
+                    d_y = abs(y - centre_y)
+                    central_neuron = neuron
+
+            sample[region].append(central_neuron)
 
         # Samples for histograms of connection lengths
         conn_len_hist_sample = {}
