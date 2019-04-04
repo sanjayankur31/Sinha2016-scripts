@@ -25,7 +25,7 @@ cbmin = 1
 # gnuplot -e "inputtime1=2000.0" -e "inputtime2=3000.0" ... plot-multiple-firing-rate-snapshots-in-row-tex.plt
 
 file_exists(fname) = system("[ -f '".fname."' ] && echo '1' || echo '0'") + 0
-set term epslatex color size 14cm, 4.5cm
+set term epslatex color size 5.55, 1.6
 set output simulation."-firing-rate-snapshots-".neuron_set.".tex"
 
 unset xtics
@@ -35,15 +35,35 @@ set xrange [0:80]
 set yrange [0:100]
 set bmargin at screen 0.02
 
-eval(init_margins(0.01, 0.92, 0.001, num_images))
+set tmargin at screen 0.99
+eval(init_margins(0.07, 1.0, 0.001, num_images))
 set multiplot layout 1, num_images
 
-set cbrange [cbmin:cbmax]
 unset colorbox
+set colorbox vertical user origin screen 0.05, 0.02 size 0.01, 0.975
+set cbrange [cbmin:cbmax]
+unset cbtics
+set cbtics left offset screen -0.05 cbmin, cbmax-1
+set cblabel "Firing rate (Hz)" offset screen -0.25
+
 unset border
 unset key
 
-do for [i=1:(num_images-1)] {
+# First one, with colorbox
+inputtime = value(sprintf('inputtime%d', 1))
+inputfile = "firing-rates-".neuron_set."-".inputtime.".gdf"
+if (file_exists(inputfile)) {
+    set view map
+    eval(set_margins(1))
+    plot inputfile using 2:3:4 with image title ""
+}
+else {
+    print inputfile." not found. Exiting"
+    exit
+}
+
+unset colorbox
+do for [i=2:(num_images-0)] {
     inputtime = value(sprintf('inputtime%d', i))
     inputfile = "firing-rates-".neuron_set."-".inputtime.".gdf"
     if (file_exists(inputfile)) {
@@ -55,20 +75,4 @@ do for [i=1:(num_images-1)] {
         print inputfile." not found. Exiting"
         exit
     }
-}
-
-# Last one
-inputtime = value(sprintf('inputtime%d', num_images))
-inputfile = "firing-rates-".neuron_set."-".inputtime.".gdf"
-if (file_exists(inputfile)) {
-    eval(set_margins(num_images))
-    set colorbox
-    unset cbtics
-    set cbtics cbmin, cbmax-1
-    set cblabel "Firing rate (Hz)"
-    plot inputfile using 2:3:4 with image title ""
-}
-else {
-    print inputfile." not found. Exiting"
-    exit
 }
