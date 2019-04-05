@@ -8,6 +8,7 @@ set ytics border nomirror autofreq 2
 set xtics border nomirror
 set lmargin at screen 0.01
 set rmargin at screen 1.0
+set tmargin at screen 0.99
 set yrange [0:6]
 
 simulation="201811221433"
