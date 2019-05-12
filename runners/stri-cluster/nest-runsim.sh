@@ -41,7 +41,7 @@ module load "$MODULE_TO_USE"
 
 cd $RESULT_PATH
 
-/usr/local/bin/mpiexec -n $NUM_MPI_NODES python3 $PROGRAM_PATH
+/usr/local/bin/mpiexec -n $NUM_MPI_NODES -v python3 $PROGRAM_PATH
 
 module unload "$MODULE_TO_USE"
 END_TIME=$(date +%Y%m%d%H%M)
