@@ -12,7 +12,7 @@ get_rmargin(col) = (left_margin + (col - 1) * gap_size + col * ((right_margin - 
 
 # Variables
 # Simulation
-simulation = "201811221433"
+simulation = "201905131224"
 neuron_set = "E"
 # Number of images to put in the row
 num_images = 4
@@ -22,7 +22,7 @@ cbmax = 5
 cbmin = 1
 
 # Usage:
-# gnuplot -e "inputtime1=2000.0" -e "inputtime2=3000.0" ... plot-multiple-firing-rate-snapshots-in-row-tex.plt
+# gnuplot -e 'inputtime1="2000.0"' -e 'inputtime2="3000.0"' ... plot-multiple-firing-rate-snapshots-in-row-tex.plt
 
 file_exists(fname) = system("[ -f '".fname."' ] && echo '1' || echo '0'") + 0
 set term epslatex color size 5.55, 1.6
