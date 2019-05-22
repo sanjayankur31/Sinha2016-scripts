@@ -43,7 +43,7 @@ set object 13 circle at o_x,o_y size r_lpz_c fc rgb "yellow" fs transparent soli
 
 # Variables
 # Simulation
-simulation = "201811221433"
+simulation = "201905131224"
 # Number of images to put in the row
 num_images = 3
 # Incoming or outgoing
@@ -52,12 +52,12 @@ conn_type = "out"
 
 ### E neurons
 # neuron set
-neuron_set = "p_lpz_E"
+neuron_set = "lpz_c_I"
 
 file_exists(fname) = system("[ -f '".fname."' ] && echo '1' || echo '0'") + 0
 
 # type of synapse 1
-synapse_set = "EE"
+synapse_set = "II"
 set output simulation."-75-conns-top-".synapse_set."-".neuron_set."-".conn_type.".tex"
 eval(init_margins(0.01, 0.99, 0.001, num_images))
 set multiplot layout 1, num_images
@@ -79,7 +79,7 @@ do for [i=1:(num_images)] {
 unset multiplot
 
 # type of synapse 2
-synapse_set = "EI"
+synapse_set = "IE"
 file_exists(fname) = system("[ -f '".fname."' ] && echo '1' || echo '0'") + 0
 
 set output simulation."-75-conns-top-".synapse_set."-".neuron_set."-".conn_type.".tex"
