@@ -24,7 +24,7 @@ lgr = get_module_logger(__name__)
 
 
 def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
-                            rows=50000000., dt=100., window=1000.,
+                            rows=50000000., dt=1., window=1000.,
                             snapshot_dt=200000.):
     """Get various metrics from raster spike files.
 
@@ -41,7 +41,6 @@ def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
     # Initial indices
     left = 0.
     right = 0.
-    dt = 1.  # ms
 
     num_neurons = int(num_neurons)
     # start at 50 ms
@@ -237,7 +236,6 @@ def get_individual_firing_rate_snapshots(neuronset, spikes_fn,
 
     """
     sorted_timelist = numpy.sort(timelist)
-    num_neurons = len(neuron_locations)
 
     current = 0
     old_spikes = numpy.array([])
