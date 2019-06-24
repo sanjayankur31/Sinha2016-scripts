@@ -1,4 +1,4 @@
-load '/home/asinha/Documents/02_Code/00_mine/Sinha2016-scripts/postprocess/gnuplot/pattern-palette.pal'
+# load '/home/asinha/Documents/02_Code/00_mine/Sinha2016-scripts/postprocess/gnuplot/firing-rates-palette.pal'
 
 # Helper functions
 # https://stackoverflow.com/a/21087936/375067
@@ -9,6 +9,7 @@ set_margins(col) = sprintf('set lmargin at screen %f;', get_lmargin(col)) . \
   sprintf('set rmargin at screen %f;', get_rmargin(col));
 get_lmargin(col) = (left_margin + (col - 1) * (gap_size + ((right_margin - left_margin)-(col_count - 1) * gap_size)/col_count))
 get_rmargin(col) = (left_margin + (col - 1) * gap_size + col * ((right_margin - left_margin)-(col_count - 1) * gap_size)/col_count)
+file_exists(fname) = system("[ -f '".fname."' ] && echo '1' || echo '0'") + 0
 
 set term epslatex color size 14cm, 4.5cm
 unset xtics
@@ -37,30 +38,50 @@ set yrange[o_y-1.5*r_p_lpz:o_y+1.5*r_p_lpz]
 # Circles denoting areas
 # set offset 400, 400, 400, 400
 set object 10 rectangle fc rgb "black" fs transparent solid 0.1 noborder from graph 0, graph 0 to graph 1, graph 1 behind
-set object 11 circle at o_x,o_y size r_p_lpz fc rgb "red" fs transparent solid 0.1 behind
-set object 12 circle at o_x,o_y size r_lpz_b fc rgb "green" fs transparent solid 0.1 behind
-set object 13 circle at o_x,o_y size r_lpz_c fc rgb "yellow" fs transparent solid 0.3 behind
+set object 11 circle at o_x,o_y size r_p_lpz fc rgb "green" fs transparent solid 0.3 noborder behind
+set object 12 circle at o_x,o_y size r_lpz_b fc rgb "yellow" fs transparent solid 0.3 noborder behind
+set object 13 circle at o_x,o_y size r_lpz_c fc rgb "red" fs transparent solid 0.1 noborder behind
 
 # Variables
 # Simulation
 simulation = "201905131224"
 # Number of images to put in the row
 num_images = 3
-# Incoming or outgoing
-conn_type = "out"
+# inputtimes
+inputtime1="2000.0"
+inputtime2="4000.0"
+inputtime3="6000.0"
 
+# line colours
+# Excitatory synapses
+set linestyle 1 lc rgb '#3b4cc0' lw 0.25 pt 7 ps 0.75
+# Inhibitory synapses
+set linestyle 2 lc rgb '#f7a789' lw 0.25 pt 7 ps 0.75
+# Central neuron style
+set linestyle 3 lc rgb 'black' lw 0.25 pt 7 ps 0.75
 
-### E neurons
 # neuron set
-neuron_set = "lpz_c_I"
+neuron_set = "p_lpz_E"
+# Incoming or outgoing
+conn_type = "in"
 
-file_exists(fname) = system("[ -f '".fname."' ] && echo '1' || echo '0'") + 0
 
 # type of synapse 1
-synapse_set = "II"
+synapse_set = "EE"
+# Labels.
+set label 1 "Excitatory" at graph 0.1, 0.9 front
+# set label 2 "Inhibitory" at graph 0.1, 0.9 front
+# Style for line
+mylinestyle=1
+# Style for src neurons
+mysrcstyle=1
+# Style for target neurons
+mytgtstyle=3
+
 set output simulation."-75-conns-top-".synapse_set."-".neuron_set."-".conn_type.".tex"
 eval(init_margins(0.01, 0.99, 0.001, num_images))
 set multiplot layout 1, num_images
+
 
 # Incoming
 do for [i=1:(num_images)] {
@@ -68,8 +89,11 @@ do for [i=1:(num_images)] {
     inputfile = "75-conns-top-".synapse_set."-".neuron_set."-".inputtime."-".conn_type.".txt"
     if (file_exists(inputfile)) {
         eval(set_margins(i))
-        plot inputfile using 1:2:($3-$1):($4-$2) with vectors lw 0.25 nohead title "", inputfile using 1:2 with points pt 7 lc 6 ps 0.75 lw 0.25 title "", inputfile using 3:4 with points pt 6 lc 6 ps 0.75 lw 0.25 title ""
+        plot inputfile using 1:2:($3-$1):($4-$2) with vectors ls mylinestyle nohead title "", inputfile using 1:2 with points ls mysrcstyle title "", inputfile using 3:4 with points ls mytgtstyle title ""
     }
+        # Unset so that they only show on first graph
+        unset label 1
+        # unset label 2
     else {
         print inputfile." not found. Exiting"
         exit
@@ -80,7 +104,15 @@ unset multiplot
 
 # type of synapse 2
 synapse_set = "IE"
-file_exists(fname) = system("[ -f '".fname."' ] && echo '1' || echo '0'") + 0
+# Labels
+# set label 1 "Excitatory" at graph 0.1, 0.9 front
+set label 2 "Inhibitory" at graph 0.1, 0.9 front
+# Line style
+mylinestyle=2
+# Style for src neurons
+mysrcstyle=2
+# Style for target neurons
+mytgtstyle=3
 
 set output simulation."-75-conns-top-".synapse_set."-".neuron_set."-".conn_type.".tex"
 eval(init_margins(0.01, 0.99, 0.001, num_images))
@@ -92,8 +124,11 @@ do for [i=1:(num_images)] {
     inputfile = "75-conns-top-".synapse_set."-".neuron_set."-".inputtime."-".conn_type.".txt"
     if (file_exists(inputfile)) {
         eval(set_margins(i))
-        plot inputfile using 1:2:($3-$1):($4-$2) with vectors lw 0.25 nohead title "", inputfile using 1:2 with points pt 7 lc 6 ps 0.75 lw 0.25 title "", inputfile using 3:4 with points pt 6 lc 6 ps 0.75 lw 0.25 title ""
+        plot inputfile using 1:2:($3-$1):($4-$2) with vectors ls mylinestyle nohead title "", inputfile using 1:2 with points ls mysrcstyle title "", inputfile using 3:4 with points ls mytgtstyle title ""
     }
+        # Unset so that they only show on first graph
+        # unset label 1
+        unset label 2
     else {
         print inputfile." not found. Exiting"
         exit
