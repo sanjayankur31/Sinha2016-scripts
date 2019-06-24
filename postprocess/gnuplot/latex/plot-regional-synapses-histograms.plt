@@ -10,7 +10,7 @@
 
 # For the LaTeX output, one needs to fix the labels, since they have double subscripts and so on. These are read from the data files.
 
-load '/home/asinha/Documents/02_Code/00_repos/00_mine/Sinha2016-scripts/postprocess/gnuplot/firing-rates-palette.pal'
+load '/home/asinha/Documents/02_Code/00_mine/Sinha2016-scripts/postprocess/gnuplot/firing-rates-palette.pal'
 set term epslatex color size 5,3
 set lmargin at screen 0.15
 set xlabel "Time (\\(s\\))"

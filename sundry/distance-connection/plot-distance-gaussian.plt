@@ -1,4 +1,4 @@
-load '/home/asinha/Documents/02_Code/00_repos/00_mine/gnuplot-palettes/paired.pal'
+load '/home/asinha/Documents/02_Code/00_mine/gnuplot-palettes/paired.pal'
 set term pngcairo enhanced font "OpenSans, 28" size 1920, 1080
 # define the functions
 f(d,sigma)= (2*exp(-(d**2)/(2*(sigma**2.0)))/(sigma*((2*3.1415)**0.5)))

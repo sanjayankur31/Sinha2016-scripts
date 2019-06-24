@@ -1,4 +1,4 @@
-load '/home/asinha/Documents/02_Code/00_repos/00_mine/Sinha2016-scripts/postprocess/gnuplot/pattern-palette-snapshot.pal'
+load '/home/asinha/Documents/02_Code/00_mine/Sinha2016-scripts/postprocess/gnuplot/pattern-palette-snapshot.pal'
 
 # Helper functions
 # https://stackoverflow.com/a/21087936/375067

@@ -1,4 +1,4 @@
-load '/home/asinha/Documents/02_Code/00_repos/00_mine/Sinha2016-scripts/postprocess/gnuplot/pattern-palette.pal'
+load '/home/asinha/Documents/02_Code/00_mine/Sinha2016-scripts/postprocess/gnuplot/pattern-palette.pal'
 set term epslatex color size 15, 10 font "Helvetica,35"
 set xlabel "Percent of overlap with LPZ"
 set ylabel "SNR"

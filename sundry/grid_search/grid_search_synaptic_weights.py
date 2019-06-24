@@ -26,7 +26,7 @@ class GridSearch:
 
     def __init__(self):
         """Initialise."""
-        self.source = "/home/asinha/Documents/02_Code/00_repos/00_mine/Sinha2016/src/Sinha2016.py"
+        self.source = "/home/asinha/Documents/02_Code/00_mine/Sinha2016/src/Sinha2016.py"
         self.branch = "master"
 
     def usage(self):

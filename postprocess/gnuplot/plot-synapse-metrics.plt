@@ -1,4 +1,4 @@
-load '/home/asinha/Documents/02_Code/00_repos/00_mine/gnuplot-palettes/paired.pal'
+load '/home/asinha/Documents/02_Code/00_mine/gnuplot-palettes/paired.pal'
 set term pngcairo font "OpenSans, 28" size 1920, 1080
 set xlabel "Time (seconds)"
 set ylabel "Number of incoming synapses"

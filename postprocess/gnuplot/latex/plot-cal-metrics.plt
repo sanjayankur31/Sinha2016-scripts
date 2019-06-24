@@ -5,7 +5,7 @@
 # ymax: max y value to plot
 # simid: id of the sim (for identification purposes)
 
-load '/home/asinha/Documents/02_Code/00_repos/00_mine/Sinha2016-scripts/postprocess/gnuplot/neuron-locations.pal'
+load '/home/asinha/Documents/02_Code/00_mine/Sinha2016-scripts/postprocess/gnuplot/neuron-locations.pal'
 file_exists(file) = system("[ -f '".file."' ] && echo '1' || echo '0'") + 0
 
 set term epslatex color size 5,3

@@ -1,4 +1,4 @@
-load '/home/asinha/Documents/02_Code/00_repos/00_mine/gnuplot-palettes/paired.pal'
+load '/home/asinha/Documents/02_Code/00_mine/gnuplot-palettes/paired.pal'
 set term pngcairo enhanced font "OpenSans, 28" size 1920, 1080
 set format y "%.1tx10^{%T}"
 

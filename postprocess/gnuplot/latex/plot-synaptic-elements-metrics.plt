@@ -1,5 +1,5 @@
-load '/home/asinha/Documents/02_Code/00_repos/00_mine/Sinha2016-scripts/postprocess/gnuplot/firing-rates-palette.pal'
-# load '/home/asinha/Documents/02_Code/00_repos/00_mine/gnuplot-palettes/paired.pal'
+load '/home/asinha/Documents/02_Code/00_mine/Sinha2016-scripts/postprocess/gnuplot/firing-rates-palette.pal'
+# load '/home/asinha/Documents/02_Code/00_mine/gnuplot-palettes/paired.pal'
 set term epslatex color size 5,2.5
 set xlabel "Time (\\(s\\))"
 set ylabel "Mean synaptic elements"
