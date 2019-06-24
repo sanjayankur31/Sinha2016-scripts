@@ -8,7 +8,7 @@ set ytics border nomirror
 set xtics border nomirror
 set lmargin at screen 0.01
 set yrange [0:]
-set key inside top vertical
+set key inside center top horizontal
 
 simulation="201905131224"
 
