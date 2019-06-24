@@ -19,4 +19,4 @@ set arrow nohead from first 6000, first 0 to first 6000, graph 1 ls 0 lw 2 dt 2
 # pre
 set output simulation."-05-se-con-pre-totals-lpz_c_I-p_lpz_E.tex"
 set title ""
-plot "05-se-all-p_lpz_E.txt" using ($1/1000):15 with linespoints ls 1 lw 5 title "Exc", "05-se-all-lpz_c_I.txt" using ($1/1000):15 with linespoints ls 6 lw 5 title "Inh";
+plot "05-se-all-p_lpz_E.txt" using ($1/1000):15 with linespoints ls 1 lw 5 title "E", "05-se-all-lpz_c_I.txt" using ($1/1000):15 with linespoints ls 6 lw 5 title "I";

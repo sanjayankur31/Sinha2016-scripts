@@ -179,7 +179,7 @@ else {
 }
 unset multiplot
 
-# Inhibitory neurons
+# Iibitory neurons
 set xrange [0:40]
 set yrange [0:50]
 neuron_set = "I"

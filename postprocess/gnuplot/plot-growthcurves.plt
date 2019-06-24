@@ -60,7 +60,7 @@ set object 5 rectangle from eps_den_E_i, graph 0 to graph 1, graph 1 fc rgb "red
 
 plot [x=0:xmax_E] dzdt(x, nu_den_E_e, zeta_den_E_e, xi_den_E_e, omega_den_E_e) w lines lw 6 lc 3 dt 2 title 'Dendritic E', [x=0:xmax_E] dzdt(x, nu_den_E_i, zeta_den_E_i, xi_den_E_i, omega_den_E_i) w lines lw 6 lc 7 dt 4 title 'Dendritic I', [x=0:xmax_E] dzdt(x, nu_ax_E, zeta_ax_E, xi_ax_E, omega_ax_E) w lines lw 6 lc 1 dt 1 title 'Axonal', 0 title "";
 
-# Inhibitory
+# Iibitory
 unset arrow
 unset label
 unset object
