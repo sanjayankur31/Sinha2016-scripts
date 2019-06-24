@@ -9,7 +9,8 @@ set xtics border nomirror
 set lmargin at screen 0.01
 set rmargin at screen 1.0
 set tmargin at screen 0.99
-set yrange [0:6]
+set yrange [0:7]
+set key inside center top horizontal
 
 simulation="201905131224"
 
@@ -20,17 +21,17 @@ set arrow nohead from first 6000, first -0.5 to first 6000, first 7 ls 0 lw 2 dt
 
 set output simulation."-mean-firing-rates-lpz_c_I-E-zoomed.tex"
 set title ""
-plot "mean-firing-rates-lpz_c_I.gdf" every 500 with lines ls 6 title "I", "mean-firing-rates-lpz_c_E.gdf" every 500 with lines ls 1  title "E";
+plot "mean-firing-rates-lpz_c_E.gdf" every 500 with lines ls 1  title "E", "mean-firing-rates-lpz_c_I.gdf" every 500 with lines ls 6 title "I";
 
 set output simulation."-mean-firing-rates-lpz_b_I-E-zoomed.tex"
 set title ""
-plot "mean-firing-rates-lpz_b_I.gdf" every 500 with lines ls 6 title "I", "mean-firing-rates-lpz_b_E.gdf" every 500 with lines ls 1  title "E";
+plot "mean-firing-rates-lpz_b_E.gdf" every 500 with lines ls 1  title "E", "mean-firing-rates-lpz_b_I.gdf" every 500 with lines ls 6 title "I";
 
 set output simulation."-mean-firing-rates-p_lpz_I-E-zoomed.tex"
 set title ""
-plot "mean-firing-rates-p_lpz_I.gdf" every 500 with lines ls 6 title "I", "mean-firing-rates-p_lpz_E.gdf" every 500 with lines ls 1  title "E";
+plot "mean-firing-rates-p_lpz_E.gdf" every 500 with lines ls 1  title "E", "mean-firing-rates-p_lpz_I.gdf" every 500 with lines ls 6 title "I";
 
 set output simulation."-mean-firing-rates-o_I-E-zoomed.tex"
 set title ""
-plot "mean-firing-rates-o_I.gdf" every 500 with lines ls 6 title "I", "mean-firing-rates-o_E.gdf" every 500 with lines ls 1  title "E";
+plot "mean-firing-rates-o_E.gdf" every 500 with lines ls 1  title "E",  "mean-firing-rates-o_I.gdf" every 500 with lines ls 6 title "I";
 
