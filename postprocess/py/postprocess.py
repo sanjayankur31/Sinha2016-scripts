@@ -568,7 +568,7 @@ class Postprocess:
                 extract_spikes(neuron_set, "spikes-{}.gdf".format(neuron_set),
                                self.cfg['snapshots']['rasters'])
 
-            for t in self.cfg['snapshots']['raster']:
+            for t in self.cfg['snapshots']['rasters']:
                 neuron_dict = {
                     'E': [self.neurons['E'][0][0], self.neurons['E'][-1][0]],
                     'I': [self.neurons['I'][0][0], self.neurons['I'][-1][0]],
