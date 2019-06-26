@@ -10,9 +10,11 @@ Author: Ankur Sinha <sanjay DOT ankur AT gmail DOT com>
 
 
 import os
+import csv
 import subprocess
 from subprocess import CalledProcessError
 import numpy
+import random
 import pandas
 from nestpp.loggerpp import get_module_logger
 # special case for matplotlib
@@ -200,9 +202,9 @@ def plot_rasters(neuron_sets_dict, snapshot_time, proportion=0.1):
     plt.ylabel("Neurons")
     plt.xlabel("Time (s)")
     plt.xticks(numpy.arange(snapshot_time - 1., snapshot_time + 0.1, 0.2))
-    newset_start = 0
+    counter = 1
     plot_fn = "raster-"
-    file_data = None
+    file_data = []
     for neuron_set, [nid_start, nid_end] in neuron_sets_dict.items():
         plot_fn += "{}-".format(neuron_set)
         num_neurons = nid_end - nid_start
@@ -214,32 +216,29 @@ def plot_rasters(neuron_sets_dict, snapshot_time, proportion=0.1):
         neurons1 = neurons1DF.values
 
         # pick a smaller contiguous subset
-        neuron_ids = sorted(list(set(neurons1[:, 0])))
         picked_ids = []
         data_to_plot = []
-        if len(neuron_ids) > int(num_neurons * proportion):
-            # pick first contiguous subset
-            picked_ids = [x for x in neuron_ids if x < (nid_start +
-                                                        int(num_neurons *
-                                                            proportion))]
-            for nid, spike_time in neurons1:
-                if nid in picked_ids:
-                    data_to_plot.append([nid - nid_start + newset_start,
-                                         spike_time])
 
-            data_to_plot = numpy.array(data_to_plot)
-        else:
-            data_to_plot = neurons1
+        # pick random neurons from the complete set of neurons
+        picked_ids = random.sample(range(int(nid_start), int(nid_end) + 1),
+                                   int(num_neurons * proportion))
+        # Give them sequential indexes so that they can be printed one after
+        # the other in the raster
+        indexed_picked_ids = {}
+        counter += 1
+        for picked_id in picked_ids:
+            indexed_picked_ids[picked_id] = counter
+            counter += 1
 
-        plt.plot(data_to_plot[:, 1], data_to_plot[:, 0], ".",
+        for nid, spike_time in neurons1:
+            if nid in picked_ids:
+                data_to_plot.append([nid, indexed_picked_ids[nid],
+                                     spike_time])
+                file_data.append([nid, indexed_picked_ids[nid], spike_time])
+
+        data_to_plot = numpy.array(data_to_plot)
+        plt.plot(data_to_plot[:, 2], data_to_plot[:, 2], ".",
                  markersize=5.0, label=neuron_set)
-
-        if file_data:
-            file_data = numpy.concatenate(file_data, data_to_plot, axis=0)
-        else:
-            file_data = data_to_plot
-
-        newset_start += int(num_neurons * proportion)
 
     plot_output_fn = plot_fn[:-1] + "-{}.png".format(snapshot_time)
     data_output_fn = plot_fn[:-1] + "-{}.txt".format(snapshot_time)
@@ -247,6 +246,9 @@ def plot_rasters(neuron_sets_dict, snapshot_time, proportion=0.1):
     plt.legend(loc="upper right")
     plt.savefig(plot_output_fn)
 
-    numpy.savetxt(data_output_fn, file_data, delimiter="\t")
+    # write data to file also
+    with open(data_output_fn, 'w') as fh:
+        wr = csv.writer(fh, delimiter='\t')
+        wr.writerows(file_data, )
 
     return True
