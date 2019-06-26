@@ -202,7 +202,7 @@ def plot_rasters(neuron_sets_dict, snapshot_time, proportion=0.1):
     plt.xticks(numpy.arange(snapshot_time - 1., snapshot_time + 0.1, 0.2))
     newset_start = 0
     plot_fn = "raster-"
-    file_data = numpy.array()
+    file_data = numpy.array([])
     for neuron_set, [nid_start, nid_end] in neuron_sets_dict.items():
         plot_fn += "{}-".format(neuron_set)
         num_neurons = nid_end - nid_start
