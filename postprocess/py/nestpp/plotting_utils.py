@@ -190,8 +190,7 @@ def plot_rasters(neuron_sets_dict, snapshot_time, proportion=0.1):
     Note that this function only plots the graphs. The spikes must be extracted
     and available before this function is called.
 
-    :neuron_sets: dictionary of neuron sets and [nid_start, nid_end] for each
-                    set
+    :neuron_sets: dictionary of neuron sets and neuron_ids for each set
     :snapshot_time: time for which raster is being generated in seconds
     :proportion: what percentage of all neurons to pick for the raster
     :returns: True if everything went OK, False otherwise
@@ -205,9 +204,8 @@ def plot_rasters(neuron_sets_dict, snapshot_time, proportion=0.1):
     counter = 1
     plot_fn = "raster-"
     file_data = []
-    for neuron_set, [nid_start, nid_end] in neuron_sets_dict.items():
+    for neuron_set, neuronids in neuron_sets_dict.items():
         plot_fn += "{}-".format(neuron_set)
-        num_neurons = nid_end - nid_start
         f1 = "spikes-{}-{}.gdf".format(neuron_set, snapshot_time)
         neurons1DF = pandas.read_csv(f1, sep='\s+',
                                      lineterminator="\n",
@@ -220,8 +218,8 @@ def plot_rasters(neuron_sets_dict, snapshot_time, proportion=0.1):
         data_to_plot = []
 
         # pick random neurons from the complete set of neurons
-        picked_ids = random.sample(range(int(nid_start), int(nid_end) + 1),
-                                   int(num_neurons * proportion))
+        picked_ids = random.sample(list(neuronids),
+                                   int(len(neuronids) * proportion))
         # Give them sequential indexes so that they can be printed one after
         # the other in the raster
         indexed_picked_ids = {}
@@ -237,7 +235,7 @@ def plot_rasters(neuron_sets_dict, snapshot_time, proportion=0.1):
                 file_data.append([nid, indexed_picked_ids[nid], spike_time])
 
         data_to_plot = numpy.array(data_to_plot)
-        plt.plot(data_to_plot[:, 2], data_to_plot[:, 2], ".",
+        plt.plot(data_to_plot[:, 2], data_to_plot[:, 1], ".",
                  markersize=5.0, label=neuron_set)
 
     plot_output_fn = plot_fn[:-1] + "-{}.png".format(snapshot_time)

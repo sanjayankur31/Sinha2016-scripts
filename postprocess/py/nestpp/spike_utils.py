@@ -358,7 +358,7 @@ def validate_raster_df(dataframe):
         return True
 
 
-def extract_spikes(neuron_set, spikes_fn, snapshot_time_list,
+def extract_spikes(neuron_set, spikes_fn, snapshot_time_list, window=1000,
                    rows=50000000):
     """Extract spikes for neuron set at particular times.
 
@@ -368,6 +368,7 @@ def extract_spikes(neuron_set, spikes_fn, snapshot_time_list,
     :neuron_set: neuron set that spikes should be extracted for.
     :spikes_fn: file name of spikes file
     :snapshot_time_list: times at which spikes are to be extracted in seconds
+    :window: time window to extract spikes for, in ms
     :rows: rows to be read in each pandas chunk
     :returns: True if everything went OK, False otherwise
 
@@ -422,7 +423,7 @@ def extract_spikes(neuron_set, spikes_fn, snapshot_time_list,
 
             # Find our values
             start = numpy.searchsorted(times,
-                                       time - 1000.,
+                                       time - float(window),
                                        side='left')
             end = numpy.searchsorted(times,
                                      time,

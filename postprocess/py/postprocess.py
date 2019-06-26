@@ -560,20 +560,17 @@ class Postprocess:
                                      'plot-firing-rates-snapshot.plt'),
                         args)
 
-    def generate_raster_graphs(self):
+    def generate_raster_graphs(self, neuron_sets=['E', 'I']):
         """Plot raster graphs for E and I neurons."""
-        # rasters for E I only for the moment
         if len(self.cfg['snapshots']['rasters']) > 0:
-            for neuron_set in ['E', 'I']:
+            neuron_dict = {}
+            for neuron_set in neuron_sets:
                 extract_spikes(neuron_set, "spikes-{}.gdf".format(neuron_set),
                                self.cfg['snapshots']['rasters'])
+                neuron_dict[neuron_set] = self.neurons[neuron_set][:, 0]
 
             for t in self.cfg['snapshots']['rasters']:
-                neuron_dict = {
-                    'E': [self.neurons['E'][0][0], self.neurons['E'][-1][0]],
-                    'I': [self.neurons['I'][0][0], self.neurons['I'][-1][0]],
-                }
-                plot_rasters(neuron_dict, t, proportion=0.1)
+                plot_rasters(neuron_dict, t, proportion=1.0)
 
     def plot_neuron_locations(self):
         """Plot graphs showing locations of neurons."""
@@ -1338,7 +1335,8 @@ class Postprocess:
         processes = []
         processes.append(Process(target=self.generate_firing_rate_graphs))
         processes.append(Process(target=self.generate_firing_rate_histograms))
-        processes.append(Process(target=self.generate_raster_graphs))
+        processes.append(Process(target=self.generate_raster_graphs,
+                                 args=(['lpz_c_E', 'p_lpz_E'],)))
         processes.append(
             Process(target=self.generate_firing_rate_grid_snapshots))
         processes.append(Process(target=self.generate_calcium_graphs))
