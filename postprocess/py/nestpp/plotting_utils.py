@@ -235,12 +235,12 @@ def plot_rasters(neuron_sets_dict, snapshot_time, proportion=0.1):
 
         newset_start += int(num_neurons * proportion)
 
-    plot_fn = plot_fn[:-1] + "-{}.png".format(snapshot_time)
-    data_fn = plot_fn[:-1] + "-{}.txt".format(snapshot_time)
+    plot_output_fn = plot_fn[:-1] + "-{}.png".format(snapshot_time)
+    data_output_fn = plot_fn[:-1] + "-{}.txt".format(snapshot_time)
 
     plt.legend(loc="upper right")
-    plt.savefig(plot_fn)
+    plt.savefig(plot_output_fn)
 
-    numpy.savetxt(data_fn, data_to_plot, delimiter="\t")
+    numpy.savetxt(data_output_fn, data_to_plot, delimiter="\t")
 
     return True
