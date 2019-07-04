@@ -12,9 +12,13 @@ set key inside center top horizontal
 
 simulation="201905131224"
 
-set arrow nohead from first 2000, graph 0 to first 2000, graph 1 ls 0 lw 2 dt 2
-set arrow nohead from first 4000, first 0 to first 4000, graph 1 ls 0 lw 2 dt 2
-set arrow nohead from first 6000, first 0 to first 6000, graph 1 ls 0 lw 2 dt 2
+inputtime1="2000.0"
+inputtime2="4000.0"
+inputtime3="16000.0"
+
+set arrow nohead from first inputtime1, first 0 to first inputtime1, graph 1 ls 0 lw 2 dt 2
+set arrow nohead from first inputtime2, first 0 to first inputtime2, graph 1 ls 0 lw 2 dt 2
+set arrow nohead from first inputtime3, first 0 to first inputtime3, graph 1 ls 0 lw 2 dt 2
 
 # means
 # E neurons
