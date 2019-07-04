@@ -18,7 +18,7 @@ neuron_set = "E"
 num_images = 4
 
 # Range of cb
-cbmax = 5
+cbmax = 6
 cbmin = 1
 
 # Usage:
