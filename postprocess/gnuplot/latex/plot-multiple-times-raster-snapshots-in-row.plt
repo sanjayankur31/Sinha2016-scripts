@@ -46,7 +46,7 @@ set multiplot layout 1, num_images
 inputtime1="1500.0"
 inputtime2="2001.5"
 inputtime3="4000.0"
-inputtime4="6000.0"
+inputtime4="16000.0"
 
 do for [i=1:(num_images-0)] {
     inputtime = value(sprintf('inputtime%d', i))

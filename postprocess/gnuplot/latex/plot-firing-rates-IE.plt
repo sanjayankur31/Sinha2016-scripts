@@ -13,11 +13,16 @@ set yrange [0:7]
 set key inside center top horizontal
 
 simulation="201905131224"
+inputtime1="1500.0"
+inputtime2="2001.5"
+inputtime3="4000.0"
+inputtime4="16000.0"
 
-set arrow nohead from first 1500, first -0.5 to first 1500, first 7 ls 0 lw 2 dt 2
-set arrow nohead from first 2000, first -0.5 to first 2000, first 7 ls 0 lw 2 dt 2
-set arrow nohead from first 4000, first -0.5 to first 4000, first 7 ls 0 lw 2 dt 2
-set arrow nohead from first 6000, first -0.5 to first 6000, first 7 ls 0 lw 2 dt 2
+
+set arrow nohead from first inputtime1, first -0.5 to first inputtime1, first 7 ls 0 lw 2 dt 2
+set arrow nohead from first inputtime2, first -0.5 to first inputtime2, first 7 ls 0 lw 2 dt 2
+set arrow nohead from first inputtime3, first -0.5 to first inputtime3, first 7 ls 0 lw 2 dt 2
+set arrow nohead from first inputtime4, first -0.5 to first inputtime4, first 7 ls 0 lw 2 dt 2
 
 set output simulation."-mean-firing-rates-lpz_c_I-E-zoomed.tex"
 set title ""

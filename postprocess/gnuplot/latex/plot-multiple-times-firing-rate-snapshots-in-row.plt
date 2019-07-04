@@ -24,6 +24,11 @@ cbmin = 1
 # Usage:
 # gnuplot -e 'inputtime1="2000.0"' -e 'inputtime2="3000.0"' ... plot-multiple-firing-rate-snapshots-in-row-tex.plt
 
+inputtime1="1500.0"
+inputtime2="2001.5"
+inputtime3="4000.0"
+inputtime4="16000.0"
+
 file_exists(fname) = system("[ -f '".fname."' ] && echo '1' || echo '0'") + 0
 set term epslatex color size 5.55, 1.6
 set output simulation."-firing-rate-snapshots-".neuron_set.".tex"
