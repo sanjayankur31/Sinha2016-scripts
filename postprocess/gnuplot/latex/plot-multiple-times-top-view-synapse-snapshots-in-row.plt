@@ -50,7 +50,7 @@ num_images = 3
 # inputtimes
 inputtime1="2000.0"
 inputtime2="4000.0"
-inputtime3="6000.0"
+inputtime3="16000.0"
 
 # line colours
 # Excitatory synapses
@@ -61,22 +61,22 @@ set linestyle 2 lc rgb '#f7a789' lw 0.25 pt 7 ps 0.75
 set linestyle 3 lc rgb 'black' lw 0.25 pt 7 ps 0.75
 
 # neuron set
-neuron_set = "lpz_c_I"
+neuron_set = "lpz_c_E"
 # Incoming or outgoing
-conn_type = "out"
+conn_type = "in"
 
 
 # type of synapse 1
-synapse_set = "II"
+synapse_set = "EE"
 # Labels.
-# set label 1 "Excitatory" at graph 0.1, 0.9 front
-set label 2 "Inhibitory" at graph 0.1, 0.9 front
+set label 1 "Excitatory" at graph 0.1, 0.9 front
+# set label 2 "Inhibitory" at graph 0.1, 0.9 front
 # Style for line
-mylinestyle=2
+mylinestyle=1
 # Style for src neurons
-mysrcstyle=3
+mysrcstyle=1
 # Style for target neurons
-mytgtstyle=2
+mytgtstyle=3
 
 set output simulation."-75-conns-top-".synapse_set."-".neuron_set."-".conn_type.".tex"
 eval(init_margins(0.01, 0.99, 0.001, num_images))
@@ -110,9 +110,9 @@ set label 2 "Inhibitory" at graph 0.1, 0.9 front
 # Line style
 mylinestyle=2
 # Style for src neurons
-mysrcstyle=3
+mysrcstyle=2
 # Style for target neurons
-mytgtstyle=2
+mytgtstyle=3
 
 set output simulation."-75-conns-top-".synapse_set."-".neuron_set."-".conn_type.".tex"
 eval(init_margins(0.01, 0.99, 0.001, num_images))
