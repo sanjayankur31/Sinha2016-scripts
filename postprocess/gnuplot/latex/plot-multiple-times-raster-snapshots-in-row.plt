@@ -28,6 +28,10 @@ set output simulation."-raster-snapshots.tex"
 # linestyle for points
 set linestyle 1 lc rgb 'black' lw 0.25 pt 7 ps 0.4
 
+set label 1 "LPZ C" at graph -0.15, 0.1 rotate front
+set label 2 "P LPZ" at graph -0.15, 0.6 rotate front
+set arrow nohead from graph -0.15, graph 0.4 to graph 0.0, graph 0.4 ls 1 lw 2
+
 unset xlabel
 unset ylabel
 
@@ -36,7 +40,7 @@ unset ytics
 
 set bmargin at screen 0.02
 set tmargin at screen 0.99
-eval(init_margins(0.06, 1.0, 0.006, num_images))
+eval(init_margins(0.04, 0.99, 0.007, num_images))
 set multiplot layout 1, num_images
 
 # unset border
@@ -54,6 +58,8 @@ do for [i=1:(num_images-0)] {
     if (file_exists(inputfile)) {
         eval(set_margins(i))
         plot inputfile using 3:2 with points ls 1 title ""
+        unset label
+        unset arrow
     }
     else {
         print inputfile." not found. Exiting"
