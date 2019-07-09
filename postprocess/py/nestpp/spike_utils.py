@@ -24,14 +24,15 @@ lgr = get_module_logger(__name__)
 
 
 def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
-                            rows=50000000., dt=1., window=1000.,
-                            snapshot_dt=200000.):
+                            rows=50000000., start_time=100., dt=1.,
+                            window=1000., snapshot_dt=200000.):
     """Get various metrics from raster spike files.
 
     :neuronset: name of neuron set being looked at
     :spikes_fn: file name of spikes file
     :num_neurons: number of neurons in neuron set
     :rows: rows to be read in each pandas chunk
+    :start_time: time to start the processing at (ms)
     :dt: increment value (ms)
     :window: window to count spikes in (ms)
     :snapshot_dt: interval between snapshots for ISI and STD metrics (ms)
@@ -43,8 +44,7 @@ def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
     right = 0.
 
     num_neurons = int(num_neurons)
-    # start at 50 ms
-    current_time = 50.
+    current_time = start_time
     old_neuronIDs = numpy.array([])
     old_times = numpy.array([])
     lgr.info("Processing {}.".format(spikes_fn))
@@ -131,8 +131,8 @@ def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
 
                 # STD of firing rates and ISI cv - it
                 # just takes way too much time - my post processing wont
-                # finish.
-                if (current_time % snapshot_dt == 0):
+                # finish. So, we calculate it at intervals
+                if ((current_time - start_time) % snapshot_dt == 0):
                     # STD of firing rates
                     # take 5 milli second bins of this 1 second bin
                     # find firing rates for each bin
