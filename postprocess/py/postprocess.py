@@ -479,6 +479,7 @@ class Postprocess:
 
         self.lgr.info("Generating mean firing rate graphs vs time")
 
+        #  for neuron_set in ['lpz_c_E', 'lpz_b_E', 'lpz_c_I', 'lpz_b_I']:
         for neuron_set in self.neurons.keys():
             get_firing_rate_metrics(
                 neuron_set, "spikes-{}.gdf".format(neuron_set),
