@@ -113,6 +113,8 @@ def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
                 # the max check is in the while condition, and that
                 # ascertains if a new chunk should be read
                 if right == left:
+                    lgr.warning("No spikes in interval at {}".format(
+                        current_time))
                     current_time = times[left]
                     continue
 
@@ -133,6 +135,8 @@ def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
                 # just takes way too much time - my post processing wont
                 # finish. So, we calculate it at intervals
                 if ((current_time - start_time) % snapshot_dt == 0):
+                    lgr.debug("calculating ISI CV and STD for {}".format(
+                        current_time))
                     # STD of firing rates
                     # take 5 milli second bins of this 1 second bin
                     # find firing rates for each bin
