@@ -13,3 +13,11 @@ set output "ISI-cv-I.png"
 set title "CV of ISIs for I neurons"
 plot "ISI-cv-I.gdf" with linespoints lw 2 title "I", 1 with lines lw 2 title "1";
 
+set output "ISI-cv-lpz_c_E.png"
+set title "CV of ISIs for LPZ C E neurons"
+plot "ISI-cv-lpz_c_E.gdf" with linespoints lw 2 title "E", 1 with lines lw 2 title "1";
+
+set output "ISI-cv-lpz_b_E.png"
+set title "CV of ISIs for LPZ B E neurons"
+plot "ISI-cv-lpz_b_E.gdf" with linespoints lw 2 title "E", 1 with lines lw 2 title "1";
+
