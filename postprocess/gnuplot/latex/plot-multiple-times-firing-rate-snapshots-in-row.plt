@@ -27,7 +27,7 @@ cbmin = 1
 inputtime1="1500.0"
 inputtime2="2001.5"
 inputtime3="4000.0"
-inputtime4="16000.0"
+inputtime4="16600.0"
 
 file_exists(fname) = system("[ -f '".fname."' ] && echo '1' || echo '0'") + 0
 set term epslatex color size 5.55, 1.6
