@@ -207,11 +207,15 @@ def plot_rasters(neuron_sets_dict, snapshot_time, proportion=0.1):
     for neuron_set, neuronids in neuron_sets_dict.items():
         plot_fn += "{}-".format(neuron_set)
         f1 = "spikes-{}-{}.gdf".format(neuron_set, snapshot_time)
-        neurons1DF = pandas.read_csv(f1, sep='\s+',
-                                     lineterminator="\n",
-                                     skipinitialspace=True,
-                                     header=None, index_col=None)
-        neurons1 = neurons1DF.values
+        try:
+            neurons1DF = pandas.read_csv(f1, sep='\s+', lineterminator="\n",
+                                         skipinitialspace=True, header=None,
+                                         index_col=None)
+            neurons1 = neurons1DF.values
+        except pandas.errors.EmptyDataError as e:
+            lgr.warn("No data in file {}".format(f1))
+            lgr.warn(e)
+            neurons1 = []
 
         # pick a smaller contiguous subset
         picked_ids = []
@@ -234,9 +238,11 @@ def plot_rasters(neuron_sets_dict, snapshot_time, proportion=0.1):
                                      spike_time])
                 file_data.append([nid, indexed_picked_ids[nid], spike_time])
 
-        data_to_plot = numpy.array(data_to_plot)
-        plt.plot(data_to_plot[:, 2], data_to_plot[:, 1], ".",
-                 markersize=5.0, label=neuron_set)
+        # only plot if there are some spikes
+        if len(data_to_plot) > 0:
+            data_to_plot = numpy.array(data_to_plot)
+            plt.plot(data_to_plot[:, 2], data_to_plot[:, 1], ".",
+                     markersize=5.0, label=neuron_set)
 
     plot_output_fn = plot_fn[:-1] + "-{}.png".format(snapshot_time)
     data_output_fn = plot_fn[:-1] + "-{}.txt".format(snapshot_time)
