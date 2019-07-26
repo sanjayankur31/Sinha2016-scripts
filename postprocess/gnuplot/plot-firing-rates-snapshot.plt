@@ -7,7 +7,7 @@ set yrange [0:ymax]
 set xtics border nomirror
 set ytics border nomirror
 set cblabel "Firing rate (Hz)"
-set cbrange [0:20]
+set cbrange [0:6]
 set xlabel "Neurons"
 set ylabel "Neurons"
 
