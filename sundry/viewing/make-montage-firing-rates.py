@@ -88,6 +88,33 @@ def make_montage_grid_plots(simulation):
     make_montage(args, output_file)
 
 
+def make_montage_rasters(simulation):
+    """Make montage of rasters.
+
+    :simulation: simulation to make montage for
+    :returns: nothing
+
+    """
+    print("Generating raster montage for {}".format(simulation))
+    output_file = (
+        "{}-raster-lpz_c_E-p_lpz_E-montage.png".format(simulation)
+    )
+    f_glob = "{}-raster-lpz_c_E-p_lpz_E*.png".format(simulation)
+    file_list = natsorted(glob.glob(f_glob))
+
+    args = []
+    for afile in file_list:
+        if os.path.isfile(afile):
+            args.append(afile)
+
+    args += [
+        "-tile", "{}x{}".format(len(file_list), 1),
+        "-geometry", "+2+2",
+        output_file
+    ]
+    make_montage(args, output_file)
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Make montages of firing rate related graphs"
@@ -96,4 +123,5 @@ if __name__ == "__main__":
                         help="simulation to consider")
     args = parser.parse_args()
     make_montage_grid_plots(vars(args)['simulation'])
+    make_montage_rasters(vars(args)['simulation'])
     make_montage_firng_rate_plots(vars(args)['simulation'])
