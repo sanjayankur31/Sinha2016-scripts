@@ -16,7 +16,7 @@ simulation="201905131224"
 inputtime1="1500.0"
 inputtime2="2001.5"
 inputtime3="4000.0"
-inputtime4="16600.0"
+inputtime4="16400.0"
 
 
 set arrow nohead from first inputtime1, first 0.5 to first inputtime1, first 2 ls 0 lw 2 dt 2
