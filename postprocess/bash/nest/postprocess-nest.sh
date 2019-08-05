@@ -17,10 +17,10 @@ CLUSTER_PATH="asinha@uhhpc:/beegfs/general/asinha/simulations-nest/"
 SORTTMPDIR="/simulation-drive/sort-tmpdir"
 # name of generated directory
 DIRNAME=""
-# Number of parallel calls
+# Number of parallel rsync calls
 NUM_PARALLEL=4
-# Location of config file template
-CONFIG_PATH=""
+# Location of config file template, can be overridden using the environment
+CONFIG_PATH=${CONFIG_PATH:-"/simulation-drive/"}
 
 function setup() {
     pushd "$DIRNAME" || exit -1
@@ -160,7 +160,7 @@ pypostprocess ()
             cp -v "$CONFIG_PATH/config.ini" .
             python3 "$SCRIPTS_HOME/postprocess/py/postprocess.py"
         else
-            echo "Could not find config file. Exiting gracefully."
+            echo "Could not find config file in $CONFIG_PATH. Exiting gracefully."
         fi
     popd || exit -1
 }
