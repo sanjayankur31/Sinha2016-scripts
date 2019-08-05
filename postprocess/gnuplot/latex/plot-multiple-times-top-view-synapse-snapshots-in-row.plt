@@ -50,7 +50,7 @@ num_images = 3
 # inputtimes
 inputtime1="2000.0"
 inputtime2="4000.0"
-inputtime3="16600.0"
+inputtime3="16500.0"
 
 # line colours
 # Excitatory synapses
