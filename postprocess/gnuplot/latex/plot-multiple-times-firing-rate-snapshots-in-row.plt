@@ -12,7 +12,7 @@ get_rmargin(col) = (left_margin + (col - 1) * gap_size + col * ((right_margin - 
 
 # Variables
 # Simulation
-simulation = "201905131224"
+simulation = "201907151509"
 neuron_set = "E"
 # Number of images to put in the row
 num_images = 4
@@ -27,7 +27,7 @@ cbmin = 1
 inputtime1="1500.0"
 inputtime2="2001.5"
 inputtime3="4000.0"
-inputtime4="16400.0"
+inputtime4="18000.0"
 
 file_exists(fname) = system("[ -f '".fname."' ] && echo '1' || echo '0'") + 0
 set term epslatex color size 5.55, 1.6

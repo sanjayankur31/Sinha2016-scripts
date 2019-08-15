@@ -12,11 +12,11 @@ set tmargin at screen 0.99
 set yrange [0:7]
 set key inside center top horizontal
 
-simulation="201905131224"
+simulation="201908061027"
 inputtime1="1500.0"
 inputtime2="2001.5"
 inputtime3="4000.0"
-inputtime4="16400.0"
+inputtime4="18000.0"
 
 
 set arrow nohead from first inputtime1, first 0.5 to first inputtime1, first 2 ls 0 lw 2 dt 2

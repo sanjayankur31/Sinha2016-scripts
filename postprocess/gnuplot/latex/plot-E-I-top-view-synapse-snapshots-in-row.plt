@@ -48,7 +48,7 @@ set object 13 circle at o_x,o_y size r_lpz_c fc rgb "yellow" fs transparent soli
 
 # Variables
 # Simulation
-simulation = "201905131224"
+simulation = "201908061027"
 # Number of images to put in the row
 num_images = 2
 # Incoming or outgoing

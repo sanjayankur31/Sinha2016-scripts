@@ -44,13 +44,13 @@ set object 13 circle at o_x,o_y size r_lpz_c fc rgb "red" fs transparent solid 0
 
 # Variables
 # Simulation
-simulation = "201905131224"
+simulation = "201908061027"
 # Number of images to put in the row
 num_images = 3
 # inputtimes
 inputtime1="2000.0"
 inputtime2="4000.0"
-inputtime3="16000.0"
+inputtime3="18000.0"
 
 # line colours
 # Excitatory synapses
@@ -61,22 +61,22 @@ set linestyle 2 lc rgb '#f7a789' lw 0.25 pt 7 ps 0.75
 set linestyle 3 lc rgb 'black' lw 0.25 pt 7 ps 0.75
 
 # neuron set
-neuron_set = "lpz_c_E"
+neuron_set = "lpz_c_I"
 # Incoming or outgoing
-conn_type = "in"
+conn_type = "out"
 
 
 # type of synapse 1
-synapse_set = "EE"
+synapse_set = "IE"
 # Labels.
-set label 1 "Excitatory" at graph 0.1, 0.9 front
-# set label 2 "Inhibitory" at graph 0.1, 0.9 front
+set label 1 "Inhibitory" at graph 0.1, 0.9 front
+# set label 1 "Inhibitory" at graph 0.1, 0.9 front
 # Style for line
-mylinestyle=1
+mylinestyle=2
 # Style for src neurons
-mysrcstyle=1
+mysrcstyle=3
 # Style for target neurons
-mytgtstyle=3
+mytgtstyle=1
 
 set output simulation."-75-conns-top-".synapse_set."-".neuron_set."-".conn_type.".tex"
 eval(init_margins(0.01, 0.99, 0.001, num_images))
@@ -103,16 +103,16 @@ do for [i=1:(num_images)] {
 unset multiplot
 
 # type of synapse 2
-synapse_set = "IE"
+synapse_set = "II"
 # Labels
 # set label 1 "Excitatory" at graph 0.1, 0.9 front
-set label 2 "Inhibitory" at graph 0.1, 0.9 front
+set label 1 "Inhibitory" at graph 0.1, 0.9 front
 # Line style
 mylinestyle=2
 # Style for src neurons
-mysrcstyle=2
+mysrcstyle=3
 # Style for target neurons
-mytgtstyle=3
+mytgtstyle=2
 
 set output simulation."-75-conns-top-".synapse_set."-".neuron_set."-".conn_type.".tex"
 eval(init_margins(0.01, 0.99, 0.001, num_images))

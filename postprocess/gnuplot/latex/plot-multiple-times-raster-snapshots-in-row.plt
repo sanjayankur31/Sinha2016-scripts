@@ -12,7 +12,7 @@ get_rmargin(col) = (left_margin + (col - 1) * gap_size + col * ((right_margin - 
 
 # Variables
 # Simulation
-simulation = "201905131224"
+simulation = "201908061027"
 # Number of images to put in the row
 num_images = 4
 
@@ -45,12 +45,12 @@ set multiplot layout 1, num_images
 
 # unset border
 # unset key
-# set yrange[0:100]
+set yrange[0:]
 
 inputtime1="1500.0"
 inputtime2="2001.5"
 inputtime3="4000.0"
-inputtime4="16400.0"
+inputtime4="18000.0"
 
 do for [i=1:(num_images-0)] {
     inputtime = value(sprintf('inputtime%d', i))
