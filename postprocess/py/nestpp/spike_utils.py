@@ -132,12 +132,17 @@ def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
 
                     # Print NA values for STD and ISI which will not be
                     # calculated for this time
-                    lgr.warning("Printing -1 for STD and ISI CV")
+                    lgr.warning("Printing invalid values for STD and ISI CV")
+
+                    # For gnuplot, lines starting with # are ignored.
+                    # To skip these points and have a discontinuous graph in
+                    # gnuplot, one must leave a blank line in the text.
                     print(
-                        "{}\t{}".format(current_time/1000., -1.),
+                        "#{}\tNA\n".format(current_time/1000.),
                         file=fh2, flush=True)
+
                     print(
-                        "{}\t{}".format(current_time/1000., -1.),
+                        "#{}\tNA\n".format(current_time/1000.),
                         file=fh3, flush=True)
                     continue
 
