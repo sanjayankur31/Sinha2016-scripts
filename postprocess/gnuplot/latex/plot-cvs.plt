@@ -24,7 +24,7 @@ set arrow nohead from first inputtime2, first 0.5 to first inputtime2, first 2 l
 set arrow nohead from first inputtime3, first 0.5 to first inputtime3, first 2 ls 0 lw 2 dt 2
 set arrow nohead from first inputtime4, first 0.5 to first inputtime4, first 2 ls 0 lw 2 dt 2
 # Horizontal line marking 1
-set arrow nohead from first 0, first 1 to first 18000, first 1 lc black lw 4
+set arrow nohead from first 0, first 1 to graph 1, first 1 lc black lw 4
 
 set xlabel "Time (seconds)"
 set ylabel "CV(ISI)"
