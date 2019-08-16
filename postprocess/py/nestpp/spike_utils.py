@@ -95,6 +95,11 @@ def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
             right = 0
 
             while (current_time < math.floor(times[-1])):
+                # Initialise these to 0
+                mean_firing_rate = 0.
+                spikesnum = 0.
+                mystd = -1
+
                 left += numpy.searchsorted(times[left:],
                                            (current_time - window),
                                            side='left')
@@ -131,9 +136,12 @@ def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
                                     mean_firing_rate),
                     file=fh1, flush=True)
 
-                # STD of firing rates and ISI cv - it
-                # just takes way too much time - my post processing wont
-                # finish. So, we calculate it at intervals
+                # We only get here if there are some spikes, so there's no need
+                # to check for that again.
+
+                # STD of firing rates and ISI cv - it just takes way too much
+                # time to do for each dt - my post processing wont finish. So,
+                # we calculate it at intervals
                 if ((current_time - start_time) % snapshot_dt == 0):
                     lgr.debug("calculating ISI CV and STD for {}".format(
                         current_time))
@@ -162,49 +170,46 @@ def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
 
                     lgr.debug("std being calculated from {} values".format(
                         len(bin5rates)))
+                    mystd = numpy.std(bin5rates)
                     print(
-                        "{}\t{}".format(current_time/1000.,
-                                        numpy.std(bin5rates)),
+                        "{}\t{}".format(current_time/1000., mystd),
                         file=fh2, flush=True)
 
                     # ISI stats
                     neurons = set(thiswindow_neuronIDs)
-                    if len(neurons) == 0:
-                        lgr.warning("No neurons found in window. Skipping")
-                    else:
-                        lgr.debug("{} neurons being analysed.".format(
-                            len(neurons)))
-                        # for all neurons in this window
-                        ISI_cvs = []
-                        for neuron in list(neurons):
-                            indices = [i for i, x
-                                       in enumerate(thiswindow_neuronIDs)
-                                       if x == neuron]
-                            neuron_times = [thiswindow_times[i] for i in
-                                            indices]
+                    lgr.debug("ISI: {} neurons being analysed.".format(
+                        len(neurons)))
+                    # for all neurons in this window
+                    ISI_cvs = []
+                    for neuron in list(neurons):
+                        indices = [i for i, x
+                                   in enumerate(thiswindow_neuronIDs)
+                                   if x == neuron]
+                        neuron_times = [thiswindow_times[i] for i in
+                                        indices]
 
-                            ISIs = []
-                            if len(neuron_times) > 1:
-                                # otherwise ISI is undefined in this window for
-                                # this neuron
-                                prev = neuron_times[0]
-                                # get a list of ISIs
-                                for neuron_time in neuron_times:
-                                    ISIs.append(neuron_time - prev)
-                                    prev = neuron_time
+                        ISIs = []
+                        if len(neuron_times) > 1:
+                            # otherwise ISI is undefined in this window for
+                            # this neuron
+                            prev = neuron_times[0]
+                            # get a list of ISIs
+                            for neuron_time in neuron_times:
+                                ISIs.append(neuron_time - prev)
+                                prev = neuron_time
 
-                                # for this neuron, get stats
-                                ISI_mean = numpy.mean(ISIs)
-                                ISI_std = numpy.std(ISIs)
-                                ISI_cv = ISI_std/ISI_mean
+                            # for this neuron, get stats
+                            ISI_mean = numpy.mean(ISIs)
+                            ISI_std = numpy.std(ISIs)
+                            ISI_cv = ISI_std/ISI_mean
 
-                                if not numpy.isnan(ISI_cv):
-                                    ISI_cvs.append(ISI_cv)
+                            if not numpy.isnan(ISI_cv):
+                                ISI_cvs.append(ISI_cv)
 
-                        print(
-                            "{}\t{}".format(current_time/1000.,
-                                            numpy.mean(ISI_cvs)),
-                            file=fh3, flush=True)
+                    print(
+                        "{}\t{}".format(current_time/1000.,
+                                        numpy.mean(ISI_cvs)),
+                        file=fh3, flush=True)
 
                 current_time += dt
 
