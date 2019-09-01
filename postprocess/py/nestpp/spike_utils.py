@@ -120,7 +120,30 @@ def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
                 if right == left:
                     lgr.warning("No spikes in interval at {}".format(
                         current_time))
-                    current_time = times[left]
+                    # Increment it by snapshot_dt to ensure that the next check
+                    # for ISI and STD metrics can be made.
+                    # Ideally, I should be able to move it to times[left], but
+                    # there is no guarantee that it would remain dividible by
+                    # snapshot_dt. That would mean that the next bits are never
+                    # run, even if there are spikes.
+                    current_time += snapshot_dt
+                    lgr.warning("Current time updated to {}".format(
+                        current_time))
+
+                    # Print NA values for STD and ISI which will not be
+                    # calculated for this time
+                    lgr.warning("Printing invalid values for STD and ISI CV")
+
+                    # For gnuplot, lines starting with # are ignored.
+                    # To skip these points and have a discontinuous graph in
+                    # gnuplot, one must leave a blank line in the text.
+                    print(
+                        "#{}\tNA\n".format(current_time/1000.),
+                        file=fh2, flush=True)
+
+                    print(
+                        "#{}\tNA\n".format(current_time/1000.),
+                        file=fh3, flush=True)
                     continue
 
                 # could even just do right - left if all I'm using is len
