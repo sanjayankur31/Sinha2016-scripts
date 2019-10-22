@@ -12,7 +12,7 @@ get_rmargin(col) = (left_margin + (col - 1) * gap_size + col * ((right_margin - 
 
 # Variables
 # Simulation
-simulation = "201907151509"
+simulation = "201908151244"
 neuron_set = "E"
 # Number of images to put in the row
 num_images = 4
@@ -30,7 +30,7 @@ inputtime3="4000.0"
 inputtime4="18000.0"
 
 file_exists(fname) = system("[ -f '".fname."' ] && echo '1' || echo '0'") + 0
-set term epslatex color size 5.55, 1.6
+set term epslatex color size 4.60, 1.4
 set output simulation."-firing-rate-snapshots-".neuron_set.".tex"
 
 unset xtics
