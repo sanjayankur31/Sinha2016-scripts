@@ -1,11 +1,11 @@
 # Usage: gnuplot plot-firing-rates-IE-tex.plt
 load '/home/asinha/Documents/02_Code/00_mine/Sinha2016-scripts/postprocess/gnuplot/firing-rates-palette.pal'
-set term epslatex color size 5,1.5
-set xlabel "Time (\\(s\\))"
+set term epslatex color size 4.0,1.5
+set xlabel "Time (\\(\\times 1000s\\))"
 set ylabel "Firing rate (Hz)"
 set border 3
 set ytics border nomirror autofreq 2
-set xtics border nomirror
+set xtics border nomirror 2000 format "%.0s"
 set lmargin at screen 0.01
 set rmargin at screen 1.0
 set tmargin at screen 0.99
