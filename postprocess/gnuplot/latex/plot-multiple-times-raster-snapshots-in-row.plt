@@ -20,7 +20,7 @@ num_images = 4
 # gnuplot -e 'inputtime1="2000.0"' -e 'inputtime2="3000.0"' ... plot-multiple-firing-rate-snapshots-in-row-tex.plt
 
 file_exists(fname) = system("[ -f '".fname."' ] && echo '1' || echo '0'") + 0
-set term epslatex color size 5.55, 1.6
+set term epslatex color size 4.60, 1.4
 set output simulation."-raster-snapshots.tex"
 # set term pngcairo color size 36cm,9cm
 # set output simulation."-raster-snapshots.png"
