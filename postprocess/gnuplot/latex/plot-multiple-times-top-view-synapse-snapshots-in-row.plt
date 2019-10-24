@@ -11,7 +11,7 @@ get_lmargin(col) = (left_margin + (col - 1) * (gap_size + ((right_margin - left_
 get_rmargin(col) = (left_margin + (col - 1) * gap_size + col * ((right_margin - left_margin)-(col_count - 1) * gap_size)/col_count)
 file_exists(fname) = system("[ -f '".fname."' ] && echo '1' || echo '0'") + 0
 
-set term epslatex color size 14cm, 4.5cm
+set term epslatex color size 4.6, 1.5
 unset xtics
 unset ytics
 set size ratio -1
@@ -61,18 +61,18 @@ set linestyle 2 lc rgb '#f7a789' lw 0.25 pt 7 ps 0.75
 set linestyle 3 lc rgb 'black' lw 0.25 pt 7 ps 0.75
 
 # neuron set
-neuron_set = "lpz_c_I"
+neuron_set = "p_lpz_E"
 # Incoming or outgoing
 conn_type = "out"
 
 
 # type of synapse 1
-synapse_set = "IE"
+synapse_set = "EE"
 # Labels.
-set label 1 "Inhibitory" at graph 0.1, 0.9 front
+set label 1 "Excitatory" at graph 0.1, 0.9 front
 # set label 1 "Inhibitory" at graph 0.1, 0.9 front
 # Style for line
-mylinestyle=2
+mylinestyle=1
 # Style for src neurons
 mysrcstyle=3
 # Style for target neurons
@@ -103,16 +103,16 @@ do for [i=1:(num_images)] {
 unset multiplot
 
 # type of synapse 2
-synapse_set = "II"
+synapse_set = "EI"
 # Labels
 # set label 1 "Excitatory" at graph 0.1, 0.9 front
 set label 1 "Inhibitory" at graph 0.1, 0.9 front
 # Line style
-mylinestyle=2
+mylinestyle=1
 # Style for src neurons
 mysrcstyle=3
 # Style for target neurons
-mytgtstyle=2
+mytgtstyle=1
 
 set output simulation."-75-conns-top-".synapse_set."-".neuron_set."-".conn_type.".tex"
 eval(init_margins(0.01, 0.99, 0.001, num_images))
@@ -127,8 +127,8 @@ do for [i=1:(num_images)] {
         plot inputfile using 1:2:($3-$1):($4-$2) with vectors ls mylinestyle nohead title "", inputfile using 1:2 with points ls mysrcstyle title "", inputfile using 3:4 with points ls mytgtstyle title ""
     }
         # Unset so that they only show on first graph
-        # unset label 1
-        unset label 2
+        unset label 1
+        # unset label 2
     else {
         print inputfile." not found. Exiting"
         exit
