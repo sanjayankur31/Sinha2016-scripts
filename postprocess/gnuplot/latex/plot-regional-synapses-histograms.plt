@@ -11,7 +11,7 @@
 # For the LaTeX output, one needs to fix the labels, since they have double subscripts and so on. These are read from the data files.
 
 load '/home/asinha/Documents/02_Code/00_mine/Sinha2016-scripts/postprocess/gnuplot/firing-rates-palette.pal'
-set term epslatex color size 5,2.0
+set term epslatex color size 4.0,2.0
 set xlabel "Time (\\(x 1000s\\))"
 set ylabel "Synapses" offset 6,0
 
@@ -39,15 +39,21 @@ set key tmargin center horizontal samplen 1 nobox
 simid="201908061027"
 
 ## LPZ C
+set yrange [0:80000]
 set output simid."-75-connection-rowstacked-histograms-E-to-lpz_c_E.tex"
-plot for [COL=5:2:-1] '75-syn_conns-incoming-totals-lpz_c_E-EE.txt' every 2 using COL:xtic(sprintf("\\(%.1f\\)", $1/1000)) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '75-syn_conns-incoming-totals-lpz_c_E-EE.txt' every 1 using COL:xtic(sprintf("\\(%.1f\\)", $1/1000)) lc COL-1 title columnheader
 
+set yrange [0:14000]
 set output simid."-75-connection-rowstacked-histograms-I-to-lpz_c_E.tex"
-plot for [COL=5:2:-1] '75-syn_conns-incoming-totals-lpz_c_E-IE.txt' every 2 using COL:xtic(sprintf("\\(%.1f\\)", $1/1000)) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '75-syn_conns-incoming-totals-lpz_c_E-IE.txt' every 1 using COL:xtic(sprintf("\\(%.1f\\)", $1/1000)) lc COL-1 title columnheader
 
 # P LPZ
+set ytics border nomirror autofreq 20000
+set yrange [0:80000]
 set output simid."-75-connection-rowstacked-histograms-E-to-p_lpz_E.tex"
-plot for [COL=5:2:-1] '75-syn_conns-incoming-totals-p_lpz_E-EE.txt' every 2 using COL:xtic(sprintf("\\(%.1f\\)", $1/1000)) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '75-syn_conns-incoming-totals-p_lpz_E-EE.txt' every 1 using COL:xtic(sprintf("\\(%.1f\\)", $1/1000)) lc COL-1 title columnheader
 
+set ytics border nomirror autofreq 30000
+unset yrange
 set output simid."-75-connection-rowstacked-histograms-I-to-p_lpz_E.tex"
-plot for [COL=5:2:-1] '75-syn_conns-incoming-totals-p_lpz_E-IE.txt' every 2 using COL:xtic(sprintf("\\(%.1f\\)", $1/1000)) lc COL-1 title columnheader
+plot for [COL=5:2:-1] '75-syn_conns-incoming-totals-p_lpz_E-IE.txt' every 1 using COL:xtic(sprintf("\\(%.1f\\)", $1/1000)) lc COL-1 title columnheader
