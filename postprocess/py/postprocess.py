@@ -129,8 +129,10 @@ class Postprocess:
                 self.neurons['pattern-{}'.format(i)] = neurons_P
                 self.neurons['background-{}'.format(i)] = neurons_B
 
-                overlapping_neurons = set(self.neurons_lpz_E).intersection(
-                    set(neurons_P))
+                neurons_P = set((tuple(i) for i in neurons_P))
+                neurons_lpz_E = set((tuple(i) for i in self.neurons['lpz_E']))
+
+                overlapping_neurons = neurons_lpz_E.intersection(neurons_P)
                 overlapping_percent = len(overlapping_neurons)/len(neurons_P)
                 print("{}\t{}".format(i, overlapping_percent), file=f)
 
