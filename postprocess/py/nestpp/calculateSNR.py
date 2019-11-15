@@ -28,7 +28,7 @@ class calculateSNR:
         print("Mean2 is: {}".format(mean2))
 
         std1 = numpy.std(rates1, dtype=float)
-        print("STD1is: {}".format(std1))
+        print("STD1 is: {}".format(std1))
         std2 = numpy.std(rates2, dtype=float)
         print("STD2 is: {}".format(std2))
 
