@@ -17,12 +17,10 @@ class calculateSNR:
 
     """Calculate SNR from two sets of unlabelled firing rate files."""
 
-    def run(self, signal_file, noise_file):
+    def run(self, signal_file, noise_file, column):
         """Main runner method."""
-        rates1 = numpy.loadtxt(signal_file, usecols=1,
-                               delimiter='\t')
-        rates2 = numpy.loadtxt(noise_file, usecols=1,
-                               delimiter='\t')
+        rates1 = numpy.loadtxt(signal_file, usecols=column, delimiter='\t')
+        rates2 = numpy.loadtxt(noise_file, usecols=column, delimiter='\t')
 
         mean1 = numpy.mean(rates1, dtype=float)
         print("Mean1 is: {}".format(mean1))
@@ -51,8 +49,8 @@ class calculateSNR:
 
 if __name__ == "__main__":
     runner = calculateSNR()
-    if len(sys.argv) != 3:
+    if len(sys.argv) != 4:
         print("Wrong arguments.", file=sys.stderr)
         runner.usage()
     else:
-        runner.run(sys.argv[1], sys.argv[2])
+        runner.run(sys.argv[1], sys.argv[2], sys.argv[3])
