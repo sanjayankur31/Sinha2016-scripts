@@ -637,8 +637,8 @@ class Postprocess:
                             'firing-rates-background-{}-{}.gdf'.format(
                                 i, j),
                             3)
-                        print("{}\t{}".format(
-                            (self.cfg['snapshots']['snrs'])[j], snr), file=f)
+                        print("{}\t{}".format((self.cfg['snapshots']['snrs']),
+                                              snr), file=f)
 
             # Plot the graphs
             # The gnuplot script loops over all pattern SNR files
