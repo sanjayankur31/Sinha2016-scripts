@@ -632,9 +632,9 @@ class Postprocess:
                         # for each time, calculate the SNR from the firing
                         # rates of the neurons and print it to a file
                         snr = snrCalculator.run(
-                            'firing-rate-pattern-{}-{}.gdf'.format(
+                            'firing-rates-pattern-{}-{}.gdf'.format(
                                 i, j),
-                            'firing-rate-background-{}-{}.gdf'.format(
+                            'firing-rates-background-{}-{}.gdf'.format(
                                 i, j),
                             3)
                         print("{}\t{}".format(
