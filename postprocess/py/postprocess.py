@@ -614,7 +614,7 @@ class Postprocess:
             import nestpp.calculateSNR as snr
             snrCalculator = snr.calculateSNR()
             for i in range(1, self.numpats + 1):
-                # use firing rate getter and do stuff
+                # get firing rates of all neurons at all these times
                 get_individual_firing_rate_snapshots(
                     "background-{}".format(i),
                     "spikes-background-{}.gdf".format(i),
@@ -629,6 +629,8 @@ class Postprocess:
 
                 with open("00-SNR-pattern-{}.txt".format(str(i)), 'w') as f:
                     for j in self.cfg['snapshots']['snrs']:
+                        # for each time, calculate the SNR from the firing
+                        # rates of the neurons and print it to a file
                         snr = snrCalculator.run(
                             'firing-rate-pattern-{}-{}.gdf'.format(
                                 i, j),
@@ -637,8 +639,10 @@ class Postprocess:
                             3)
                         print("{}\t{}".format(
                             (self.cfg['snapshots']['snrs'])[j], snr), file=f)
-            args = ["-e", "numpats='{}'".format(self.numpats)]
 
+            # Plot the graphs
+            # The gnuplot script loops over all pattern SNR files
+            args = ["-e", "numpats='{}'".format(self.numpats)]
             plot_using_gnuplot_binary(
                 os.path.join(self.cfg['plots_dir'],
                              'plot-snr-all-patterns.plt'),
