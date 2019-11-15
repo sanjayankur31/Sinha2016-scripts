@@ -606,45 +606,44 @@ class Postprocess:
                          'plot-neuron-locations.plt'))
 
     def plot_snrs(self):
-        """Postprocess combined spike files.
-
-        TODO: INCOMPLETE
         """
-        return True
+        Calculate SNRs and generate graphs.
 
-        if self.cfg.snr:
-            import nestpp.getFiringRates as rg
+        """
+        if len(self.cfg['snapshots']['snrs']) > 0:
             import nestpp.calculateSNR as snr
             snrCalculator = snr.calculateSNR()
-            patFilesB = []
-            patFilesP = []
-
-            for i in range(1, self.cfg.numpats + 1):
+            for i in range(1, self.numpats + 1):
                 # use firing rate getter and do stuff
-                rateGetterB = rg.getFiringRates()
-                if rateGetterB.setup(
-                    self.cfg.filenamePrefixB + str(i) + ".gdf",
-                    'B-{}'.format(i),
-                    self.cfg.neurons_B[i-1],
-                    self.cfg.rows_per_read
-                ):
-                    patFilesB = rateGetterB.run(self.cfg.snr_timelist)
+                get_individual_firing_rate_snapshots(
+                    "background-{}".format(i),
+                    "spikes-background-{}.gdf".format(i),
+                    self.neurons['background-{}'.format(i)],
+                    self.cfg['snapshots']['snrs'])
 
-                rateGetterP = rg.getFiringRates()
-                if rateGetterP.setup(
-                    self.cfg.filenamePrefixP + str(i) + ".gdf",
-                    'P-{}'.format(i),
-                    self.cfg.neurons_P[i-1],
-                    self.cfg.rows_per_read
-                ):
-                    patFilesP = rateGetterP.run(self.cfg.snr_timelist)
-                    print("patfilesP is: {} ".format(patFilesP))
+                get_individual_firing_rate_snapshots(
+                    "pattern-{}".format(i),
+                    "spikes-pattern-{}.gdf".format(i),
+                    self.neurons['background-{}'.format(i)],
+                    self.cfg['snapshots']['snrs'])
 
                 with open("00-SNR-pattern-{}.txt".format(str(i)), 'w') as f:
-                    for j in range(0, len(self.cfg.snr_timelist)):
-                        snr = snrCalculator.run(patFilesP[j], patFilesB[j])
+                    for j in self.cfg['snapshots']['snrs']:
+                        snr = snrCalculator.run(
+                            'firing-rate-pattern-{}-{}.gdf'.format(
+                                i, j),
+                            'firing-rate-background-{}-{}.gdf'.format(
+                                i, j),
+                            3)
                         print("{}\t{}".format(
-                            self.cfg.snr_timelist[j], snr), file=f)
+                            (self.cfg['snapshots']['snrs'])[j], snr), file=f)
+            args = ["-e", "numpats='{}'".format(self.numpats)]
+
+            plot_using_gnuplot_binary(
+                os.path.join(self.cfg['plots_dir'],
+                             'plot-snr-all-patterns.plt'),
+                args
+            )
 
     def generate_total_synapse_change_graphs(self, plotting_interval=1000.):
         """Process total synapse change graphs.
