@@ -43,8 +43,11 @@ class calculateSNR:
 
     def usage(self):
         """Print usage."""
-        usage = ("Usage: \npython3 calculateSNR.py " + "signal_file noise_file")
+        usage = (
+            "Usage: \npython3 calculateSNR.py " + "signal_file noise_file"
+        )
         print(usage, file=sys.stderr)
+
 
 if __name__ == "__main__":
     runner = calculateSNR()
