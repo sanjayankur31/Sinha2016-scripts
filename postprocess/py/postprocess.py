@@ -624,7 +624,7 @@ class Postprocess:
                 get_individual_firing_rate_snapshots(
                     "pattern-{}".format(i),
                     "spikes-pattern-{}.gdf".format(i),
-                    self.neurons['background-{}'.format(i)],
+                    self.neurons['pattern-{}'.format(i)],
                     self.cfg['snapshots']['snrs'])
 
                 with open("00-SNR-pattern-{}.txt".format(str(i)), 'w') as f:
