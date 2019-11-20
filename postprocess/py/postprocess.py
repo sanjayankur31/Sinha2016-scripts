@@ -1357,11 +1357,11 @@ class Postprocess:
         for proc in processes:
             proc.start()
 
-        #  self.plot_snrs()
         self.lgr.info("Waiting for all processes to finish")
         for proc in processes:
             proc.join()
 
+        self.plot_snrs()
         end_time = time.clock()
         self.lgr.info("Post processing took {} minutes".format(
             (end_time - start_time)/60
