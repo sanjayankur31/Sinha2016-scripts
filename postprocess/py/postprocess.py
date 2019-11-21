@@ -120,21 +120,42 @@ class Postprocess:
         # each pattern and the LPZ
         self.numpats = get_numpats()
         with open("00-pattern-overlap.txt", 'w') as f:
+            # Print header
+            print("{}\t{}\t{}\t{}\t{}".format(
+                "p_number", "p_total", "p_in_lpz", "r_total", "r_in_lpz"),
+                  file=f)
             for i in range(1, self.numpats + 1):
                 neurons_P = self.__load_neurons(
                     "00-pattern-neurons-" + str(i) + ".txt")
                 neurons_B = self.__load_neurons(
                     "00-background-neurons-" + str(i) + ".txt")
+                neurons_R = self.__load_neurons(
+                    "00-recall-neurons-" + str(i) + ".txt")
 
                 self.neurons['pattern-{}'.format(i)] = neurons_P
                 self.neurons['background-{}'.format(i)] = neurons_B
+                self.neurons['recall-{}'.format(i)] = neurons_R
 
                 neurons_P = set((tuple(i) for i in neurons_P))
+                neurons_R = set((tuple(i) for i in neurons_R))
                 neurons_lpz_E = set((tuple(i) for i in self.neurons['lpz_E']))
 
-                overlapping_neurons = neurons_lpz_E.intersection(neurons_P)
-                overlapping_percent = len(overlapping_neurons)/len(neurons_P)
-                print("{}\t{}".format(i, overlapping_percent), file=f)
+                # Get the bits that fall in the LPZ
+                p_neurons_in_lpz = neurons_lpz_E.intersection(neurons_P)
+                with open("00-pattern-in-lpz-{}.txt".format(str(i))):
+                    # Print the gids of the pattern neurons in the LPZ
+                    for nrn in p_neurons_in_lpz:
+                        print("{}".format(nrn[0]))
+
+                r_neurons_in_lpz = neurons_lpz_E.intersection(neurons_R)
+                with open("00-recall-in-lpz-{}.txt".format(str(i))):
+                    # Print the gids of the pattern neurons in the LPZ
+                    for nrn in r_neurons_in_lpz:
+                        print("{}".format(nrn[0]))
+
+                print("{}\t{}\t{}\t{}\t{}".format(
+                    i, len(neurons_P), len(p_neurons_in_lpz), len(neurons_R),
+                    len(r_neurons_in_lpz)), file=f)
 
     def generate_synaptic_element_graphs(self):
         """Post process synaptic elements from individual neuronal files."""
