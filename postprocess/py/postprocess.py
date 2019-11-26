@@ -142,16 +142,18 @@ class Postprocess:
 
                 # Get the bits that fall in the LPZ
                 p_neurons_in_lpz = neurons_lpz_E.intersection(neurons_P)
-                with open("00-pattern-in-lpz-{}.txt".format(str(i))):
+                with open("00-pattern-in-lpz-{}.txt".format(str(i)),
+                          'w') as fp:
                     # Print the gids of the pattern neurons in the LPZ
                     for nrn in p_neurons_in_lpz:
-                        print("{}".format(nrn[0]))
+                        print("{}".format(nrn[0]), file=fp)
 
                 r_neurons_in_lpz = neurons_lpz_E.intersection(neurons_R)
-                with open("00-recall-in-lpz-{}.txt".format(str(i))):
+                with open("00-recall-in-lpz-{}.txt".format(str(i)),
+                          'w') as fr:
                     # Print the gids of the pattern neurons in the LPZ
                     for nrn in r_neurons_in_lpz:
-                        print("{}".format(nrn[0]))
+                        print("{}".format(nrn[0]), file=fr)
 
                 print("{}\t{}\t{}\t{}\t{}".format(
                     i, len(neurons_P), len(p_neurons_in_lpz), len(neurons_R),

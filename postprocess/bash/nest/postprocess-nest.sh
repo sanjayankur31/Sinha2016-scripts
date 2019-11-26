@@ -68,6 +68,9 @@ combine ()
 
             echo "Moving background neuron files"
             mv "00-background-neurons-""$pat"".txt" "$CONSOLIDATED_DIR"
+
+            echo "Moving recall neuron files"
+            mv "00-recall-neurons-""$pat"".txt" "$CONSOLIDATED_DIR"
         done
 
         echo "Combining lpz_c_E files"
