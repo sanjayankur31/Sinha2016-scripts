@@ -4,7 +4,7 @@ set term pngcairo font "OpenSans, 28" size 1920, 1080
 set xlabel "Time (seconds)"
 set ylabel "SNR"
 set yrange [0:]
-set xtics border nomirror 50
+set xtics border nomirror
 set lmargin at screen 0.15
 
 outfile = "SNR-patterns.png"
