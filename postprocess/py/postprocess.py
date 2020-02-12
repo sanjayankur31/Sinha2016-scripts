@@ -119,6 +119,9 @@ class Postprocess:
         # Populate pattern lists and calculate the overlap percentage between
         # each pattern and the LPZ
         self.numpats = get_numpats()
+        # If there are no patterns, do not go further.
+        if self.numpats == 0:
+            return
         with open("00-pattern-overlap.txt", 'w') as f:
             # Print header
             print("{}\t{}\t{}\t{}\t{}".format(
