@@ -490,3 +490,34 @@ def extract_spikes(neuron_set, spikes_fn, snapshot_time_list, window=1000,
         del times
         gc.collect()
     return True
+
+
+def extract_neurons_from_spike_file(neuron_sets, output_names, spike_file,
+                                    rows=50000000.):
+    """
+    Take a spike file, and extract spikes for the different neuron sets into
+    different files.
+
+    :neuron_sets: list of neuron sets to extract
+    :output_names: output names of new spike files
+    :spike_file: main spike file
+    :rows: rows to read from the chunk
+    :returns: nothing
+
+    """
+    if len(neuron_sets) != len(output_names):
+        lgr.error("An output file name must be provided for each neuron set.")
+        lgr.error("Exiting")
+        return
+
+    for chunk in pandas.read_csv(spike_file, sep='\s+',  # noqa: W605
+                                 names=["neuronID",
+                                        "spike_time"],
+                                 dtype={'neuronID': numpy.uint16,
+                                        'spike_time': float},
+                                 lineterminator="\n",
+                                 skipinitialspace=True,
+                                 header=None, index_col=None,
+                                 skip_blank_lines=True,
+                                 chunksize=rows):
+        pass
