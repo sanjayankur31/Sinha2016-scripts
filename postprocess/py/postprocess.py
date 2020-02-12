@@ -29,7 +29,8 @@ from nestpp.plotting_utils import (plot_using_gnuplot_binary,
 from nestpp.loggerpp import get_module_logger
 from nestpp.spike_utils import (get_firing_rate_metrics,
                                 get_individual_firing_rate_snapshots,
-                                extract_spikes)
+                                extract_spikes,
+                                extract_neurons_from_spike_file)
 from nestpp.file_utils import (get_info_from_file_series,
                                combine_files_row_wise)
 
@@ -145,6 +146,14 @@ class Postprocess:
 
                 # Get the bits that fall in the LPZ
                 p_neurons_in_lpz = neurons_lpz_E.intersection(neurons_P)
+                self.neurons['pattern-in-lpz-{}'.format(i)] = p_neurons_in_lpz
+                # Get the bits that fall outside the LPZ
+                # Remember to set the right file names when you extract these
+                # neurons from the pattern spike files.
+                p_neurons_outside_lpz = neurons_P.difference(neurons_lpz_E)
+                self.neurons['pattern-outside-lpz-{}'.format(i)] = \
+                    p_neurons_outside_lpz
+
                 with open("00-pattern-in-lpz-{}.txt".format(str(i)),
                           'w') as fp:
                     # Print the gids of the pattern neurons in the LPZ
@@ -500,12 +509,42 @@ class Postprocess:
         plot_using_gnuplot_binary(os.path.join(self.cfg['plots_dir'],
                                                'plot-cal-metrics.plt'))
 
+    def __separate_pattern_by_lpz(self):
+        """
+        Split the spike file for each pattern into two files: one for pattern
+        neurons in the LPZ, one for neurons outside the LPZ.
+
+        :returns: nothing
+
+        """
+        for i in range(1, self.numpats + 1):
+            # Get the neuron sets
+            p_neurons_in_lpz = \
+                self.neurons['pattern-in-lpz-{}'.format(i)][:, 0]
+            p_neurons_outside_lpz = \
+                self.neurons['pattern-outside-lpz-{}'.format(i)][:, 0]
+
+            # Get the data
+            p_spike_file = "spikes-pattern-{}.gdf".format(i)
+
+            extract_neurons_from_spike_file(
+                [p_neurons_in_lpz, p_neurons_outside_lpz],
+                ['pattern-in-lpz-{}.gdf', 'pattern-outside-lpz-{}.gdf'],
+                p_spike_file
+            )
+
     def generate_firing_rate_graphs(self):
         """Generate firing rate graphs."""
         if "firing_rates" not in self.cfg['time_graphs']:
             return True
 
         self.lgr.info("Generating mean firing rate graphs vs time")
+
+        # Split the pattern spikes
+        # Must be done before the firing rates are calculated because it reads
+        # spike files for each neuron set.
+        if self.numpats > 0:
+            self.__separate_pattern_by_lpz()
 
         #  for neuron_set in ['lpz_c_E', 'lpz_b_E', 'lpz_c_I', 'lpz_b_I']:
         for neuron_set in self.neurons.keys():
