@@ -56,7 +56,7 @@ def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
             open("std-firing-rates-{}.gdf".format(neuronset), 'w') as fh2, \
             open("ISI-cv-{}.gdf".format(neuronset), 'w') as fh3:
 
-        for chunk in pandas.read_csv(spikes_fn, sep='\s+',
+        for chunk in pandas.read_csv(spikes_fn, sep='\s+',  # noqa: W605
                                      names=["neuronID",
                                             "spike_time"],
                                      dtype={'neuronID': numpy.uint16,
@@ -276,7 +276,7 @@ def get_individual_firing_rate_snapshots(neuronset, spikes_fn,
     end = 0.
 
     lgr.info("Reading spikes file {}".format(spikes_fn))
-    for chunk in pandas.read_csv(spikes_fn, sep='\s+',
+    for chunk in pandas.read_csv(spikes_fn, sep='\s+',  # noqa: W605
                                  names=["neuronID",
                                         "spike_time"],
                                  dtype={'neuronID': numpy.uint16,
@@ -411,7 +411,7 @@ def extract_spikes(neuron_set, spikes_fn, snapshot_time_list, window=1000,
     old_times = numpy.array([])
 
     lgr.info("Reading spikes file {}".format(spikes_fn))
-    for chunk in pandas.read_csv(spikes_fn, sep='\s+',
+    for chunk in pandas.read_csv(spikes_fn, sep='\s+',  # noqa: W605
                                  names=["neuronID",
                                         "spike_time"],
                                  dtype={'neuronID': numpy.uint16,
