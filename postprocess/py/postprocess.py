@@ -30,7 +30,7 @@ from nestpp.loggerpp import get_module_logger
 from nestpp.spike_utils import (get_firing_rate_metrics,
                                 get_individual_firing_rate_snapshots,
                                 extract_spikes,
-                                extract_neurons_from_spike_file)
+                                extract_subsets_from_spike_file)
 from nestpp.file_utils import (get_info_from_file_series,
                                combine_files_row_wise)
 
@@ -527,7 +527,7 @@ class Postprocess:
             # Get the data
             p_spike_file = "spikes-pattern-{}.gdf".format(i)
 
-            extract_neurons_from_spike_file(
+            extract_subsets_from_spike_file(
                 [p_neurons_in_lpz, p_neurons_outside_lpz],
                 ['pattern-in-lpz-{}.gdf', 'pattern-outside-lpz-{}.gdf'],
                 p_spike_file

@@ -492,7 +492,7 @@ def extract_spikes(neuron_set, spikes_fn, snapshot_time_list, window=1000,
     return True
 
 
-def extract_neurons_from_spike_file(neuron_sets, output_names, spike_file,
+def extract_subsets_from_spike_file(neuron_sets, output_names, spike_file,
                                     rows=50000000.):
     """
     Take a spike file, and extract spikes for the different neuron sets into
@@ -510,6 +510,15 @@ def extract_neurons_from_spike_file(neuron_sets, output_names, spike_file,
         lgr.error("Exiting")
         return
 
+    # set up the neuron sets and the file handles
+    neuron_set_dfs = []
+    output_dfs = []
+    for i in range(0, len(neuron_sets)):
+        neuron_set_dfs.append(
+            pandas.DataFrame(neuron_sets[i], columns=["neuronID"])
+        )
+        output_dfs[i] = None
+
     for chunk in pandas.read_csv(spike_file, sep='\s+',  # noqa: W605
                                  names=["neuronID",
                                         "spike_time"],
@@ -520,4 +529,17 @@ def extract_neurons_from_spike_file(neuron_sets, output_names, spike_file,
                                  header=None, index_col=None,
                                  skip_blank_lines=True,
                                  chunksize=rows):
-        pass
+        # find the spikes for each set and print them to the file
+        for i in range(0, len(neuron_sets)):
+            joined_df = neuron_set_dfs[i].join(
+                chunk, on="neuronID", how="inner")
+
+            if output_dfs[i]:
+                output_dfs[i].append(joined_df)
+            else:
+                output_dfs[i] = joined_df
+
+    # Write the new files
+    for i in range(0, len(neuron_sets)):
+        output_dfs[i].to_csv(output_names[i], sep="\t", header=None,
+                             index=None,)
