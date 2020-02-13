@@ -19,3 +19,14 @@ do for [pat=1:numpats+0] {
         plot infile with lines ls 2 title "P"
     }
 }
+do for [pat=1:numpats+0] {
+    set ytics 5
+    set yrange [0:40]
+    outfile = sprintf('mean-firing-rates-background-zoomed-%d.png', pat)
+    infile = sprintf('mean-firing-rates-background-%d.gdf', pat)
+    if (file_exists(infile)) {
+        set output outfile
+        set title "Mean firing rate for background ".pat." neurons"
+        plot infile with lines ls 2 title "B"
+    }
+}
