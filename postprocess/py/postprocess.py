@@ -140,19 +140,22 @@ class Postprocess:
                 self.neurons['background-{}'.format(i)] = neurons_B
                 self.neurons['recall-{}'.format(i)] = neurons_R
 
+                # convert to sets for set operations
                 neurons_P = set((tuple(i) for i in neurons_P))
                 neurons_R = set((tuple(i) for i in neurons_R))
                 neurons_lpz_E = set((tuple(i) for i in self.neurons['lpz_E']))
 
                 # Get the bits that fall in the LPZ
                 p_neurons_in_lpz = neurons_lpz_E.intersection(neurons_P)
-                self.neurons['pattern-in-lpz-{}'.format(i)] = p_neurons_in_lpz
+                self.neurons['pattern-in-lpz-{}'.format(i)] = numpy.array(
+                    list(p_neurons_in_lpz)
+                )
                 # Get the bits that fall outside the LPZ
                 # Remember to set the right file names when you extract these
                 # neurons from the pattern spike files.
                 p_neurons_outside_lpz = neurons_P.difference(neurons_lpz_E)
                 self.neurons['pattern-outside-lpz-{}'.format(i)] = \
-                    p_neurons_outside_lpz
+                    numpy.array(list(p_neurons_outside_lpz))
 
                 with open("00-pattern-in-lpz-{}.txt".format(str(i)),
                           'w') as fp:
@@ -517,22 +520,24 @@ class Postprocess:
         :returns: nothing
 
         """
+        self.lgr.info("Separating pattern neurons by LPZ")
         for i in range(1, self.numpats + 1):
             # Get the neuron sets
             p_neurons_in_lpz = \
-                self.neurons['pattern-in-lpz-{}'.format(i)][:, 0]
+                (self.neurons['pattern-in-lpz-{}'.format(i)])[:, 0]
             p_neurons_outside_lpz = \
-                self.neurons['pattern-outside-lpz-{}'.format(i)][:, 0]
+                (self.neurons['pattern-outside-lpz-{}'.format(i)])[:, 0]
 
             # Get the data
             p_spike_file = "spikes-pattern-{}.gdf".format(i)
 
             extract_subsets_from_spike_file(
                 [p_neurons_in_lpz, p_neurons_outside_lpz],
-                ['spikes-pattern-in-lpz-{}.gdf',
-                 'spikes-pattern-outside-lpz-{}.gdf'],
+                ['spikes-pattern-in-lpz-{}.gdf'.format(i),
+                 'spikes-pattern-outside-lpz-{}.gdf'.format(i)],
                 p_spike_file
             )
+        self.lgr.info("Pattern neurons separated by LPZ")
 
     def generate_firing_rate_graphs(self):
         """Generate firing rate graphs."""
@@ -547,8 +552,9 @@ class Postprocess:
         if self.numpats > 0:
             self.__separate_pattern_by_lpz()
 
-        #  for neuron_set in ['lpz_c_E', 'lpz_b_E', 'lpz_c_I', 'lpz_b_I']:
-        for neuron_set in self.neurons.keys():
+        #  for neuron_set in self.neurons.keys():
+        for neuron_set in ['pattern-1', 'pattern-in-lpz-1',
+                           'pattern-outside-lpz-1']:
             get_firing_rate_metrics(
                 neuron_set, "spikes-{}.gdf".format(neuron_set),
                 len(self.neurons[neuron_set]), start_time=100., dt=100.,
