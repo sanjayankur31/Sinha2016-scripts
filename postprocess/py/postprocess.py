@@ -529,7 +529,8 @@ class Postprocess:
 
             extract_subsets_from_spike_file(
                 [p_neurons_in_lpz, p_neurons_outside_lpz],
-                ['pattern-in-lpz-{}.gdf', 'pattern-outside-lpz-{}.gdf'],
+                ['spikes-pattern-in-lpz-{}.gdf',
+                 'spikes-pattern-outside-lpz-{}.gdf'],
                 p_spike_file
             )
 
