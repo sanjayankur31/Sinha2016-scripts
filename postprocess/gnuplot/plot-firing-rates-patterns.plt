@@ -22,13 +22,23 @@ do for [pat=1:numpats+0] {
 do for [pat=1:numpats+0] {
     set ytics 5
     set yrange [0:40]
-    outfile = sprintf('mean-firing-rates-pattern-in-out-lpz-zoomed-%d.png', pat)
+    outfile = sprintf('mean-firing-rates-pattern-in-lpz-zoomed-%d.png', pat)
     infile_in_lpz = sprintf('mean-firing-rates-pattern-in-lpz-%d.gdf', pat)
-    infile_out_lpz = sprintf('mean-firing-rates-pattern-outside-lpz-%d.gdf', pat)
     if (file_exists(infile_in_lpz)) {
         set output outfile
         set title "Mean firing rate for pattern ".pat." neurons"
-        plot infile_in_lpz with lines ls 2 title "In", infile_out_lpz with lines ls 3 title "Out"
+        plot infile_in_lpz with lines ls 2 title "In"
+    }
+}
+do for [pat=1:numpats+0] {
+    set ytics 5
+    set yrange [0:40]
+    outfile = sprintf('mean-firing-rates-pattern-outside-lpz-zoomed-%d.png', pat)
+    infile_out_lpz = sprintf('mean-firing-rates-pattern-outside-lpz-%d.gdf', pat)
+    if (file_exists(infile_out_lpz)) {
+        set output outfile
+        set title "Mean firing rate for pattern ".pat." neurons"
+        plot infile_out_lpz with lines ls 2 title "Out"
     }
 }
 do for [pat=1:numpats+0] {
