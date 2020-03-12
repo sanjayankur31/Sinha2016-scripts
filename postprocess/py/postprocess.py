@@ -19,7 +19,7 @@ import sys
 import math
 import logging
 from collections import OrderedDict
-import time
+import timeit
 
 # module imports
 from nestpp.utils import (get_config, get_numpats)
@@ -1404,7 +1404,7 @@ class Postprocess:
 
     def main(self):
         """Do everything."""
-        start_time = time.clock()
+        start_time = timeit.default_timer()
 
         self.plot_neuron_locations()
         self.plot_growth_curves()
@@ -1434,7 +1434,7 @@ class Postprocess:
             proc.join()
 
         self.plot_snrs()
-        end_time = time.clock()
+        end_time = timeit.default_timer()
         self.lgr.info("Post processing took {} minutes".format(
             (end_time - start_time)/60
         ))
