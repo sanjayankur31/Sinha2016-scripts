@@ -54,10 +54,10 @@ def get_metrics(input_filename, numpats, output_filename):
             mean_snr = numpy.mean(snrs)
             std_snr = numpy.std(snrs)
 
-            print("{}\t{}".format(mean_snr, std_snr), file=f2)
+            print("{}\t{}\t{}".format(i+1, mean_snr, std_snr), file=f2)
 
 
 if __name__ == "__main__":
-    for kval in [5, 6]:
+    for kval in [5, 6, 7, 8]:
         get_metrics("00-SNR-data-k-w-{}.txt".format(kval), 50,
                     "00-mean-std-SNR-k-w-{}.txt".format(kval))
