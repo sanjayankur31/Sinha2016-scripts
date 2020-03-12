@@ -11,14 +11,10 @@ set yrange [0:200]
 set key inside center top horizontal
 set colorsequence podo
 
-set output "Mean-clipped-multi-prints.tex"
+set output "MeanNoise-cumulative-multi-prints.tex"
 set title ""
 plot \
-"00-mean-std-Mean-k-w-5.txt" using 1:($2-$3):($2+$3) with filledcurve ls 1 title "", \
-"00-mean-std-Mean-k-w-5.txt" using 1:2 with lines ls 2 lw 5 title "\\(\\chi = 5\\)", \
-"00-mean-std-Mean-k-w-6.txt" using 1:($2-$3):($2+$3) with filledcurve ls 3 title "", \
-"00-mean-std-Mean-k-w-6.txt" using 1:2 with lines ls 4 lw 5 title "\\(\\chi = 6\\)", \
-"00-mean-std-Mean-k-w-7.txt" using 1:($2-$3):($2+$3) with filledcurve ls 5 title "", \
-"00-mean-std-Mean-k-w-7.txt" using 1:2 with lines ls 6 lw 5 title "\\(\\chi = 7\\)", \
-"00-mean-std-Mean-k-w-8.txt" using 1:($2-$3):($2+$3) with filledcurve ls 7 title "", \
-"00-mean-std-Mean-k-w-8.txt" using 1:2 with lines ls 7 lw 5 title "\\(\\chi = 8\\)";
+"00-mean-std-Mean-noise-k-w-5.txt" using 1:($2-$3):($2+$3) with filledcurve ls 1 title "", \
+"00-mean-std-Mean-noise-k-w-5.txt" using 1:2 with lines ls 2 lw 5 title "\\(\\chi = 5\\)", \
+"00-mean-std-Mean-noise-k-w-6.txt" using 1:($2-$3):($2+$3) with filledcurve ls 3 title "", \
+"00-mean-std-Mean-noise-k-w-6.txt" using 1:2 with lines ls 4 lw 5 title "\\(\\chi = 6\\)", \
