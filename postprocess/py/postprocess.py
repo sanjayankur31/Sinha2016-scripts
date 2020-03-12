@@ -553,7 +553,7 @@ class Postprocess:
             self.__separate_pattern_by_lpz()
 
         #  for neuron_set in ['pattern-1', 'pattern-in-lpz-1',
-                           #  'pattern-outside-lpz-1']:
+        #  'pattern-outside-lpz-1']:
         for neuron_set in self.neurons.keys():
             get_firing_rate_metrics(
                 neuron_set, "spikes-{}.gdf".format(neuron_set),
