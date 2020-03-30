@@ -14,23 +14,26 @@ set key inside center top horizontal
 
 simulation="202002101527"
 
+set arrow from graph 0,first 37 to graph 1, first 37 nohead ls 5;
 set output simulation."-mean-firing-rates-pattern-zoomed.tex"
 set title ""
 plot "mean-firing-rates-pattern-1.gdf" every 10 with lines ls 1  title "";
 
-set yrange [0:40]
-set output simulation."-mean-firing-rates-pattern-zoomed-outside-lpz.tex"
-set title ""
-plot "mean-firing-rates-pattern-outside-lpz-1.gdf" every 10 with lines ls 3  title "";
-
-# The two graphs with lesser values
-set yrange [0:10]
-set ytics border nomirror autofreq 5
-
+unset arrow
+set arrow from graph 0,first 37 to graph 1, first 37 nohead ls 5;
+set arrow from graph 0,first 5 to graph 1, first 5 nohead ls 6;
 set output simulation."-mean-firing-rates-pattern-zoomed-in-lpz.tex"
 set title ""
 plot "mean-firing-rates-pattern-in-lpz-1.gdf" every 10 with lines ls 2  title "";
 
+unset arrow
+set arrow from graph 0,first 37 to graph 1, first 37 nohead ls 5;
+set output simulation."-mean-firing-rates-pattern-zoomed-outside-lpz.tex"
+set title ""
+plot "mean-firing-rates-pattern-outside-lpz-1.gdf" every 10 with lines ls 3  title "";
+
+unset arrow
+set arrow from graph 0,first 7.7 to graph 1, first 7.7 nohead ls 5;
 set output simulation."-mean-firing-rates-background-zoomed.tex"
 set title ""
 plot "mean-firing-rates-background-1.gdf" every 10 with lines ls 4  title "";
