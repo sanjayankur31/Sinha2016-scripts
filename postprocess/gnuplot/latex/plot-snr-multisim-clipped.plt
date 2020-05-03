@@ -25,6 +25,8 @@ plot \
 "00-mean-std-Mean-k-w-8.txt" using 1:2 with lines ls 4 lw 5 title "\\(\\chi = 8\\)";
 
 set xlabel "Number of patterns stored"
+set ytics border nomirror autofreq 10
+set yrange [0:30]
 set ylabel "Firing rate (Hz)"
 set output "MeanNoise-clipped-multi-prints.tex"
 set title ""

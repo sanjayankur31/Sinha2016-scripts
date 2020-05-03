@@ -21,6 +21,8 @@ plot \
 "00-mean-std-Mean-k-w-6.txt" using 1:2 with lines ls 2 lw 5 title "\\(\\chi = 6\\)";
 
 set xlabel "Number of patterns stored"
+set ytics border nomirror autofreq 10
+set yrange [0:30]
 set ylabel "Firing rate (Hz)"
 set output "MeanNoise-cumulative-multi-prints.tex"
 set title ""
