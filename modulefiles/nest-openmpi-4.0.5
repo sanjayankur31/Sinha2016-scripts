@@ -1,0 +1,32 @@
+#%Module 1.0
+#
+#  NEST module for use with openmpi 'environment-modules' package:
+#  My nest branch
+
+# load the right openmpi
+module load openmpi-4.0.5
+
+# NEST is installed here. When you relocate NEST, change this variable.
+setenv NEST_INSTALL_DIR /home/asinha/installed-software/nest-openmpi
+#
+# NEST finds standard *.sli files $NEST_DATA_DIR/sli
+setenv NEST_DATA_DIR /home/asinha/installed-software/nest-openmpi/share/nest
+
+# NEST finds help files $NEST_DOC_DIR/help
+setenv NEST_DOC_DIR /home/asinha/installed-software/nest-openmpi/share/doc/nest
+
+# The path where NEST looks for user modules.
+setenv NEST_MODULE_PATH /home/asinha/installed-software/nest-openmpi/lib64/nest
+
+# The path where the PyNEST bindings are installed.
+append-path PYTHONPATH /home/asinha/installed-software/nest-openmpi/lib64/python3.5/site-packages
+
+# Make nest-openmpi / sli /... executables visible.
+prepend-path PATH /home/asinha/installed-software/nest-openmpi/bin
+#
+# Needed to get openmpi to work properly with Python
+setenv        LD_PRELOAD       /soft/openmpi-4.0.5/lib/libmpi.so
+
+# For simulations
+setenv MV2_ENABLE_AFFINITY 0
+setenv MV2_SHOW_CPU_BINDING 1

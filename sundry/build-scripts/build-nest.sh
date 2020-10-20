@@ -27,7 +27,7 @@ build_nest ()
 {
     if [[ "$HOSTNAME" = "uhhpc.herts.ac.uk" ]] || [[ $HOSTNAME =~ headnode* ]] || [[ $HOSTNAME =~ ^(node)[0-9]+ ]] ; then
         rm -rf "$INSTALL_PATH"
-        module load mvapich2
+        module load openmpi-4.0.5
         pushd "$SOURCE_PATH" || exit -1
             git clean -dfx
             git checkout "$BRANCH"
@@ -71,13 +71,13 @@ while getopts "muh" OPTION
 do
     case $OPTION in
         u)
-            INSTALL_PATH="$HOME/installed-software/nest-mvapich2-upstream/"
+            INSTALL_PATH="$HOME/installed-software/nest-openmpi-upstream/"
             BRANCH="master"
             build_nest
             exit 0
             ;;
         m)
-            INSTALL_PATH="$HOME/installed-software/nest-mvapich2/"
+            INSTALL_PATH="$HOME/installed-software/nest-openmpi/"
             BRANCH="disable-str-pl-updates"
             build_nest
             exit 0
