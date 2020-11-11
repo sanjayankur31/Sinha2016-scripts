@@ -169,31 +169,20 @@ def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
                     lgr.debug("calculating ISI CV and STD for {}".format(
                         current_time))
                     # STD of firing rates
-                    # take 5 milli second bins of this 1 second bin
-                    # find firing rates for each bin
-                    # get std of these 200 values
-                    bin5rates = []
-                    bin5left = 0
-                    bin5right = 0
-                    bin5time = thiswindow_times[0]
-                    while bin5time < math.floor(thiswindow_times[-1] - 5.):
-                        bin5left += numpy.searchsorted(
-                            thiswindow_times[bin5left:], bin5time, side="left")
-                        bin5right = bin5left + numpy.searchsorted(
-                            thiswindow_times[bin5left:], bin5time + 5.,
-                            side="right")
-                        bin5neurons = thiswindow_neuronIDs[bin5left:bin5right]
-
-                        # multiplied by 200 to get firing rate per second as
-                        # Hertz since bins are 5ms each
-                        firing_rate = (float(len(bin5neurons)) *
-                                       200./num_neurons)
-                        bin5rates.append(firing_rate)
-                        bin5time = bin5time + dt
+                    # calculate firing rates of each neuron in the window
+                    # then find STD
+                    spike_counts = collections.Counter(thiswindow_neuronIDs)
+                    firing_rates = []
+                    for neuron, count in spike_counts.items():
+                        firing_rates.append(count/(window/1000))
+                    neurons_spiking = len(firing_rates)
+                    # Add 0s for neurons that did not spike
+                    for i in range(0, (num_neurons - neurons_spiking)):
+                        firing_rates.append(0)
 
                     lgr.debug("std being calculated from {} values".format(
-                        len(bin5rates)))
-                    mystd = numpy.std(bin5rates)
+                        len(firing_rates)))
+                    mystd = numpy.std(firing_rates)
                     print(
                         "{}\t{}".format(current_time/1000., mystd),
                         file=fh2, flush=True)
