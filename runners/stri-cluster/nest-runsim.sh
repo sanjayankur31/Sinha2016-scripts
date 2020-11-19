@@ -11,7 +11,7 @@
 #PBS -N nest_v_s
 
 module unload mpi/mpich-x86_64
-module load mvapich2-1.7
+module load "$MODULE_TO_USE"
 
 SIM_PATH="/beegfs/general/asinha/simulations-nest/"
 SIM_TIME=""
