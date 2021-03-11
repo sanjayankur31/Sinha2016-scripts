@@ -15,6 +15,11 @@ import pandas
 import gc
 import os
 import collections
+import random
+from quantities import ms
+from neo.core import SpikeTrain
+from elephant.conversion import BinnedSpikeTrain
+from elephant.spike_train_correlation import correlation_coeff
 
 # local imports
 from nestpp.loggerpp import get_module_logger
@@ -54,7 +59,8 @@ def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
 
     with open("mean-firing-rates-{}.gdf".format(neuronset), 'w') as fh1, \
             open("std-firing-rates-{}.gdf".format(neuronset), 'w') as fh2, \
-            open("ISI-cv-{}.gdf".format(neuronset), 'w') as fh3:
+            open("ISI-cv-{}.gdf".format(neuronset), 'w') as fh3, \
+            open("cc-{}.gdf".format(neuronset), 'w') as fh4:
 
         for chunk in pandas.read_csv(spikes_fn, sep='\s+',  # noqa: W605
                                      names=["neuronID",
@@ -186,6 +192,37 @@ def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
                     print(
                         "{}\t{}".format(current_time/1000., mystd),
                         file=fh2, flush=True)
+
+                    # CC
+                    # I do not sort them.
+                    neurons = set(thiswindow_neuronIDs)
+                    # Shuffle them so that the spike trains are from a shuffled
+                    # pack of neurons when the CC is calculated
+                    random.shuffle(neurons)
+                    # Select at least 800 neurons
+                    N = max(int(0.1 * len(neurons)), 800)
+                    neurons = neurons[0:N]
+                    spike_trains = []
+                    # Get spike trains for each neuron
+                    for nrn in list(neurons):
+                        indices = [i for i, x in
+                                   enumerate(thiswindow_neuronIDs) if x == nrn]
+                        nrn_spike_times = thiswindow_times[indices]
+                        nrn_spiketrain = SpikeTrain(nrn_spike_times * ms,
+                                                    t_stop=thiswindow_times[-1])
+                        spike_trains.append(nrn_spiketrain)
+
+                    bin_size = ((thiswindow_times[-1] - thiswindow_times[0]) * ms)
+                    binned_spike_trains = BinnedSpikeTrain(spike_trains,
+                                                           bin_size)
+                    cc_matrix = correlation_coeff(binned_spike_trains)
+                    # (sum of triangle)/(N * (N-1)/2)
+                    avg_cc = (
+                        numpy.nansum(numpy.tril(cc_matrix))/(N * (N - 1) / 2)
+                    )
+                    print(
+                        "{}\t{}".format(current_time/1000., avg_cc), file=fh4,
+                        flush=True)
 
                     # ISI stats
                     neurons = set(thiswindow_neuronIDs)
