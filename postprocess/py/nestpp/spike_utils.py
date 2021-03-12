@@ -195,7 +195,8 @@ def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
 
                     # CC
                     # I do not sort them.
-                    neurons = set(thiswindow_neuronIDs)
+                    # Get unique neuron list
+                    neurons = list(set(thiswindow_neuronIDs))
                     # Shuffle them so that the spike trains are from a shuffled
                     # pack of neurons when the CC is calculated
                     random.shuffle(neurons)
