@@ -19,7 +19,7 @@ import random
 from quantities import ms
 from neo.core import SpikeTrain
 from elephant.conversion import BinnedSpikeTrain
-from elephant.spike_train_correlation import correlation_coeff
+from elephant.spike_train_correlation import correlation_coefficient
 
 # local imports
 from nestpp.loggerpp import get_module_logger
@@ -215,7 +215,7 @@ def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
                     bin_size = ((thiswindow_times[-1] - thiswindow_times[0]) * ms)
                     binned_spike_trains = BinnedSpikeTrain(spike_trains,
                                                            bin_size)
-                    cc_matrix = correlation_coeff(binned_spike_trains)
+                    cc_matrix = correlation_coefficient(binned_spike_trains)
                     # (sum of triangle)/(N * (N-1)/2)
                     avg_cc = (
                         numpy.nansum(numpy.tril(cc_matrix))/(N * (N - 1) / 2)
