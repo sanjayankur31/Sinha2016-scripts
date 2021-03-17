@@ -149,11 +149,11 @@ def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
                     # To skip these points and have a discontinuous graph in
                     # gnuplot, one must leave a blank line in the text.
                     print(
-                        "#{}\tNA\n".format(current_time/1000.),
+                        "#{}\tNA\n".format(current_time / 1000.),
                         file=fh2, flush=True)
 
                     print(
-                        "#{}\tNA\n".format(current_time/1000.),
+                        "#{}\tNA\n".format(current_time / 1000.),
                         file=fh3, flush=True)
                     continue
 
@@ -163,10 +163,10 @@ def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
 
                 # mean firing rate
                 spikesnum = float(len(thiswindow_neuronIDs))
-                mean_firing_rate = (spikesnum/num_neurons)/(window/1000)
+                mean_firing_rate = (spikesnum / num_neurons) / (window / 1000)
                 # total neuronIDs by number of neurons
                 print(
-                    "{}\t{}".format(current_time/1000.,
+                    "{}\t{}".format(current_time / 1000.,
                                     mean_firing_rate),
                     file=fh1, flush=True)
 
@@ -186,7 +186,7 @@ def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
                         spike_counts = collections.Counter(thiswindow_neuronIDs)
                         firing_rates = []
                         for neuron, count in spike_counts.items():
-                            firing_rates.append(count/(window/1000))
+                            firing_rates.append(count / (window / 1000))
                         neurons_spiking = len(firing_rates)
                         # Add 0s for neurons that did not spike
                         for i in range(0, (num_neurons - neurons_spiking)):
@@ -196,7 +196,7 @@ def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
                             len(firing_rates)))
                         mystd = numpy.std(firing_rates)
                         print(
-                            "{}\t{}".format(current_time/1000., mystd),
+                            "{}\t{}".format(current_time / 1000., mystd),
                             file=fh2, flush=True)
 
                     if cc_enabled:
@@ -232,10 +232,10 @@ def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
                         cc_matrix = correlation_coefficient(binned_spike_trains)
                         # (sum of triangle)/(N * (N-1)/2)
                         avg_cc = (
-                            numpy.nansum(numpy.tril(cc_matrix))/(N * (N - 1) / 2)
+                            numpy.nansum(numpy.tril(cc_matrix)) / (N * (N - 1) / 2)
                         )
                         print(
-                            "{}\t{}".format(current_time/1000., avg_cc), file=fh4,
+                            "{}\t{}".format(current_time / 1000., avg_cc), file=fh4,
                             flush=True)
 
                     if isi_enabled:
@@ -265,13 +265,13 @@ def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
                                 # for this neuron, get stats
                                 ISI_mean = numpy.mean(ISIs)
                                 ISI_std = numpy.std(ISIs)
-                                ISI_cv = ISI_std/ISI_mean
+                                ISI_cv = ISI_std / ISI_mean
 
                                 if not numpy.isnan(ISI_cv):
                                     ISI_cvs.append(ISI_cv)
 
                         print(
-                            "{}\t{}".format(current_time/1000.,
+                            "{}\t{}".format(current_time / 1000.,
                                             numpy.mean(ISI_cvs)),
                             file=fh3, flush=True)
 
@@ -380,22 +380,18 @@ def get_individual_firing_rate_snapshots(neuronset, spikes_fn,
                     if n_id not in spike_counts:
                         rates[n_id] = 0
                     else:
-                        rates[n_id] = spike_counts[n_id]/(window/1000)
+                        rates[n_id] = spike_counts[n_id] / (window / 1000)
                 lgr.debug("Neurons after appending zeros: {}".format(
                     len(rates)))
 
                 o_fn = "firing-rates-{}-{}.gdf".format(
-                    neuronset, time/1000.)
+                    neuronset, time / 1000.)
                 lgr.info("Printing neuronal firing rate values to {}".format(
                     o_fn))
 
                 with open(o_fn, 'w') as fh:
                     for neuron in neuron_locations:
-                        print("{}\t{}\t{}\t{}".format(
-                            neuron[0], neuron[1], neuron[2],
-                            rates[int(neuron[0])]
-                        ), file=fh
-                              )
+                        print("{}\t{}\t{}\t{}".format(neuron[0], neuron[1], neuron[2], rates[int(neuron[0])]), file=fh)
 
                 current += 1
                 if current >= len(sorted_timelist):
@@ -422,12 +418,10 @@ def validate_raster_df(dataframe):
 
     """
     if dataframe.shape[1] != 2:
-        lgr.error("Data seems incorrect - should have 2 columns. " +
-                  "Please check and re-run")
+        lgr.error("Data seems incorrect - should have 2 columns. Please check and re-run")
         return False
     else:
-        lgr.info("Read " + str(dataframe.shape[0]) +
-                 " rows.")
+        lgr.info("Read " + str(dataframe.shape[0]) + "rows.")
         return True
 
 
