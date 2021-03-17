@@ -30,7 +30,9 @@ lgr = get_module_logger(__name__)
 
 def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
                             rows=50000000., start_time=100., dt=1.,
-                            window=1000., snapshot_dt=200000.):
+                            window=1000., snapshot_dt=200000.,
+                            isi_enabled=True, std_enabled=True,
+                            cc_enabled=True):
     """Get various metrics from raster spike files.
 
     :neuronset: name of neuron set being looked at
@@ -41,6 +43,9 @@ def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
     :dt: increment value (ms)
     :window: window to count spikes in (ms)
     :snapshot_dt: interval between snapshots for ISI and STD metrics (ms)
+    :isi_enabled: if ISI CVs should be calculated
+    :std_enabled: if STD of firing rate should be calculated
+    :cc_enabled: if average spike correlation coefficient should be enabled
     :returns: True if everything went OK, else False
 
     """
@@ -172,94 +177,103 @@ def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
                 # time to do for each dt - my post processing wont finish. So,
                 # we calculate it at intervals
                 if ((current_time - start_time) % snapshot_dt == 0):
-                    lgr.debug("calculating ISI CV and STD for {}".format(
-                        current_time))
-                    # STD of firing rates
-                    # calculate firing rates of each neuron in the window
-                    # then find STD
-                    spike_counts = collections.Counter(thiswindow_neuronIDs)
-                    firing_rates = []
-                    for neuron, count in spike_counts.items():
-                        firing_rates.append(count/(window/1000))
-                    neurons_spiking = len(firing_rates)
-                    # Add 0s for neurons that did not spike
-                    for i in range(0, (num_neurons - neurons_spiking)):
-                        firing_rates.append(0)
+                    if std_enabled:
+                        lgr.debug("STD for {}".format(
+                            current_time))
+                        # STD of firing rates
+                        # calculate firing rates of each neuron in the window
+                        # then find STD
+                        spike_counts = collections.Counter(thiswindow_neuronIDs)
+                        firing_rates = []
+                        for neuron, count in spike_counts.items():
+                            firing_rates.append(count/(window/1000))
+                        neurons_spiking = len(firing_rates)
+                        # Add 0s for neurons that did not spike
+                        for i in range(0, (num_neurons - neurons_spiking)):
+                            firing_rates.append(0)
 
-                    lgr.debug("std being calculated from {} values".format(
-                        len(firing_rates)))
-                    mystd = numpy.std(firing_rates)
-                    print(
-                        "{}\t{}".format(current_time/1000., mystd),
-                        file=fh2, flush=True)
+                        lgr.debug("std being calculated from {} values".format(
+                            len(firing_rates)))
+                        mystd = numpy.std(firing_rates)
+                        print(
+                            "{}\t{}".format(current_time/1000., mystd),
+                            file=fh2, flush=True)
 
-                    # CC
-                    # I do not sort them.
-                    # Get unique neuron list
-                    neurons = list(set(thiswindow_neuronIDs))
-                    # Shuffle them so that the spike trains are from a shuffled
-                    # pack of neurons when the CC is calculated
-                    random.shuffle(neurons)
-                    # Select at least 800 neurons
-                    N = max(int(0.1 * len(neurons)), 800)
-                    neurons = neurons[0:N]
-                    spike_trains = []
-                    # Get spike trains for each neuron
-                    for nrn in list(neurons):
-                        indices = [i for i, x in
-                                   enumerate(thiswindow_neuronIDs) if x == nrn]
-                        nrn_spike_times = thiswindow_times[indices]
-                        nrn_spiketrain = SpikeTrain(nrn_spike_times * ms,
-                                                    t_stop=thiswindow_times[-1])
-                        spike_trains.append(nrn_spiketrain)
+                    if cc_enabled:
+                        lgr.debug("CC for {}".format(
+                            current_time))
+                        # CC
+                        # I do not sort them.
+                        # Get unique neuron list
+                        neurons = list(set(thiswindow_neuronIDs))
+                        # Shuffle them so that the spike trains are from a shuffled
+                        # pack of neurons when the CC is calculated
+                        random.shuffle(neurons)
+                        # Select at least 800 neurons
+                        if len(neurons) > 800:
+                            N = max(int(0.1 * len(neurons)), 800)
+                        else:
+                            N = len(neurons)
+                        lgr.debug("CC is using {} neurons".format(N))
+                        neurons = neurons[0:N]
+                        spike_trains = []
+                        # Get spike trains for each neuron
+                        for nrn in list(neurons):
+                            indices = [i for i, x in
+                                       enumerate(thiswindow_neuronIDs) if x == nrn]
+                            nrn_spike_times = thiswindow_times[indices]
+                            nrn_spiketrain = SpikeTrain(nrn_spike_times * ms,
+                                                        t_stop=thiswindow_times[-1])
+                            spike_trains.append(nrn_spiketrain)
 
-                    bin_size = ((thiswindow_times[-1] - thiswindow_times[0]) * ms)
-                    binned_spike_trains = BinnedSpikeTrain(spike_trains,
-                                                           bin_size)
-                    cc_matrix = correlation_coefficient(binned_spike_trains)
-                    # (sum of triangle)/(N * (N-1)/2)
-                    avg_cc = (
-                        numpy.nansum(numpy.tril(cc_matrix))/(N * (N - 1) / 2)
-                    )
-                    print(
-                        "{}\t{}".format(current_time/1000., avg_cc), file=fh4,
-                        flush=True)
+                        bin_size = (5 * ms)
+                        binned_spike_trains = BinnedSpikeTrain(spike_trains,
+                                                               bin_size)
+                        cc_matrix = correlation_coefficient(binned_spike_trains)
+                        # (sum of triangle)/(N * (N-1)/2)
+                        avg_cc = (
+                            numpy.nansum(numpy.tril(cc_matrix))/(N * (N - 1) / 2)
+                        )
+                        print(
+                            "{}\t{}".format(current_time/1000., avg_cc), file=fh4,
+                            flush=True)
 
-                    # ISI stats
-                    neurons = set(thiswindow_neuronIDs)
-                    lgr.debug("ISI: {} neurons being analysed.".format(
-                        len(neurons)))
-                    # for all neurons in this window
-                    ISI_cvs = []
-                    for neuron in list(neurons):
-                        indices = [i for i, x
-                                   in enumerate(thiswindow_neuronIDs)
-                                   if x == neuron]
-                        neuron_times = [thiswindow_times[i] for i in
-                                        indices]
+                    if isi_enabled:
+                        # ISI stats
+                        neurons = set(thiswindow_neuronIDs)
+                        lgr.debug("ISI: {} neurons being analysed.".format(
+                            len(neurons)))
+                        # for all neurons in this window
+                        ISI_cvs = []
+                        for neuron in list(neurons):
+                            indices = [i for i, x
+                                       in enumerate(thiswindow_neuronIDs)
+                                       if x == neuron]
+                            neuron_times = [thiswindow_times[i] for i in
+                                            indices]
 
-                        ISIs = []
-                        if len(neuron_times) > 1:
-                            # otherwise ISI is undefined in this window for
-                            # this neuron
-                            prev = neuron_times[0]
-                            # get a list of ISIs
-                            for neuron_time in neuron_times:
-                                ISIs.append(neuron_time - prev)
-                                prev = neuron_time
+                            ISIs = []
+                            if len(neuron_times) > 1:
+                                # otherwise ISI is undefined in this window for
+                                # this neuron
+                                prev = neuron_times[0]
+                                # get a list of ISIs
+                                for neuron_time in neuron_times:
+                                    ISIs.append(neuron_time - prev)
+                                    prev = neuron_time
 
-                            # for this neuron, get stats
-                            ISI_mean = numpy.mean(ISIs)
-                            ISI_std = numpy.std(ISIs)
-                            ISI_cv = ISI_std/ISI_mean
+                                # for this neuron, get stats
+                                ISI_mean = numpy.mean(ISIs)
+                                ISI_std = numpy.std(ISIs)
+                                ISI_cv = ISI_std/ISI_mean
 
-                            if not numpy.isnan(ISI_cv):
-                                ISI_cvs.append(ISI_cv)
+                                if not numpy.isnan(ISI_cv):
+                                    ISI_cvs.append(ISI_cv)
 
-                    print(
-                        "{}\t{}".format(current_time/1000.,
-                                        numpy.mean(ISI_cvs)),
-                        file=fh3, flush=True)
+                        print(
+                            "{}\t{}".format(current_time/1000.,
+                                            numpy.mean(ISI_cvs)),
+                            file=fh3, flush=True)
 
                 current_time += dt
 
