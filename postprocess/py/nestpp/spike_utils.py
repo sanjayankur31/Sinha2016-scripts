@@ -230,12 +230,13 @@ def get_firing_rate_metrics(neuronset, spikes_fn, num_neurons=8000.,
                         binned_spike_trains = BinnedSpikeTrain(spike_trains,
                                                                bin_size)
                         cc_matrix = correlation_coefficient(binned_spike_trains)
-                        # (sum of triangle)/(N * (N-1)/2)
+                        # elements in triangle: (N * (N-1)/2)
+                        # mean of cc values = (sum of triangle)/(N * (N-1)/2)
                         avg_cc = (
-                            numpy.nansum(numpy.tril(cc_matrix)) / (N * (N - 1) / 2)
+                            numpy.nansum(numpy.tril(cc_matrix, -1)) / (N * (N - 1) / 2)
                         )
                         print(
-                            "{}\t{}".format(current_time / 1000., avg_cc), file=fh4,
+                            "{}\t{}\t{}".format(current_time / 1000., N, avg_cc), file=fh4,
                             flush=True)
 
                     if isi_enabled:
